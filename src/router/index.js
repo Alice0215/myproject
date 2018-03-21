@@ -23,7 +23,7 @@ const Router = new VueRouter({
 Router.beforeEach((to, from, next) => {
   const u = localStorage.getItem('token')
   if (u) {
-    if (to.fullPath === '/login' || to.fullPath === '/register') {
+    if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/partyregister') {
       return Router.replace('/')
     }
     // Update module and sub
@@ -31,7 +31,7 @@ Router.beforeEach((to, from, next) => {
     console.log('TO: ' + path)
     return next()
   }
-  if (to.fullPath === '/login' || to.fullPath === '/register') {
+  if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/partyregister') {
     return next()
   }
   Router.replace('/login')

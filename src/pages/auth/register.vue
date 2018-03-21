@@ -8,7 +8,6 @@
         <input text-dark required v-model="username" placeholder="用户名" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
         <select class="full-width select" v-model="partyName">
-            <option>选择机构</option>
             <option  v-for="item in organizations"
             :key="item.id"
             :label="item.partyName"
@@ -58,19 +57,21 @@
                 if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
                     deviceType = 2
                 }
-                var data = {
-                    partyId: this.partyName,
-                    phone: this.phone,
-                    username: this.username,
+                let data = {
+                    username: this.username, 
                     fullname: this.name,
                     email: this.email,
                     password: this.password,
-                    passwordVerify: this.password,
+                    partyId: this.partyName,
+                    phone: this.phone,
                     deviceType: deviceType,
                     passwordVerify: this.password_confirmation
                 }
-                console.log(data)
-                this.$axios.post('api/user/register', data)
+                let params = new URLSearchParams()
+                for (var key in data) {
+                    params.append(key, data[key])
+                }
+                this.$axios.post('api/user/register', params)
                     .then(response => {
                         console.log(response)
                         this.$router.push('/post')

@@ -53,7 +53,7 @@
                     deviceType = 2
                 }
                 var data = {
-                    partyId: this.partyName,
+                    partyName: this.partyName,
                     phone: this.phone,
                     username: this.username,
                     fullname: this.name,
@@ -63,11 +63,14 @@
                     deviceType: deviceType,
                     passwordVerify: this.password_confirmation
                 }
-                console.log(data)
-                this.$axios.post('api/user/register', data)
+                let params = new URLSearchParams()
+                for (var key in data) {
+                    params.append(key, data[key])
+                }
+                this.$axios.post('api/party/register', params)
                     .then(response => {
                         console.log(response)
-                        //this.$router.push('/login')
+                        this.$router.push('/login')
                     })
                     .catch(e => {
                         console.log('Error', e.response.data.message);

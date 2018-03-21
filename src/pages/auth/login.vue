@@ -9,6 +9,13 @@
         <!--<i aria-hidden="true" class="q-icon q-if-control material-icons">visibility_off</i>-->
     </div>
     <q-btn class="full-width main-color-bg" @click="login()">登录</q-btn>
+    <div class="left">
+        <a href="javascript:">忘记密码？</a>
+    </div>
+    <div class="right">
+        <span>没有账号?</span>
+        <a href="javascript:" @click="register">现在注册</a>
+    </div>
   </div>
 </template>
 
@@ -83,6 +90,12 @@ export default {
 .login-btn{
   width: 200px;
 }
+.right{
+    float: right;
+}
+.left{
+    float: left;
+}
 .card {
       margin-bottom: 0px;
       padding: 30px 15px;
@@ -100,11 +113,8 @@ export default {
   h4 {
       font-weight: 300;
   }
-  a {
-      font-size: 14px;
-  }
-  a:hover {
-      text-decoration: underline;
+   a,a:hover {
+      text-decoration: none;
       color: #1AAD19;
   }
   a:focus {
