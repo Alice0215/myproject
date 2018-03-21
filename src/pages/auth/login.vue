@@ -1,23 +1,19 @@
 <template>
-  <div class="fixed-center text-center">
+  <div class="card">
     <p>
-      <img
-        src="~assets/quasar-logo-full.svg"
-        class="log"
-      >
+      <img src="" class="log"/>
     </p>
-  <div class="full-width">
-    <input text-dark required v-model="username" placeholder="账号" class="full-width login-input">
-    <input text-dark required v-model="password" placeholder="密码"  class="full-width login-input">
-  </div>
-    <q-btn
-      class="login-btn main-color-bg"
-       @click="login()"
-    >登录</q-btn>
+    <div class="full-width">
+        <input text-dark required v-model="username" placeholder="账号" class="full-width login-input">
+        <input text-dark required v-model="password" placeholder="密码"  class="full-width login-input">
+        <!--<i aria-hidden="true" class="q-icon q-if-control material-icons">visibility_off</i>-->
+    </div>
+    <q-btn class="full-width main-color-bg" @click="login()">登录</q-btn>
   </div>
 </template>
 
 <script>
+const alerts = { color: 'tertiary', message: 'Woah! Danger! You are getting good at this!', icon: 'report_problem' }
 export default {
   data () {
     return {
@@ -43,12 +39,34 @@ export default {
         }
         this.$axios.post('api/user/login', data)
           .then(response => {
-              if(response.resultCode="SUCCESS"){
-                 console.log(response)
-                 this.$auth.setToken(response.data.resultMsg.userToken)
-                 this.$router.push('/post')
+              console.log(response)
+              if(response.resultCode=="SUCCESS"){
+                localStorage.setItem('token',response.data.resultMsg.userToken)
+                this.$q.notify({
+                    color:'secondary',
+                    textColor:'',
+                    icon:'tag_faces',
+                    message: '登录成功，正在跳转中',
+                    position:'center',
+                    avatar:'',
+                    actions: Math.random() * 100 > 50
+                            ? [ { label: 'success', handler: () => this.$router.push('/post') } ]
+                            : null,
+                    timeout: Math.random() * 5000 + 3000
+                })
               }else{
-                alert(response.data.resultMsg)
+                this.$q.notify({
+                    color:'tertiary',
+                    textColor:'',
+                    icon:'report_problem',
+                    message: response.data.resultMsg,
+                    position:'center',
+                    avatar:'',
+                    actions: Math.random() * 100 > 50
+                            ? [ {handler: () => this.$router.push('/login') } ]
+                            : null,
+                    timeout: Math.random() * 5000 + 3000
+                })
               }
              
           })
@@ -61,17 +79,12 @@ export default {
 </script>
 
 <style>
-.log{
-  width: 30px;
-  max-width: 150px;
-}
 .login-btn{
   width: 200px;
 }
 .card {
       margin-bottom: 0px;
-  }
-  .card-content {
+      padding: 30px 15px;
       min-height: 160px;
   }
   .login-input{

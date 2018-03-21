@@ -1,10 +1,7 @@
 export default [
   {
     path: '/',
-    component: () => import('layouts/default'),
-    children: [
-      { path: '', component: () => import('pages/index') }
-    ]
+    component: () => import('pages/index')
   },
   {
     path: '/login',
@@ -13,6 +10,10 @@ export default [
   {
     path: '/register',
     component: () => import('pages/auth/register')
+  },
+  {
+    path: '/partyregister',
+    component: () => import('pages/auth/partyregister')
   },
   {
     path: '/user',

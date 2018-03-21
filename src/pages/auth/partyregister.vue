@@ -1,19 +1,13 @@
 <template>
   <div class="card">
     <div class="register-title">
-        <span class="hover">个人注册</span>
-        <span @click="partyregister()">机构注册</span>
+        <span @click="partyregister()">个人注册</span>
+        <span class="hover">机构注册</span>
     </div>
     <div class="full-width">
+        <input text-dark required v-model="partyName" placeholder="机构名称" class="full-width login-input">
         <input text-dark required v-model="username" placeholder="用户名" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
-        <select class="full-width select" v-model="partyName">
-            <option>选择机构</option>
-            <option  v-for="item in organizations"
-            :key="item.id"
-            :label="item.partyName"
-            :value="item.id"></option>
-                </select>
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
         <input text-dark required v-model="password" placeholder="密码"  class="full-width login-input">
@@ -51,7 +45,7 @@
                  })
             },
             partyregister () {
-                this.$router.push('/partyregister')
+                this.$router.push('/register')
             },
             register() {
                 let deviceType = 1
@@ -73,7 +67,7 @@
                 this.$axios.post('api/user/register', data)
                     .then(response => {
                         console.log(response)
-                        this.$router.push('/post')
+                        //this.$router.push('/login')
                     })
                     .catch(e => {
                         console.log('Error', e.response.data.message);

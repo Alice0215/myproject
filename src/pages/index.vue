@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex flex-center">
-    <img alt="Quasar logo" src="~assets/quasar-logo-full.svg">
-  </q-page>
+ <div class="full-width text-center">
+   正在开发中
+  </div>
 </template>
 
 <style>
