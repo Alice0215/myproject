@@ -20,5 +20,21 @@ const Router = new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
   routes
 })
-
+Router.beforeEach((to, from, next) => {
+  const u = localStorage.getItem('token')
+  if (u) {
+    if (to.fullPath === '/login' || to.fullPath === '/register') {
+      return Router.replace('/')
+    }
+    // Update module and sub
+    const path = to.fullPath
+    console.log('TO: ' + path)
+    return next()
+  }
+  if (to.fullPath === '/login' || to.fullPath === '/register') {
+    return next()
+  }
+  Router.replace('/login')
+})
+console.log(Router)
 export default Router

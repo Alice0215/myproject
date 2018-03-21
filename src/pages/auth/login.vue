@@ -40,9 +40,9 @@ export default {
         this.$axios.post('api/user/login', data)
           .then(response => {
               console.log(response)
-              if(response.resultCode=="SUCCESS"){
+              if(response.data.resultCode=="SUCCESS"){
                 localStorage.setItem('token',response.data.resultMsg.userToken)
-                this.$q.notify({
+                /*this.$q.notify({
                     color:'secondary',
                     textColor:'',
                     icon:'tag_faces',
@@ -50,10 +50,11 @@ export default {
                     position:'center',
                     avatar:'',
                     actions: Math.random() * 100 > 50
-                            ? [ { label: 'success', handler: () => this.$router.push('/post') } ]
+                            ? [ { label: 'success', handler: () => this.$router.push('/') } ]
                             : null,
                     timeout: Math.random() * 5000 + 3000
-                })
+                })*/
+                this.$router.push('/')
               }else{
                 this.$q.notify({
                     color:'tertiary',
