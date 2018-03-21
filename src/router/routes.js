@@ -16,6 +16,10 @@ export default [
     component: () => import('pages/auth/partyregister')
   },
   {
+    path: '/project',
+    component: () => import('pages/project/add')
+  },
+  {
     path: '/user',
     component: () => import('layouts/User'),
     children: [
