@@ -38,14 +38,19 @@ export default {
             username : this.username,
             password : this.password,
             deviceType : deviceType,
-            deviceBrand:'HW',
-            pushDeviceId:1
+            deviceBrand: 'HW',
+            pushDeviceId: 1
         }
-        this.$http.post('user/login', data)
+        this.$axios.post('api/user/login', data)
           .then(response => {
-              console.log(response)
-              this.$router.push('/post')
-              this.$auth.setToken(response.data.resultMsg.userToken)
+              if(response.resultCode="SUCCESS"){
+                 console.log(response)
+                 this.$auth.setToken(response.data.resultMsg.userToken)
+                 this.$router.push('/post')
+              }else{
+                alert(response.data.resultMsg)
+              }
+             
           })
           .catch(e => {
               console.log('Error', e.message);

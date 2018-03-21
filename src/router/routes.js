@@ -8,17 +8,11 @@ export default [
   },
   {
     path: '/login',
-    component: () => import('pages/auth/login'),
-    children: [
-      { path: '', component: () => import('pages/auth/login') }
-    ]
+    component: () => import('pages/auth/login')
   },
   {
     path: '/register',
-    component: () => import('pages/auth/register'),
-    children: [
-      { path: '', component: () => import('pages/auth/register') }
-    ]
+    component: () => import('pages/auth/register')
   },
   {
     path: '/user',
