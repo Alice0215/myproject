@@ -4,10 +4,53 @@
         <input text-dark required v-model="username" placeholder="项目名称" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="输入地址" class="full-width login-input">
         <input text-dark required v-model="email" placeholder="项目简介" class="full-width login-input">
-        <input text-dark required v-model="phone" placeholder="设置项目负责人" class="full-width login-input">
-        <input text-dark required v-model="password" placeholder="设置项目负责人"  class="full-width login-input">
+        <q-search v-model="search" color="secondary" icon="local" placeholder="PlacesPlacesPlacesPlacesPlacesPlacesPlaces"></q-search>
+        <q-field count>
+            <q-input suffix="#" prefix="@" type="password" v-model="model" hide-underline />
+        </q-field>
+        <q-field :count="10">
+            <q-input suffix="#" prefix="@" type="textarea" v-model="model" hide-underline />
+        </q-field>
+        <p class="full-width" @click="$router.push('/adduser')">设置项目管理员</p>
+        <p class="full-width" @click="$router.push('/adduser')">设置项目负责人</p>
+        <p class="caption">Multiple File Upload - No Upload Button</p>
+        <q-uploader
+            style="max-width: 320px"
+            float-label="Upload files"
+            multiple
+            hide-upload-button
+            :url="url"
+            @start="emit('start')"
+            @finish="emit('finish')"
+            @uploaded="uploaded"
+            @add="add"
+            @remove:done="removeDone"
+            @remove:abort="removeAbort"
+            @remove:cancel="removeCancel"
+        />
+
+          <form @submit.prevent>
+          <q-input class="q-ma-sm" autocomplete="username"
+            v-model="username"
+            float-label="Username"
+            :dark="dark"
+            :error="error"
+            :warning="warning"
+            :disable="disable"
+            :readonly="readonly"
+            :clearable="clearable"
+            @focus="onFocus"
+            @blur="onBlur"
+            @change="onChange"
+            @input="onInput"
+            @clear="onClear"
+            @autofill="ev => onAutofill(ev, 'username')"
+          />
+          <q-input suffix="#" prefix="@" type="textarea" v-model="model" />
+          <div><q-btn type="submit" flat label="Login" /></div>
+        </form>
     </div>
-    <q-btn class="full-width main-color-bg" @click="register()">创建项目</q-btn>
+    <q-btn class="full-width main-color-bg" @click="add()">创建项目</q-btn>
   </div>
 </template>
 
@@ -41,7 +84,7 @@
             partyregister () {
                 this.$router.push('/partyregister')
             },
-            register() {
+            add() {
                 let deviceType = 1
                 if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
                     deviceType = 2
@@ -54,7 +97,9 @@
                     partyId: this.partyName,
                     phone: this.phone,
                     deviceType: deviceType,
-                    passwordVerify: this.password_confirmation
+                    passwordVerify: this.password_confirmation,
+                    search: '',
+                    number: ''
                 }
                 let params = new URLSearchParams()
                 for (var key in data) {
@@ -68,6 +113,15 @@
                     .catch(e => {
                         console.log('Error', e.response.data.message);
                     })
+            },
+            onChange (val) {
+                console.log('@change', JSON.stringify(val))
+            },
+            onInput (val) {
+                console.log('@input', JSON.stringify(val))
+            },
+            onClear (val) {
+                console.log('@clear', JSON.stringify(val))
             }
         }
     }

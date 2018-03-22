@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators'
+
     export default {
         mounted() {
             this.getPersonal()

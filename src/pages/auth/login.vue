@@ -4,9 +4,8 @@
       <img src="" class="log"/>
     </p>
     <div class="full-width">
-        <input text-dark required v-model="username" placeholder="账号" class="full-width login-input">
-        <input type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
-        <!--<i aria-hidden="true" class="q-icon q-if-control material-icons">visibility_off</i>-->
+        <q-input class="login-input"  v-model="username" placeholder="账号"/>
+        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
     </div>
     <q-btn class="full-width main-color-bg" @click="login()">登录</q-btn>
     <div class="left">
@@ -40,10 +39,12 @@ export default {
             username : this.username,
             password : this.password,
             deviceType : deviceType,
-            deviceBrand: 'HW',
-            pushDeviceId: 1
         }
-        this.$axios.post('api/user/login', data)
+        let params = new URLSearchParams()
+        for (var key in data) {
+            params.append(key, data[key])
+        }
+        this.$axios.post('api/user/login', data,{headers: {"Content-Type": "application/json"}})
           .then(response => {
               console.log(response)
               if(response.data.resultCode=="SUCCESS"){
@@ -105,6 +106,7 @@ export default {
       border-radius: 10px;
       padding: 10px 20px;
       margin-bottom: 25px;
+      color: black;
   }
   button {
       margin-bottom: 4%;
@@ -125,5 +127,8 @@ export default {
   }
   input:not(.no-style):hover{
       border-bottom: none;
+  }
+  .q-if:before, .q-if:after{
+      background: none;
   }
 </style>
