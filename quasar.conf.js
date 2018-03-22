@@ -67,14 +67,17 @@ module.exports = function (ctx) {
         'QInput',
         'QUploader',
         'QInput',
-        'QSelect'
+        'QSelect',
+        'QItem',
+        'QItemSide'
       ],
       directives: [
         'Ripple'
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ]
     },
     // animations: 'all' --- includes all animations

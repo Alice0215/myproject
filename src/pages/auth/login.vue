@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { Dialog } from 'quasar'
 export default {
   data () {
     return {
@@ -46,37 +47,22 @@ export default {
         }
         this.$axios.post('api/user/login', data,{headers: {"Content-Type": "application/json"}})
           .then(response => {
-              console.log(response)
+              
               if(response.data.resultCode=="SUCCESS"){
                 localStorage.setItem('token',response.data.resultMsg.userToken)
-                /*this.$q.notify({
-                    color:'secondary',
-                    textColor:'',
-                    icon:'tag_faces',
-                    message: '登录成功，正在跳转中',
-                    position:'center',
-                    avatar:'',
-                    actions: Math.random() * 100 > 50
-                            ? [ { label: 'success', handler: () => this.$router.push('/') } ]
-                            : null,
-                    timeout: Math.random() * 5000 + 3000
-                })*/
+                this.$q.dialog({
+                    title: '提示',
+                    message: '登录成功！'
+                })
                 this.$router.push('/')
               }else{
-                this.$q.notify({
-                    color:'tertiary',
-                    textColor:'',
-                    icon:'report_problem',
-                    message: response.data.resultMsg,
-                    position:'center',
-                    avatar:'',
-                    actions: Math.random() * 100 > 50
-                            ? [ {handler: () => this.$router.push('/login') } ]
-                            : null,
-                    timeout: Math.random() * 5000 + 3000
+                this.$q.dialog({
+                    title: '提示',
+                    message: response.data.resultMsg
                 })
+                this.$router.push('/login')
               }
-             
+
           })
           .catch(e => {
               console.log('Error', e.message);

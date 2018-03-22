@@ -20,12 +20,8 @@ export default [
     component: () => import('pages/project/add')
   },
   {
-    path: '/user',
-    component: () => import('layouts/User'),
-    children: [
-      { path: 'profile', component: () => import('pages/Profile') },
-      { path: 'posts', component: () => import('pages/Posts') }
-    ]
+    path: '/project/alluser',
+    component: () => import('pages/project/all_user')
   },
   { // Always leave this as last one
     path: '*',

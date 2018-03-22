@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import { Dialog } from 'quasar'
     export default {
         mounted() {
             this.getPersonal()
@@ -69,11 +70,21 @@
                 }
                 this.$axios.post('api/party/register', params)
                     .then(response => {
-                        console.log(response)
-                        this.$router.push('/login')
-                    })
-                    .catch(e => {
-                        console.log('Error', e.response.data.message);
+                        if(response.data.resultCode=="SUCCESS"){
+                            this.$q.dialog({
+                                title: '提示',
+                                message: '注册成功'
+                            })
+                             this.$router.push('/')
+
+                        }else{
+                            this.$q.dialog({
+                                title: '提示',
+                                message: response.data.resultMsg
+                            })
+                             this.$router.push('/partyregister')
+                        }
+                      
                     })
             }
         }

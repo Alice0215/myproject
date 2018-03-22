@@ -2,20 +2,24 @@
   <div class="card">
     <div class="full-width">
         <input text-dark required v-model="username" placeholder="项目名称" class="full-width login-input">
-        <input text-dark required v-model="name" placeholder="输入地址" class="full-width login-input">
-        <input text-dark required v-model="email" placeholder="项目简介" class="full-width login-input">
+       
         <q-search icon="place" color="amber" v-model="address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
-        <q-field :count="60">
-            <q-input type="textarea" v-model="remark" hide-underline class="login-input" />
-        </q-field>
-       <!-- <p class="full-width" @click="$router.push('/adduser')">设置项目管理员</p>
-        <p class="full-width" @click="$router.push('/adduser')">设置项目负责人</p>-->
+        <q-input type="textarea" v-model="remark" hide-underline class="login-input" placeholder="项目简介"/>
+        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser')">
+            设置项目管理员
+          <q-item-side right icon="keyboard_arrow_right" />
+        </q-item>
+        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser')">
+            设置项目负责人
+          <q-item-side right  icon="keyboard_arrow_right" />
+        </q-item>
     </div>
-    <q-btn class="full-width main-color-bg" @click="add()">创建项目</q-btn>
+    <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
   </div>
 </template>
 
 <script>
+    import { Dialog } from 'quasar'
     export default {
         mounted() {
             this.getPersonal()
@@ -72,76 +76,56 @@
                     .catch(e => {
                         console.log('Error', e.response.data.message);
                     })
-            },
-            onChange (val) {
-                console.log('@change', JSON.stringify(val))
-            },
-            onInput (val) {
-                console.log('@input', JSON.stringify(val))
-            },
-            onClear (val) {
-                console.log('@clear', JSON.stringify(val))
+
             }
+            
         }
     }
 </script>
 
 <style>
-.login-btn{
-  width: 200px;
-}
-.card {
-      margin-bottom: 0px;
-      padding: 30px 15px;
-      min-height: 160px;
-  }
-  .login-input{
-      border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 10px 20px;
-      margin-bottom: 25px;
-  }
-  button {
-      margin-bottom: 4%;
-  }
-  h4 {
-      font-weight: 300;
-  }
-  a {
-      font-size: 14px;
-  }
-  a:hover {
-      text-decoration: underline;
-      color: #1AAD19;
-  }
-  a:focus {
-      text-decoration: none;
-  }
-  .main-color-bg{
-      background-color: #1AAD19;
-      color:white;
-  }
+    .login-btn{
+    width: 200px;
+    }
+
+    .underline{
+        border-bottom: 1px solid #cccccc;
+        margin-top: 20px;
+    }
+
+    .card {
+        margin-bottom: 0px;
+        padding: 30px 15px;
+        min-height: 160px;
+    }
+
+    .login-input{
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 10px 10px;
+        margin-bottom: 25px;
+    }
+    a,a:hover,a:focus {
+        text-decoration: underline;
+        color: #1AAD19;
+    }
+
+    .btn{
+    background-color: #1AAD19;
+        color:white;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
   input:not(.no-style):hover{
       border-bottom: none;
   }
-   .hover{
-        padding-bottom: 10px;
-        border-bottom: solid 2px #1AAD19;
-        font-weight: bold;
-    }
-    .register-title{
-        height: 80px;
-        line-height: 80px;
-        text-align: center;
-        width: 100%;
-        color: black;
-        font-size: 20px;
-    }
-    .register-title span{margin-right: 50px}
-    .select{
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 10px 15px;
-        margin-bottom: 25px;
-    }
+  .q-if-inner{
+      min-height: 30px !important;
+      padding-bottom: 10px;
+
+  }
+  .q-if-control.q-icon{
+      padding-bottom: 6px;
+  }
+
 </style>
