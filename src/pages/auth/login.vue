@@ -7,7 +7,7 @@
         <q-input class="login-input"  v-model="username" placeholder="账号"/>
         <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
     </div>
-    <q-btn class="full-width main-color-bg" @click="login()">登录</q-btn>
+    <q-btn class="full-width login-btn" @click="login()">登录</q-btn>
     <div class="left">
         <a href="javascript:">忘记密码？</a>
     </div>
@@ -108,12 +108,6 @@ export default {
       margin-bottom: 25px;
       color: black;
   }
-  button {
-      margin-bottom: 4%;
-  }
-  h4 {
-      font-weight: 300;
-  }
    a,a:hover {
       text-decoration: none;
       color: #1AAD19;
@@ -121,9 +115,10 @@ export default {
   a:focus {
       text-decoration: none;
   }
-  .main-color-bg{
+  .login-btn{
       background-color: #1AAD19;
       color:white;
+      margin-bottom: 20px;
   }
   input:not(.no-style):hover{
       border-bottom: none;

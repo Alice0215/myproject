@@ -7,19 +7,16 @@
     <div class="full-width">
         <input text-dark required v-model="username" placeholder="用户名" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
-        <select v-model="partyName" placeholder="所属机构" class="full-width select">
-            <option value="">选择机构名称</option>
-            <option  v-for="item in organizations"
-            :key="item.id"
-            :label="item.partyName"
-            :value="item.id"></option>
-        </select>
+        <q-select v-model="partyName" :options="organizations" placeholder="所属机构"  class="login-input"/>
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
         <input  type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
         <input  type="password" required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
     </div>
-    <q-btn class="full-width main-color-bg" @click="register()">注册</q-btn>
+    <q-btn class="full-width input" @click="register()">注册</q-btn>
+    <div class="login-field">
+        <span>已有账号？</span><a @click="$router.push('/login')">立即登录</a>
+    </div>
   </div>
 </template>
 
@@ -52,6 +49,16 @@ import { required, email } from 'vuelidate/lib/validators'
                     password: [{required: true, message: '请设置密码'}],
                     passwordVerify: [{required: true, message: '请确认密码'}]
                 },
+                selectOptions: [
+                    {
+                    label: 'Google',
+                    value: 'goog'
+                    },
+                    {
+                    label: 'Facebook',
+                    value: 'fb'
+                    }
+                ]
             }
         },
         methods: {
@@ -61,7 +68,9 @@ import { required, email } from 'vuelidate/lib/validators'
             async getPersonal(){
                 this.$axios.get('api/party/all')
                  .then(response=>{
-                    this.organizations = response.data.resultMsg
+                    for (var key in response.data.resultMsg) {
+                        this.organizations.push({label: response.data.resultMsg[key]['partyName'], value: response.data.resultMsg[key]['id']})
+                    } 
                  })
             },
             partyregister () {
@@ -100,9 +109,9 @@ import { required, email } from 'vuelidate/lib/validators'
 </script>
 
 <style>
-.login-btn{
-  width: 200px;
-}
+ .q-if:before, .q-if:after{
+      background: none;
+  }
 .card {
       margin-bottom: 0px;
       padding: 30px 15px;
@@ -113,29 +122,6 @@ import { required, email } from 'vuelidate/lib/validators'
       border-radius: 10px;
       padding: 10px 20px;
       margin-bottom: 25px;
-  }
-  button {
-      margin-bottom: 4%;
-  }
-  h4 {
-      font-weight: 300;
-  }
-  a {
-      font-size: 14px;
-  }
-  a:hover {
-      text-decoration: underline;
-      color: #1AAD19;
-  }
-  a:focus {
-      text-decoration: none;
-  }
-  .main-color-bg{
-      background-color: #1AAD19;
-      color:white;
-  }
-  input:not(.no-style):hover{
-      border-bottom: none;
   }
    .hover{
         padding-bottom: 10px;
@@ -150,11 +136,18 @@ import { required, email } from 'vuelidate/lib/validators'
         color: black;
         font-size: 20px;
     }
+    a,a:hover {
+        text-decoration: none;
+        color: #1AAD19;
+    }
     .register-title span{margin-right: 50px}
-    .select{
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 10px 15px;
-        margin-bottom: 25px;
+    .input{
+      background-color: #1AAD19;
+      color:white;
+      margin-bottom: 20px;
+    }
+    .login-field{
+        text-align: center;
+        margin-bottom: 40px;
     }
 </style>

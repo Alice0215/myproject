@@ -4,51 +4,12 @@
         <input text-dark required v-model="username" placeholder="项目名称" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="输入地址" class="full-width login-input">
         <input text-dark required v-model="email" placeholder="项目简介" class="full-width login-input">
-        <q-search v-model="search" color="secondary" icon="local" placeholder="PlacesPlacesPlacesPlacesPlacesPlacesPlaces"></q-search>
-        <q-field count>
-            <q-input suffix="#" prefix="@" type="password" v-model="model" hide-underline />
+        <q-search icon="place" color="amber" v-model="address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
+        <q-field :count="60">
+            <q-input type="textarea" v-model="remark" hide-underline class="login-input" />
         </q-field>
-        <q-field :count="10">
-            <q-input suffix="#" prefix="@" type="textarea" v-model="model" hide-underline />
-        </q-field>
-        <p class="full-width" @click="$router.push('/adduser')">设置项目管理员</p>
-        <p class="full-width" @click="$router.push('/adduser')">设置项目负责人</p>
-        <p class="caption">Multiple File Upload - No Upload Button</p>
-        <q-uploader
-            style="max-width: 320px"
-            float-label="Upload files"
-            multiple
-            hide-upload-button
-            :url="url"
-            @start="emit('start')"
-            @finish="emit('finish')"
-            @uploaded="uploaded"
-            @add="add"
-            @remove:done="removeDone"
-            @remove:abort="removeAbort"
-            @remove:cancel="removeCancel"
-        />
-
-          <form @submit.prevent>
-          <q-input class="q-ma-sm" autocomplete="username"
-            v-model="username"
-            float-label="Username"
-            :dark="dark"
-            :error="error"
-            :warning="warning"
-            :disable="disable"
-            :readonly="readonly"
-            :clearable="clearable"
-            @focus="onFocus"
-            @blur="onBlur"
-            @change="onChange"
-            @input="onInput"
-            @clear="onClear"
-            @autofill="ev => onAutofill(ev, 'username')"
-          />
-          <q-input suffix="#" prefix="@" type="textarea" v-model="model" />
-          <div><q-btn type="submit" flat label="Login" /></div>
-        </form>
+       <!-- <p class="full-width" @click="$router.push('/adduser')">设置项目管理员</p>
+        <p class="full-width" @click="$router.push('/adduser')">设置项目负责人</p>-->
     </div>
     <q-btn class="full-width main-color-bg" @click="add()">创建项目</q-btn>
   </div>
@@ -65,10 +26,8 @@
                 username:'',
                 email: '',
                 password: '',
-                phone:'',
-                partyName:'',
-                password_confirmation: '',
-                organizations: []
+                address:'',
+                remark:''
             }
         },
         methods: {
