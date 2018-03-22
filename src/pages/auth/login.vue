@@ -5,7 +5,7 @@
     </p>
     <div class="full-width">
         <input text-dark required v-model="username" placeholder="账号" class="full-width login-input">
-        <input text-dark required v-model="password" placeholder="密码"  class="full-width login-input">
+        <input type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
         <!--<i aria-hidden="true" class="q-icon q-if-control material-icons">visibility_off</i>-->
     </div>
     <q-btn class="full-width main-color-bg" @click="login()">登录</q-btn>
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-const alerts = { color: 'tertiary', message: 'Woah! Danger! You are getting good at this!', icon: 'report_problem' }
 export default {
   data () {
     return {

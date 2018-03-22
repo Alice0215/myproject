@@ -7,16 +7,17 @@
     <div class="full-width">
         <input text-dark required v-model="username" placeholder="用户名" class="full-width login-input">
         <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
-        <select class="full-width select" v-model="partyName">
+        <select v-model="partyName" placeholder="所属机构" class="full-width select">
+            <option value="">选择机构名称</option>
             <option  v-for="item in organizations"
             :key="item.id"
             :label="item.partyName"
             :value="item.id"></option>
-                </select>
+        </select>
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
-        <input text-dark required v-model="password" placeholder="密码"  class="full-width login-input">
-        <input text-dark required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
+        <input  type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
+        <input  type="password" required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
     </div>
     <q-btn class="full-width main-color-bg" @click="register()">注册</q-btn>
   </div>
@@ -36,7 +37,19 @@
                 phone:'',
                 partyName:'',
                 password_confirmation: '',
-                organizations: []
+                organizations: [],
+                rules: {
+                    username: [{required: true, message: '请填写用户名'}],
+                    fullname: [{required: true, message: '请填写真实姓名'}],
+                    partyId: [{required: true, message: '请选择机构'}],
+                    email: [{required: true, message: '请填写邮箱'},
+                        {pattern: /^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-zA-Z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+\.){1,63}[a-zA-Z0-9]+$/,
+                        message: '输入正确的邮箱'}],
+                    phone: [{required: true, message: '请填写手机号'},
+                        {pattern: /^\d{11}$/, message: '输入正确的手机号'}],
+                    password: [{required: true, message: '请设置密码'}],
+                    passwordVerify: [{required: true, message: '请确认密码'}]
+                },
             }
         },
         methods: {
