@@ -6,7 +6,6 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   let params = null
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {
     params = data
-    params['_t'] = +new Date()
   }
   const resp = await axios.request({
     url,

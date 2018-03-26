@@ -1,6 +1,13 @@
 <template>
   
   <div class="main">
+    <q-toolbar class="header">
+    <q-toolbar class="fix">
+        <q-toolbar-title>
+        项目
+        </q-toolbar-title>
+    </q-toolbar>
+    </q-toolbar>
    <!--<div class="backTo" v-show="isShow">
         <q-item-side left  icon="keyboard arrow left" />
         <span v-on:click="back">返回{{$store.state.count}}</span>
@@ -9,15 +16,14 @@
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
     </div>-->
     <div class="full-width">
-
-         <q-item  v-for="user in users"
-          :key="user.userId"  @click="addUser(user.fullname,user.userId)"
-          v-ripple.mat class="full-width underline user-item">
+        <div  v-for="user in users"
+          :key="user.userId"  @click="addUser(user.fullname,user.userId)">
+         <q-item  v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
             <q-item-main :label="user.fullname" /> 
             <q-item-side right icon="done" v-show="isShow" /> 
         </q-item>
-        
+        </div>
     </div>
   </div>
 </template>
@@ -31,7 +37,7 @@
             return {
                 users: [],
                 key_word:'',
-                isShow:true
+                isShow:false
             }
         },
         mounted() {
@@ -56,10 +62,9 @@
                 this.$router.go(-1);//返回上一层
             },
             //头部返回 $router.push('/path/to')
-            addUser(param){
-                console.log("2222")
-                console.log(param)
-                this.$store.commit('Project/add', param)
+            addUser(fullname,userId){
+                console.log(userId)
+                return this.$router.push('add?fullname='+fullname+'&userId='+userId)
             }
 
         }
@@ -67,6 +72,22 @@
 </script>
 
 <style>
+    .header,.fix{
+        background-color: #F7F7F7 !important;
+        padding: 0px;
+        margin-bottom: 15px;
+    
+    }
+    .fix{
+        text-align: center;
+        font-size: 14px;
+        color:#101010 !important;
+        border-bottom: 1px solid #DCDCDC;
+        top: 0;
+        z-index: 100;
+        position: fixed;
+    }
+
     .user-item:hover{
         background: none;
     }

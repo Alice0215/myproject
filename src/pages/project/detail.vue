@@ -1,16 +1,14 @@
 
 <template>
-    
-    <q-list class="list">
-        <q-toolbar class="header">
-        <q-toolbar class="fix">
-            <q-toolbar-title>
-            项目
+
+    <q-list class="q-mt-md list" dark>
+        <q-toolbar inverted>
+            <q-toolbar-title class="header">
+                任务
             </q-toolbar-title>
-       </q-toolbar>
         </q-toolbar>
         <q-item multiline  v-for="item in list"
-          :key="item.id" class="list-list">
+          :key="item.id"  @click="addUser(item.fullname,user.userId)">
             <q-item-side class="add-btn" />
             <q-item-main>
             <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
@@ -18,15 +16,9 @@
             {{item.projectDesc}}
             </q-item-tile>
             </q-item-main>
-            
         </q-item>
-         <q-toolbar inverted>
-            <q-toolbar-title class="footer">
-                底部
-            </q-toolbar-title>
-        </q-toolbar>
+
     </q-list>
-    
     
 </template>
 
@@ -61,26 +53,13 @@
 </script>
 
 <style>
-.list{
-    padding: 0px;
-}
-.header,.fix{
-    background-color: #F7F7F7 !important;
-    padding: 0px;
-    margin-bottom: 15px;
-   
-}
-.fix{
-     text-align: center;
+.header{
+    background-color: #F7F7F7;
+    text-align: center;
     font-size: 14px;
-    color:#101010 !important;
-    border-bottom: 1px solid #DCDCDC;
-    top: 0;
-    z-index: 100;
-    position: fixed;
-}
-.list-list:first-child{
-    margin-top: 75px;
+    color:black;
+    height: 40px;
+    line-height: 40px;
 }
 .add-btn{
     width: 75px;

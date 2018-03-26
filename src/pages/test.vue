@@ -1,99 +1,114 @@
 <template>
-<q-layout>
- <q-pageContainer>
+<q-pageContainer>
   <q-page padding class="row justify-center">
     <div style="width: 500px; max-width: 90vw;">
       <p class="caption">
-        <span class="desktop-only">Click</span>
-        <span class="mobile-only">Tap</span>
-        on each type to see it in action.
+        Toolbars are mainly used in Layout headers and footers, but they can be used
+        in your Page view too.
       </p>
 
-      <q-list style="max-width: 600px;">
-        <q-item
-          link
-          v-for="dialog in types"
-          :key="dialog.label"
-          @click.native="dialog.handler()"
-          v-ripple.mat
-        >
-          <q-item-side :icon="dialog.icon" />
-          <q-item-main :label="dialog.label" />
-          <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item-separator />
-        <q-list-header>Options</q-list-header>
-        <q-item
-          link
-          v-for="dialog in options"
-          :key="dialog.label"
-          @click.native="dialog.handler()"
-          v-ripple.mat
-        >
-          <q-item-side :icon="dialog.icon" />
-          <q-item-main :label="dialog.label" />
-          <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item-separator />
-        <q-list-header>Appear from Edges</q-list-header>
-        <q-item
-          link
-          v-for="position in ['top', 'right', 'bottom', 'left']"
-          :key="position"
-          @click.native="openSpecialPosition(position)"
-          v-ripple.mat
-        >
-          <q-item-side :icon="positionalIcon[position]" />
-          <q-item-main :label="`Dialog from ${position}`" />
-          <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-      </q-list>
+      <q-toolbar>
+        <q-btn flat round dense icon="menu" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="more_vert" />
+      </q-toolbar>
+
+      <br>
+
+      <q-toolbar inverted>
+        <q-btn flat round dense icon="menu" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="more_vert" />
+      </q-toolbar>
 
       <p class="caption">
-        For complex cases where you need a certain content (like different form components),
-        you can use the Dialog as a component. This way you can also add your custom logic
-        for content validation.
+        They come in all colors.
       </p>
-      <q-btn color="primary" @click="customDialogModel = true" label="Show Dialog" />
 
-      <q-dialog
-        v-model="customDialogModel"
-        stack-buttons
-        prevent-close
-        @cancel="onCancel"
-        @ok="onOk"
-        @show="onShow"
-        @hide="onHide"
-      >
-        <!-- This or use "title" prop on <q-dialog> -->
-        <span slot="title">Favorite Superhero</span>
+      <q-toolbar color="secondary">
+        <q-btn flat round dense icon="assignment_ind" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="sim_card" />
+        <q-btn flat round dense icon="gamepad" />
+      </q-toolbar>
+      <q-toolbar color="yellow" text-color="dark">
+        <q-btn flat round dense icon="assignment_ind" />
+        <q-toolbar-title>
+          Toolbar
+          <span slot="subtitle">Subtitle</span>
+        </q-toolbar-title>
+        <q-btn flat round dense icon="sim_card" />
+        <q-btn flat round dense icon="gamepad" />
+      </q-toolbar>
+      <q-toolbar color="orange">
+        <q-btn flat round dense icon="mail">
+          <q-chip floating color="red">2</q-chip>
+        </q-btn>
+        <q-toolbar-title>
+          Long title for Toolbar. Very very very very very very long title.
+        </q-toolbar-title>
+        <q-btn flat round dense icon="alarm" />
+        <q-btn flat round dense icon="router" />
+        <q-btn flat round dense icon="keyboard" />
+      </q-toolbar>
+      <q-toolbar color="dark">
+        <q-btn flat round dense icon="menu" />
+        <q-btn flat round dense icon="security" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="headset" />
+        <q-btn flat round dense icon="tv" />
+      </q-toolbar>
 
-        <!-- This or use "message" prop on <q-dialog> -->
-        <span slot="message">What is your superhero of choice?</span>
+      <p class="caption">
+        And inverted:
+      </p>
 
-        <div slot="body">
-          <q-field
-            icon="account_circle"
-            helper="We need your name so we can send you to the movies."
-            label="Your name"
-            :label-width="3"
-            :error="nameError"
-          >
-            <q-input v-model="name" />
-          </q-field>
-        </div>
-
-        <template slot="buttons" slot-scope="props">
-          <q-btn color="primary" label="Choose Superman" @click="choose(props.ok, 'Superman')" />
-          <q-btn color="black" label="Choose Batman" @click="choose(props.ok, 'Batman')" />
-          <q-btn color="negative" label="Choose Spiderman" @click="choose(props.ok, 'Spiderman')" />
-          <q-btn flat label="No thanks" @click="props.cancel" />
-        </template>
-      </q-dialog>
+      <q-toolbar inverted color="secondary">
+        <q-btn flat round dense icon="assignment_ind" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="sim_card" />
+        <q-btn flat round dense icon="gamepad" />
+      </q-toolbar>
+      <q-toolbar inverted color="purple">
+        <q-btn flat round dense icon="assignment_ind" />
+        <q-toolbar-title>
+          Toolbar
+          <span slot="subtitle">Subtitle</span>
+        </q-toolbar-title>
+        <q-btn flat round dense icon="sim_card" />
+        <q-btn flat round dense icon="gamepad" />
+      </q-toolbar>
+      <q-toolbar inverted color="orange">
+        <q-btn flat round dense icon="mail" />
+        <q-toolbar-title>
+          Long title for Toolbar. Very very very very very very long title.
+        </q-toolbar-title>
+        <q-btn flat round dense icon="alarm" />
+        <q-btn flat round dense icon="router" />
+        <q-btn flat round dense icon="keyboard" />
+      </q-toolbar>
+      <q-toolbar inverted color="dark">
+        <q-btn flat round dense icon="menu" />
+        <q-btn flat round dense icon="security" />
+        <q-toolbar-title>
+          Toolbar
+        </q-toolbar-title>
+        <q-btn flat round dense icon="headset" />
+        <q-btn flat round dense icon="tv" />
+      </q-toolbar>
     </div>
   </q-page>
- </q-pageContainer>
-</q-layout>
+</q-pageContainer>
 </template>
 
 <script>
