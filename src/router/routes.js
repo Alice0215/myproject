@@ -12,16 +12,20 @@ export default [
     component: () => import('pages/auth/register')
   },
   {
-    path: '/partyregister',
-    component: () => import('pages/auth/partyregister')
+    path: '/partyRegister',
+    component: () => import('pages/auth/partyRegister')
   },
   {
     path: '/project',
     component: () => import('pages/project/add')
   },
   {
-    path: '/project/alluser',
-    component: () => import('pages/project/all_user')
+    path: '/project/allUser',
+    component: () => import('pages/project/allUser')
+  },
+  {
+    path: '/test',
+    component: () => import('pages/test')
   },
   { // Always leave this as last one
     path: '*',

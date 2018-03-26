@@ -5,13 +5,15 @@
        
         <q-search icon="place" color="amber" v-model="address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="remark" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser')">
-            设置项目管理员
-          <q-item-side right icon="keyboard_arrow_right" />
+        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=1')">
+            <q-item-side icon="group" />
+            <q-item-main :label="`选择项目管理员`" />
+            <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
-        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser')">
-            设置项目负责人
-          <q-item-side right  icon="keyboard_arrow_right" />
+        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=2')">
+            <q-item-side icon="group" />
+            <q-item-main :label="`选择项目管理员`" />
+            <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
     <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
@@ -21,9 +23,6 @@
 <script>
     import { Dialog } from 'quasar'
     export default {
-        mounted() {
-            this.getPersonal()
-        },
         data() {
             return {
                 name: '',
@@ -31,11 +30,11 @@
                 email: '',
                 password: '',
                 address:'',
-                remark:''
+                remark:'',
             }
         },
         methods: {
-            login() {
+            alert() {
                 this.$router.push('/login')
             },
             async getPersonal(){

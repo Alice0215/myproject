@@ -34,6 +34,10 @@ module.exports = function (ctx) {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules|quasar)/
+        },
+        {
+          test: /\.sass$/,
+          loaders: ['style', 'css', 'sass']
         })
       }
     },

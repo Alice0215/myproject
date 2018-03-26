@@ -10,8 +10,8 @@
         <q-select v-model="partyName" :options="organizations" placeholder="所属机构"  class="login-input"/>
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
-        <input  type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
-        <input  type="password" required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
+        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
+        <q-input type="password" class="login-input" autocomplete="password_confirmation" v-model="password_confirmation" placeholder="确认密码"/>
     </div>
     <q-btn class="full-width input" @click="register()">注册</q-btn>
     <div class="login-field">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import { required, email } from 'vuelidate/lib/validators'
+    import { required, email, minLength, between  } from 'vuelidate/lib/validators'
     import { Dialog } from 'quasar'
     export default {
         mounted() {
@@ -77,6 +77,11 @@
                 this.$router.push('/partyregister')
             },
             register() {
+                this.$v.form.$touch()
+                if (this.$v.form.$error) {
+                    this.$q.notify('Please review fields again.')
+                    return
+                }
                 let deviceType = 1
                 if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
                     deviceType = 2
