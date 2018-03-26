@@ -10,8 +10,8 @@
         <q-select v-model="partyName" :options="organizations" placeholder="所属机构"  class="login-input"/>
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
-        <input  type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
-        <input  type="password" required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
+        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
+        <q-input type="password" class="login-input" autocomplete="password_confirmation" v-model="password_confirmation" placeholder="确认密码"/>
     </div>
     <q-btn class="full-width input" @click="register()">注册</q-btn>
     <div class="login-field">
@@ -21,11 +21,12 @@
 </template>
 
 <script>
-    import { required, email } from 'vuelidate/lib/validators'
+    import { request } from '../../common'
+    import { required, email, minLength, between  } from 'vuelidate/lib/validators'
     import { Dialog } from 'quasar'
     export default {
         mounted() {
-            this.getPersonal()
+            this.getparty()
         },
         data() {
             return {
@@ -49,23 +50,13 @@
                     password: [{required: true, message: '请设置密码'}],
                     passwordVerify: [{required: true, message: '请确认密码'}]
                 },
-                selectOptions: [
-                    {
-                    label: 'Google',
-                    value: 'goog'
-                    },
-                    {
-                    label: 'Facebook',
-                    value: 'fb'
-                    }
-                ]
             }
         },
         methods: {
             login() {
                 this.$router.push('/login')
             },
-            async getPersonal(){
+            async getparty(){
                 this.$axios.get('api/party/all')
                  .then(response=>{
                     for (var key in response.data.resultMsg) {
@@ -77,6 +68,11 @@
                 this.$router.push('/partyregister')
             },
             register() {
+                /*this.$v.form.$touch()
+                if (this.$v.form.$error) {
+                    this.$q.notify('Please review fields again.')
+                    return
+                }*/
                 let deviceType = 1
                 if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
                     deviceType = 2
@@ -86,16 +82,16 @@
                     fullname: this.name,
                     email: this.email,
                     password: this.password,
-                    partyId: this.partyName,
+                    partyId: 79,
                     phone: this.phone,
                     deviceType: deviceType,
                     passwordVerify: this.password_confirmation
                 }
-                let params = new URLSearchParams()
+                const params = new FormData()
                 for (var key in data) {
                     params.append(key, data[key])
                 }
-                this.$axios.post('api/user/register', params)
+                request('user/register', 'post', params)
                     .then(response => {
                         if(response.data.resultCode=="SUCCESS"){
                             this.$q.dialog({

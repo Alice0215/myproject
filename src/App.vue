@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+   metaInfo: {
+    titleTemplate: '%s | E园林'
+  },
 }
 </script>
 

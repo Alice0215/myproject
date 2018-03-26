@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    component: () => import('pages/index')
+    component: () => import('pages/project/list')
   },
   {
     path: '/login',
@@ -12,16 +12,20 @@ export default [
     component: () => import('pages/auth/register')
   },
   {
-    path: '/partyregister',
-    component: () => import('pages/auth/partyregister')
+    path: '/partyRegister',
+    component: () => import('pages/auth/partyRegister')
   },
   {
-    path: '/project',
+    path: '/project/add',
     component: () => import('pages/project/add')
   },
   {
-    path: '/project/alluser',
-    component: () => import('pages/project/all_user')
+    path: '/project/allUser',
+    component: () => import('pages/project/allUser')
+  },
+  {
+    path: '/test',
+    component: () => import('pages/test')
   },
   {
     path: '/map',

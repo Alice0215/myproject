@@ -37,6 +37,10 @@ module.exports = function (ctx) {
             scss: ['vue-style-loader', 'css', 'sass'].join('!')
           },
           exclude: /(node_modules|quasar)/
+        },
+        {
+          test: /\.sass$/,
+          loaders: ['style', 'css', 'sass']
         })
       }
     },

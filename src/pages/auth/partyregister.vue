@@ -10,15 +10,17 @@
         <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
         <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
         <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
-        <input type="password" required v-model="password" placeholder="密码"  class="full-width login-input">
-        <input type="password" required v-model="password_confirmation" placeholder="确认密码"  class="full-width login-input">
+        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
+        <q-input type="password" class="login-input" autocomplete="password_confirmation" v-model="password_confirmation" placeholder="确认密码"/>
     </div>
     <q-btn class="full-width main-color-bg" @click="register()">注册</q-btn>
   </div>
 </template>
 
 <script>
-  import { Dialog } from 'quasar'
+   import { Dialog } from 'quasar'
+   import { request } from '../../common'
+   import { required, email, minLength, between  } from 'vuelidate/lib/validators'
     export default {
         mounted() {
             this.getPersonal()
@@ -68,7 +70,7 @@
                 for (var key in data) {
                     params.append(key, data[key])
                 }
-                this.$axios.post('api/party/register', params)
+                request('party/register', 'post', params)
                     .then(response => {
                         if(response.data.resultCode=="SUCCESS"){
                             this.$q.dialog({

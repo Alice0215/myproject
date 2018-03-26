@@ -11,11 +11,10 @@ module.exports = function (ctx) {
       'app.styl'
     ],
     extras: [
-      ctx.theme.mat ? 'roboto-font' : null,
-      'material-icons'
-      // 'ionicons',
-      // 'mdi',
-      // 'fontawesome'
+      'material-icons',
+      'ionicons',
+      'mdi',
+      'fontawesome'
     ],
     supportIE: false,
     vendor: {
@@ -52,6 +51,7 @@ module.exports = function (ctx) {
         'QLayoutHeader',
         'QLayoutDrawer',
         'QPageContainer',
+        'QToolbar',
         'QPage',
         'QToolbar',
         'QToolbarTitle',
@@ -68,8 +68,8 @@ module.exports = function (ctx) {
         'QUploader',
         'QInput',
         'QSelect',
-        'QItem',
-        'QItemSide'
+        'QItemTile',
+        'QItemSeparator'
       ],
       directives: [
         'Ripple'
