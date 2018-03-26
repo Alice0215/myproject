@@ -1,7 +1,7 @@
 <template>
   <div class="card">
-    <p>
-      <img src="" class="log"/>
+    <p class="log">
+      <img src="statics/logo.png"/>
     </p>
     <div class="full-width">
         <q-input class="login-input"  v-model="username" placeholder="账号" />
@@ -50,29 +50,28 @@ export default {
         for (var key in data) {
             params.append(key, data[key])
         }
-        const response = request('user/login', 'post', {
+        request('user/login', 'post', {
           'userToken': '',
           'password': this.password,
           'username': this.username
         })
-       
-        console.log(response)
-        
-        /*if(response.data.data.resultCode=="SUCCESS"){
-            localStorage.setItem('token',response.data.data.resultMsg.userToken)
-            this.$q.dialog({
-                title: '提示',
-                message: '登录成功！'
-            })
-            this.$router.push('/')
-        }else{
-            this.$q.dialog({
-                title: '提示',
-                message: response.data.data.resultMsg
-            })
-            this.$router.push('/login')
-        }*/
-       
+        .then(response => {
+           if(response.data.resultCode=="SUCCESS"){
+                localStorage.setItem('token',response.data.resultMsg.userToken)
+                localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
+                this.$q.dialog({
+                    title: '提示',
+                    message: '登录成功！'
+                })
+                this.$router.push('/')
+            }else{
+                this.$q.dialog({
+                    title: '提示',
+                    message: response.data.resultMsg
+                })
+                this.$router.push('/login')
+            }
+        })
     }
   }
 }
@@ -117,5 +116,8 @@ export default {
   }
   .q-if:before, .q-if:after{
       background: none;
+  }
+  .log{
+      text-align: center;
   }
 </style>

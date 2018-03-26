@@ -21,6 +21,7 @@
 </template>
 
 <script>
+    import { request } from '../../common'
     import { required, email, minLength, between  } from 'vuelidate/lib/validators'
     import { Dialog } from 'quasar'
     export default {
@@ -67,11 +68,11 @@
                 this.$router.push('/partyregister')
             },
             register() {
-                this.$v.form.$touch()
+                /*this.$v.form.$touch()
                 if (this.$v.form.$error) {
                     this.$q.notify('Please review fields again.')
                     return
-                }
+                }*/
                 let deviceType = 1
                 if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
                     deviceType = 2
@@ -81,16 +82,16 @@
                     fullname: this.name,
                     email: this.email,
                     password: this.password,
-                    partyId: this.partyName,
+                    partyId: 79,
                     phone: this.phone,
                     deviceType: deviceType,
                     passwordVerify: this.password_confirmation
                 }
-                let params = new URLSearchParams()
+                const params = new FormData()
                 for (var key in data) {
                     params.append(key, data[key])
                 }
-                this.$axios.post('api/user/register', params)
+                request('user/register', 'post', params)
                     .then(response => {
                         if(response.data.resultCode=="SUCCESS"){
                             this.$q.dialog({

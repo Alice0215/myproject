@@ -1,7 +1,7 @@
 import { server } from './const'
 import axios from 'axios'
-async function request (url, method = 'get', data = {}, responseType = 'json', admin = false) {
-  const endpoint = admin ? server.ADMIN_API : server.API
+async function request (url, method = 'get', data = {}, responseType = 'json', project = false) {
+  const endpoint = project ? server.PROJECT_API : server.API
   url = endpoint + url
   let params = null
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {

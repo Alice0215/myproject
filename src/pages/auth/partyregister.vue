@@ -18,7 +18,9 @@
 </template>
 
 <script>
-  import { Dialog } from 'quasar'
+   import { Dialog } from 'quasar'
+   import { request } from '../../common'
+   import { required, email, minLength, between  } from 'vuelidate/lib/validators'
     export default {
         mounted() {
             this.getPersonal()
@@ -68,7 +70,7 @@
                 for (var key in data) {
                     params.append(key, data[key])
                 }
-                this.$axios.post('api/party/register', params)
+                request('party/register', 'post', params)
                     .then(response => {
                         if(response.data.resultCode=="SUCCESS"){
                             this.$q.dialog({
