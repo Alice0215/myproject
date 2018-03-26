@@ -20,9 +20,12 @@
             </q-item-main>
             
         </q-item>
-         <q-toolbar inverted>
-            <q-toolbar-title class="footer">
-                底部
+         <q-toolbar class="footer">
+            <q-toolbar-title class="menu">
+               <span>我的项目apps</span>
+                <span>扫二维码</span>
+                <span>巡查</span>
+                <span>我的</span>
             </q-toolbar-title>
         </q-toolbar>
     </q-list>
@@ -64,33 +67,32 @@
 .list{
     padding: 0px;
 }
-.header,.fix{
+.header,.fix,.footer{
     background-color: #F7F7F7 !important;
     padding: 0px;
     margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+    color:#101010 !important;
+   
    
 }
 .fix{
-     text-align: center;
-    font-size: 14px;
-    color:#101010 !important;
+     top: 0;
     border-bottom: 1px solid #DCDCDC;
-    top: 0;
     z-index: 100;
     position: fixed;
-}
-.list-list:first-child{
-    margin-top: 75px;
 }
 .add-btn{
     width: 75px;
     height: 75px;
     background-color:#DCDCDC; 
-    border-radius: 10px;
+    border-radius: 5px;
 }
 .title{
     font-size: 16px;
     color:black;
+    padding-top: 10px;
 }
 .content{
     font-size: 14px;
@@ -101,5 +103,17 @@
     flex: 1;
     width: 20%;
 }
+.footer{
+    background-color: #F9F9F9 !important;
+     z-index: 100;
+    position: fixed;
+}
+.footer span{
+    width: 25%;
+    display: inline-block;
+    text-align: center;
+    
+}
+
 
 </style>
