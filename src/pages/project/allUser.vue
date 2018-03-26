@@ -43,7 +43,7 @@
         },
         methods: {
             async getUsers(){
-                this.$axios.get('api/user/account')
+                this.$axios.get('api/user/all')
                  .then(response=>{
                     if(response.data.resultCode=="SUCCESS"){
                         this.users = response.data.resultMsg

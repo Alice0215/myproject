@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    component: () => import('pages/index')
+    component: () => import('pages/project/list')
   },
   {
     path: '/login',
@@ -16,7 +16,7 @@ export default [
     component: () => import('pages/auth/partyRegister')
   },
   {
-    path: '/project',
+    path: '/project/add',
     component: () => import('pages/project/add')
   },
   {

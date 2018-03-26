@@ -25,7 +25,7 @@
     import { Dialog } from 'quasar'
     export default {
         mounted() {
-            this.getPersonal()
+            this.getparty()
         },
         data() {
             return {
@@ -49,23 +49,13 @@
                     password: [{required: true, message: '请设置密码'}],
                     passwordVerify: [{required: true, message: '请确认密码'}]
                 },
-                selectOptions: [
-                    {
-                    label: 'Google',
-                    value: 'goog'
-                    },
-                    {
-                    label: 'Facebook',
-                    value: 'fb'
-                    }
-                ]
             }
         },
         methods: {
             login() {
                 this.$router.push('/login')
             },
-            async getPersonal(){
+            async getparty(){
                 this.$axios.get('api/party/all')
                  .then(response=>{
                     for (var key in response.data.resultMsg) {
