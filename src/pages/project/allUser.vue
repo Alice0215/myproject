@@ -9,27 +9,22 @@
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
     </div>
     <div class="full-width">
-        <q-item link class="full-width underline user-item" @click="addUser">  
-            <q-item-side icon="account circle" class="user"/>
-            <q-item-main :label="`设置项目负责人`" />
-            <q-item-side right icon="done" v-show="isShow" /> 
-        </q-item>
-        <q-item link class="full-width underline user-item">  
-            <q-item-side icon="account circle" class="user"/>
-            <q-item-main :label="`会员名称`" /> 
-        </q-item>
+
          <q-item  v-for="user in users"
           :key="user.userId"
           v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
-            <q-item-main :label="`设置项目负责人`" /> 
+            <q-item-main :label="user.fullname" /> 
             <q-item-side right icon="done" v-show="isShow" /> 
         </q-item>
+
     </div>
   </div>
 </template>
 
 <script>
+    import { request } from '../../common'
+    import { Dialog } from 'quasar'
     export default {
         data() {
             return {
@@ -43,16 +38,15 @@
         },
         methods: {
             async getUsers(){
-                this.$axios.get('api/user/all')
-                 .then(response=>{
-                    if(response.data.resultCode=="SUCCESS"){
-                        this.users = response.data.resultMsg
-                    }else{
-                        console.log(response.data.resultMsg)
-                       // this.$q.dialog({ title: '提示', message: response.data.resultMsg})
-                    }
-                  
-                 })
+                request('user/all', 'get')
+                .then(response=>{
+                if(response.data.resultCode=="SUCCESS"){
+                    this.users = response.data.resultMsg
+                }else{
+                    console.log(response.data.resultMsg)
+                }
+                
+                })
             },
             back(){
                 this.$router.go(-1);//返回上一层

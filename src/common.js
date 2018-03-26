@@ -16,7 +16,7 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
       'Authorization': localStorage.getItem('token'),
-      'CURRENT_PARTY_ID': localStorage.getItem('Organization'),
+      'CURRENT_PARTY_ID': '108',
       'Access-Control-Allow-Origin': '*',
       'Content-type': 'application/json'
     },

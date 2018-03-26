@@ -22,6 +22,7 @@
 
 <script>
     import { Dialog } from 'quasar'
+    import { request } from '../../common'
     export default {
         data() {
             return {
@@ -48,9 +49,23 @@
                 for (var key in data) {
                     params.append(key, data[key])
                 }
-                this.$axios.post('yyl/project/create', params,{headers: {"Content-Type": "application/json"}})
+                request('project/create', 'post',params,'json',true)
                     .then(response => {
-                        console.log(response)
+                        if(response.data.resultCode=="SUCCESS"){
+                            localStorage.setItem('token',response.data.resultMsg.userToken)
+                            localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
+                            this.$q.dialog({
+                                title: '提示',
+                                message: '项目添加成功！'
+                            })
+                            this.$router.push('/')
+                        }else{
+                            this.$q.dialog({
+                                title: '提示',
+                                message: response.data.resultMsg
+                            })
+                            this.$router.push('/login')
+                        }
                     })
                     .catch(e => {
                         console.log('Error', e.response.data.message);
