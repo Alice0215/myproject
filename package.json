@@ -28,7 +28,8 @@
     "eslint-plugin-vue": "^4.3.0",
     "node-sass": "^4.8.3",
     "quasar-cli": "^0.15.12",
-    "sass-loader": "^6.0.7"
+    "sass-loader": "^6.0.7",
+    "standard": "^11.0.1"
   },
   "engines": {
     "node": ">= 8.9.0",

@@ -7,8 +7,9 @@
 
 <script>
   import _ from 'lodash'
+
   export default {
-    data() {
+    data () {
       return {
         loading: false
       }
@@ -18,14 +19,14 @@
        * 获取逆地理信息
        * @param location
        */
-      getAdressByGeocoder(location) {
+      getAdressByGeocoder (location) {
         if (_.isUndefined(location)) {
           return
         }
         let locationArray = location.split(',')
         let geocoder = new AMap.Geocoder({
           radius: 1000,
-          extensions: "all"
+          extensions: 'all'
         })
         geocoder.getAddress(locationArray, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
@@ -37,13 +38,13 @@
        * 处理逆向地理编码
        * @param data
        */
-      handleGeocoder(data) {
+      handleGeocoder (data) {
         console.log(data)
         if (data.info === 'OK') {
           console.log('地址是: ' + data.regeocode.formattedAddress)
         }
       },
-      async getGeolocation() {
+      async getGeolocation () {
         let mapObj = new AMap.Map('iCenter')
         mapObj.plugin('AMap.Geolocation', function () {
           let geolocation = new AMap.Geolocation({
@@ -70,8 +71,8 @@
         })
       }
     },
-    async mounted() {
-      // this.getGeolocation()
+    async mounted () {
+// this.getGeolocation()
       this.$nextTick(() => {
         document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
         let iframe = document.getElementById('map_frame').contentWindow
