@@ -4,7 +4,7 @@
     <q-list class="q-mt-md list" dark>
         <q-toolbar inverted>
             <q-toolbar-title class="header">
-                任务
+                任务{{$store.state.count}}
             </q-toolbar-title>
         </q-toolbar>
         <q-item multiline>
@@ -27,7 +27,9 @@
             </q-item-tile>
             </q-item-main>
         </q-item>
+
     </q-list>
+    
 </template>
 
 <script>

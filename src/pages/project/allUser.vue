@@ -1,28 +1,29 @@
 <template>
   
   <div class="main">
-   <div class="backTo" v-show="isShow">
+   <!--<div class="backTo" v-show="isShow">
         <q-item-side left  icon="keyboard arrow left" />
-        <span v-on:click="back">返回</span>
+        <span v-on:click="back">返回{{$store.state.count}}</span>
     </div>
     <div class="search-field">
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
-    </div>
+    </div>-->
     <div class="full-width">
 
          <q-item  v-for="user in users"
-          :key="user.userId"
+          :key="user.userId"  @click="addUser(user.fullname,user.userId)"
           v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
             <q-item-main :label="user.fullname" /> 
             <q-item-side right icon="done" v-show="isShow" /> 
         </q-item>
-
+        
     </div>
   </div>
 </template>
 
 <script>
+    import {mapState} from 'vuex';
     import { request } from '../../common'
     import { Dialog } from 'quasar'
     export default {
@@ -36,6 +37,9 @@
         mounted() {
             this.getUsers()
         },
+        computed:mapState({
+                count:state=>state.count  //理解为传入state对象，修改state.count属性
+        }),
         methods: {
             async getUsers(){
                 request('user/all', 'get')
@@ -52,8 +56,10 @@
                 this.$router.go(-1);//返回上一层
             },
             //头部返回 $router.push('/path/to')
-            addUser(){
-
+            addUser(param){
+                console.log("2222")
+                console.log(param)
+                this.$store.commit('Project/add', param)
             }
 
         }
