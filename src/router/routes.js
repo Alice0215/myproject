@@ -23,6 +23,10 @@ export default [
     path: '/project/alluser',
     component: () => import('pages/project/all_user')
   },
+  {
+    path: '/map',
+    component: () => import('pages/map')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')

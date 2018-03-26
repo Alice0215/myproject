@@ -24,6 +24,7 @@
     <!-- Add to home screen for Windows -->
     <meta name="msapplication-TileImage" content="statics/icons/ms-icon-144x144.png">
     <meta name="msapplication-TileColor" content="<%= htmlWebpackPlugin.options.pwaManifest.background_color %>">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <% } %>
 
     <%= htmlWebpackPlugin.options.headScripts %>
@@ -40,6 +41,7 @@
     <% }}}} %>
   </head>
   <body>
+  <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.4&key=d18fb1ffb12982910e0ab4c6ffd7ee6e&plugin=AMap.Geocoder"></script>
     <% if (!htmlWebpackPlugin.options.ctx.mode.electron) { %>
       <noscript>
         This is your fallback content in case JavaScript fails to load.
