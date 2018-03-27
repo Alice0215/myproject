@@ -1,17 +1,14 @@
 <template>
   
   <div class="main">
+    <q-toolbar class="header">
     <q-toolbar class="fix">
-        <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)"/>
         <q-toolbar-title class="header-title"> 
         项目负责人
         </q-toolbar-title>
     </q-toolbar>
-   <!--<div class="backTo" v-show="isShow">
-        <q-item-side left  icon="keyboard arrow left" />
-        <span v-on:click="back">返回{{$store.state.count}}</span>
-    </div>
-    <div class="search-field">
+    </q-toolbar>
+    <!--<div class="search-field">
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
     </div>-->
     <div class="full-width">
@@ -31,6 +28,7 @@
     import {mapState} from 'vuex';
     import { request } from '../../common'
     import { Dialog } from 'quasar'
+    import eventBus from '../../eventBus'
     export default {
         data() {
             return {
@@ -47,23 +45,20 @@
         }),
         methods: {
             async getUsers(){
+                console.log(eventBus.$on('event_name'))
                 request('user/all', 'get')
                 .then(response=>{
-                if(response.data.resultCode=="SUCCESS"){
-                    this.users = response.data.resultMsg
-                }else{
-                    console.log(response.data.resultMsg)
-                }
-                
+                    if(response.data.resultCode=="SUCCESS"){
+                        this.users = response.data.resultMsg
+                    }else{
+                        console.log(response.data.resultMsg)
+                    }
                 })
             },
-            back(){
-                this.$router.go(-1);//返回上一层
-            },
-            //头部返回 $router.push('/path/to')
             addUser(fullname,userId){
-                console.log(userId)
-                return this.$router.push('add?fullname='+fullname+'&userId='+userId)
+                eventBus.$emit('users',  {"fullname":fullname,"userId":userId})
+                //this.$store.commit('chooseUser', {"fullname":fullname,"userId":userId})
+                this.$router.go(-1)
             }
 
         }
@@ -99,9 +94,6 @@
         text-align: center;
         width: 96%;
         margin-left: 2%;
-    }
-    .header{
-        position: fixed;
     }
     .login-btn{
         width: 200px;

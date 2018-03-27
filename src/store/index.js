@@ -1,26 +1,33 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import example from './module-example'
+import module from './module'
 
 Vue.use(Vuex)
 
 const state = {
-  count: 1
+  current: null,
+  old: null
 }
 
 const mutations = {
-  add (state) {
-    state.count += 1
-  },
-  reduce (state) {
-    state.count -= 1
+  chooseUser (state, o) {
+    if (o) {
+      if (o.userId && o.userName && o.type) {
+        state.current = o
+        state.current.userInfo = o
+      }
+      if (o.projectName) {
+        state.old = o
+        state.old.userInfo = o
+      }
+    }
   }
 }
 
 const store = new Vuex.Store({
   modules: {
-    example
+    module
   },
   state,
   mutations

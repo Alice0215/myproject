@@ -2,82 +2,54 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix">
-            <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)"/>
+            <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)" class="reback"/>返回
             <q-toolbar-title class="header-title">
-            新建项目
+           填写信息
             </q-toolbar-title>
        </q-toolbar>
     </q-toolbar>  
     <div class="full-width card">
-        <input text-dark required v-model="formData.projectName" placeholder="项目名称" class="full-width login-input">
-       
-        <q-search icon="place" color="amber" v-model="formData.address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
-        <q-input type="textarea" v-model="formData.projectJobs" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
-            <q-item-side icon="group" />
-            <q-item-main :label="formData.TMlable" />
-            <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item link class="full-width underline"  @click.native="chooseUser('TL')">
-            <q-item-side icon="group" />
-            <q-item-main :label="formData.TLlable" />
-            <q-item-side right  icon="keyboard_arrow_right" />
-        </q-item>
+        <input text-dark required v-model="contactPerson" placeholder="姓名" class="full-width login-input">
+        <input text-dark required v-model="contactNumber" placeholder="联系方式" class="full-width login-input">
+        <input text-dark required v-model="amount" placeholder="输入申请二维码枚数" class="full-width login-input">
     </div>
-    <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
+    <q-btn class="full-width btn" @click="add()">提交申请</q-btn>
   </div>
 </template>
 
 <script>
     import { Dialog } from 'quasar'
     import { request } from '../../common'
-    import eventBus from '../../eventBus'
-    import {mapState} from 'vuex'
     export default {
         data() {
             return {
-                formData:{
-                    projectName:'',
-                    projectDesc:'',
-                    projectJobs: '',
-                    address:'',
-                    TMlable:'设置项目负责人',
-                    TLlable:'设置项目参与者',
-                    TLUserId: '',
-                    TMUserId: '',
-                    jobType:'TM',
-                },
-                TLUserId: '',
-                TMUserId: '',
-                jobType:'TM',
+                projectId:1,
+                amount:'',
+                contactNumber: '',
+                contactPerson:''
             }
         },
         methods: {
             add() {
-                //eventBus.$on('event_name')
                 let data = {
-                    projectName: this.projectName, 
-                    projectDesc: this.projectDesc,
-                    projectJobs: [{ "jobType":"TL", "userId":79}]
+                    projectId: this.projectId, 
+                    amount: this.amount,
+                    contactNumber: this.contactNumber,
+                    contactPerson: this.contactPerson,
                 }
-                let params = new URLSearchParams()
-                for (var key in data) {
-                    params.append(key, data[key])
-                }
-                request('project/create', 'post',params,'json',true)
+                request('qrcode/batch', 'post',data,'json',true) 
                     .then(response => {
+                        console.log(response)
                         if(response.data.resultCode=="SUCCESS"){
                             this.$q.dialog({
                                 title: '提示',
                                 message: '项目添加成功！'
                             })
-                            this.$router.push('/')
                         }else{
                             this.$q.dialog({
                                 title: '提示',
-                                message: response.data.resultMsg
+                                message: response.data.resultMsg.hint
                             })
-                            this.$router.push('/login')
                         }
                     })
             },
@@ -103,6 +75,9 @@
     .header-title{
         font-size: 15px;
         margin-right: 40px;
+    }
+    .reback{
+        min-width: auto !important;
     }
     .fix{
         top: 0;
@@ -137,10 +112,11 @@
     }
 
     .btn{
-    background-color: #1AAD19;
+        background-color: #1AAD19;
         color:white;
-        margin-top: 30px;
         margin-bottom: 20px;
+        height: 50px;
+        line-height: 50px;
     }
   input:not(.no-style):hover{
       border-bottom: none;

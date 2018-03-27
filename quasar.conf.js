@@ -63,7 +63,6 @@ module.exports = function (ctx) {
         'QItemSide',
         'QSearch',
         'QField',
-        'QInput',
         'QUploader',
         'QInput',
         'QSelect',
@@ -71,7 +70,8 @@ module.exports = function (ctx) {
         'QItemSeparator',
         'QInfiniteScroll',
         'QSpinner',
-        'QChip'
+        'QTabs',
+        'QScrollArea'
       ],
       directives: [
         'Ripple'
