@@ -20,12 +20,12 @@ export default [
     component: () => import('pages/project/add')
   },
   {
-    path: '/project/allUser',
-    component: () => import('pages/project/allUser')
+    path: '/project/edit',
+    component: () => import('pages/project/edit')
   },
   {
-    path: '/test',
-    component: () => import('pages/test')
+    path: '/project/allUser',
+    component: () => import('pages/project/allUser')
   },
   {
     path: '/map',
