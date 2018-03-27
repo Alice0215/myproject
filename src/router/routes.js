@@ -31,6 +31,10 @@ export default [
     path: '/map',
     component: () => import('pages/map')
   },
+  {
+    path: '/project/maintenance',
+    component: () => import('pages/project/constructionMaintenance.vue')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')
