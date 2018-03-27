@@ -1,12 +1,11 @@
 <template>
   
   <div class="main">
-    <q-toolbar class="header">
     <q-toolbar class="fix">
-        <q-toolbar-title>
-        项目
+        <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)"/>
+        <q-toolbar-title class="header-title"> 
+        项目负责人
         </q-toolbar-title>
-    </q-toolbar>
     </q-toolbar>
    <!--<div class="backTo" v-show="isShow">
         <q-item-side left  icon="keyboard arrow left" />
