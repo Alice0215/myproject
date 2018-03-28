@@ -27,6 +27,9 @@
       <q-list-header>备注信息</q-list-header>
       <q-input class="remark-field" v-model="remark" type="textarea" placeholder="请输入备注信息" rows="6" hide-underline	 />
     </q-list>
+    <q-list class="mt-6 bg-white pb-8">
+      <q-list-header>现场拍照</q-list-header>
+    </q-list>
   </q-layout>
 </template>
 

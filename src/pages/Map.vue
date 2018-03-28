@@ -11,7 +11,8 @@
   export default {
     data () {
       return {
-        loading: false
+        loading: false,
+        position: {}
       }
     },
     methods: {
@@ -23,12 +24,11 @@
         if (_.isUndefined(location)) {
           return
         }
-        let locationArray = location.split(',')
         let geocoder = new AMap.Geocoder({
           radius: 1000,
           extensions: 'all'
         })
-        geocoder.getAddress(locationArray, (status, result) => {
+        geocoder.getAddress(location, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
             this.handleGeocoder(result)
           }
@@ -39,7 +39,10 @@
        * @param data
        */
       handleGeocoder (data) {
-        console.log(data)
+        let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
+        geoInfo.position = this.position
+        geoInfo = JSON.stringify(geoInfo)
+        console.log(geoInfo)
         if (data.info === 'OK') {
           console.log('地址是: ' + data.regeocode.formattedAddress)
         }
@@ -81,8 +84,16 @@
         }
         window.addEventListener('message', e => {
           console.log(e)
+          if (_.isUndefined(e.data.location)) {
+            return
+          }
           let geocoder = e.data.location
-          this.getAdressByGeocoder(geocoder)
+          let lngLatArray = geocoder.split(',')
+          if (lngLatArray.length > 1) {
+            this.position.lng = lngLatArray[0]
+            this.position.lat = lngLatArray[1]
+          }
+          this.getAdressByGeocoder(lngLatArray)
         }, false)
       })
     }
