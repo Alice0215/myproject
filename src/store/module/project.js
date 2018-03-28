@@ -1,9 +1,9 @@
-import * as _ from 'lodash'
 import { request } from '../../common'
 import eventBus from '../../eventBus'
 
 const state = {
   current: null,
+  old: null,
   module: null,
   // 有权限的模块
   moduleIds: null
@@ -18,6 +18,18 @@ const mutations = {
       }
       if (o.projectId && !o.id) {
         state.current.id = o.projectId
+      }
+    }
+  },
+  chooseUser (state, o) {
+    if (o) {
+      if (o.userId && o.userName && o.type) {
+        state.current = o
+        state.current.userInfo = o
+      }
+      if (o.projectName) {
+        state.old = o
+        state.old.userInfo = o
       }
     }
   },
@@ -68,12 +80,6 @@ const actions = {
       commit('setModuleIds', resp.moduleIds)
       eventBus.$emit('refresh-calendar')
     }
-  },
-  setModule ({ commit, rootState }, module) {
-    if (!module) {
-      module = _.find(rootState.Module.items, { id: 'my-project' })
-    }
-    commit('setModule', module)
   }
 }
 

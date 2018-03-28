@@ -64,12 +64,15 @@ module.exports = function (ctx) {
         'QItemSide',
         'QSearch',
         'QField',
-        'QInput',
         'QUploader',
         'QInput',
         'QSelect',
         'QItemTile',
         'QItemSeparator',
+        'QInfiniteScroll',
+        'QSpinner',
+        'QTabs',
+        'QScrollArea',
         'QChipsInput'
       ],
       directives: [

@@ -8,6 +8,9 @@ export default [
     component: () => import('pages/auth/login')
   },
   {
+    path: '/logout'
+  },
+  {
     path: '/register',
     component: () => import('pages/auth/register')
   },
@@ -20,12 +23,24 @@ export default [
     component: () => import('pages/project/add')
   },
   {
+    path: '/project/edit',
+    component: () => import('pages/project/edit')
+  },
+  {
     path: '/project/allUser',
     component: () => import('pages/project/allUser')
   },
   {
+    path: '/qcode/list',
+    component: () => import('pages/qcode/list')
+  },
+  {
     path: '/test',
-    component: () => import('pages/test')
+    component: () => import('pages/qcode/test')
+  },
+  {
+    path: '/qcode/add',
+    component: () => import('pages/qcode/add')
   },
   {
     path: '/map',

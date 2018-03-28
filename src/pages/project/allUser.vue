@@ -1,18 +1,14 @@
 <template>
-  
+
   <div class="main">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-        <q-toolbar-title>
-        项目
+        <q-toolbar-title class="header-title">
+        项目负责人
         </q-toolbar-title>
     </q-toolbar>
     </q-toolbar>
-   <!--<div class="backTo" v-show="isShow">
-        <q-item-side left  icon="keyboard arrow left" />
-        <span v-on:click="back">返回{{$store.state.count}}</span>
-    </div>
-    <div class="search-field">
+    <!--<div class="search-field">
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
     </div>-->
     <div class="full-width">
@@ -20,8 +16,8 @@
           :key="user.userId"  @click="addUser(user.fullname,user.userId)">
          <q-item  v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
-            <q-item-main :label="user.fullname" /> 
-            <q-item-side right icon="done" v-show="isShow" /> 
+            <q-item-main :label="user.fullname" />
+            <q-item-side right icon="done" v-show="isShow" />
         </q-item>
         </div>
     </div>
@@ -29,105 +25,97 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
-    import { request } from '../../common'
-    import { Dialog } from 'quasar'
-    export default {
-        data() {
-            return {
-                users: [],
-                key_word:'',
-                isShow:false
-            }
-        },
-        mounted() {
-            this.getUsers()
-        },
-        computed:mapState({
-                count:state=>state.count  //理解为传入state对象，修改state.count属性
-        }),
-        methods: {
-            async getUsers(){
-                request('user/all', 'get')
-                .then(response=>{
-                if(response.data.resultCode=="SUCCESS"){
-                    this.users = response.data.resultMsg
-                }else{
-                    console.log(response.data.resultMsg)
-                }
-                
-                })
-            },
-            back(){
-                this.$router.go(-1);//返回上一层
-            },
-            //头部返回 $router.push('/path/to')
-            addUser(fullname,userId){
-                console.log(userId)
-                return this.$router.push('add?fullname='+fullname+'&userId='+userId)
-            }
-
-        }
+import { mapState } from 'vuex'
+import { request } from '../../common'
+import eventBus from '../../eventBus'
+export default {
+  data () {
+    return {
+      users: [],
+      key_word: '',
+      isShow: false
     }
+  },
+  mounted () {
+    this.getUsers()
+  },
+  computed: mapState({
+    count: state => state.count // 理解为传入state对象，修改state.count属性
+  }),
+  methods: {
+    async getUsers () {
+      console.log(eventBus.$on('event_name'))
+      request('user/all', 'get').then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          this.users = response.data.resultMsg
+        } else {
+          console.log(response.data.resultMsg)
+        }
+      })
+    },
+    addUser (fullname, userId) {
+      eventBus.$emit('users', { fullname: fullname, userId: userId })
+      this.$router.go(-1)
+    }
+  }
+}
 </script>
 
 <style>
-    .header,.fix{
-        background-color: #F7F7F7 !important;
-        padding: 0px;
-        margin-bottom: 15px;
-    
-    }
-    .fix{
-        text-align: center;
-        font-size: 14px;
-        color:#101010 !important;
-        border-bottom: 1px solid #DCDCDC;
-        top: 0;
-        z-index: 100;
-        position: fixed;
-    }
+.header,
+.fix {
+  background-color: #f7f7f7 !important;
+  padding: 0px;
+  margin-bottom: 15px;
+}
+.fix {
+  text-align: center;
+  font-size: 14px;
+  color: #101010 !important;
+  border-bottom: 1px solid #dcdcdc;
+  top: 0;
+  z-index: 100;
+  position: fixed;
+}
 
-    .user-item:hover{
-        background: none;
-    }
-    .search-field{
-        background: #cccccc;
-        height: 50px;
-    }
-    .search-field .btn{
-        background-color: white;
-        text-align: center;
-        width: 96%;
-        margin-left: 2%;
-    }
-    .header{
-        position: fixed;
-    }
-    .login-btn{
-        width: 200px;
-    }
-    .user{
-        min-width: auto;
-    }
-    .underline{
-        border-bottom: 1px solid #cccccc;
-    }
+.user-item:hover {
+  background: none;
+}
+.search-field {
+  background: #cccccc;
+  height: 50px;
+}
+.search-field .btn {
+  background-color: white;
+  text-align: center;
+  width: 96%;
+  margin-left: 2%;
+}
+.login-btn {
+  width: 200px;
+}
+.user {
+  min-width: auto;
+}
+.underline {
+  border-bottom: 1px solid #cccccc;
+}
 
-    .card {
-        margin-bottom: 0px;
-        min-height: 160px;
-    }
+.card {
+  margin-bottom: 0px;
+  min-height: 160px;
+}
 
-    .login-input{
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 10px 10px;
-        margin-bottom: 25px;
-    }
-    a,a:hover,a:focus {
-        text-decoration: underline;
-        color: #1AAD19;
-    }
-
+.login-input {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px 10px;
+  margin-bottom: 25px;
+}
+a,
+a:hover,
+a:focus {
+  text-decoration: underline;
+  color: #1aad19;
+}
 </style>
