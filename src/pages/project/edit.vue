@@ -3,7 +3,7 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix">
-            <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)"/>
+             <a @click="$router.go(-1)"><q-item-side left  icon="keyboard arrow left"/></a>
             <q-toolbar-title class="header-title">
             项目设置
             </q-toolbar-title>
@@ -118,12 +118,6 @@ export default {
   margin-bottom: 0px;
   padding: 5px 15px;
   min-height: 160px;
-}
-.btn {
-  background-color: #1aad19;
-  color: white;
-  margin-top: 30px;
-  margin-bottom: 20px;
 }
 input:not(.no-style):hover {
   border-bottom: none;

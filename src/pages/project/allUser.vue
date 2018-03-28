@@ -3,6 +3,7 @@
   <div class="main">
     <q-toolbar class="header">
     <q-toolbar class="fix">
+       <a @click="$router.go(-1)" class="top-nav-left">关闭</a>
         <q-toolbar-title class="header-title">
         项目负责人
         </q-toolbar-title>

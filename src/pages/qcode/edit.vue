@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-            <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>返回
+             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
            填写信息
             </q-toolbar-title>

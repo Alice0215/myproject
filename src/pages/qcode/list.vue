@@ -2,7 +2,7 @@
 <template>
     <q-layout class='list bg-color'>
         <q-toolbar class='header'>
-         <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>
+          <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
             项目名称
             </q-toolbar-title>
@@ -27,31 +27,17 @@
         </div>
         <p class='qcount'>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
-            <div>
-              <q-item-tile sublabel lines='1' class='item text-left'>
-               <span class="qfield-mtitle">国槐01</span>
-               <span class="qfield-stitle">单株</span>
-               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
-             </q-item-tile>
-            <q-item-tile sublabel lines='1' class='item text-left'>
-               <span class="qfield-mtitle">国槐01</span>
-               <span class="qfield-stitle">单株</span>
-               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
-             </q-item-tile>
-            <q-item-tile sublabel lines='1' class='item text-left'>
-               <span class="qfield-mtitle">国槐01</span>
-               <span class="qfield-stitle">单株</span>
-               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
-             </q-item-tile>
-             <q-item-tile sublabel lines='1' class='item text-left'>
-               <span class="qfield-mtitle">国槐01</span>
-               <span class="qfield-stitle">单株</span>
-               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
+            <div @click="$router.push('/qcode/detail')">
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
+          :key="item.id" to="/qcode/detail" >
+               <span class="qfield-mtitle">{{item.alias}}</span>
+               <span class="qfield-stitle">{{item.alias}}</span>
+               <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
              </q-item-tile>
             </div>
         </q-scroll-area>
 
-         <q-btn class='full-width bg-color qr-btn'  @click="$router.push('/add')">申请制作二维码</q-btn>
+         <q-btn class='full-width bg-color qr-btn'  @click="$router.push('add')">申请制作二维码</q-btn>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -69,16 +55,16 @@ export default {
       list: '',
       loading: false,
       pageNo: 1,
-      hasLoadAll: true,
+      hasLoadAll: false,
       qrtype: '',
       qrtypes: [
         {
-          label: 'Google',
-          value: 'goog'
+          label: '单株植物',
+          value: '1'
         },
         {
-          label: 'Facebook',
-          value: 'fb'
+          label: '片区植物',
+          value: '2'
         }
       ]
     }
@@ -87,34 +73,16 @@ export default {
     this.load()
   },
   methods: {
-    async getlist () {
-      request(
-        'project/list?pageNo=' + this.pageNo + '&pageSize=20',
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          this.list = response.data.resultMsg
-          this.pageNo++
-        } else {
-          console.log(response.data.resultMsg)
-        }
-      })
-    },
-
     async load () {
       if (!this.hasLoadAll) {
         this.loading = true
         request(
-          'project/list?pageNo=' + this.pageNo + '&pageSize=20',
+          'qrcode/list?projectId=1&pageNo=' + this.pageNo + '&pageSize=20',
           'get',
           '',
           'json',
           true
         ).then(response => {
-          console.log(response)
           if (response.data.resultCode === 'SUCCESS') {
             this.loading = false
             let list = response.data.resultMsg
@@ -122,13 +90,16 @@ export default {
               this.hasLoadAll = true
               return
             }
-            if (list.length < 20) {
+            if (list.length <= 20) {
               this.list = list
               this.hasLoadAll = true
               return
             }
             this.list = this.list.concat(list)
             this.pageNo++
+          } else {
+            this.hasLoadAll = true
+            return ''
           }
         })
       }

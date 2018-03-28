@@ -2,19 +2,15 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-            <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>返回
+             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
               二维码名称
             </q-toolbar-title>
-            <q-item-side right @click='$router.go(-1)' class='reback'/>历史记录
+            <a class="top-nav-right">历史记录</a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
-        <input text-dark required v-model='contactPerson' placeholder='姓名' class='full-width login-input'>
-        <input text-dark required v-model='contactNumber' placeholder='联系方式' class='full-width login-input'>
-        <input text-dark required v-model='amount' placeholder='输入申请二维码枚数' class='full-width login-input'>
     </div>
-    <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
   </div>
 </template>
 
