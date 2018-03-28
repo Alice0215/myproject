@@ -1,16 +1,21 @@
 <template>
   <div id="q-app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App',
-   metaInfo: {
-    titleTemplate: '%s | E园林'
-  },
-}
+
+  document.addEventListener('deviceready', () => {
+    console.log(navigator.camera)
+  }, false)
+
+  export default {
+    name: 'App',
+    metaInfo: {
+      titleTemplate: '%s | E园林'
+    },
+  }
 </script>
 
 <style>
