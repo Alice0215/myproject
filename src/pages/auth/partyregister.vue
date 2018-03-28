@@ -147,27 +147,12 @@ export default {
 }
 </script>
 
-<style>
-.q-if:before,
-.q-if:after {
-  background: none;
-}
-.q-if-error{
-  border: 1px solid red !important;
-}
-.login-btn {
-  width: 200px;
-}
+<style lang='scss'>
+@import "../../assets/css/common";
 .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
-}
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-bottom: 25px;
 }
 button {
   margin-bottom: 4%;
@@ -178,24 +163,12 @@ h4 {
 a {
   font-size: 14px;
 }
-a:hover {
-  text-decoration: underline;
-  color: #1aad19;
-}
-a:focus {
-  text-decoration: none;
-}
 .main-color-bg {
   background-color: #1aad19;
   color: white;
 }
 input:not(.no-style):hover {
   border-bottom: none;
-}
-.hover {
-  padding-bottom: 10px;
-  border-bottom: solid 2px #1aad19;
-  font-weight: bold;
 }
 .register-title {
   height: 80px;
@@ -207,11 +180,5 @@ input:not(.no-style):hover {
 }
 .register-title span {
   margin-right: 50px;
-}
-.select {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 15px;
-  margin-bottom: 25px;
 }
 </style>

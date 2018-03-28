@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
 .header,
 .fix {
   background-color: #f7f7f7 !important;

@@ -161,31 +161,14 @@ export default {
 }
 </script>
 
-<style>
-.q-if:before,
-.q-if:after {
-  background: none;
-}
-
+<style lang='scss'>
+@import "../../assets/css/common";
 .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
 }
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-bottom: 25px;
-}
-.q-if-error{
-  border: 1px solid red !important;
-}
-.hover {
-  padding-bottom: 10px;
-  border-bottom: solid 2px #1aad19;
-  font-weight: bold;
-}
+
 .register-title {
   height: 80px;
   line-height: 80px;
@@ -193,11 +176,6 @@ export default {
   width: 100%;
   color: black;
   font-size: 20px;
-}
-a,
-a:hover {
-  text-decoration: none;
-  color: #1aad19;
 }
 .register-title span {
   margin-right: 50px;

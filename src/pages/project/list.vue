@@ -116,49 +116,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
+@import "../../assets/css/common";
 .list {
   padding: 0px;
   border: none;
-}
-.header,
-.fix,
-.footer {
-  background-color: #f7f7f7 !important;
-  padding: 0px;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 14px;
-  color: #101010 !important;
-}
-.header-title {
-  font-size: 15px;
-}
-.fix {
-  top: 0;
-  border-bottom: 1px solid #dcdcdc;
-  z-index: 100;
-  position: fixed;
-}
-
-.footer {
-  background-color: #f9f9f9 !important;
-  margin: 0px;
-}
-.footer .menu {
-  background-color: #f9f9f9 !important;
-  z-index: 100;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  font-size: 12px;
-}
-.footer span {
-  width: 23%;
-  display: inline-block;
-  text-align: center;
 }
 .add-btn {
   width: 75px;

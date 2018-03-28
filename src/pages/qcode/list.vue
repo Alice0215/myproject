@@ -85,7 +85,6 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.list = response.data.resultMsg
           this.pageNo++
-          console.log(this.list)
         } else {
           console.log(response.data.resultMsg)
         }
@@ -116,7 +115,6 @@ export default {
               return
             }
             this.list = this.list.concat(list)
-            console.log(this.list)
             this.pageNo++
           }
         })
@@ -126,7 +124,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
 .list {
   padding: 0px;
   border: none;

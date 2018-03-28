@@ -61,23 +61,8 @@ export default {
 }
 </script>
 
-<style>
-.header,
-.fix {
-  background-color: #f7f7f7 !important;
-  padding: 0px;
-  margin-bottom: 15px;
-}
-.fix {
-  text-align: center;
-  font-size: 14px;
-  color: #101010 !important;
-  border-bottom: 1px solid #dcdcdc;
-  top: 0;
-  z-index: 100;
-  position: fixed;
-}
-
+<style lang='scss'>
+@import "../../assets/css/common";
 .user-item:hover {
   background: none;
 }
@@ -91,9 +76,6 @@ export default {
   width: 96%;
   margin-left: 2%;
 }
-.login-btn {
-  width: 200px;
-}
 .user {
   min-width: auto;
 }
@@ -104,18 +86,5 @@ export default {
 .card {
   margin-bottom: 0px;
   min-height: 160px;
-}
-
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 10px;
-  margin-bottom: 25px;
-}
-a,
-a:hover,
-a:focus {
-  text-decoration: underline;
-  color: #1aad19;
 }
 </style>

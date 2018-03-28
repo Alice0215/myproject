@@ -85,60 +85,17 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.header,
-.fix {
-  background-color: #f7f7f7 !important;
-  padding: 0px;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 14px;
-  color: #101010 !important;
-}
-.header-title {
-  font-size: 15px;
-  margin-right: 40px;
-}
-.fix {
-  top: 0;
-  border-bottom: 1px solid #dcdcdc;
-  z-index: 100;
-  position: fixed;
-}
-.login-btn {
-  width: 200px;
-}
-
+<style lang='scss'>
+@import "../../assets/css/common";
 .underline {
   border-bottom: 1px solid #cccccc;
   margin-top: 20px;
-}
-.q-if:before,
-.q-if:after {
-  background: none;
-}
-.q-if-error{
-  border: 1px solid red !important;
 }
 .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
 }
-
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-bottom: 25px;
-}
-a,
-a:hover,
-a:focus {
-  text-decoration: underline;
-  color: #1aad19;
-}
-
 .btn {
   background-color: #1aad19;
   color: white;
