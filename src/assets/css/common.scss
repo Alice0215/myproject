@@ -41,7 +41,7 @@ a {
 .login-input {
   border: 1px solid #eee;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 8px 20px;
   margin-bottom: 25px;
   color: black;
   font-size: 16px;
@@ -145,4 +145,7 @@ input:not(.no-style):hover {
 }
 .top-nav-right{
   padding-right: 15px;
+}
+.q-if-inner{
+  padding-bottom: 0px !important;
 }

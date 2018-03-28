@@ -10,6 +10,22 @@
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
+      <div class="top-field">
+        <p class='text-center'>
+          <img src='statics/qr.png'/>
+        </p>
+        <p class='text-center'>
+          <q-btn class="show-qr">查看二维码</q-btn>
+        </p>
+      </div>
+      <div class="qr-info">
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+      </div>
+      <q-btn class="full-width bg-color qr-btn">编辑基础信息</q-btn>
     </div>
   </div>
 </template>
@@ -87,5 +103,17 @@ input:not(.no-style):hover {
 }
 .q-if-control.q-icon {
   padding-bottom: 6px;
+}
+.top-field p{
+  margin-bottom: 10px;
+}
+.qr-info{
+  margin-top: 30px;
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 30px;
+  p{
+    margin-bottom: 5px;
+  }
 }
 </style>

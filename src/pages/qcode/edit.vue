@@ -4,16 +4,36 @@
         <q-toolbar class='fix'>
              <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
-           填写信息
+              二维码名称
             </q-toolbar-title>
+             <a class="top-nav-right"></a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
-        <input text-dark required v-model='contactPerson' placeholder='姓名' class='full-width login-input'>
-        <input text-dark required v-model='contactNumber' placeholder='联系方式' class='full-width login-input'>
-        <input text-dark required v-model='amount' placeholder='输入申请二维码枚数' class='full-width login-input'>
+      <div class="top-field">
+        <p class='text-center'>
+          <img src='statics/qr.png'/>
+        </p>
+        <p>
+
+        </p>
+      </div>
+      <div class="qr-info">
+         <q-input
+        v-model="amount"
+        placeholder='输入片区名称' class='login-input'
+      />
+      <q-input
+        v-model="amount"
+        placeholder='默认项目名称' class='login-input'
+      />
+      <q-input
+        v-model="amount"
+        placeholder='新增植物' class='login-input'
+      />
+      </div>
+      <q-btn class="full-width btn">保存</q-btn>
     </div>
-    <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
   </div>
 </template>
 
@@ -67,6 +87,7 @@ export default {
 </script>
 
 <style lang='scss'>
+@import "../../assets/css/common";
 .reback {
   min-width: auto !important;
 }
@@ -80,14 +101,6 @@ export default {
   padding: 30px 15px;
   min-height: 160px;
 }
-
-.btn {
-  background-color: #1aad19;
-  color: white;
-  margin-bottom: 20px;
-  height: 50px;
-  line-height: 50px;
-}
 input:not(.no-style):hover {
   border-bottom: none;
 }
@@ -97,5 +110,17 @@ input:not(.no-style):hover {
 }
 .q-if-control.q-icon {
   padding-bottom: 6px;
+}
+.top-field p{
+  margin-bottom: 10px;
+}
+.qr-info{
+  margin-top: 30px;
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 30px;
+  p{
+    margin-bottom: 5px;
+  }
 }
 </style>
