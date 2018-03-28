@@ -1,21 +1,21 @@
 
 <template>
 
-    <q-layout class='list'>
+    <q-layout class='list bg-color'>
         <q-toolbar class='header'>
          <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>
-            <q-toolbar-title class='header-title'>
+            <q-toolbar-title class='header-title text-center'>
             项目名称
             </q-toolbar-title>
          <q-item-side right icon='group' @click='$router.go(-1)' class='group'/>
         </q-toolbar>
-        <q-toolbar class='header'>
-          <q-toolbar-title>
-            <q-item-tile sublabel lines='1' class='header-info'>
+        <q-toolbar>
+          <q-toolbar-title class="text-center project-info">
+            <q-item-tile sublabel lines='1'>
               简介：项目描述内容，项目描述内容
              </q-item-tile>
               <q-item-side left icon='place' class='inline newicon'></q-item-side>
-                <q-item-tile sublabel lines='1' class='inline'>
+                <q-item-tile sublabel lines='1' class='inline text-center'>
                 郑州市，金水区
                 </q-item-tile>
               <q-item-side right icon='border color' class='inline newicon'></q-item-side>
@@ -24,6 +24,8 @@
 
         <q-scroll-area  class='qfield'>
             <div>
+            <p>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
+
             <q-item-tile sublabel lines='1' class='item'>
                 简介：项目描述内容，项目描述内容
              </q-item-tile>
@@ -123,16 +125,13 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.list {
-  padding: 0px;
-  border: none;
-}
-.inline {
-  display: inline;
+.project-info{
+  font-size: 15px;
+  line-height: 23px;
 }
 .qfield {
   width: 100%;
-  height: 300px;
+  height: 350px;
   padding: 15px;
   background-color: #f5f5f5;
 }
@@ -140,44 +139,22 @@ export default {
   width: 100%;
   height: 50px;
   background-color: white;
-  border: 1px solid #999999;
+  border: 1px solid #DFDFDF;
   border-radius: 3px;
   padding: 10px;
   margin-bottom: 10px;
   line-height: 28px;
 }
 .newicon .q-icon,
-.newicon .q-icon.material-icons {
-  font-size: 20px;
-}
-.header,
-.fix {
-  background-color: #f7f7f7 !important;
-  padding: 0px;
-  text-align: center;
-  font-size: 14px;
-  color: #101010 !important;
-}
-.header-title {
-  font-size: 15px;
-}
-.header-info {
-  margin-bottom: 8px;
+.newicon .q-icon.material-icons,.icon-error .q-icon.material-icons {
+  font-size: 18px;
+  color: #999999
 }
 .group {
   margin-right: 10px;
 }
-.fix {
-  top: 0;
-  border-bottom: 1px solid #dcdcdc;
-  z-index: 100;
-  position: fixed;
-}
 .add-qcode {
   border: 1px solid #dcdcdc;
   border-radius: 5px;
-}
-.center {
-  text-align: center;
 }
 </style>
