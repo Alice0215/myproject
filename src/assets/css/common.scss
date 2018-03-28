@@ -85,10 +85,10 @@ input:not(.no-style):hover {
 }
 .header-title {
   font-size: 15px;
-  margin-right: 40px;
+  color: #101010;
 }
 .footer {
-  background-color: #f7f7f7 !important;
+  background-color:  $bgcolor !important;
   padding: 0px;
   font-size: 14px;
   width: 100%;
@@ -96,15 +96,15 @@ input:not(.no-style):hover {
   bottom: 0px;
 }
 .footer .menu {
-  background-color: #f9f9f9 !important;
+  background-color: $bgcolor !important;
   z-index: 100;
   bottom: 0px;
   width: 100%;
   font-size: 12px;
-  color: #101010;
+  color: #999999;
 }
 .bg-primary{
-  background: #f9f9f9 !important;
+  background:  $bgcolor !important;
 }
 .active{
   color: $primary !important;
@@ -114,4 +114,7 @@ input:not(.no-style):hover {
 }
 .inline {
   display: inline;
+}
+.bg-color{
+  background-color:  $bgcolor;
 }
