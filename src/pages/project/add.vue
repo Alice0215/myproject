@@ -9,8 +9,7 @@
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card">
-        <input text-dark required v-model="formData.projectName" placeholder="项目名称" class="full-width login-input">
-
+        <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
         <q-search icon="place" color="amber" v-model="formData.address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectJobs" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
@@ -72,9 +71,8 @@ export default {
         } else {
           this.$q.dialog({
             title: '提示',
-            message: response.data.resultMsg
+            message: response.data.resultMsg.hint
           })
-          this.$router.push('/login')
         }
       })
     },
@@ -87,54 +85,17 @@ export default {
 }
 </script>
 
-<style>
-.header,
-.fix {
-  background-color: #f7f7f7 !important;
-  padding: 0px;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 14px;
-  color: #101010 !important;
-}
-.header-title {
-  font-size: 15px;
-  margin-right: 40px;
-}
-.fix {
-  top: 0;
-  border-bottom: 1px solid #dcdcdc;
-  z-index: 100;
-  position: fixed;
-}
-.login-btn {
-  width: 200px;
-}
-
+<style lang='scss'>
+@import "../../assets/css/common";
 .underline {
   border-bottom: 1px solid #cccccc;
   margin-top: 20px;
 }
-
 .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
 }
-
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 10px;
-  margin-bottom: 25px;
-}
-a,
-a:hover,
-a:focus {
-  text-decoration: underline;
-  color: #1aad19;
-}
-
 .btn {
   background-color: #1aad19;
   color: white;

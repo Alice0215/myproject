@@ -5,76 +5,102 @@
         <span @click='partyregister()'>机构注册</span>
     </div>
     <div class='full-width'>
-        <input text-dark required v-model='username' placeholder='用户名' class='full-width login-input'>
-        <input text-dark required v-model='name' placeholder='真实姓名' class='full-width login-input'>
-        <q-select v-model='partyName' :options='organizations' placeholder='所属机构'  class='login-input'/>
-        <input text-dark required v-model='email' placeholder='邮箱' class='full-width login-input'>
-        <input text-dark required v-model='phone' placeholder='手机号' class='full-width login-input'>
-        <q-input type='password' class='login-input' autocomplete='current-password' v-model='password' placeholder='密码'/>
-        <q-input type='password' class='login-input' autocomplete='password_confirmation' v-model='password_confirmation' placeholder='确认密码'/>
-    </div>
-    <q-btn class='full-width input' @click='register()'>注册</q-btn>
-    <div class='login-field'>
-        <span>已有账号？</span><a href="javascript:" @click="$router.push('/login')">立即登录</a>
+      <q-input
+        v-model="form.username"
+        @blur="$v.form.username.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.username.$error"
+        placeholder='用户名' class='login-input'
+      />
+      <q-input
+        v-model="form.fullname"
+        @blur="$v.form.fullname.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.fullname.$error"
+        placeholder='真实姓名' class='login-input'
+      />
+      <q-select v-model='form.partyId' :options='organizations'
+        @blur="$v.form.partyId.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.partyId.$error"
+        placeholder='所属机构'  class='login-input'
+      />
+      <q-input
+        v-model="form.email"
+        @blur="$v.form.email.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.email.$error"
+        placeholder='邮箱' class=' login-input'
+      />
+       <q-input
+        v-model="form.phone"
+        @blur="$v.form.phone.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.phone.$error"
+        placeholder='手机号' class=' login-input'
+      />
+      <q-input
+        v-model="form.password"
+         @blur="$v.form.password.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.password.$error"
+        placeholder='密码' class=' login-input' type='password'
+      />
+      <q-input
+        v-model="form.password_confirmation"
+         @blur="$v.form.password_confirmation.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.password_confirmation.$error"
+        placeholder='确认密码' class=' login-input' type='password'
+      />
+      <q-btn class='full-width input' @click='submit()'>注册</q-btn>
+      <div class='login-field'>
+          <span>已有账号？</span><a href="javascript:" @click="$router.push('/login')">立即登录</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-import { required, email, minLength, between } from 'vuelidate/lib/validators'
 export default {
-  mounted () {
-    this.getparty()
-  },
   data () {
     return {
-      name: '',
-      username: '',
-      email: '',
-      password: '',
-      phone: '',
-      partyName: '',
-      password_confirmation: '',
       organizations: [],
-      rules: {
-        username: [{ required: true, message: '请填写用户名' }],
-        fullname: [{ required: true, message: '请填写真实姓名' }],
-        partyId: [{ required: true, message: '请选择机构' }],
-        email: [
-          { required: true, message: '请填写邮箱' },
-          {
-            pattern: /^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-zA-Z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+\.){1,63}[a-zA-Z0-9]+$/,
-            message: '输入正确的邮箱'
-          }
-        ],
-        phone: [
-          { required: true, message: '请填写手机号' },
-          { pattern: /^\d{11}$/, message: '输入正确的手机号' }
-        ],
-        password: [{ required: true, message: '请设置密码' }],
-        passwordVerify: [{ required: true, message: '请确认密码' }]
+      form: {
+        username: '',
+        fullname: '',
+        email: '',
+        phone: '',
+        partyId: '',
+        password: '',
+        password_confirmation: ''
       }
     }
   },
+  validations: {
+    form: {
+      username: { required },
+      fullname: { required },
+      email: { required, email },
+      partyId: { required },
+      phone: { required },
+      password: { required },
+      password_confirmation: { required }
+    }
+  },
+  mounted () {
+    this.getparty()
+  },
   methods: {
-    login () {
-      this.$router.push('/login')
-    },
-    async getparty () {
-      this.$axios.get('api/party/all').then(response => {
-        for (var key in response.data.resultMsg) {
-          this.organizations.push({
-            label: response.data.resultMsg[key]['partyName'],
-            value: response.data.resultMsg[key]['id']
-          })
-        }
-      })
-    },
-    partyregister () {
-      this.$router.push('/partyregister')
-    },
-    register () {
+    submit () {
+      this.$v.form.$touch()
+
+      if (this.$v.form.$error) {
+        this.$q.notify('请完善注册信息')
+        return ''
+      }
       let deviceType = 1
       if (
         /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
@@ -86,7 +112,7 @@ export default {
         fullname: this.name,
         email: this.email,
         password: this.password,
-        partyId: 79,
+        partyId: this.partyName,
         phone: this.phone,
         deviceType: deviceType,
         passwordVerify: this.password_confirmation
@@ -114,32 +140,35 @@ export default {
         .catch(e => {
           console.log('Error', e.response.data.message)
         })
+    },
+    login () {
+      this.$router.push('/login')
+    },
+    async getparty () {
+      this.$axios.get('api/party/all').then(response => {
+        for (var key in response.data.resultMsg) {
+          this.organizations.push({
+            label: response.data.resultMsg[key]['partyName'],
+            value: response.data.resultMsg[key]['id']
+          })
+        }
+      })
+    },
+    partyregister () {
+      this.$router.push('/partyregister')
     }
   }
 }
 </script>
 
-<style>
-.q-if:before,
-.q-if:after {
-  background: none
-}
+<style lang='scss'>
+@import "../../assets/css/common";
 .card {
-  margin-bottom: 0px
-  padding: 30px 15px
-  min-height: 160px
+  margin-bottom: 0px;
+  padding: 30px 15px;
+  min-height: 160px;
 }
-.login-input {
-  border: 1px solid #eee
-  border-radius: 10px
-  padding: 10px 20px
-  margin-bottom: 25px
-}
-.hover {
-  padding-bottom: 10px;
-  border-bottom: solid 2px #1aad19;
-  font-weight: bold
-}
+
 .register-title {
   height: 80px;
   line-height: 80px;
@@ -148,21 +177,16 @@ export default {
   color: black;
   font-size: 20px;
 }
-a,
-a:hover {
-  text-decoration: none;
-  color: #1aad19
-}
 .register-title span {
-  margin-right: 50px
+  margin-right: 50px;
 }
 .input {
   background-color: #1aad19;
   color: white;
-  margin-bottom: 20px
+  margin-bottom: 20px;
 }
 .login-field {
   text-align: center;
-  margin-bottom: 40px
+  margin-bottom: 40px;
 }
 </style>

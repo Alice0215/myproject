@@ -35,10 +35,6 @@ export default [
     component: () => import('pages/qcode/list')
   },
   {
-    path: '/test',
-    component: () => import('pages/qcode/test')
-  },
-  {
     path: '/qcode/add',
     component: () => import('pages/qcode/add')
   },

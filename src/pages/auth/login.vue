@@ -1,19 +1,19 @@
 <template>
-  <div class="card">
-    <p class="log">
-      <img src="statics/logo.png"/>
+  <div class='card'>
+    <p class='log'>
+      <img src='statics/logo.png'/>
     </p>
-    <div class="full-width">
-        <q-input class="login-input"  v-model="username" placeholder="账号" />
-        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
+    <div class='full-width'>
+        <q-input class='login-input'  v-model='username' placeholder='账号' />
+        <q-input type='password' class='login-input' autocomplete='current-password' v-model='password' placeholder='密码'/>
     </div>
-    <q-btn class="full-width login-btn" @click="login()">登录</q-btn>
-    <div class="left">
-        <a href="javascript:">忘记密码？</a>
+    <q-btn class='full-width login-btn' @click='login()'>登录</q-btn>
+    <div class='float-left'>
+        <a href='javascript:'>忘记密码？</a>
     </div>
-    <div class="right">
+    <div class='float-right'>
         <span>没有账号?</span>
-        <a href="javascript:" @click="register">现在注册</a>
+        <a href='javascript:' @click='register'>现在注册</a>
     </div>
   </div>
 </template>
@@ -27,13 +27,19 @@ export default {
       password: ''
     }
   },
+  watch: {
+    username (v) {
+      localStorage.setItem('username', v)
+    }
+  },
+  mounted () {
+    this.username = localStorage.getItem('username')
+  },
   methods: {
     register () {
       this.$router.push('/register')
     },
-    mounted () {
-      this.username = localStorage.getItem('username')
-    },
+
     login () {
       let deviceType = 1
       if (
@@ -51,14 +57,21 @@ export default {
       for (var key in data) {
         params.append(key, data[key])
       }
-      request('user/login', 'post', {
-        userToken: '',
-        password: this.password,
-        username: this.username
-      }).then(response => {
+      request(
+        'user/login',
+        'post',
+        {
+          userToken: '',
+          password: this.password,
+          username: this.username
+        },
+        'json',
+        true
+      ).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
-          localStorage.setItem('token', response.data.resultMsg.userToken)
           localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
+          localStorage.setItem('token', response.data.resultMsg.userToken)
+          localStorage.setItem('partyId', response.data.resultMsg.partyId)
           this.$q.dialog({
             title: '提示',
             message: '登录成功！'
@@ -69,7 +82,6 @@ export default {
             title: '提示',
             message: response.data.resultMsg
           })
-          this.$router.push('/login')
         }
       })
     }
@@ -77,49 +89,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.login-btn {
-  width: 200px;
-}
-.right {
-  float: right;
-}
-.left {
-  float: left;
-}
-.card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
-}
-.login-input {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-bottom: 25px;
-  color: black;
-}
-a,
-a:hover {
-  text-decoration: none;
-  color: #1aad19;
-}
-a:focus {
-  text-decoration: none;
-}
-.login-btn {
-  background-color: #1aad19;
-  color: white;
-  margin-bottom: 20px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
-.q-if:before,
-.q-if:after {
-  background: none;
-}
+<style lang='scss'>
+@import "../../assets/css/common";
 .log {
   text-align: center;
+  margin-top: 30px;
 }
 </style>
