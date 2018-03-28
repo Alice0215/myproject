@@ -1,0 +1,277 @@
+@import "variable";
+// Position
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.ellipsis {
+  display: block;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Display
+.block {
+  display: block;
+}
+
+.inline {
+  display: inline;
+}
+
+.ib {
+  display: inline-block;
+}
+
+.hide {
+  display: none;
+}
+
+// Align
+.va-t {
+  vertical-align: top;
+}
+
+.va-m {
+  vertical-align: middle;
+}
+
+// Cursor
+.pointer {
+  cursor: pointer;
+}
+
+// Border
+.b-radius-15 {
+  border-radius: 15px;
+}
+
+.br-1 {
+  border-right: 1px solid $line;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+// Text
+.normal {
+  font-weight: normal;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.lh-1-8 {
+  line-height: 1.8em;
+}
+
+// Float
+.float-none {
+  float: none !important;
+}
+
+.float-left {
+  float: left !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+// Clear
+.clear-both {
+  clear: both;
+}
+
+// Width & Height
+
+.mw-unset {
+  min-width: unset;
+}
+
+.fill-h {
+  height: 100%;
+}
+
+// Font size
+$font-sizes: 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 40, 50, 60, 70;
+
+@each $font-size in $font-sizes {
+  .font-#{$font-size} {
+    font-size: #{$font-size}px !important;
+  }
+}
+
+// Size
+$sizes: 0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 180, 200, 240, 250, 300, 320, 500, 600;
+
+@each $s in $sizes {
+  .w-#{$s} {
+    width: ($s * 1px) !important;
+  }
+
+  .h-#{$s} {
+    height: ($s * 1px) !important;
+  }
+
+  .min-w-#{$s} {
+    min-width: ($s * 1px) !important;
+  }
+
+  .min-h-#{$s} {
+    min-height: ($s * 1px) !important;
+  }
+
+  .max-w-#{$s} {
+    max-width: ($s * 1px) !important;
+  }
+
+  .max-h-#{$s} {
+    max-height: ($s * 1px) !important;
+  }
+
+  @if $s <= 100 {
+    .wp-#{$s} {
+      width: ($s * 1%) !important;
+    }
+
+    .hp-#{$s} {
+      height: ($s * 1%) !important;
+    }
+
+    .min-wp-#{$s} {
+      min-width: ($s * 1%) !important;
+    }
+
+    .min-hp-#{$s} {
+      min-height: ($s * 1%) !important;
+    }
+
+    .max-wp-#{$s} {
+      max-width: ($s * 1%) !important;
+    }
+
+    .max-hp-#{$s} {
+      max-height: ($s * 1%) !important;
+    }
+  }
+}
+
+// Margin && padding
+
+$numbers: -30, -20, -15, -12, -11, -10, -5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 16, 20, 25, 30, 40, 50, 70, 80, 100;
+
+@each $number in $numbers {
+
+  // Margin
+  .m-#{$number} {
+    margin: ($number * 1px) !important;
+  }
+  .mv-#{$number} {
+    margin-top: ($number * 1px) !important;
+    margin-bottom: ($number * 1px) !important;
+  }
+  .mh-#{$number} {
+    margin-left: ($number * 1px) !important;
+    margin-right: ($number * 1px) !important;
+  }
+  .mt-#{$number} {
+    margin-top: ($number * 1px) !important;
+  }
+  .mb-#{$number} {
+    margin-bottom: ($number * 1px) !important;
+  }
+  .ml-#{$number} {
+    margin-left: ($number * 1px) !important;
+  }
+  .mr-#{$number} {
+    margin-right: ($number * 1px) !important;
+  }
+
+  // Position
+  .l-#{$number} {
+    left: ($number * 1px) !important;
+  }
+
+  .r-#{$number} {
+    right: ($number * 1px) !important;
+  }
+
+  .t-#{$number} {
+    top: ($number * 1px) !important;
+  }
+
+  .b-#{$number} {
+    bottom: ($number * 1px) !important;
+  }
+
+  // Padding
+  @if $number >= 0 {
+    .p-#{$number} {
+      padding: ($number * 1px) !important;
+    }
+    .pv-#{$number} {
+      padding-top: ($number * 1px) !important;
+      padding-bottom: ($number * 1px) !important;
+    }
+    .ph-#{$number} {
+      padding-left: ($number * 1px) !important;
+      padding-right: ($number * 1px) !important;
+    }
+    .pt-#{$number} {
+      padding-top: ($number * 1px) !important;
+    }
+    .pb-#{$number} {
+      padding-bottom: ($number * 1px) !important;
+    }
+    .pl-#{$number} {
+      padding-left: ($number * 1px) !important;
+    }
+    .pr-#{$number} {
+      padding-right: ($number * 1px) !important;
+    }
+  }
+}
+
+// Colors
+$colors: $primary, red, silver, blue, green, white, orange, gray, darkgray, dimgray, black;
+
+@each $name in $colors {
+  .color-#{$name} {
+    color: $name !important;
+  }
+
+  .bg-#{$name} {
+    background-color: $name !important;
+  }
+}
+
+@for $i from 1 through 10 {
+  .depth-#{$i} .cell:first-of-type > span > span:first-child {
+    padding-left: $i * 32px !important;
+  }
+}

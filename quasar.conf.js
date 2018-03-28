@@ -5,7 +5,8 @@ module.exports = function (ctx) {
     // app plugins (/src/plugins)
     plugins: [
       'axios',
-      'vuelidate'
+      'vuelidate',
+      'helper'
     ],
     css: [
       'app.styl'
@@ -71,7 +72,8 @@ module.exports = function (ctx) {
         'QInfiniteScroll',
         'QSpinner',
         'QTabs',
-        'QScrollArea'
+        'QScrollArea',
+        'QChipsInput'
       ],
       directives: [
         'Ripple'
