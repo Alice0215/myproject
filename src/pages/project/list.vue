@@ -1,6 +1,4 @@
-
 <template>
-
     <q-list class="list">
         <q-toolbar class="header">
         <q-toolbar class="fix">
@@ -17,7 +15,7 @@
         </q-item>
         <q-infinite-scroll :handler="load">
         <q-item multiline  v-for="item in list"
-          :key="item.id" class="list-list">
+          :key="item.id" class="list-list"  to="qcode/list">
            <q-item-side class="add-btn" />
             <q-item-main>
             <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
@@ -26,27 +24,16 @@
             </q-item-tile>
             </q-item-main>
         </q-item>
-        <!--
-        <el-card v-if="items.length">
-        <label class="gray" :class="{'pointer': !hasLoadAll, 'disable-click': hasLoadAll}" @click="load">
-            {{ !hasLoadAll ? '查看更多...' : '已全部加载...'}}
-        </label>
-        </el-card>
-    -->
         <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
           <q-spinner name="dots" slot="message" :size="40"></q-spinner>
         </div>
       </q-infinite-scroll>
-
-         <q-toolbar class="footer">
-            <q-toolbar-title class="menu">
-               <span icon="apps">我的项目</span>
-               <q-tab slot="title" name="link" label="Link" icon="cloud" color="amber" />
-               <span><i class="apps"></i>扫二维码</span>
-                <span><i class="apps"></i>巡查</span>
-                <span><i class="apps"></i>我的</span>
-            </q-toolbar-title>
-        </q-toolbar>
+      <q-tabs class="footer">
+        <q-route-tab slot="title" icon="apps" to="/" replace label="我的项目" class="menu" />
+        <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
+        <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
+        <q-route-tab slot="title" icon="person" to="/" replace label="我的" class="menu"/>
+      </q-tabs>
     </q-list>
 </template>
 

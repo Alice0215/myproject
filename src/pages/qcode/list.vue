@@ -47,15 +47,12 @@
             申请制作二维码
             </q-toolbar-title>
          </q-toolbar>
-         <q-toolbar class='footer'>
-            <q-toolbar-title class='menu'>
-               <span icon='apps'>我的项目</span>
-               <q-tab slot='title' name='link' label='Link' icon='cloud' color='amber' />
-               <span><i class='apps'></i>扫二维码</span>
-                <span><i class='apps'></i>巡查</span>
-                <span><i class='apps'></i>我的</span>
-            </q-toolbar-title>
-        </q-toolbar>
+         <q-tabs class="footer">
+          <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
+          <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
+          <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
+          <q-route-tab slot="title" icon="person" to="/" replace label="我的" class="menu"/>
+        </q-tabs>
     </q-layout>
 </template>
 
@@ -125,6 +122,7 @@ export default {
 </script>
 
 <style lang='scss'>
+@import "../../assets/css/common";
 .list {
   padding: 0px;
   border: none;
@@ -153,8 +151,7 @@ export default {
   font-size: 20px;
 }
 .header,
-.fix,
-.footer {
+.fix {
   background-color: #f7f7f7 !important;
   padding: 0px;
   text-align: center;
@@ -179,26 +176,6 @@ export default {
 .add-qcode {
   border: 1px solid #dcdcdc;
   border-radius: 5px;
-}
-
-.footer {
-  background-color: #f9f9f9 !important;
-  margin: 0px;
-}
-.footer .menu {
-  background-color: #f9f9f9 !important;
-  z-index: 100;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  font-size: 12px;
-}
-.footer span {
-  width: 23%;
-  display: inline-block;
-  text-align: center;
 }
 .center {
   text-align: center;
