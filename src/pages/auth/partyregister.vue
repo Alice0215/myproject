@@ -5,13 +5,53 @@
         <span class="hover">机构注册</span>
     </div>
     <div class="full-width">
-        <input text-dark required v-model="partyName" placeholder="机构名称" class="full-width login-input">
-        <input text-dark required v-model="username" placeholder="用户名" class="full-width login-input">
-        <input text-dark required v-model="name" placeholder="真实姓名" class="full-width login-input">
-        <input text-dark required v-model="email" placeholder="邮箱" class="full-width login-input">
-        <input text-dark required v-model="phone" placeholder="手机号" class="full-width login-input">
-        <q-input type="password" class="login-input" autocomplete="current-password" v-model="password" placeholder="密码"/>
-        <q-input type="password" class="login-input" autocomplete="password_confirmation" v-model="password_confirmation" placeholder="确认密码"/>
+        <q-input v-model="partyId" placeholder="机构名称" class="login-input"
+        @blur="$v.form.partyId.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.partyId.$error"
+        />
+        <q-input
+        v-model="form.username"
+        @blur="$v.form.username.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.username.$error"
+        placeholder='用户名' class='login-input'
+      />
+      <q-input
+        v-model="form.fullname"
+        @blur="$v.form.fullname.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.fullname.$error"
+        placeholder='真实姓名' class='login-input'
+      />
+         <q-input
+        v-model="form.email"
+        @blur="$v.form.email.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.email.$error"
+        placeholder='邮箱' class=' login-input'
+      />
+       <q-input
+        v-model="form.phone"
+        @blur="$v.form.phone.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.phone.$error"
+        placeholder='手机号' class=' login-input'
+      />
+      <q-input
+        v-model="form.password"
+         @blur="$v.form.password.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.password.$error"
+        placeholder='密码' class=' login-input' type='password'
+      />
+      <q-input
+        v-model="form.password_confirmation"
+         @blur="$v.form.password_confirmation.$touch"
+        @keyup.enter="submit"
+        :error="$v.form.password_confirmation.$error"
+        placeholder='确认密码' class=' login-input' type='password'
+      />
     </div>
     <q-btn class="full-width main-color-bg" @click="register()">注册</q-btn>
   </div>
@@ -19,21 +59,34 @@
 
 <script>
 import { request } from '../../common'
-import { required, email, minLength, between } from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 export default {
   mounted () {
     this.getPersonal()
   },
   data () {
     return {
-      name: '',
-      username: '',
-      email: '',
-      password: '',
-      phone: '',
-      partyName: '',
-      password_confirmation: '',
+      form: {
+        username: '',
+        fullname: '',
+        email: '',
+        phone: '',
+        partyId: '',
+        password: '',
+        password_confirmation: ''
+      },
       organizations: []
+    }
+  },
+  validations: {
+    form: {
+      username: { required },
+      fullname: { required },
+      email: { required, email },
+      partyId: { required },
+      phone: { required },
+      password: { required },
+      password_confirmation: { required }
     }
   },
   methods: {
@@ -49,6 +102,11 @@ export default {
       this.$router.push('/register')
     },
     register () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$q.notify('请完善注册信息')
+        return ''
+      }
       let deviceType = 1
       if (
         /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
@@ -90,6 +148,13 @@ export default {
 </script>
 
 <style>
+.q-if:before,
+.q-if:after {
+  background: none;
+}
+.q-if-error{
+  border: 1px solid red !important;
+}
 .login-btn {
   width: 200px;
 }

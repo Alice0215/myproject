@@ -1,5 +1,6 @@
 import { server } from './const'
 import axios from 'axios'
+import store from './store'
 async function request (url, method = 'get', data = {}, responseType = 'json', project = false) {
   const endpoint = project ? server.PROJECT_API : server.API
   url = endpoint + url
@@ -15,7 +16,7 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
       'Authorization': localStorage.getItem('token'),
-      'CURRENT_PARTY_ID': '108',
+      'CURRENT_PARTY_ID': localStorage.getItem('partyId'),
       'Access-Control-Allow-Origin': '*',
       'Content-type': 'application/json'
     },
@@ -26,14 +27,6 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   })
   return resp
 }
-/**
- * 获取当前登录用户的所有机构
-*/
-async function getPersonal () {
-  let resp = await request('party/personal')
-  return resp
-}
 export {
-  request,
-  getPersonal
+  request
 }
