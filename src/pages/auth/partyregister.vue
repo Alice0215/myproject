@@ -135,12 +135,19 @@ export default {
           })
           this.$router.push('/')
         } else {
-          this.$q.dialog({
-            title: '提示',
-            message: response.data.resultMsg
-          })
-          this.$router.push('/partyregister')
+          if (response.data.resultCode === 'ERROR') {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg.hint
+            })
+          } else {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
+          }
         }
+        this.$router.push('/partyregister')
       })
     }
   }

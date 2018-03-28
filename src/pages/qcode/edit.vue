@@ -67,7 +67,6 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "../../assets/css/common";
 .reback {
   min-width: auto !important;
 }
@@ -82,6 +81,13 @@ export default {
   min-height: 160px;
 }
 
+.btn {
+  background-color: #1aad19;
+  color: white;
+  margin-bottom: 20px;
+  height: 50px;
+  line-height: 50px;
+}
 input:not(.no-style):hover {
   border-bottom: none;
 }

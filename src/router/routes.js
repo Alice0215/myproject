@@ -39,6 +39,14 @@ export default [
     component: () => import('pages/qcode/add')
   },
   {
+    path: '/qcode/detail',
+    component: () => import('pages/qcode/detail')
+  },
+  {
+    path: '/qcode/edit',
+    component: () => import('pages/qcode/edit')
+  },
+  {
     path: '/map',
     component: () => import('pages/map')
   },

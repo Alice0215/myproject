@@ -4,8 +4,9 @@
         <q-toolbar class='fix'>
             <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>返回
             <q-toolbar-title class='header-title'>
-           填写信息
+              二维码名称
             </q-toolbar-title>
+            <q-item-side right @click='$router.go(-1)' class='reback'/>历史记录
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
@@ -81,7 +82,6 @@ export default {
   padding: 30px 15px;
   min-height: 160px;
 }
-
 input:not(.no-style):hover {
   border-bottom: none;
 }

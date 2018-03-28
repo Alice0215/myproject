@@ -1,6 +1,5 @@
 
 <template>
-
     <q-layout class='list bg-color'>
         <q-toolbar class='header'>
          <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>
@@ -21,34 +20,38 @@
               <q-item-side right icon='border color' class='inline newicon'></q-item-side>
             </q-toolbar-title>
         </q-toolbar>
-
+        <div class='nav-title'>
+            <span class='hover'>二维码列表</span>
+            <span @click="$router.push('/add')">维护记录</span>
+            <q-select v-model='qrtype' :options='qrtypes' placeholder='类型' />
+        </div>
+        <p class='qcount'>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
             <div>
-            <p>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
-
-            <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
+              <q-item-tile sublabel lines='1' class='item text-left'>
+               <span class="qfield-mtitle">国槐01</span>
+               <span class="qfield-stitle">单株</span>
+               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
              </q-item-tile>
-             <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
+            <q-item-tile sublabel lines='1' class='item text-left'>
+               <span class="qfield-mtitle">国槐01</span>
+               <span class="qfield-stitle">单株</span>
+               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
              </q-item-tile>
-             <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
+            <q-item-tile sublabel lines='1' class='item text-left'>
+               <span class="qfield-mtitle">国槐01</span>
+               <span class="qfield-stitle">单株</span>
+               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
              </q-item-tile>
-              <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
-             </q-item-tile>
-              <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
+             <q-item-tile sublabel lines='1' class='item text-left'>
+               <span class="qfield-mtitle">国槐01</span>
+               <span class="qfield-stitle">单株</span>
+               <span class="qfield-stitle">2018-02-10 浇水浇水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水水浇水浇水浇水浇水</span>
              </q-item-tile>
             </div>
         </q-scroll-area>
 
-         <q-toolbar class='footer add-qcode'>
-            <q-toolbar-title class='header-title' @click="$router.push('/add')">
-            申请制作二维码
-            </q-toolbar-title>
-         </q-toolbar>
+         <q-btn class='full-width bg-color qr-btn'  @click="$router.push('/add')">申请制作二维码</q-btn>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -66,7 +69,18 @@ export default {
       list: '',
       loading: false,
       pageNo: 1,
-      hasLoadAll: true
+      hasLoadAll: true,
+      qrtype: '',
+      qrtypes: [
+        {
+          label: 'Google',
+          value: 'goog'
+        },
+        {
+          label: 'Facebook',
+          value: 'fb'
+        }
+      ]
     }
   },
   mounted () {
@@ -125,30 +139,42 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.project-info{
-  font-size: 15px;
+.project-info {
+  font-size: 12px;
   line-height: 23px;
+}
+.qcount {
+  padding: 15px 15px 0px;
+  margin-bottom: 3px;
 }
 .qfield {
   width: 100%;
-  height: 350px;
+  height: 300px;
   padding: 15px;
   background-color: #f5f5f5;
+  .item {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    border: 1px solid #dfdfdf;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+    line-height: 28px;
+    .qfield-mtitle {
+      font-size: 14px;
+      padding-right: 100px;
+    }
+  }
 }
-.qfield .item {
-  width: 100%;
-  height: 50px;
-  background-color: white;
-  border: 1px solid #DFDFDF;
-  border-radius: 3px;
-  padding: 10px;
-  margin-bottom: 10px;
-  line-height: 28px;
+.qfield .item .qfield-stitle {
+  font-size: 12px;
 }
 .newicon .q-icon,
-.newicon .q-icon.material-icons,.icon-error .q-icon.material-icons {
+.newicon .q-icon.material-icons,
+.icon-error .q-icon.material-icons {
   font-size: 18px;
-  color: #999999
+  color: #999999;
 }
 .group {
   margin-right: 10px;

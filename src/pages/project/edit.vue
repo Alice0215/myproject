@@ -86,10 +86,17 @@ export default {
             })
             this.$router.go(-1)
           } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
+            if (response.data.resultCode === 'ERROR') {
+              this.$q.dialog({
+                title: '提示',
+                message: response.data.resultMsg.hint
+              })
+            } else {
+              this.$q.dialog({
+                title: '提示',
+                message: response.data.resultMsg
+              })
+            }
             this.$router.push('/login')
           }
         })

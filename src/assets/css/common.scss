@@ -43,6 +43,7 @@ a {
   padding: 10px 20px;
   margin-bottom: 25px;
   color: black;
+  font-size: 16px;
 }
 a:focus {
   text-decoration: none;
@@ -84,7 +85,7 @@ input:not(.no-style):hover {
   position: fixed;
 }
 .header-title {
-  font-size: 15px;
+  font-size: 17px;
   color: #101010;
 }
 .footer {
@@ -117,4 +118,24 @@ input:not(.no-style):hover {
 }
 .bg-color{
   background-color:  $bgcolor;
+}
+.btn {
+  background-color: #1aad19;
+  color: white;
+  margin-bottom: 20px;
+  height: 50px;
+  line-height: 50px;
+}
+.nav-title {
+  height: 80px;
+  text-align: center;
+  width: 100%;
+  color: #101010;
+  background: white;
+  font-size: 14px;
+  span {
+    margin-right: 50px;
+    padding-top: 20px;
+    display: inline-block;
+  }
 }
