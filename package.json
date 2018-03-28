@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Quasar Framework app",
   "productName": "Quasar App",
-  "cordovaId": "org.cordova.quasar.app",
+  "cordovaId": "com.eyuanlin.app",
   "author": "xtq <xuetq@shinetechchina.com>",
   "private": true,
   "scripts": {
