@@ -1,12 +1,14 @@
 <template>
-  <div id="map-page">
+  <q-layout id="map-page">
     <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
     </iframe>
-  </div>
+  </q-layout>
 </template>
 
 <script>
   import _ from 'lodash'
+  import eventBus from '../../eventBus'
+
 
   export default {
     data () {
@@ -42,9 +44,10 @@
         let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
         geoInfo.position = this.position
         geoInfo = JSON.stringify(geoInfo)
-        console.log(geoInfo)
+        console.log('123')
         if (data.info === 'OK') {
-          console.log('地址是: ' + data.regeocode.formattedAddress)
+          eventBus.$emit('user_location', geoInfo)
+          this.$router.back()
         }
       },
       async getGeolocation () {
@@ -72,30 +75,33 @@
             console.log(error)
           })     // 返回定位出错信息
         })
+      },
+      receivedMessage (e) {
+        console.log(e)
+        if (_.isUndefined(e.data.location)) {
+          return
+        }
+        let geocoder = e.data.location
+        let lngLatArray = geocoder.split(',')
+        if (lngLatArray.length > 1) {
+          this.position.lng = lngLatArray[0]
+          this.position.lat = lngLatArray[1]
+        }
+        this.getAdressByGeocoder(lngLatArray)
       }
     },
     async mounted () {
-// this.getGeolocation()
       this.$nextTick(() => {
         document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
         let iframe = document.getElementById('map_frame').contentWindow
         document.getElementById('map_frame').onload = function () {
           iframe.postMessage('hello', 'https://m.amap.com/picker/')
         }
-        window.addEventListener('message', e => {
-          console.log(e)
-          if (_.isUndefined(e.data.location)) {
-            return
-          }
-          let geocoder = e.data.location
-          let lngLatArray = geocoder.split(',')
-          if (lngLatArray.length > 1) {
-            this.position.lng = lngLatArray[0]
-            this.position.lat = lngLatArray[1]
-          }
-          this.getAdressByGeocoder(lngLatArray)
-        }, false)
+        window.addEventListener('message', this.receivedMessage, false)
       })
+    },
+    beforeDestroy () {
+      window.removeEventListener('message', this.receivedMessage)
     }
   }
 </script>
@@ -105,6 +111,7 @@
     #map_frame {
       width: 100%;
       height: 100%;
+      border: 0;
     }
   }
 

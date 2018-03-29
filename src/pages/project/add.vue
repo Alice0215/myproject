@@ -10,7 +10,8 @@
     </q-toolbar>
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
+        <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+                  class="login-input" disable hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
@@ -41,7 +42,8 @@ export default {
         TLlable: '设置项目参与者',
         TLUserId: '',
         TMUserId: '',
-        jobType: 'TM'
+        jobType: 'TM',
+        geoInfo: null
       },
       TLUserId: '',
       TMUserId: '',
@@ -90,7 +92,17 @@ export default {
       this.formData.jobType = jobType
       eventBus.$emit('event_name', 'some message')
       this.$router.push('allUser')
+    },
+    openMap () {
+      this.$router.push('map')
     }
+  },
+  mounted () {
+    eventBus.$on('user_location', geo => {
+      this.formData.geoInfo = JSON.parse(geo)
+      this.formData.address = this.formData.geoInfo.formattedAddress
+      console.log(this.formData.address)
+    })
   }
 }
 </script>
