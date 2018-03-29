@@ -5,7 +5,7 @@
         <span class="hover">机构注册</span>
     </div>
     <div class="full-width">
-        <q-input v-model="partyId" placeholder="机构名称" class="login-input"
+        <q-input v-model="form.partyId" placeholder="机构名称" class="login-input"
         @blur="$v.form.partyId.$touch"
         @keyup.enter="submit"
         :error="$v.form.partyId.$error"
@@ -167,9 +167,7 @@ button {
 h4 {
   font-weight: 300;
 }
-a {
-  font-size: 14px;
-}
+
 .main-color-bg {
   background-color: #1aad19;
   color: white;

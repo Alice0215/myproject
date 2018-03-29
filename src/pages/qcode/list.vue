@@ -11,13 +11,13 @@
         <q-toolbar>
           <q-toolbar-title class="text-center project-info">
             <q-item-tile sublabel lines='1'>
-              简介：项目描述内容，项目描述内容
+              简介：{{projectDesc}}
              </q-item-tile>
               <q-item-side left icon='place' class='inline newicon'></q-item-side>
                 <q-item-tile sublabel lines='1' class='inline text-center'>
-                郑州市，金水区
+               {{location}}
                 </q-item-tile>
-              <q-item-side right icon='border color' class='inline newicon'></q-item-side>
+              <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
         <div class='nav-title'>
@@ -57,6 +57,9 @@ export default {
       pageNo: 1,
       hasLoadAll: false,
       qrtype: '',
+      projectId: '',
+      projectDesc: '',
+      location: '',
       qrtypes: [
         {
           label: '单株植物',
@@ -77,7 +80,7 @@ export default {
       if (!this.hasLoadAll) {
         this.loading = true
         request(
-          'qrcode/list?projectId=1&pageNo=' + this.pageNo + '&pageSize=20',
+          'qrcode/list?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20',
           'get',
           '',
           'json',
@@ -103,7 +106,36 @@ export default {
           }
         })
       }
+    },
+    getInfo () {
+      request(
+        'project/detail?projectId=' + this.projectId,
+        'get',
+        '',
+        'json',
+        true
+      ).then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
+          if (response.data.resultMsg.location) {
+            this.location = response.data.resultMsg.location.formattedAddress
+          }
+          this.projectDesc = response.data.resultMsg.projectDesc
+          console.log(this.info)
+        } else {
+          console.log(response.data.resultMsg)
+          this.$q.dialog({
+            title: '提示',
+            message: response.data.resultMsg
+          })
+        }
+      })
     }
+  },
+  created () {
+    this.projectId = this.$route.query.projectId
+    this.getInfo()
+    this.load()
   }
 }
 </script>

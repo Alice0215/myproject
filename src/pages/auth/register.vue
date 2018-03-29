@@ -196,4 +196,9 @@ export default {
   text-align: center;
   margin-bottom: 40px;
 }
+a {
+  font-size: 14px;
+  display: inline-block !important;
+  color: #1aad19 !important;
+}
 </style>

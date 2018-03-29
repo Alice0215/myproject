@@ -10,7 +10,7 @@
     </q-toolbar>
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
+        <q-search icon="place" color="amber" v-model="formData.locationJson" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
@@ -36,7 +36,7 @@ export default {
       formData: {
         projectName: '',
         projectDesc: '',
-        address: '',
+        locationJson: '',
         TMlable: '设置项目负责人',
         TLlable: '设置项目参与者',
         TLUserId: '',
@@ -49,22 +49,29 @@ export default {
     }
   },
   methods: {
-    toback () {
-      window.history.back()
-    },
     add () {
       // eventBus.$on('event_name')
       let data = {
-        projectName: this.formData.projectName,
-        projectDesc: this.formData.projectDesc,
-        projectJobs: [{ jobType: 'TL', userId: 79 }]
+        'projectDesc': this.formData.projectDesc,
+        'projectName': this.formData.projectName,
+        'locationJson': '',
+        'projectJobs': [
+          {
+            'jobType': 'TM',
+            'userId': 79
+          },
+          {
+            'jobType': 'TL',
+            'userId': 78
+          }
+        ]
       }
       console.log(data)
       let params = new URLSearchParams()
       for (var key in data) {
         params.append(key, data[key])
       }
-      request('project/create', 'post', params, 'json', true).then(response => {
+      request('project/create', 'post', data, 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
             title: '提示',

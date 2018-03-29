@@ -15,12 +15,12 @@
         <q-input type="textarea" v-model="projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=1')">
             <q-item-side icon="group" />
-            <q-item-main :label="`设置项目负责人`" />
+            <q-item-main :label="TMlable" />
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
         <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=2')">
             <q-item-side icon="group" />
-            <q-item-main :label="`设置项目参与者`" />
+            <q-item-main :label="TLlable" />
             <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
@@ -37,11 +37,12 @@ export default {
       projectName: '',
       projectDesc: '',
       address: '',
-      TMlable: '设置项目负责人',
-      TLlable: '设置项目参与者'
+      TMlable: '无',
+      TLlable: '无'
     }
   },
-  mounted () {
+  created () {
+    this.projectId = this.$route.query.id
     this.getInfo()
   },
   methods: {
@@ -69,15 +70,17 @@ export default {
     },
     edit () {
       let data = {
-        projectName: this.projectName,
-        projectDesc: this.projectDesc,
-        projectJobs: [{ jobType: 'TL', userId: 79 }]
+        'projectId': this.projectId,
+        'projectName': this.projectName,
+        'projectDesc': this.projectDesc,
+        'locationJson': '',
+        'projectJobs': [{ jobType: 'TL', userId: 79 }, { jobType: 'TM', userId: 79 }]
       }
       let params = new URLSearchParams()
       for (var key in data) {
         params.append(key, data[key])
       }
-      request('project/edit', 'put', params, 'json', true)
+      request('project/edit', 'put', data, 'json', true)
         .then(response => {
           if (response.data.resultCode === 'SUCCESS') {
             this.$q.dialog({
@@ -97,7 +100,6 @@ export default {
                 message: response.data.resultMsg
               })
             }
-            this.$router.push('/login')
           }
         })
         .catch(e => {

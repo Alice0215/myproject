@@ -61,7 +61,7 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
             title: '提示',
-            message: '项目添加成功！'
+            message: '保存成功！'
           })
         } else {
           if (response.data.resultCode === 'ERROR') {

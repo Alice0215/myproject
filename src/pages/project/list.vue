@@ -15,7 +15,8 @@
         </q-item>
         <q-infinite-scroll :handler="load" class="scroll-field">
         <q-item multiline  v-for="item in list"
-          :key="item.id" class="list-list"  to="qcode/list?projectId=item.id">
+          :key="item.id" class="list-list">
+          <a href='javascript:' @click="$router.push('qcode/list?projectId='+item.id)">
            <q-item-side class="add-btn" />
             <q-item-main>
             <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
@@ -23,6 +24,7 @@
             {{item.projectDesc}}
             </q-item-tile>
             </q-item-main>
+          </a>
         </q-item>
         <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
           <q-spinner name="dots" slot="message" :size="40"></q-spinner>
@@ -69,7 +71,9 @@ export default {
         }
       })
     },
-
+    toDetail (projectId) {
+      return 'qcode/List?projectId' + projectId
+    },
     async load () {
       if (!this.hasLoadAll) {
         this.loading = true
@@ -109,7 +113,7 @@ export default {
   padding: 0px;
   border: none;
 }
-.scroll-field{
+.scroll-field {
   margin-bottom: 63px;
 }
 .add-btn {

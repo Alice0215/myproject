@@ -56,7 +56,7 @@ export default {
     },
     addUser (fullname, userId) {
       eventBus.$emit('users', { fullname: fullname, userId: userId })
-      this.$router.go(-1)
+      this.$router.push('add')
     }
   }
 }

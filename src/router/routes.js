@@ -24,27 +24,33 @@ export default [
   },
   {
     path: '/project/edit',
-    component: () => import('pages/project/edit')
+    component: () => import('pages/project/edit'),
+    name: 'projectEdit'
   },
   {
     path: '/project/allUser',
-    component: () => import('pages/project/allUser')
+    component: () => import('pages/project/allUser'),
+    name: 'allUser'
   },
   {
     path: '/qcode/list',
-    component: () => import('pages/qcode/list')
+    component: () => import('pages/qcode/list'),
+    name: 'qcodeList'
   },
   {
     path: '/qcode/add',
-    component: () => import('pages/qcode/add')
+    component: () => import('pages/qcode/add'),
+    name: 'qcodeAdd'
   },
   {
     path: '/qcode/detail',
-    component: () => import('pages/qcode/detail')
+    component: () => import('pages/qcode/detail'),
+    name: 'qcodeDetail'
   },
   {
     path: '/qcode/edit',
-    component: () => import('pages/qcode/edit')
+    component: () => import('pages/qcode/edit'),
+    name: 'qcodeEdit'
   },
   {
     path: '/map',
