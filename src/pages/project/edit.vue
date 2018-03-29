@@ -10,17 +10,17 @@
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card" >
-        <input text-dark required v-model="projectName" class="full-width login-input">
-        <q-search icon="place" color="amber" v-model="address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
-        <q-input type="textarea" v-model="projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=1')">
+        <input text-dark required v-model="formData.projectName" class="full-width login-input">
+        <q-search icon="place" color="amber" v-model="formData.locationJson" class="login-input" placeholder="输入地址/定位地址"/>
+        <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+        <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
-            <q-item-main :label="TMlable" />
+            <q-item-main :label="formData.TMlable" />
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
-        <q-item link class="full-width underline"  @click.native="$router.push('/project/alluser?type=2')">
+        <q-item link class="full-width underline" @click.native="chooseUser('TL')">
             <q-item-side icon="group" />
-            <q-item-main :label="TLlable" />
+            <q-item-main :label="formData.TLlable" />
             <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
@@ -34,16 +34,36 @@ export default {
   data () {
     return {
       projectId: '',
-      projectName: '',
-      projectDesc: '',
-      address: '',
-      TMlable: '无',
-      TLlable: '无'
+      formData: {
+        projectName: '',
+        projectDesc: '',
+        locationJson: '',
+        TMlable: '设置项目负责人',
+        TLlable: '设置项目参与者',
+        TMobg: { 'jobType': 'TM', 'userId': '' },
+        TLobg: { 'jobType': 'TL', 'userId': '' }
+      }
     }
   },
   created () {
     this.projectId = this.$route.query.id
     this.getInfo()
+    if (this.$route.query.type) {
+      if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
+        let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+        this.formData = oldInfo
+      }
+      if (this.$route.query.type === 'TM') {
+        this.formData.TMlable = this.$route.query.fullname
+        this.formData.TMobg.userId = this.$route.query.userId
+      } else {
+        this.formData.TLlable = this.$route.query.fullname
+        this.formData.TLobg.userId = this.$route.query.userId
+      }
+    }
+    if (localStorage.getItem('oldInfo')) {
+      localStorage.removeItem('oldInfo')
+    }
   },
   methods: {
     getInfo () {
@@ -56,11 +76,13 @@ export default {
       ).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           console.log(response.data.resultMsg)
-          this.projectName = response.data.resultMsg.projectName
-          this.projectDesc = response.data.resultMsg.projectDesc
-          console.log(this.info)
+          this.formData.projectName = response.data.resultMsg.projectName
+          this.formData.projectDesc = response.data.resultMsg.projectDesc
+          this.formData.locationJson = response.data.resultMsg.locationJson
+          this.formData.TMlable = response.data.resultMsg.projectJobList
+          this.formData.TLlable = response.data.resultMsg.locationJson
+          this.formData.TMlable = response.data.resultMsg.locationJson
         } else {
-          console.log(response.data.resultMsg)
           this.$q.dialog({
             title: '提示',
             message: response.data.resultMsg
@@ -69,12 +91,23 @@ export default {
       })
     },
     edit () {
+      let projectJobs = []
+      if (this.formData.TMobg.userId !== '' && this.formData.TLobg.userId !== '') {
+        projectJobs = [this.formData.TMobg, this.formData.TLobg]
+      } else {
+        if (this.formData.TMobg.userId !== '') {
+          projectJobs = [this.formData.TMobg]
+        }
+        if (this.formData.TLobg.userId !== '') {
+          projectJobs = [this.formData.TLobg]
+        }
+      }
       let data = {
         'projectId': this.projectId,
         'projectName': this.projectName,
         'projectDesc': this.projectDesc,
         'locationJson': '',
-        'projectJobs': [{ jobType: 'TL', userId: 79 }, { jobType: 'TM', userId: 79 }]
+        'projectJobs': projectJobs
       }
       let params = new URLSearchParams()
       for (var key in data) {
@@ -105,6 +138,10 @@ export default {
         .catch(e => {
           console.log('Error', e.response.data.message)
         })
+    },
+    chooseUser (jobType, userId) {
+      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      this.$router.push('allUser?type=' + jobType + '&userId=' + userId + '&projectId=' + this.projectId)
     }
   }
 }

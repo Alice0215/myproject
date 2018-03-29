@@ -108,14 +108,14 @@ export default {
         deviceType = 2
       }
       let data = {
-        username: this.username,
-        fullname: this.name,
-        email: this.email,
-        password: this.password,
-        partyId: this.partyName,
-        phone: this.phone,
+        username: this.form.username,
+        fullname: this.form.name,
+        email: this.form.email,
+        password: this.form.password,
+        partyId: this.form.partyId,
+        phone: this.form.phone,
         deviceType: deviceType,
-        passwordVerify: this.password_confirmation
+        passwordVerify: this.form.password_confirmation
       }
       const params = new FormData()
       for (var key in data) {

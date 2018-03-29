@@ -34,7 +34,17 @@ export default {
     return {
       users: [],
       key_word: '',
-      isShow: false
+      isShow: false,
+      type: '',
+      selectId: '',
+      projectId: ''
+    }
+  },
+  created () {
+    this.type = this.$route.query.type
+    if (this.$route.userId) {
+      this.selectId = this.$route.userId
+      this.projectId = this.$route.projectId
     }
   },
   mounted () {
@@ -55,8 +65,13 @@ export default {
       })
     },
     addUser (fullname, userId) {
-      eventBus.$emit('users', { fullname: fullname, userId: userId })
-      this.$router.push('add')
+      let userInfo = { 'fullname': fullname, 'userId': userId }
+      eventBus.$emit('users', userInfo)
+      if (this.selectId !== '') {
+        this.$router.push('edit?type=' + this.type + '&fullname=' + fullname + '&userId=' + userId + '&projectId=' + this.projectId)
+      } else {
+        this.$router.push('add?type=' + this.type + '&fullname=' + fullname + '&userId=' + userId)
+      }
     }
   }
 }

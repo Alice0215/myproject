@@ -29,7 +29,6 @@
 
 <script>
 import { request } from '../../common'
-import eventBus from '../../eventBus'
 export default {
   data () {
     return {
@@ -39,40 +38,52 @@ export default {
         locationJson: '',
         TMlable: '设置项目负责人',
         TLlable: '设置项目参与者',
-        TLUserId: '',
-        TMUserId: '',
-        jobType: 'TM'
-      },
-      TLUserId: '',
-      TMUserId: '',
-      jobType: 'TM'
+        TMobg: { 'jobType': 'TM', 'userId': '' },
+        TLobg: { 'jobType': 'TL', 'userId': '' }
+      }
     }
+  },
+  created () {
+    if (this.$route.query.type) {
+      if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
+        let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+        this.formData = oldInfo
+      }
+      if (this.$route.query.type === 'TM') {
+        this.formData.TMlable = this.$route.query.fullname
+        this.formData.TMobg.userId = this.$route.query.userId
+      } else {
+        this.formData.TLlable = this.$route.query.fullname
+        this.formData.TLobg.userId = this.$route.query.userId
+      }
+    }
+    localStorage.removeItem('oldInfo')
   },
   methods: {
     add () {
-      // eventBus.$on('event_name')
+      let projectJobs = []
+      if (this.formData.TMobg.userId !== '' && this.formData.TLobg.userId !== '') {
+        projectJobs = [this.formData.TMobg, this.formData.TLobg]
+      } else {
+        if (this.formData.TMobg.userId !== '') {
+          projectJobs = [this.formData.TMobg]
+        }
+        if (this.formData.TLobg.userId !== '') {
+          projectJobs = [this.formData.TLobg]
+        }
+      }
+      console.log(projectJobs)
       let data = {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
         'locationJson': '',
-        'projectJobs': [
-          {
-            'jobType': 'TM',
-            'userId': 79
-          },
-          {
-            'jobType': 'TL',
-            'userId': 78
-          }
-        ]
-      }
-      console.log(data)
-      let params = new URLSearchParams()
-      for (var key in data) {
-        params.append(key, data[key])
+        'projectJobs': projectJobs
       }
       request('project/create', 'post', data, 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
+          if (localStorage.getItem('oldInfo')) {
+            localStorage.removeItem('oldInfo')
+          }
           this.$q.dialog({
             title: '提示',
             message: '项目添加成功！'
@@ -94,9 +105,8 @@ export default {
       })
     },
     chooseUser (jobType) {
-      this.formData.jobType = jobType
-      eventBus.$emit('event_name', 'some message')
-      this.$router.push('allUser')
+      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      this.$router.push('allUser?type=' + jobType)
     }
   }
 }
