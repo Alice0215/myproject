@@ -13,14 +13,14 @@
         <q-search icon="place" color="amber" v-model="formData.locationJson" @click="openMap"
                   class="login-input" disable hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
+        <q-item link class="full-width underline user"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
-            <q-item-main :label="formData.TMlable" />
+            <q-item-main :label="`项目负责人`" /><span class="user">{{TMlable}}</span>
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
-        <q-item link class="full-width underline"  @click.native="chooseUser('TL')">
+        <q-item link class="full-width underline users"  @click.native="chooseUser('TL')">
             <q-item-side icon="group" />
-            <q-item-main :label="formData.TLlable" />
+            <q-item-main :label="`项目参与者`" />{{TLlable}}
             <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
@@ -39,8 +39,8 @@ export default {
         projectDesc: '',
         locationJson: '',
         geoInfo: null,
-        TMlable: '设置项目负责人',
-        TLlable: '设置项目参与者',
+        TMlable: '',
+        TLlable: '',
         TMobg: { 'jobType': 'TM', 'userId': '' },
         TLobg: { 'jobType': 'TL', 'userId': '' }
       }
@@ -127,6 +127,18 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
+.users{
+  font-size: 14px;
+  .user{
+    padding: 3px;
+    text-align: center;
+    display: inline-block;
+    background-color: #DCDCDC;
+    border-radius: 2px;
+    margin-left: 3px;
+  }
+}
+
 .underline {
   border-bottom: 1px solid #cccccc;
   margin-top: 20px;

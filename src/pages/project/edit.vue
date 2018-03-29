@@ -13,14 +13,14 @@
         <input text-dark required v-model="formData.projectName" class="full-width login-input">
         <q-search icon="place" color="amber" v-model="formData.locationJson" class="login-input" placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
+        <q-item link class="full-width underline users"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
             <q-item-main :label="formData.TMlable" />
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
-        <q-item link class="full-width underline" @click.native="chooseUser('TL')">
+        <q-item link class="full-width underline users" @click.native="chooseUser('TL')">
             <q-item-side icon="group" />
-            <q-item-main :label="formData.TLlable" />
+            <q-item-main :label="formData.TLlable" /><span class="user">1122</span><span class="user">1122</span>
             <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
@@ -38,8 +38,8 @@ export default {
         projectName: '',
         projectDesc: '',
         locationJson: '',
-        TMlable: '设置项目负责人',
-        TLlable: '设置项目参与者',
+        TMlable: '项目负责人',
+        TLlable: '项目参与者',
         TMobg: { 'jobType': 'TM', 'userId': '' },
         TLobg: { 'jobType': 'TL', 'userId': '' }
       }
@@ -79,9 +79,6 @@ export default {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
           this.formData.locationJson = response.data.resultMsg.locationJson
-          this.formData.TMlable = response.data.resultMsg.projectJobList
-          this.formData.TLlable = response.data.resultMsg.locationJson
-          this.formData.TMlable = response.data.resultMsg.locationJson
         } else {
           this.$q.dialog({
             title: '提示',
@@ -160,6 +157,17 @@ export default {
 }
 input:not(.no-style):hover {
   border-bottom: none;
+}
+.users{
+  font-size: 14px;
+  .user{
+    padding: 3px;
+    text-align: center;
+    display: inline-block;
+    background-color: #DCDCDC;
+    border-radius: 2px;
+    margin-left: 3px;
+  }
 }
 .q-if-inner {
   min-height: 30px !important;
