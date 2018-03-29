@@ -98,11 +98,10 @@ export default {
     }
   },
   created () {
-    eventBus.$on('user_location', geo => {
+    eventBus.$once('user_location', geo => {
       this.formData.geoInfo = JSON.parse(geo)
       this.formData.address = this.formData.geoInfo.formattedAddress
       console.log(this.formData.address)
-      eventBus.$off('user_location')
     })
   }
 }
