@@ -5,10 +5,10 @@
         <span class="hover">机构注册</span>
     </div>
     <div class="full-width">
-        <q-input v-model="partyId" placeholder="机构名称" class="login-input"
-        @blur="$v.form.partyId.$touch"
+        <q-input v-model="form.partyName" placeholder="机构名称" class="login-input"
+        @blur="$v.form.partyName.$touch"
         @keyup.enter="submit"
-        :error="$v.form.partyId.$error"
+        :error="$v.form.partyName.$error"
         />
         <q-input
         v-model="form.username"
@@ -73,7 +73,8 @@ export default {
         phone: '',
         partyId: '',
         password: '',
-        password_confirmation: ''
+        password_confirmation: '',
+        partyName: ''
       },
       organizations: []
     }
@@ -83,7 +84,8 @@ export default {
       username: { required },
       fullname: { required },
       email: { required, email },
-      partyId: { required },
+      // partyId: { required },
+      partyName: {required},
       phone: { required },
       password: { required },
       password_confirmation: { required }
@@ -114,17 +116,17 @@ export default {
         deviceType = 2
       }
       var data = {
-        partyName: this.partyName,
-        phone: this.phone,
-        username: this.username,
-        fullname: this.name,
-        email: this.email,
-        password: this.password,
+        partyName: this.form.partyName,
+        phone: this.form.phone,
+        username: this.form.username,
+        fullname: this.form.fullname,
+        email: this.form.email,
+        password: this.form.password,
         deviceType: deviceType,
-        passwordVerify: this.password_confirmation
+        passwordVerify: this.form.password_confirmation
       }
-      let params = new URLSearchParams()
-      for (var key in data) {
+      let params = new FormData()
+      for (let key in data) {
         params.append(key, data[key])
       }
       request('party/register', 'post', params).then(response => {
