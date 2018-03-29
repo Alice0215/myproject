@@ -15,12 +15,12 @@
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline users"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
-            <q-item-main :label="`项目负责人`" /><span class="user">{{TMlable}}</span>
+            <q-item-main :label="formData.TMlable" />
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
         <q-item link class="full-width underline users"  @click.native="chooseUser('TL')">
             <q-item-side icon="group" />
-            <q-item-main :label="`项目参与者`" />{{TLlable}}
+            <q-item-main :label="formData.TLlable" />
             <q-item-side right  icon="keyboard_arrow_right" />
         </q-item>
     </div>
@@ -38,16 +38,17 @@ export default {
         projectName: '',
         projectDesc: '',
         locationJson: '',
-        geoInfo: null,
-        TMlable: '',
-        TLlable: '',
+        TMlable: '设置负责人',
+        TLlable: '设置参与者',
         TMobg: { 'jobType': 'TM', 'userId': '' },
-        TLobg: { 'jobType': 'TL', 'userId': '' }
+        TLobg: { 'jobType': 'TL', 'userId': '' },
+        geoInfo: null
       }
     }
   },
   created () {
     if (this.$route.query.type) {
+      console.log('1111')
       if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
         let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
         this.formData = oldInfo
