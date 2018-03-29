@@ -53,8 +53,8 @@ export default [
     name: 'qcodeEdit'
   },
   {
-    path: '/map',
-    component: () => import('pages/map')
+    path: '/project/map',
+    component: () => import('pages/project/map')
   },
   {
     path: '/project/maintenance',

@@ -109,7 +109,11 @@ export default {
       }
       let data = {
         username: this.form.username,
+<<<<<<< HEAD
         fullname: this.form.name,
+=======
+        fullname: this.form.fullname,
+>>>>>>> origin/feature/vitta0323
         email: this.form.email,
         password: this.form.password,
         partyId: this.form.partyId,
@@ -118,7 +122,7 @@ export default {
         passwordVerify: this.form.password_confirmation
       }
       const params = new FormData()
-      for (var key in data) {
+      for (let key in data) {
         params.append(key, data[key])
       }
       request('user/register', 'post', params)

@@ -10,7 +10,8 @@
     </q-toolbar>
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.locationJson" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
+        <q-search icon="place" color="amber" v-model="formData.locationJson" @click="openMap"
+                  class="login-input" disable hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
@@ -29,6 +30,7 @@
 
 <script>
 import { request } from '../../common'
+import eventBus from '../../eventBus'
 export default {
   data () {
     return {
@@ -36,6 +38,7 @@ export default {
         projectName: '',
         projectDesc: '',
         locationJson: '',
+        geoInfo: null,
         TMlable: '设置项目负责人',
         TLlable: '设置项目参与者',
         TMobg: { 'jobType': 'TM', 'userId': '' },
@@ -107,7 +110,17 @@ export default {
     chooseUser (jobType) {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
       this.$router.push('allUser?type=' + jobType)
+    },
+    openMap () {
+      this.$router.push('map')
     }
+  },
+  mounted () {
+    eventBus.$on('user_location', geo => {
+      this.formData.geoInfo = JSON.parse(geo)
+      this.formData.address = this.formData.geoInfo.formattedAddress
+      console.log(this.formData.address)
+    })
   }
 }
 </script>
