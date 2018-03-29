@@ -44,7 +44,6 @@
         let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
         geoInfo.position = this.position
         geoInfo = JSON.stringify(geoInfo)
-        console.log('123')
         if (data.info === 'OK') {
           eventBus.$emit('user_location', geoInfo)
           this.$router.back()
