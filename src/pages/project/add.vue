@@ -13,7 +13,7 @@
         <q-search icon="place" color="amber" v-model="formData.locationJson" @click="openMap"
                   class="login-input" disable hide-underline placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline user"  @click.native="chooseUser('TM')">
+        <q-item link class="full-width underline users"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
             <q-item-main :label="`项目负责人`" /><span class="user">{{TMlable}}</span>
             <q-item-side right icon="keyboard_arrow_right" />
@@ -61,6 +61,11 @@ export default {
       }
     }
     localStorage.removeItem('oldInfo')
+    eventBus.$once('user_location', geo => {
+      this.formData.geoInfo = JSON.parse(geo)
+      this.formData.address = this.formData.geoInfo.formattedAddress
+      console.log(this.formData.address)
+    })
   },
   methods: {
     add () {
@@ -114,26 +119,19 @@ export default {
     openMap () {
       this.$router.push('map')
     }
-  },
-  created () {
-    eventBus.$once('user_location', geo => {
-      this.formData.geoInfo = JSON.parse(geo)
-      this.formData.address = this.formData.geoInfo.formattedAddress
-      console.log(this.formData.address)
-    })
   }
 }
 </script>
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.users{
+.users {
   font-size: 14px;
-  .user{
+  .user {
     padding: 3px;
     text-align: center;
     display: inline-block;
-    background-color: #DCDCDC;
+    background-color: #dcdcdc;
     border-radius: 2px;
     margin-left: 3px;
   }
