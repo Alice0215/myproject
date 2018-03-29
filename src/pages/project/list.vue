@@ -13,9 +13,9 @@
             创建项目
             </q-item-main>
         </q-item>
-        <q-infinite-scroll :handler="load">
+        <q-infinite-scroll :handler="load" class="scroll-field">
         <q-item multiline  v-for="item in list"
-          :key="item.id" class="list-list"  to="qcode/list">
+          :key="item.id" class="list-list"  to="qcode/list?projectId=item.id">
            <q-item-side class="add-btn" />
             <q-item-main>
             <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
@@ -108,6 +108,9 @@ export default {
 .list {
   padding: 0px;
   border: none;
+}
+.scroll-field{
+  margin-bottom: 63px;
 }
 .add-btn {
   width: 75px;

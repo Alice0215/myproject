@@ -2,18 +2,31 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>返回</a>
+             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
-              填写信息
+              二维码名称
             </q-toolbar-title>
+            <a class="top-nav-right">历史记录</a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
-        <input text-dark required v-model='contactPerson' placeholder='姓名' class='full-width login-input'>
-        <input text-dark required v-model='contactNumber' placeholder='联系方式' class='full-width login-input'>
-        <input text-dark required v-model='amount' placeholder='输入申请二维码枚数' class='full-width login-input'>
+      <div class="top-field">
+        <p class='text-center'>
+          <img src='statics/qr.png'/>
+        </p>
+        <p class='text-center'>
+          <q-btn class="show-qr">查看二维码</q-btn>
+        </p>
+      </div>
+      <div class="qr-info">
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+        <p>二维码类型：单株植物</p>
+      </div>
+      <q-btn class="full-width bg-color qr-btn">编辑基础信息</q-btn>
     </div>
-    <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
   </div>
 </template>
 
@@ -81,7 +94,6 @@ export default {
   padding: 30px 15px;
   min-height: 160px;
 }
-
 input:not(.no-style):hover {
   border-bottom: none;
 }
@@ -91,5 +103,17 @@ input:not(.no-style):hover {
 }
 .q-if-control.q-icon {
   padding-bottom: 6px;
+}
+.top-field p{
+  margin-bottom: 10px;
+}
+.qr-info{
+  margin-top: 30px;
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 30px;
+  p{
+    margin-bottom: 5px;
+  }
 }
 </style>

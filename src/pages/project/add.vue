@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-toolbar class="header">
-        <q-toolbar class="fix">
-            <q-item-side left  icon="keyboard arrow left" @click="$router.go(-1)"/>
+        <q-toolbar class="fix" >
+            <a @click="$router.go(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
             <q-toolbar-title class="header-title">
             新建项目
             </q-toolbar-title>
@@ -11,7 +11,7 @@
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
         <q-search icon="place" color="amber" v-model="formData.address" class="login-input"  hide-underline placeholder="输入地址/定位地址"/>
-        <q-input type="textarea" v-model="formData.projectJobs" hide-underline class="login-input" placeholder="项目简介"/>
+        <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline"  @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
             <q-item-main :label="formData.TMlable" />
@@ -36,7 +36,6 @@ export default {
       formData: {
         projectName: '',
         projectDesc: '',
-        projectJobs: '',
         address: '',
         TMlable: '设置项目负责人',
         TLlable: '设置项目参与者',
@@ -50,13 +49,17 @@ export default {
     }
   },
   methods: {
+    toback () {
+      window.history.back()
+    },
     add () {
       // eventBus.$on('event_name')
       let data = {
-        projectName: this.projectName,
-        projectDesc: this.projectDesc,
+        projectName: this.formData.projectName,
+        projectDesc: this.formData.projectDesc,
         projectJobs: [{ jobType: 'TL', userId: 79 }]
       }
+      console.log(data)
       let params = new URLSearchParams()
       for (var key in data) {
         params.append(key, data[key])
@@ -69,10 +72,17 @@ export default {
           })
           this.$router.push('/')
         } else {
-          this.$q.dialog({
-            title: '提示',
-            message: response.data.resultMsg.hint
-          })
+          if (response.data.resultCode === 'ERROR') {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg.hint
+            })
+          } else {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
+          }
         }
       })
     },

@@ -1,9 +1,8 @@
 
 <template>
-
     <q-layout class='list bg-color'>
         <q-toolbar class='header'>
-         <q-item-side left  icon='keyboard arrow left' @click='$router.go(-1)' class='reback'/>
+          <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
             项目名称
             </q-toolbar-title>
@@ -21,34 +20,24 @@
               <q-item-side right icon='border color' class='inline newicon'></q-item-side>
             </q-toolbar-title>
         </q-toolbar>
-
+        <div class='nav-title'>
+            <span class='hover'>二维码列表</span>
+            <span @click="$router.push('/add')">维护记录</span>
+            <q-select v-model='qrtype' :options='qrtypes' placeholder='类型' />
+        </div>
+        <p class='qcount'>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
-            <div>
-            <p>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
-
-            <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
-             </q-item-tile>
-             <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
-             </q-item-tile>
-             <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
-             </q-item-tile>
-              <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
-             </q-item-tile>
-              <q-item-tile sublabel lines='1' class='item'>
-                简介：项目描述内容，项目描述内容
+            <div @click="$router.push('/qcode/detail')">
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
+          :key="item.id" to="/qcode/detail" >
+               <span class="qfield-mtitle">{{item.alias}}</span>
+               <span class="qfield-stitle">{{item.alias}}</span>
+               <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
              </q-item-tile>
             </div>
         </q-scroll-area>
 
-         <q-toolbar class='footer add-qcode'>
-            <q-toolbar-title class='header-title' @click="$router.push('/add')">
-            申请制作二维码
-            </q-toolbar-title>
-         </q-toolbar>
+         <q-btn class='full-width bg-color qr-btn'  @click="$router.push('add')">申请制作二维码</q-btn>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -66,41 +55,34 @@ export default {
       list: '',
       loading: false,
       pageNo: 1,
-      hasLoadAll: true
+      hasLoadAll: false,
+      qrtype: '',
+      qrtypes: [
+        {
+          label: '单株植物',
+          value: '1'
+        },
+        {
+          label: '片区植物',
+          value: '2'
+        }
+      ]
     }
   },
   mounted () {
     this.load()
   },
   methods: {
-    async getlist () {
-      request(
-        'project/list?pageNo=' + this.pageNo + '&pageSize=20',
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          this.list = response.data.resultMsg
-          this.pageNo++
-        } else {
-          console.log(response.data.resultMsg)
-        }
-      })
-    },
-
     async load () {
       if (!this.hasLoadAll) {
         this.loading = true
         request(
-          'project/list?pageNo=' + this.pageNo + '&pageSize=20',
+          'qrcode/list?projectId=1&pageNo=' + this.pageNo + '&pageSize=20',
           'get',
           '',
           'json',
           true
         ).then(response => {
-          console.log(response)
           if (response.data.resultCode === 'SUCCESS') {
             this.loading = false
             let list = response.data.resultMsg
@@ -108,13 +90,16 @@ export default {
               this.hasLoadAll = true
               return
             }
-            if (list.length < 20) {
+            if (list.length <= 20) {
               this.list = list
               this.hasLoadAll = true
               return
             }
             this.list = this.list.concat(list)
             this.pageNo++
+          } else {
+            this.hasLoadAll = true
+            return ''
           }
         })
       }
@@ -125,30 +110,42 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.project-info{
-  font-size: 15px;
+.project-info {
+  font-size: 12px;
   line-height: 23px;
+}
+.qcount {
+  padding: 15px 15px 0px;
+  margin-bottom: 3px;
 }
 .qfield {
   width: 100%;
-  height: 350px;
+  height: 300px;
   padding: 15px;
   background-color: #f5f5f5;
+  .item {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    border: 1px solid #dfdfdf;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+    line-height: 28px;
+    .qfield-mtitle {
+      font-size: 14px;
+      padding-right: 100px;
+    }
+  }
 }
-.qfield .item {
-  width: 100%;
-  height: 50px;
-  background-color: white;
-  border: 1px solid #DFDFDF;
-  border-radius: 3px;
-  padding: 10px;
-  margin-bottom: 10px;
-  line-height: 28px;
+.qfield .item .qfield-stitle {
+  font-size: 12px;
 }
 .newicon .q-icon,
-.newicon .q-icon.material-icons,.icon-error .q-icon.material-icons {
+.newicon .q-icon.material-icons,
+.icon-error .q-icon.material-icons {
   font-size: 18px;
-  color: #999999
+  color: #999999;
 }
 .group {
   margin-right: 10px;
