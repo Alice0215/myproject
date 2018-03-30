@@ -20,7 +20,8 @@ export default [
   },
   {
     path: '/project/add',
-    component: () => import('pages/project/add')
+    component: () => import('pages/project/add'),
+    name: 'projectAdd'
   },
   {
     path: '/project/edit',

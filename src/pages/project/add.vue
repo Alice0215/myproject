@@ -6,23 +6,24 @@
             <q-toolbar-title class="header-title">
             新建项目
             </q-toolbar-title>
+           <q-item-side right/>
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.locationJson" @click="openMap"
-                  class="login-input" disable hide-underline placeholder="输入地址/定位地址"/>
-        <q-input type="textarea" v-model="formData.projectDesc" hide-underline class="login-input" placeholder="项目简介"/>
-        <q-item link class="full-width underline users"  @click.native="chooseUser('TM')">
-            <q-item-side icon="group" />
-            <q-item-main :label="formData.TMlable" />
-            <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item link class="full-width underline users"  @click.native="chooseUser('TL')">
-            <q-item-side icon="group" />
-            <q-item-main :label="formData.TLlable" />
-            <q-item-side right  icon="keyboard_arrow_right" />
-        </q-item>
+        <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+                  class="login-input" disable  placeholder="输入地址/定位地址"/>
+        <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+          <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
+              <q-item-side icon="group" />
+              <q-item-main :label="`设置负责人`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+              <q-item-side right icon="keyboard_arrow_right" />
+          </q-item>
+            <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
+                <q-item-side icon="group" />
+                <q-item-main :label="`设置参与者`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+                <q-item-side right  icon="keyboard_arrow_right" />
+            </q-item>
     </div>
     <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
   </div>
@@ -37,55 +38,88 @@ export default {
       formData: {
         projectName: '',
         projectDesc: '',
-        locationJson: '',
-        TMlable: '设置负责人',
-        TLlable: '设置参与者',
-        TMobg: { 'jobType': 'TM', 'userId': '' },
-        TLobg: { 'jobType': 'TL', 'userId': '' },
+        address: '',
+        locationJson: { 'addressComponent': '' },
+        TMlable: [],
+        TLlable: [],
+        TMSelect: [],
+        TLSelect: [],
+        TMobg: [],
+        TLobg: [],
         geoInfo: null
-      }
+      },
+      tempType: ''
     }
   },
   created () {
-    if (this.$route.query.type) {
-      console.log('1111')
-      if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
-        let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
-        this.formData = oldInfo
-      }
+    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
+      let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+      this.formData = oldInfo
+      localStorage.removeItem('oldInfo')
+    }
+    if (this.$route.query.user) {
       if (this.$route.query.type === 'TM') {
-        this.formData.TMlable = this.$route.query.fullname
-        this.formData.TMobg.userId = this.$route.query.userId
+        this.formData.TMobg = []
+        this.formData.TMlable = []
+        this.formData.TMSelect = []
       } else {
-        this.formData.TLlable = this.$route.query.fullname
-        this.formData.TLobg.userId = this.$route.query.userId
+        this.formData.TLobg = []
+        this.formData.TLlable = []
+        this.formData.TLSelect = []
+      }
+      for (var val of this.$route.query.user) {
+        let obg = {
+          'jobType': '',
+          'userId': ''
+        }
+        obg.userId = val.userId
+        if (this.$route.query.type === 'TM') {
+          obg.jobType = 'TM'
+          if (this.formData.TMobg.indexOf(obg) === -1) {
+            if (this.formData.TMobg.length < 3) {
+              this.formData.TMlable.push(val.fullname)
+            }
+            this.formData.TMSelect.push(val.userId)
+            this.formData.TMobg.push(obg)
+          }
+        } else {
+          obg.jobType = 'TL'
+          if (this.formData.TLobg.indexOf(obg) === -1) {
+            if (this.formData.TLobg.length < 3) {
+              this.formData.TLlable.push(val.fullname)
+            }
+            this.formData.TLSelect.push(val.userId)
+            this.formData.TLobg.push(obg)
+          }
+        }
       }
     }
-    localStorage.removeItem('oldInfo')
     eventBus.$once('user_location', geo => {
       this.formData.geoInfo = JSON.parse(geo)
       this.formData.address = this.formData.geoInfo.formattedAddress
+      this.formData.locationJson.addressComponent = this.formData.geoInfo.addressComponent
+
       console.log(this.formData.address)
     })
+    if (localStorage.getItem('user_location') !== '') {
+      this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
+      console.log(this.formData.geoInfo)
+      if (this.formData.geoInfo !== null) {
+        this.formData.address = this.formData.geoInfo.formattedAddress
+        this.formData.locationJson = { 'addressComponent': this.formData.geoInfo.addressComponent }
+      }
+
+      localStorage.removeItem('user_location')
+    }
   },
   methods: {
     add () {
       let projectJobs = []
-      if (this.formData.TMobg.userId !== '' && this.formData.TLobg.userId !== '') {
-        projectJobs = [this.formData.TMobg, this.formData.TLobg]
-      } else {
-        if (this.formData.TMobg.userId !== '') {
-          projectJobs = [this.formData.TMobg]
-        }
-        if (this.formData.TLobg.userId !== '') {
-          projectJobs = [this.formData.TLobg]
-        }
-      }
-      console.log(projectJobs)
+      projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
       let data = {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
-        'locationJson': '',
+        'locationJson': this.formData.locationJson,
         'projectJobs': projectJobs
       }
       request('project/create', 'post', data, 'json', true).then(response => {
@@ -114,10 +148,19 @@ export default {
       })
     },
     chooseUser (jobType) {
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('type', jobType)
+      if (jobType === 'TM') {
+        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
+      } else {
+        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TLSelect))
+      }
       this.$router.push('allUser?type=' + jobType)
     },
     openMap () {
+      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       this.$router.push('map')
     }
   }

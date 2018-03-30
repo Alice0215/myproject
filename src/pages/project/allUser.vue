@@ -3,9 +3,9 @@
   <div class="main">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <a @click="$router.go(-1)" class="top-nav-left">关闭</a>
+       <router-link  :to="{ path: urlname, query:{user:userParams,type:type} }" class="top-nav-left">关闭</router-link>
         <q-toolbar-title class="header-title">
-        项目负责人
+        {{title}}
         </q-toolbar-title>
     </q-toolbar>
     </q-toolbar>
@@ -18,7 +18,7 @@
          <q-item  v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
             <q-item-main :label="user.fullname" />
-            <q-item-side right icon="done" v-show="isShow" />
+            <q-item-side right icon="done" v-show="true" v-if="selectIdArr.indexOf(user.userId) !== -1"/>
         </q-item>
         </div>
     </div>
@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { request } from '../../common'
 import eventBus from '../../eventBus'
 export default {
@@ -36,26 +35,34 @@ export default {
       key_word: '',
       isShow: false,
       type: '',
-      selectId: '',
-      projectId: ''
+      selectIdArr: '',
+      projectId: '',
+      title: '',
+      urlname: '/project/add',
+      userParams: []
     }
   },
   created () {
     this.type = this.$route.query.type
-    if (this.$route.userId) {
-      this.selectId = this.$route.userId
-      this.projectId = this.$route.projectId
+    if (localStorage.getItem('selectedUser')) {
+      this.selectIdArr = localStorage.getItem('selectedUser')
+    }
+    console.log(this.selectIdArr)
+    if (this.$route.query.projectId) {
+      this.projectId = this.$route.query.projectId
+      this.urlname = '/project/edit?id=' + this.projectId
+    }
+    if (this.type === 'TM') {
+      this.title = '项目负责人'
+    } else {
+      this.title = '项目参与者'
     }
   },
   mounted () {
     this.getUsers()
   },
-  computed: mapState({
-    count: state => state.count // 理解为传入state对象，修改state.count属性
-  }),
   methods: {
     async getUsers () {
-      console.log(eventBus.$on('event_name'))
       request('user/all', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           this.users = response.data.resultMsg
@@ -66,11 +73,13 @@ export default {
     },
     addUser (fullname, userId) {
       let userInfo = { 'fullname': fullname, 'userId': userId }
-      eventBus.$emit('users', userInfo)
-      if (this.selectId !== '') {
-        this.$router.push('edit?type=' + this.type + '&fullname=' + fullname + '&userId=' + userId + '&projectId=' + this.projectId)
+      if (this.selectIdArr.indexOf(userId) !== -1) {
+        this.selectIdArr.splice(this.selectIdArr.findIndex(v => v === userId), 1)
+        this.userParams.splice(this.userParams.findIndex(v => v === userInfo), 1)
       } else {
-        this.$router.push('add?type=' + this.type + '&fullname=' + fullname + '&userId=' + userId)
+        this.userParams = [...this.userParams, userInfo]
+        eventBus.$emit('users', userInfo)
+        this.selectIdArr = [...this.selectIdArr, userId]
       }
     }
   }

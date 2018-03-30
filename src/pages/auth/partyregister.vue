@@ -127,7 +127,6 @@ export default {
       for (var key in data) {
         params.append(key, data[key])
       }
-      console.log(data)
       request('party/register', 'post', params).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
