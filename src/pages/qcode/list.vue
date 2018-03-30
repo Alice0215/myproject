@@ -27,14 +27,14 @@
         </div>
         <p class='qcount'>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
-            <div @click="$router.push('/qcode/detail')">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
-          :key="item.id" to="/qcode/detail" >
+          :key="item.id" >
+              <router-link :to="{ path: '/qcode/detail?id='+item.id }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle">{{item.alias}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
+              </router-link>
              </q-item-tile>
-            </div>
         </q-scroll-area>
 
          <q-btn class='full-width bg-color qr-btn'  @click="$router.push('add')">申请制作二维码</q-btn>
@@ -121,9 +121,7 @@ export default {
             this.location = response.data.resultMsg.location.formattedAddress
           }
           this.projectDesc = response.data.resultMsg.projectDesc
-          console.log(this.info)
         } else {
-          console.log(response.data.resultMsg)
           this.$q.dialog({
             title: '提示',
             message: response.data.resultMsg

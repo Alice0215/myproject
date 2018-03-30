@@ -60,7 +60,6 @@ export default {
       localStorage.removeItem('oldInfo')
     }
     if (this.$route.query.user) {
-      console.log(this.$route.query)
       if (this.$route.query.type === 'TM') {
         this.formData.TMobg = []
         this.formData.TMlable = []
@@ -97,8 +96,6 @@ export default {
         }
       }
     } else if (localStorage.getItem('user_location') !== null) {
-      console.log(localStorage.getItem('user_location'))
-      console.log('user_location')
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
       if (this.formData.geoInfo !== null) {
         this.formData.address = this.formData.geoInfo.formattedAddress
@@ -160,7 +157,9 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
-          this.formData.address = response.data.location
+          if (response.data.location.formattedAddress) {
+            this.formData.address = response.data.location.formattedAddress
+          }
           if (response.data.resultMsg.projectJobList.length > 0) {
             for (var val of response.data.resultMsg.projectJobList) {
               let obg = {
@@ -187,10 +186,17 @@ export default {
             }
           }
         } else {
-          this.$q.dialog({
-            title: '提示',
-            message: response.data.resultMsg
-          })
+          if (response.data.resultCode === 'ERROR') {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg.hint
+            })
+          } else {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
+          }
         }
       })
     },
