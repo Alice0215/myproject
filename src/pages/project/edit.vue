@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix" >
-            <a @click="$router.go(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
+            <a @click="$router.push('/qcode/list?projectId='+formData.projectId)"> <q-item-side left  icon="keyboard arrow left"/></a>
             <q-toolbar-title class="header-title">
             项目设置
             </q-toolbar-title>
@@ -53,7 +53,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$route)
     this.formData.projectId = this.$route.query.id
     this.getInfo()
     if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
@@ -61,7 +60,6 @@ export default {
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
     }
-    console.log(this.$route.query.user)
     if (this.$route.query.user) {
       if (this.$route.query.type === 'TM') {
         this.formData.TMobg = []
@@ -106,14 +104,13 @@ export default {
 
       console.log(this.formData.address)
     })
-    if (localStorage.getItem('user_location') !== '') {
+    if (localStorage.getItem('user_location') && localStorage.getItem('user_location') !== '') {
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
       console.log(this.formData.geoInfo)
       if (this.formData.geoInfo !== null) {
         this.formData.address = this.formData.geoInfo.formattedAddress
         this.formData.locationJson = { 'addressComponent': this.formData.geoInfo.addressComponent }
       }
-
       localStorage.removeItem('user_location')
     }
   },
@@ -167,9 +164,30 @@ export default {
         true
       ).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
           this.formData.locationJson = response.data.resultMsg.locationJson
+          if (response.data.resultMsg.projectJobList.length > 0) {
+            for (var val of response.data.resultMsg.projectJobList) {
+              let obg = {
+                'jobType': '',
+                'userId': ''
+              }
+              if (val.jobType === 'TL') {
+                this.formData.TLlable.push(val.user.fullname)
+                this.formData.TLSelect.push(val.user.id)
+                obg.jobType = 'TL'
+                this.formData.TLobg.push(obg)
+              }
+              if (val.jobType === 'TM') {
+                this.formData.TMlable.push(val.user.fullname)
+                this.formData.TMSelect.push(val.user.id)
+                obg.jobType = 'TM'
+                this.formData.TMobg.push(obg)
+              }
+            }
+          }
         } else {
           this.$q.dialog({
             title: '提示',
@@ -192,7 +210,7 @@ export default {
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
       eventBus.$emit('oldInfo', JSON.stringify(this.formData))
-      this.$router.push('map')
+      this.$router.push('map?projectId=' + this.formData.projectId)
     }
   }
 }

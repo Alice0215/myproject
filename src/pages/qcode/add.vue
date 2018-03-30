@@ -43,7 +43,6 @@ export default {
             title: '提示',
             message: '添加成功！'
           })
-          this.$router.push('list')
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

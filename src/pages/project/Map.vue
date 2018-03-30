@@ -46,7 +46,11 @@ export default {
       if (data.info === 'OK') {
         eventBus.$emit('user_location', geoInfo)
         localStorage.setItem('user_location', geoInfo)
-        this.$router.back()
+        if (this.$route.query.projectId) {
+          this.$router.push('/project/edit?id=' + this.$route.query.projectId)
+        } else {
+          this.$router.push('/project/add')
+        }
       }
     },
     async getGeolocation () {

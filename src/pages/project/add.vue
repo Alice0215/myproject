@@ -57,6 +57,7 @@ export default {
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
     }
+    console.log(this.$route)
     if (this.$route.query.user) {
       if (this.$route.query.type === 'TM') {
         this.formData.TMobg = []
@@ -94,13 +95,6 @@ export default {
         }
       }
     }
-    eventBus.$once('user_location', geo => {
-      this.formData.geoInfo = JSON.parse(geo)
-      this.formData.address = this.formData.geoInfo.formattedAddress
-      this.formData.locationJson.addressComponent = this.formData.geoInfo.addressComponent
-
-      console.log(this.formData.address)
-    })
     if (localStorage.getItem('user_location') !== '') {
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
       console.log(this.formData.geoInfo)
@@ -108,7 +102,6 @@ export default {
         this.formData.address = this.formData.geoInfo.formattedAddress
         this.formData.locationJson = { 'addressComponent': this.formData.geoInfo.addressComponent }
       }
-
       localStorage.removeItem('user_location')
     }
   },

@@ -2,7 +2,7 @@
 <template>
     <q-layout class='list bg-color'>
         <q-toolbar class='header'>
-          <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+          <a @click="$router.push('/')"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
             项目名称
             </q-toolbar-title>
