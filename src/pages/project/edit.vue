@@ -16,12 +16,12 @@
         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
           <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
               <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
               <q-item-side right icon="keyboard_arrow_right" />
           </q-item>
             <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
                 <q-item-side icon="group" />
-                <q-item-main :label="`设置参与者`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
                 <q-item-side right  icon="keyboard_arrow_right" />
             </q-item>
     </div>
@@ -39,7 +39,7 @@ export default {
         projectName: '',
         projectDesc: '',
         address: '',
-        locationJson: { 'addressComponent': '' },
+        locationJson: {},
         TMlable: [],
         TLlable: [],
         TMSelect: [],
@@ -54,13 +54,13 @@ export default {
   },
   created () {
     this.formData.projectId = this.$route.query.id
-    this.getInfo()
     if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
       let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
     }
     if (this.$route.query.user) {
+      console.log(this.$route.query)
       if (this.$route.query.type === 'TM') {
         this.formData.TMobg = []
         this.formData.TMlable = []
@@ -96,22 +96,17 @@ export default {
           }
         }
       }
-    }
-    eventBus.$once('user_location', geo => {
-      this.formData.geoInfo = JSON.parse(geo)
-      this.formData.address = this.formData.geoInfo.formattedAddress
-      this.formData.locationJson.addressComponent = this.formData.geoInfo.addressComponent
-
-      console.log(this.formData.address)
-    })
-    if (localStorage.getItem('user_location') && localStorage.getItem('user_location') !== '') {
+    } else if (localStorage.getItem('user_location') !== null) {
+      console.log(localStorage.getItem('user_location'))
+      console.log('user_location')
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
-      console.log(this.formData.geoInfo)
       if (this.formData.geoInfo !== null) {
         this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = { 'addressComponent': this.formData.geoInfo.addressComponent }
+        this.formData.locationJson = this.formData.geoInfo
       }
       localStorage.removeItem('user_location')
+    } else {
+      this.getInfo()
     }
   },
   methods: {
@@ -122,7 +117,6 @@ export default {
         'projectId': this.formData.projectId,
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
-        'locationJson': this.formData.locationJson,
         'projectJobs': projectJobs
       }
       let params = new URLSearchParams()
@@ -164,27 +158,31 @@ export default {
         true
       ).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
-          console.log(response.data.resultMsg)
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
-          this.formData.locationJson = response.data.resultMsg.locationJson
+          this.formData.address = response.data.location
           if (response.data.resultMsg.projectJobList.length > 0) {
             for (var val of response.data.resultMsg.projectJobList) {
               let obg = {
                 'jobType': '',
                 'userId': ''
               }
-              if (val.jobType === 'TL') {
-                this.formData.TLlable.push(val.user.fullname)
-                this.formData.TLSelect.push(val.user.id)
+              obg.userId = val.user.id
+              if (val.jobType.key === 'TL') {
                 obg.jobType = 'TL'
-                this.formData.TLobg.push(obg)
+                if (this.formData.TLobg.indexOf(obg) === -1) {
+                  this.formData.TLlable.push(val.user.fullname)
+                  this.formData.TLSelect.push(val.user.id)
+                  this.formData.TLobg.push(obg)
+                }
               }
-              if (val.jobType === 'TM') {
-                this.formData.TMlable.push(val.user.fullname)
-                this.formData.TMSelect.push(val.user.id)
+              if (val.jobType.key === 'TM') {
                 obg.jobType = 'TM'
-                this.formData.TMobg.push(obg)
+                if (this.formData.TMobg.indexOf(obg) === -1) {
+                  this.formData.TMlable.push(val.user.fullname)
+                  this.formData.TMSelect.push(val.user.id)
+                  this.formData.TMobg.push(obg)
+                }
               }
             }
           }

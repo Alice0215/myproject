@@ -53,9 +53,9 @@ export default {
       this.urlname = '/project/edit?id=' + this.projectId
     }
     if (this.type === 'TM') {
-      this.title = '项目负责人'
-    } else {
       this.title = '项目参与者'
+    } else {
+      this.title = '项目负责人'
     }
   },
   mounted () {

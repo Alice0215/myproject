@@ -16,12 +16,12 @@
         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
           <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
               <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
               <q-item-side right icon="keyboard_arrow_right" />
           </q-item>
             <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
                 <q-item-side icon="group" />
-                <q-item-main :label="`设置参与者`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
                 <q-item-side right  icon="keyboard_arrow_right" />
             </q-item>
     </div>
@@ -100,7 +100,7 @@ export default {
       console.log(this.formData.geoInfo)
       if (this.formData.geoInfo !== null) {
         this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = { 'addressComponent': this.formData.geoInfo.addressComponent }
+        this.formData.locationJson = this.formData.geoInfo
       }
       localStorage.removeItem('user_location')
     }
@@ -112,7 +112,7 @@ export default {
       let data = {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
-        'locationJson': this.formData.locationJson,
+        'locationJson': JSON.stringify(this.formData.locationJson),
         'projectJobs': projectJobs
       }
       request('project/create', 'post', data, 'json', true).then(response => {
