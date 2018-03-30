@@ -74,7 +74,8 @@ module.exports = function (ctx) {
         'QTabs',
         'QScrollArea',
         'QChipsInput',
-        'QRouteTab'
+        'QRouteTab',
+        'QBtnGroup'
       ],
       directives: [
         'Ripple'

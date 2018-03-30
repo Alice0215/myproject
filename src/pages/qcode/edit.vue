@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div id="qcode-page">
     <q-toolbar class='header'>
-        <q-toolbar class='fix'>
-             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
-            <q-toolbar-title class='header-title'>
-              二维码名称
-            </q-toolbar-title>
-             <a class="top-nav-right"></a>
-       </q-toolbar>
+      <q-toolbar class='fix'>
+        <a @click="$router.go(-1)">
+          <q-item-side left icon='keyboard arrow left' class='reback'/>
+          返回</a>
+        <q-toolbar-title class='header-title'>
+          二维码名称
+        </q-toolbar-title>
+        <a class="top-nav-right"></a>
+      </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
       <div class="top-field">
@@ -18,19 +20,97 @@
 
         </p>
       </div>
+      <div>
+        <span>类型</span>
+        <q-btn outline color="green" label="单株植物" size="xs"/>
+        <q-btn outline color="green" label="片区职务" size="xs"/>
+        <q-btn outline color="green" label="设备" size="xs"/>
+        <q-btn outline color="green" label="其他" size="xs"/>
+      </div>
       <div class="qr-info">
-         <q-input
-        v-model="amount"
-        placeholder='输入片区名称' class='login-input'
-      />
-      <q-input
-        v-model="amount"
-        placeholder='默认项目名称' class='login-input'
-      />
-      <q-input
-        v-model="amount"
-        placeholder='新增植物' class='login-input'
-      />
+        <q-input
+          v-model="amount"
+          placeholder='输入片区名称' class='login-input'
+        />
+        <q-select
+          v-model="amount"
+          placeholder='默认项目名称' class='login-input'
+          :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+        />
+        <div id="single-plant">
+          <q-select
+            v-model="amount"
+            placeholder='所属片区' class='login-input'
+            :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+          />
+          <q-select
+            v-model="amount"
+            placeholder='苗木分类选项' class='login-input mb-2'
+            :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+          />
+          <div class="row justify-between">
+            <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
+              <span class="col-3 lineHeight-32">{{v}}</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+              <span class="col-2 lineHeight-32 ml-4">cm</span>
+            </div>
+            <div class="col-12 row mt-4 justify-between" >
+              <div class="col-5 row">
+                <span class="col-5 lineHeight-32">分支数量</span>
+                <q-input type="number" class="col-4 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+                <span class="col-2 lineHeight-32 ml-4">个</span>
+              </div>
+              <div class="col-5 row">
+                <span class="col-4 lineHeight-32">几年生</span>
+                <q-input class="col-7 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+              </div>
+            </div>
+            <div class="row mt-8 col-12">
+              <span class="col-1 lineHeight-32">其他</span>
+              <q-input v-model="amount" class="col-10 ml-8 border-1 h-32 p-8"></q-input>
+            </div>
+          </div>
+          <q-input v-model="amount" placeholder="苗原地" class='login-input mt-10'></q-input>
+          <q-input v-model="amount" placeholder="苗木商名称" class='login-input'></q-input>
+          <q-input v-model="amount" placeholder="苗木其他信息" class='login-input'></q-input>
+        </div>
+        <div class="mt-10">
+          <q-item-side left icon='place' class='inline newicon'></q-item-side>
+          <q-item-tile sublabel lines='1' class='inline text-center'>
+            河南省郑州市
+          </q-item-tile>
+        </div>
+        <q-input
+          v-model="amount"
+          placeholder="输入备注信息"
+          type="textarea"
+          hide-underline class="login-input mt-10"/>
+        <div id="area-plant">
+          <q-item class="p-2">
+            <q-item-side> 片区面积</q-item-side>
+            <q-item-main class="area-input">
+              <q-input type="number" v-model="amount"></q-input>
+            </q-item-main>
+            <q-item-main label="平方米"></q-item-main>
+          </q-item>
+          <q-list class="add-area">
+            <q-list-header class="p-2 h-40">添加植物信息</q-list-header>
+            <q-item>
+              <q-item-side label>新增植物..</q-item-side>
+              <q-item-main></q-item-main>
+              <q-item-side right icon="keyboard_arrow_right"></q-item-side>
+            </q-item>
+            <q-item class="mt-8">
+              <q-item-side label>槐树</q-item-side>
+              <q-item-main></q-item-main>
+              <q-item-side right>
+                <span class="mr-6">数量: 3</span>
+                <q-icon class="mt--5" name="fas fa-edit"></q-icon>
+                <span class="mr-6"> 编辑</span>
+              </q-item-side>
+            </q-item>
+          </q-list>
+        </div>
       </div>
       <q-btn class="full-width btn">保存</q-btn>
     </div>
@@ -38,89 +118,135 @@
 </template>
 
 <script>
-import { request } from '../../common'
-export default {
-  data () {
-    return {
-      projectId: 1,
-      amount: '',
-      contactNumber: '',
-      contactPerson: ''
-    }
-  },
-  methods: {
-    add () {
-      let data = {
-        projectId: this.projectId,
-        amount: this.amount,
-        contactNumber: this.contactNumber,
-        contactPerson: this.contactPerson
+  import { request } from '../../common'
+
+  export default {
+    data () {
+      return {
+        projectId: 1,
+        amount: '',
+        contactNumber: '',
+        contactPerson: '',
+        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径',]
       }
-      request('qrcode/batch', 'post', data, 'json', true).then(response => {
-        console.log(response)
-        if (response.data.resultCode === 'SUCCESS') {
-          this.$q.dialog({
-            title: '提示',
-            message: '保存成功！'
-          })
-        } else {
-          if (response.data.resultCode === 'ERROR') {
+    },
+    methods: {
+      add () {
+        let data = {
+          projectId: this.projectId,
+          amount: this.amount,
+          contactNumber: this.contactNumber,
+          contactPerson: this.contactPerson
+        }
+        request('qrcode/batch', 'post', data, 'json', true).then(response => {
+          console.log(response)
+          if (response.data.resultCode === 'SUCCESS') {
             this.$q.dialog({
               title: '提示',
-              message: response.data.resultMsg.hint
+              message: '保存成功！'
             })
           } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
+            if (response.data.resultCode === 'ERROR') {
+              this.$q.dialog({
+                title: '提示',
+                message: response.data.resultMsg.hint
+              })
+            } else {
+              this.$q.dialog({
+                title: '提示',
+                message: response.data.resultMsg
+              })
+            }
           }
-        }
-      })
-    },
-    chooseUser (jobType) {
-      this.formData.jobType = jobType
-      this.$router.push('allUser')
+        })
+      },
+      chooseUser (jobType) {
+        this.formData.jobType = jobType
+        this.$router.push('allUser')
+      }
     }
   }
-}
 </script>
 
 <style lang='scss'>
-@import "../../assets/css/common";
-.reback {
-  min-width: auto !important;
-}
-.underline {
-  border-bottom: 1px solid #cccccc;
-  margin-top: 20px;
-}
+  @import "../../assets/css/common";
 
-.card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
-.q-if-inner {
-  min-height: 30px !important;
-  padding-bottom: 10px;
-}
-.q-if-control.q-icon {
-  padding-bottom: 6px;
-}
-.top-field p{
-  margin-bottom: 10px;
-}
-.qr-info{
-  margin-top: 30px;
-  font-size: 14px;
-  color: #333333;
-  margin-bottom: 30px;
-  p{
-    margin-bottom: 5px;
+  #qcode-page {
+
+    .lineHeight-32 {
+      line-height: 32px;
+    }
+
+    #single-plant {
+      .row {
+        .q-input {
+          .q-no-input-spinner {
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+
+    .add-area {
+      border: 0;
+
+      .q-item {
+        border-style: solid;
+        border-width: 1px;
+        border-color: lightgray;
+        border-radius: 8px;
+      }
+    }
+
+    .area-input {
+      border-style: solid;
+      border-width: 1px;
+      border-color: lightgray;
+      border-radius: 8px;
+      width: 100px;
+    }
+
+    .reback {
+      min-width: auto !important;
+    }
+
+    .underline {
+      border-bottom: 1px solid #cccccc;
+      margin-top: 20px;
+    }
+
+    .card {
+      margin-bottom: 0px;
+      padding: 30px 15px;
+      min-height: 160px;
+    }
+
+    input:not(.no-style):hover {
+      border-bottom: none;
+    }
+
+    .q-if-inner {
+      min-height: 30px !important;
+      padding-bottom: 10px;
+    }
+
+    .q-if-control.q-icon {
+      padding-bottom: 6px;
+    }
+
+    .top-field p {
+      margin-bottom: 10px;
+    }
+
+    .qr-info {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #333333;
+      margin-bottom: 30px;
+      p {
+        margin-bottom: 5px;
+      }
+    }
   }
-}
+
 </style>
