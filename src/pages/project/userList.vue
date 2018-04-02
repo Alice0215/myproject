@@ -26,8 +26,7 @@
           <q-item-main :label="` 项目参与者`" />
           <q-btn class='show-qr' right @click="chooseUser('TM')">{{TMtitle}}</q-btn>
       </q-item>
-      <div  v-for="user in TMusers"
-        :key="user.userId">
+      <div  v-for="user in TMusers">
         <q-item  v-ripple.mat class="full-width underline user-item">
           <q-item-side icon="account circle" class="user"/>
           <q-item-main :label="user.fullname" />

@@ -57,11 +57,12 @@ export default {
       return 'qcode/List?projectId' + projectId
     },
     async load (index, done) {
+      let that = this
       setTimeout(() => {
         if (!this.hasLoadAll) {
           this.loading = true
           request(
-            'project/list?pageNo=' + this.pageNo + '&pageSize=20',
+            'project/list?pageNo=' + that.pageNo + '&pageSize=20',
             'get',
             '',
             'json',
@@ -69,29 +70,27 @@ export default {
           ).then(response => {
             if (response.data.resultCode === 'SUCCESS') {
               this.loading = false
+              console.log(this.list)
               let list = response.data.resultMsg
-              console.log(list.length)
               if (list.length === 0 || !list.length) {
-                this.hasLoadAll = true
-                return
-              }
-              if (list.length === 20) {
-                this.list = list
-                this.pageNo++
-                done()
+                that.hasLoadAll = true
                 return
               }
               if (list.length < 20) {
-                this.hasLoadAll = true
+                that.hasLoadAll = true
+              } else {
+                that.pageNo++
               }
-              this.list = this.list.concat(list)
-              console.log(this.list)
-              this.pageNo++
+              if (that.list.length > 0) {
+                that.list = that.list.concat(list)
+              } else {
+                that.list = list
+              }
               done()
             }
           })
         }
-      }, 2500)
+      }, 100)
     }
   }
 }
