@@ -39,7 +39,7 @@ export default {
         projectName: '',
         projectDesc: '',
         address: '',
-        locationJson: {},
+        locationJson: '',
         TMlable: [],
         TLlable: [],
         TMSelect: [],
@@ -108,11 +108,15 @@ export default {
   methods: {
     add () {
       let projectJobs = []
+      let locationJson = ''
+      if (this.formData.locationJson !== '') {
+        locationJson = JSON.stringify(this.formData.locationJson)
+      }
       projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
       let data = {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
-        'locationJson': JSON.stringify(this.formData.locationJson),
+        'locationJson': locationJson,
         'projectJobs': projectJobs
       }
       request('project/create', 'post', data, 'json', true).then(response => {

@@ -42,7 +42,7 @@ a {
   border: 1px solid #eee;
   border-radius: 10px;
   padding: 8px 20px;
-  margin-bottom: 25px;
+  margin-top: 25px;
   color: black;
   font-size: 16px;
 }
@@ -63,6 +63,7 @@ input:not(.no-style):hover {
 }
 .q-if-error{
   border: 1px solid red !important;
+  margin-bottom: 0px;
 }
 .hover {
   padding-bottom: 10px;

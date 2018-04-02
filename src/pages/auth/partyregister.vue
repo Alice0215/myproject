@@ -5,61 +5,76 @@
         <span class="hover">机构注册</span>
     </div>
     <div class="full-width">
-        <q-input v-model="form.partyName" placeholder="机构名称" class="login-input"
-        @blur="$v.form.partyName.$touch"
+      <q-field  @blur="$v.form.partyName.$touch"
         @keyup.enter="submit"
         :error="$v.form.partyName.$error"
+         error-label="请填写机构名称">
+        <q-input v-model="form.partyName" placeholder="机构名称" class="login-input"
         />
-        <q-input
-        v-model="form.username"
-        @blur="$v.form.username.$touch"
+      </q-field>
+       <q-field  @blur="$v.form.username.$touch"
         @keyup.enter="submit"
         :error="$v.form.username.$error"
+        error-label="请属于用户名">
+      <q-input
+        v-model="form.username"
         placeholder='用户名' class='login-input'
       />
-      <q-input
-        v-model="form.fullname"
-        @blur="$v.form.fullname.$touch"
+       </q-field>
+     <q-field  @blur="$v.form.fullname.$touch"
         @keyup.enter="submit"
         :error="$v.form.fullname.$error"
+         error-label="请属于真实姓名">
+      <q-input
+        v-model="form.fullname"
         placeholder='真实姓名' class='login-input'
       />
-         <q-input
-        v-model="form.email"
-        @blur="$v.form.email.$touch"
+      </q-field>
+        <q-field @blur="$v.form.email.$touch"
         @keyup.enter="submit"
         :error="$v.form.email.$error"
+         error-label="请核对您的邮箱信息">
+      <q-input
+        v-model="form.email"
         placeholder='邮箱' class=' login-input'
       />
-       <q-input
-        v-model="form.phone"
-        @blur="$v.form.phone.$touch"
+        </q-field>
+         <q-field   @blur="$v.form.phone.$touch"
         @keyup.enter="submit"
         :error="$v.form.phone.$error"
+         error-label="请核对您的手机号">
+       <q-input
+        v-model="form.phone"
         placeholder='手机号' class=' login-input'
       />
-      <q-input
-        v-model="form.password"
+      </q-field>
+      <q-field
          @blur="$v.form.password.$touch"
         @keyup.enter="submit"
         :error="$v.form.password.$error"
+         error-label="密码为6位到16位的必填项">
+      <q-input
+       v-model="form.password"
         placeholder='密码' class=' login-input' type='password'
       />
-      <q-input
-        v-model="form.password_confirmation"
-         @blur="$v.form.password_confirmation.$touch"
+       </q-field>
+       <q-field  @blur="$v.form.password_confirmation.$touch"
         @keyup.enter="submit"
         :error="$v.form.password_confirmation.$error"
+         error-label="两次输入密码不一致">
+      <q-input
+        v-model="form.password_confirmation"
         placeholder='确认密码' class=' login-input' type='password'
       />
+       </q-field>
     </div>
-    <q-btn class="full-width main-color-bg" @click="register()">注册</q-btn>
+    <q-btn class="full-width main-color-bg input" @click="register()">注册</q-btn>
   </div>
 </template>
 
 <script>
 import { request } from '../../common'
-import { required, email } from 'vuelidate/lib/validators'
+import { required, email, minLength, maxLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   mounted () {
     this.getPersonal()
@@ -74,8 +89,7 @@ export default {
         partyName: '',
         password: '',
         password_confirmation: ''
-      },
-      organizations: []
+      }
     }
   },
   validations: {
@@ -85,8 +99,9 @@ export default {
       email: { required, email },
       partyName: { required },
       phone: { required },
-      password: { required },
-      password_confirmation: { required }
+      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
+      password_confirmation: { required,
+        sameAsPassword: sameAs('password') }
     }
   },
   methods: {
@@ -104,8 +119,11 @@ export default {
     register () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
-        this.$q.notify('请完善注册信息')
-        return ''
+        return false
+      }
+      if (!/^(\w){6,20}$/.test(this.$v.form.phone)) {
+        this.$q.notify('请输入正确的手机号')
+        return false
       }
       let deviceType = 1
       if (
@@ -167,7 +185,12 @@ button {
 h4 {
   font-weight: 300;
 }
-
+.input {
+  background-color: #1aad19;
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
 .main-color-bg {
   background-color: #1aad19;
   color: white;
