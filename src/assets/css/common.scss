@@ -53,6 +53,7 @@ a:focus {
   background-color:$primary;
   color: white;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 input:not(.no-style):hover {
   border-bottom: none;
@@ -149,4 +150,10 @@ input:not(.no-style):hover {
 }
 .q-if-inner{
   padding-bottom: 0px !important;
+}
+.show-qr {
+  border: 1px solid #bbbbbb;
+  box-shadow: none;
+  background-color: white;
+  min-height: auto;
 }

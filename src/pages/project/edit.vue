@@ -25,7 +25,7 @@
                 <q-item-side right  icon="keyboard_arrow_right" />
             </q-item>
     </div>
-    <q-btn class="full-width btn" @click="edit()">保存更改</q-btn>
+    <q-btn class="full-width btn"  v-if="formData.isEdit" @click="edit()">保存更改</q-btn>
   </div>
 </template>
 
@@ -47,7 +47,8 @@ export default {
         TMobg: [],
         TLobg: [],
         geoInfo: null,
-        projectId: ''
+        projectId: '',
+        isEdit: false
       },
       tempType: ''
     }
@@ -97,7 +98,7 @@ export default {
       }
     } else if (localStorage.getItem('user_location') !== null) {
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
-      if (this.formData.geoInfo !== null) {
+      if (this.formData.geoInfo !== null && this.formData.geoInfo.formattedAddress) {
         this.formData.address = this.formData.geoInfo.formattedAddress
         this.formData.locationJson = this.formData.geoInfo
       }
@@ -157,10 +158,12 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
-          if (response.data.location.formattedAddress) {
+          if (response.data.location && response.data.location.formattedAddress) {
             this.formData.address = response.data.location.formattedAddress
           }
           if (response.data.resultMsg.projectJobList.length > 0) {
+            let userId = JSON.parse(localStorage.getItem('user')).userId
+            console.log(userId)
             for (var val of response.data.resultMsg.projectJobList) {
               let obg = {
                 'jobType': '',
@@ -172,6 +175,9 @@ export default {
                 if (this.formData.TLobg.indexOf(obg) === -1) {
                   this.formData.TLlable.push(val.user.fullname)
                   this.formData.TLSelect.push(val.user.id)
+                  if (val.user.id === userId) {
+                    this.data.isEdit = true
+                  }
                   this.formData.TLobg.push(obg)
                 }
               }

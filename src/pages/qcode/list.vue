@@ -13,7 +13,7 @@
             <q-item-tile sublabel lines='1'>
               简介：{{projectDesc}}
              </q-item-tile>
-              <q-item-side left icon='place' class='inline newicon'></q-item-side>
+              <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
                 <q-item-tile sublabel lines='1' class='inline text-center'>
                {{location}}
                 </q-item-tile>
@@ -23,7 +23,7 @@
         <div class='nav-title'>
             <span class='hover'>二维码列表</span>
             <span @click="$router.push('/add')">维护记录</span>
-            <q-select v-model='qrtype' :options='qrtypes' placeholder='类型' />
+            <q-select v-model='qrtype' :options='qrtypes' placeholder='选择类型' />
         </div>
         <p class='qcount'>二维码60/100<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
@@ -36,8 +36,9 @@
               </router-link>
              </q-item-tile>
         </q-scroll-area>
-
-         <q-btn class='full-width bg-color qr-btn'  @click="$router.push('add')">申请制作二维码</q-btn>
+        <div  class="btn-field">
+         <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add')">申请制作二维码</q-btn>
+        </div>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -143,10 +144,14 @@ export default {
 .project-info {
   font-size: 12px;
   line-height: 23px;
+  min-height: 50px;
 }
 .qcount {
   padding: 15px 15px 0px;
   margin-bottom: 3px;
+}
+.header{
+  margin-bottom: 0px;
 }
 .qfield {
   width: 100%;
@@ -181,7 +186,12 @@ export default {
   margin-right: 10px;
 }
 .add-qcode {
-  border: 1px solid #dcdcdc;
   border-radius: 5px;
+  height: 45px;
+  background-color: #F1F1F5;
+}
+.btn-field{
+   padding: 15px;
+   width: 100%;
 }
 </style>

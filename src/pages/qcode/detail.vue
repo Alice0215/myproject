@@ -105,12 +105,6 @@ export default {
     padding: 0px 4px;
   }
 }
-.show-qr {
-  border: 1px solid #bbbbbb;
-  box-shadow: none;
-  background-color: white;
-  min-height: auto;
-}
 .card {
   padding: 0px 15px;
 }

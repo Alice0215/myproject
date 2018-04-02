@@ -77,9 +77,7 @@ export default {
 }
 
 .card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
+  padding-top: 10px;
 }
 .header-title{
   margin-right: 30px;
