@@ -22,10 +22,10 @@
       </div>
       <div>
         <span>类型</span>
-        <q-btn outline color="green" label="单株植物" size="xs"/>
-        <q-btn outline color="green" label="片区职务" size="xs"/>
-        <q-btn outline color="green" label="设备" size="xs"/>
-        <q-btn outline color="green" label="其他" size="xs"/>
+        <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
+        <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区职务" size="xs"/>
+        <q-btn outline :color="buttonsColor[2]" @click="topButtonsClicked(2)" label="设备" size="xs"/>
+        <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
         <q-input
@@ -119,6 +119,7 @@
 
 <script>
   import { request } from '../../common'
+  import _ from 'lodash'
 
   export default {
     data () {
@@ -127,10 +128,34 @@
         amount: '',
         contactNumber: '',
         contactPerson: '',
-        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径',]
+        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
+        buttonsColor: ['black', 'black', 'black', 'black']
       }
     },
     methods: {
+      topButtonsClicked (index) {
+        _.forEach(this.buttonsColor, (v, k) => {
+          if (k === index) {
+            this.$set(this.buttonsColor, k, 'green')
+          } else {
+            this.$set(this.buttonsColor, k, 'black')
+          }
+        })
+        switch (index) {
+          case 0:
+
+            break
+          case 1:
+
+            break
+          case 2:
+            break
+          case 3:
+            break
+          default:
+            break
+        }
+      },
       add () {
         let data = {
           projectId: this.projectId,
