@@ -81,7 +81,9 @@ export default {
   padding: 30px 15px;
   min-height: 160px;
 }
-
+.header-title{
+  margin-right: 30px;
+}
 input:not(.no-style):hover {
   border-bottom: none;
 }

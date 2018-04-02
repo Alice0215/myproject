@@ -39,7 +39,7 @@ export default {
         projectName: '',
         projectDesc: '',
         address: '',
-        locationJson: { 'addressComponent': '' },
+        locationJson: {},
         TMlable: [],
         TLlable: [],
         TMSelect: [],

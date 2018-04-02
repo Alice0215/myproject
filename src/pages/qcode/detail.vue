@@ -35,7 +35,7 @@
           </span>
         </p>
       </div>
-      <q-btn class="full-width bg-color qr-btn show-qr">编辑基础信息</q-btn>
+      <q-btn class="full-width bg-color qr-btn show-qr" @click='add()'>编辑基础信息</q-btn>
     </div>
   </div>
 </template>
