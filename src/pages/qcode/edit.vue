@@ -30,14 +30,14 @@
       <div class="qr-info">
         <q-input
           v-model="amount"
-          placeholder='输入片区名称' class='login-input'
+          :placeholder="namePlaceholder" class='login-input'
         />
         <q-select
           v-model="amount"
           placeholder='默认项目名称' class='login-input'
           :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
         />
-        <div id="single-plant">
+        <div id="single-plant" v-show="singleShow">
           <q-select
             v-model="amount"
             placeholder='所属片区' class='login-input'
@@ -85,7 +85,7 @@
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
-        <div id="area-plant">
+        <div id="area-plant" v-show="areaShow">
           <q-item class="p-2">
             <q-item-side> 片区面积</q-item-side>
             <q-item-main class="area-input">
@@ -129,7 +129,10 @@
         contactNumber: '',
         contactPerson: '',
         singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
-        buttonsColor: ['black', 'black', 'black', 'black']
+        buttonsColor: ['black', 'black', 'black', 'black'],
+        namePlaceholder: '植物名称',
+        areaShow: false,
+        singleShow: false,
       }
     },
     methods: {
@@ -143,14 +146,24 @@
         })
         switch (index) {
           case 0:
-
+            this.singleShow = true
+            this.areaShow = false
+            this.namePlaceholder = '植物名称'
             break
           case 1:
-
+            this.singleShow = false
+            this.areaShow = true
+            this.namePlaceholder = '输入片区名称'
             break
           case 2:
+            this.singleShow = false
+            this.areaShow = false
+            this.namePlaceholder = '输入名称'
             break
           case 3:
+            this.singleShow = false
+            this.areaShow = false
+            this.namePlaceholder = '输入名称'
             break
           default:
             break
@@ -189,6 +202,11 @@
         this.formData.jobType = jobType
         this.$router.push('allUser')
       }
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this.topButtonsClicked(0)
+      })
     }
   }
 </script>
