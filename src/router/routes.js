@@ -34,6 +34,11 @@ export default [
     name: 'allUser'
   },
   {
+    path: '/project/userList',
+    component: () => import('pages/project/userList'),
+    name: 'projectUserList'
+  },
+  {
     path: '/qcode/list',
     component: () => import('pages/qcode/list'),
     name: 'qcodeList'

@@ -55,7 +55,7 @@ export default {
   },
   created () {
     this.formData.projectId = this.$route.query.id
-    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
+    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== 'undefined') {
       let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
@@ -70,28 +70,30 @@ export default {
         this.formData.TLlable = []
         this.formData.TLSelect = []
       }
-      for (var val of this.$route.query.user) {
+      for (var val of JSON.parse(this.$route.query.user)) {
         let obg = {
           'jobType': '',
           'userId': ''
         }
         obg.userId = val.userId
         if (this.$route.query.type === 'TM') {
+          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
           obg.jobType = 'TM'
           if (this.formData.TMobg.indexOf(obg) === -1) {
             if (this.formData.TMobg.length < 3) {
               this.formData.TMlable.push(val.fullname)
             }
-            this.formData.TMSelect.push(val.userId)
+            this.formData.TMSelect.push(userInfo)
             this.formData.TMobg.push(obg)
           }
         } else {
+          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
           obg.jobType = 'TL'
           if (this.formData.TLobg.indexOf(obg) === -1) {
             if (this.formData.TLobg.length < 3) {
               this.formData.TLlable.push(val.fullname)
             }
-            this.formData.TLSelect.push(val.userId)
+            this.formData.TLSelect.push(userInfo)
             this.formData.TLobg.push(obg)
           }
         }
@@ -163,18 +165,21 @@ export default {
           }
           if (response.data.resultMsg.projectJobList.length > 0) {
             let userId = JSON.parse(localStorage.getItem('user')).userId
-            console.log(userId)
             for (var val of response.data.resultMsg.projectJobList) {
               let obg = {
                 'jobType': '',
                 'userId': ''
               }
+
               obg.userId = val.user.id
               if (val.jobType.key === 'TL') {
                 obg.jobType = 'TL'
                 if (this.formData.TLobg.indexOf(obg) === -1) {
-                  this.formData.TLlable.push(val.user.fullname)
-                  this.formData.TLSelect.push(val.user.id)
+                  if (this.formData.TLlable.length < 3) {
+                    this.formData.TLlable.push(val.user.fullname)
+                  }
+                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
+                  this.formData.TLSelect.push(userInfo)
                   if (val.user.id === userId) {
                     this.data.isEdit = true
                   }
@@ -184,8 +189,11 @@ export default {
               if (val.jobType.key === 'TM') {
                 obg.jobType = 'TM'
                 if (this.formData.TMobg.indexOf(obg) === -1) {
-                  this.formData.TMlable.push(val.user.fullname)
-                  this.formData.TMSelect.push(val.user.id)
+                  if (this.formData.TMlable.length < 3) {
+                    this.formData.TMlable.push(val.user.fullname)
+                  }
+                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
+                  this.formData.TMSelect.push(userInfo)
                   this.formData.TMobg.push(obg)
                 }
               }

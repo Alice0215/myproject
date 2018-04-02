@@ -3,7 +3,7 @@
   <div class="main">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <router-link  :to="{ path: urlname, query:{user:userParams,type:type} }" class="top-nav-left">关闭</router-link>
+       <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>
         <q-toolbar-title class="header-title">
         {{title}}
         </q-toolbar-title>
@@ -19,7 +19,7 @@
          <q-item  v-ripple.mat class="full-width underline user-item">
             <q-item-side icon="account circle" class="user"/>
             <q-item-main :label="user.fullname" />
-            <q-item-side right icon="done" v-show="true" v-if="selectIdArr.indexOf(user.userId) !== -1"/>
+            <q-item-side right icon="done" v-show="true" v-if="ids.indexOf(user.userId) !== -1"/>
         </q-item>
         </div>
     </div>
@@ -36,23 +36,32 @@ export default {
       key_word: '',
       isShow: false,
       type: '',
-      selectIdArr: '',
       projectId: '',
       title: '',
       urlname: '/project/add',
-      userParams: []
+      userParams: [],
+      ids: []
     }
   },
   created () {
     this.type = this.$route.query.type
     if (localStorage.getItem('selectedUser')) {
-      this.selectIdArr = localStorage.getItem('selectedUser')
+      this.userParams = JSON.parse(localStorage.getItem('selectedUser'))
+      for (let item of this.userParams) {
+        this.ids.push(parseInt(item['userId']))
+      }
+      console.log(this.ids)
     }
-    console.log(this.selectIdArr)
+
     if (this.$route.query.projectId) {
       this.projectId = this.$route.query.projectId
-      this.urlname = '/project/edit?id=' + this.projectId
+      if (this.$route.query.option) {
+        this.urlname = '/project/userList?id=' + this.projectId
+      } else {
+        this.urlname = '/project/edit?id=' + this.projectId
+      }
     }
+
     if (this.type === 'TM') {
       this.title = '项目参与者'
     } else {
@@ -74,14 +83,16 @@ export default {
     },
     addUser (fullname, userId) {
       let userInfo = { 'fullname': fullname, 'userId': userId }
-      if (this.selectIdArr.indexOf(userId) !== -1) {
-        this.selectIdArr.splice(this.selectIdArr.findIndex(v => v === userId), 1)
+      if (this.ids.indexOf(userId) !== -1) {
         this.userParams.splice(this.userParams.findIndex(v => v === userInfo), 1)
+        this.ids.splice(this.ids.findIndex(v => v === userId), 1)
       } else {
+        this.ids.push(userId)
         this.userParams = [...this.userParams, userInfo]
         eventBus.$emit('users', userInfo)
-        this.selectIdArr = [...this.selectIdArr, userId]
       }
+      console.log(this.ids)
+      console.log(this.userParams)
     }
   }
 }
@@ -107,10 +118,5 @@ export default {
 }
 .underline {
   border-bottom: 1px solid #cccccc;
-}
-
-.card {
-  margin-bottom: 0px;
-  min-height: 160px;
 }
 </style>

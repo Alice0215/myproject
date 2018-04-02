@@ -52,12 +52,11 @@ export default {
     }
   },
   created () {
-    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== '') {
+    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== 'undefined') {
       let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
     }
-    console.log(this.$route)
     if (this.$route.query.user) {
       if (this.$route.query.type === 'TM') {
         this.formData.TMobg = []
@@ -68,11 +67,12 @@ export default {
         this.formData.TLlable = []
         this.formData.TLSelect = []
       }
-      for (var val of this.$route.query.user) {
+      for (var val of JSON.parse(this.$route.query.user)) {
         let obg = {
           'jobType': '',
           'userId': ''
         }
+        let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
         obg.userId = val.userId
         if (this.$route.query.type === 'TM') {
           obg.jobType = 'TM'
@@ -80,7 +80,7 @@ export default {
             if (this.formData.TMobg.length < 3) {
               this.formData.TMlable.push(val.fullname)
             }
-            this.formData.TMSelect.push(val.userId)
+            this.formData.TMSelect.push(userInfo)
             this.formData.TMobg.push(obg)
           }
         } else {
@@ -89,7 +89,7 @@ export default {
             if (this.formData.TLobg.length < 3) {
               this.formData.TLlable.push(val.fullname)
             }
-            this.formData.TLSelect.push(val.userId)
+            this.formData.TLSelect.push(userInfo)
             this.formData.TLobg.push(obg)
           }
         }
@@ -97,7 +97,6 @@ export default {
     }
     if (localStorage.getItem('user_location') !== '') {
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
-      console.log(this.formData.geoInfo)
       if (this.formData.geoInfo !== null) {
         this.formData.address = this.formData.geoInfo.formattedAddress
         this.formData.locationJson = this.formData.geoInfo
@@ -181,11 +180,6 @@ export default {
 .underline {
   border-bottom: 1px solid #cccccc;
   margin-top: 20px;
-}
-.card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
 }
 .btn {
   background-color: #1aad19;

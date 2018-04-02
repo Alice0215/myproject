@@ -51,57 +51,47 @@ export default {
     }
   },
   mounted () {
-    this.load()
   },
   methods: {
-    async getlist () {
-      request(
-        'project/list?pageNo=' + this.pageNo + '&pageSize=20',
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          this.list = response.data.resultMsg
-          this.pageNo++
-          console.log(this.list)
-        } else {
-          console.log(response.data.resultMsg)
-        }
-      })
-    },
     toDetail (projectId) {
       return 'qcode/List?projectId' + projectId
     },
-    async load () {
-      if (!this.hasLoadAll) {
-        this.loading = true
-        request(
-          'project/list?pageNo=' + this.pageNo + '&pageSize=20',
-          'get',
-          '',
-          'json',
-          true
-        ).then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
-            this.loading = false
-            let list = response.data.resultMsg
-            if (list.length === 0 || !list.length) {
-              this.hasLoadAll = true
-              return
+    async load (index, done) {
+      setTimeout(() => {
+        if (!this.hasLoadAll) {
+          this.loading = true
+          request(
+            'project/list?pageNo=' + this.pageNo + '&pageSize=20',
+            'get',
+            '',
+            'json',
+            true
+          ).then(response => {
+            if (response.data.resultCode === 'SUCCESS') {
+              this.loading = false
+              let list = response.data.resultMsg
+              console.log(list.length)
+              if (list.length === 0 || !list.length) {
+                this.hasLoadAll = true
+                return
+              }
+              if (list.length === 20) {
+                this.list = list
+                this.pageNo++
+                done()
+                return
+              }
+              if (list.length < 20) {
+                this.hasLoadAll = true
+              }
+              this.list = this.list.concat(list)
+              console.log(this.list)
+              this.pageNo++
+              done()
             }
-            if (list.length < 20) {
-              this.list = list
-              this.hasLoadAll = true
-              return
-            }
-            this.list = this.list.concat(list)
-            console.log(this.list)
-            this.pageNo++
-          }
-        })
-      }
+          })
+        }
+      }, 2500)
     }
   }
 }
