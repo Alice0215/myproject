@@ -1,5 +1,5 @@
 <template>
-  <div id="qcode-page">
+  <q-layout id="qcode-page">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
         <a @click="$router.go(-1)">
@@ -54,7 +54,7 @@
               <q-input type="number" class="col-6 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
               <span class="col-2 lineHeight-32 ml-4">cm</span>
             </div>
-            <div class="col-12 row mt-4 justify-between" >
+            <div class="col-12 row mt-4 justify-between">
               <div class="col-5 row">
                 <span class="col-5 lineHeight-32">分支数量</span>
                 <q-input type="number" class="col-4 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
@@ -111,10 +111,24 @@
             </q-item>
           </q-list>
         </div>
+        <div>
+          <q-list class="mt-6 bg-white pb-8">
+            <q-list-header>现场拍照</q-list-header>
+            <div class="row">
+              <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+                <img class="full-height full-width" :src="v">
+                <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
+              </div>
+              <div class="w-100 h-100 ml-10">
+                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+              </div>
+            </div>
+          </q-list>
+        </div>
       </div>
       <q-btn class="full-width btn">保存</q-btn>
     </div>
-  </div>
+  </q-layout>
 </template>
 
 <script>
@@ -133,9 +147,14 @@
         namePlaceholder: '植物名称',
         areaShow: false,
         singleShow: false,
+        imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
+          'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
       }
     },
     methods: {
+      cancelUploadImage (index) {
+        this.imageArray = this.imageArray.splice(index + 1)
+      },
       topButtonsClicked (index) {
         _.forEach(this.buttonsColor, (v, k) => {
           if (k === index) {
@@ -289,6 +308,19 @@
       p {
         margin-bottom: 5px;
       }
+    }
+
+    .img-close {
+      margin-left: 80px;
+      margin-top: -190px;
+    }
+
+    .camera-button {
+      border-style: solid;
+      border-width: 1px;
+      border-color: lightgray;
+      border-radius: 1px;
+      box-shadow: none !important;
     }
   }
 
