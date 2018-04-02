@@ -1,5 +1,5 @@
 <template>
-  <div id="qcode-page">
+  <q-layout id="qcode-page">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
         <a @click="$router.go(-1)">
@@ -22,22 +22,22 @@
       </div>
       <div>
         <span>类型</span>
-        <q-btn outline color="green" label="单株植物" size="xs"/>
-        <q-btn outline color="green" label="片区职务" size="xs"/>
-        <q-btn outline color="green" label="设备" size="xs"/>
-        <q-btn outline color="green" label="其他" size="xs"/>
+        <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
+        <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区职务" size="xs"/>
+        <q-btn outline :color="buttonsColor[2]" @click="topButtonsClicked(2)" label="设备" size="xs"/>
+        <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
         <q-input
           v-model="amount"
-          placeholder='输入片区名称' class='login-input'
+          :placeholder="namePlaceholder" class='login-input'
         />
         <q-select
           v-model="amount"
           placeholder='默认项目名称' class='login-input'
           :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
         />
-        <div id="single-plant">
+        <div id="single-plant" v-show="singleShow">
           <q-select
             v-model="amount"
             placeholder='所属片区' class='login-input'
@@ -54,7 +54,7 @@
               <q-input type="number" class="col-6 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
               <span class="col-2 lineHeight-32 ml-4">cm</span>
             </div>
-            <div class="col-12 row mt-4 justify-between" >
+            <div class="col-12 row mt-4 justify-between">
               <div class="col-5 row">
                 <span class="col-5 lineHeight-32">分支数量</span>
                 <q-input type="number" class="col-4 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
@@ -85,7 +85,7 @@
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
-        <div id="area-plant">
+        <div id="area-plant" v-show="areaShow">
           <q-item class="p-2">
             <q-item-side> 片区面积</q-item-side>
             <q-item-main class="area-input">
@@ -111,14 +111,29 @@
             </q-item>
           </q-list>
         </div>
+        <div>
+          <q-list class="mt-6 bg-white pb-8">
+            <q-list-header>现场拍照</q-list-header>
+            <div class="row">
+              <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+                <img class="full-height full-width" :src="v">
+                <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
+              </div>
+              <div class="w-100 h-100 ml-10">
+                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+              </div>
+            </div>
+          </q-list>
+        </div>
       </div>
       <q-btn class="full-width btn">保存</q-btn>
     </div>
-  </div>
+  </q-layout>
 </template>
 
 <script>
   import { request } from '../../common'
+  import _ from 'lodash'
 
   export default {
     data () {
@@ -127,10 +142,52 @@
         amount: '',
         contactNumber: '',
         contactPerson: '',
-        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径',]
+        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
+        buttonsColor: ['black', 'black', 'black', 'black'],
+        namePlaceholder: '植物名称',
+        areaShow: false,
+        singleShow: false,
+        imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
+          'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
       }
     },
     methods: {
+      cancelUploadImage (index) {
+        this.imageArray = this.imageArray.splice(index + 1)
+      },
+      topButtonsClicked (index) {
+        _.forEach(this.buttonsColor, (v, k) => {
+          if (k === index) {
+            this.$set(this.buttonsColor, k, 'green')
+          } else {
+            this.$set(this.buttonsColor, k, 'black')
+          }
+        })
+        switch (index) {
+          case 0:
+            this.singleShow = true
+            this.areaShow = false
+            this.namePlaceholder = '植物名称'
+            break
+          case 1:
+            this.singleShow = false
+            this.areaShow = true
+            this.namePlaceholder = '输入片区名称'
+            break
+          case 2:
+            this.singleShow = false
+            this.areaShow = false
+            this.namePlaceholder = '输入名称'
+            break
+          case 3:
+            this.singleShow = false
+            this.areaShow = false
+            this.namePlaceholder = '输入名称'
+            break
+          default:
+            break
+        }
+      },
       add () {
         let data = {
           projectId: this.projectId,
@@ -164,6 +221,11 @@
         this.formData.jobType = jobType
         this.$router.push('allUser')
       }
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this.topButtonsClicked(0)
+      })
     }
   }
 </script>
@@ -246,6 +308,19 @@
       p {
         margin-bottom: 5px;
       }
+    }
+
+    .img-close {
+      margin-left: 80px;
+      margin-top: -190px;
+    }
+
+    .camera-button {
+      border-style: solid;
+      border-width: 1px;
+      border-color: lightgray;
+      border-radius: 1px;
+      box-shadow: none !important;
     }
   }
 
