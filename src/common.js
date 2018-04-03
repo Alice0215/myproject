@@ -47,7 +47,7 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   }
   console.log(resp.data.resultMsg)
   const code = resp.data.resultCode
-  const msg = resp.data.resultMsg.hint
+  const msg = resp.data.resultMsg
   if (code === 'SUCCESS') {
     if (typeof (msg) === 'string') {
       let result = ''
@@ -63,14 +63,25 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     if (msg === undefined || msg === null) {
       return {}
     }
-    return msg
+    return resp
   }
-
-  if ((code === 'FAILURE') || (code === 'ERROR')) {
+  if (code === 'FAILURE') {
     if (batchRequest > 0) {
       batchRequest--
       eventBus.$emit('request-error', {
         msg,
+        resp,
+        code
+      })
+    }
+    return null
+  }
+  if (code === 'ERROR') {
+    let errMsg = resp.data.resultMsg.hint
+    if (batchRequest > 0) {
+      batchRequest--
+      eventBus.$emit('request-error', {
+        errMsg,
         resp,
         code
       })
@@ -101,7 +112,7 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
-  return new File([u8arr], filename, {type: mime})
+  return new File([u8arr], filename, { type: mime })
 }
 
 /**

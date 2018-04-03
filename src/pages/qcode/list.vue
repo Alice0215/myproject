@@ -29,14 +29,19 @@
         </div>
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
+           <q-infinite-scroll :handler="load">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
           :key="item.id" >
               <router-link :to="{ path: '/qcode/detail?id='+item.id }">
                <span class="qfield-mtitle">{{item.alias}}</span>
-               <span class="qfield-stitle">{{item.alias}}</span>
+               <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
               </router-link>
              </q-item-tile>
+            <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
+                <q-spinner name="dots" slot="message" :size="40"></q-spinner>
+            </div>
+           </q-infinite-scroll>
         </q-scroll-area>
         <div  class="btn-field">
          <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add')">申请制作二维码</q-btn>
@@ -86,36 +91,40 @@ export default {
     }
   },
   methods: {
-    async load () {
-      if (!this.hasLoadAll) {
-        this.loading = true
-        request(
-          'qrcode/list?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20',
-          'get',
-          '',
-          'json',
-          true
-        ).then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
-            this.loading = false
-            let list = response.data.resultMsg
-            if (list.length === 0 || !list.length) {
-              this.hasLoadAll = true
-              return
+    async  load (index, done) {
+      setTimeout(() => {
+        if (!this.hasLoadAll) {
+          this.loading = true
+          request(
+            'qrcode/list?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20',
+            'get',
+            '',
+            'json',
+            true
+          ).then(response => {
+            if (response.data.resultCode === 'SUCCESS') {
+              let that = this
+              this.loading = false
+              let list = response.data.resultMsg
+              if (list.length === 0 || !list.length) {
+                this.hasLoadAll = true
+                return
+              }
+              if (list.length < 20) {
+                that.hasLoadAll = true
+              } else {
+                that.pageNo++
+              }
+              if (that.list.length > 0) {
+                that.list = that.list.concat(list)
+              } else {
+                that.list = list
+              }
+              done()
             }
-            if (list.length <= 20) {
-              this.list = list
-              this.hasLoadAll = true
-              return
-            }
-            this.list = this.list.concat(list)
-            this.pageNo++
-          } else {
-            this.hasLoadAll = true
-            return ''
-          }
-        })
-      }
+          })
+        }
+      }, 2000)
     },
     getInfo () {
       request(
@@ -160,9 +169,8 @@ export default {
   },
   created () {
     this.projectId = this.$route.query.projectId
-    this.getInfo()
-    this.load()
     this.getCount()
+    this.getInfo()
   }
 }
 </script>

@@ -150,6 +150,7 @@ export default {
         })
     },
     getInfo () {
+      let that = this
       request(
         'project/detail?projectId=' + this.formData.projectId,
         'get',
@@ -180,8 +181,8 @@ export default {
                   }
                   let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
                   this.formData.TLSelect.push(userInfo)
-                  if (val.user.id === userId) {
-                    this.data.isEdit = true
+                  if (parseInt(val.user.id) === parseInt(userId)) {
+                    that.formData.isEdit = true
                   }
                   this.formData.TLobg.push(obg)
                 }

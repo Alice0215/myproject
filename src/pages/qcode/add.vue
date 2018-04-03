@@ -6,6 +6,7 @@
             <q-toolbar-title class='header-title'>
               填写信息
             </q-toolbar-title>
+             <q-item-side right/>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
