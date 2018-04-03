@@ -35,7 +35,8 @@
 </template>
 
 <script>
-  import { request, dataURLtoFile } from '../../common'
+  import { request, deleteFiles, uploadFiles } from '../../common'
+  import eventBus from '../../eventBus'
 
   export default {
     data () {
@@ -49,19 +50,20 @@
         console.log('open camera')
         if (navigator.camera) {
           navigator.camera.getPicture(imgData => {
-            this.upload(imgData)
+            uploadFiles(imgData)
           }, errorMsg => {
             console.log(errorMsg)
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
-      },
-      async upload (fileData) {
-        let fileBlob = dataURLtoFile(fileData)
-        let fD = new FormData()
-        fD.append('file', fileBlob)
-        let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
-        console.log(uploadReq)
       }
+    },
+    mounted () {
+      eventBus.$on('upload-success', resp => {
+        console.log(resp)
+      })
+    },
+    beforeDestroy () {
+      eventBus.$off('upload-success')
     }
   }
 </script>

@@ -104,7 +104,38 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
   return new File([u8arr], filename, {type: mime})
 }
 
+/**
+ * 删除文件
+ * @param filePath 文件相对路径
+ * @returns {Promise<void>}
+ */
+async function deleteFiles (filePath) {
+  let resp = await request('file/delete?relativePath=' + filePath)
+  if (resp) {
+    let msg = '删除成功'
+    eventBus.$emit('request-error', {
+      msg
+    })
+  }
+}
+
+/**
+ * 上传文件
+ * @param fileData
+ */
+async function uploadFiles (fileData) {
+  let fileBlob = dataURLtoFile(fileData)
+  let fD = new FormData()
+  fD.append('file', fileBlob)
+  let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
+  if (uploadReq) {
+    eventBus.$emit('upload-success', uploadReq)
+  }
+}
+
 export {
   request,
-  dataURLtoFile
+  dataURLtoFile,
+  deleteFiles,
+  uploadFiles
 }
