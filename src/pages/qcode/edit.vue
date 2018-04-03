@@ -153,7 +153,7 @@
     },
     methods: {
       cancelUploadImage (index) {
-        this.imageArray = this.imageArray.splice(index + 1)
+        this.imageArray.splice(index, 1)
       },
       topButtonsClicked (index) {
         _.forEach(this.buttonsColor, (v, k) => {
