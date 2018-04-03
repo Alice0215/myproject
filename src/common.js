@@ -2,6 +2,10 @@ import { server } from './const'
 import axios from 'axios'
 import store from './store'
 import _ from 'lodash'
+import to from 'await-to-js'
+import eventBus from './eventBus'
+
+let batchRequest = Number.MAX_SAFE_INTEGER
 
 async function request (url, method = 'get', data = {}, responseType = 'json', project = false) {
   const endpoint = project ? server.PROJECT_API : server.API
@@ -10,7 +14,7 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {
     params = data
   }
-  const resp = await axios.request({
+  const [err, resp] = await to(axios.request({
     url,
     method,
     data,
@@ -26,7 +30,53 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
       withCredentials: true
     },
     params: params
-  })
+  }))
+  if (err) {
+    console.log(err)
+    if (batchRequest > 0) {
+      batchRequest--
+      if (err.message === 'Network Error') {
+        err.message = '网络错误'
+      }
+      let msg = err.message
+      eventBus.$emit('request-error', {
+        msg
+      })
+    }
+    return resp
+  }
+  console.log(resp.data.resultMsg)
+  const code = resp.data.resultCode
+  const msg = resp.data.resultMsg.hint
+  if (code === 'SUCCESS') {
+    if (typeof (msg) === 'string') {
+      let result = ''
+      try {
+        result = JSON.parse(msg)
+      } catch (e) {
+        result = msg
+      }
+      if (typeof (result) === 'object') {
+        return result
+      }
+    }
+    if (msg === undefined || msg === null) {
+      return {}
+    }
+    return msg
+  }
+
+  if ((code === 'FAILURE') || (code === 'ERROR')) {
+    if (batchRequest > 0) {
+      batchRequest--
+      eventBus.$emit('request-error', {
+        msg,
+        resp,
+        code
+      })
+    }
+    return null
+  }
   return resp
 }
 
