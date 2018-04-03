@@ -75,7 +75,9 @@ module.exports = function (ctx) {
         'QScrollArea',
         'QChipsInput',
         'QRouteTab',
-        'QBtnGroup'
+        'QBtnGroup',
+        'QInnerLoading',
+        'QSpinnerGears'
       ],
       directives: [
         'Ripple'
@@ -83,7 +85,8 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'Dialog'
+        'Dialog',
+        'Loading'
       ]
     },
     // animations: 'all' --- includes all animations

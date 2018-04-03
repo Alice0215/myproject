@@ -47,7 +47,8 @@ export default {
     return {
       qrCodeId: 1,
       code: {},
-      other: ''
+      other: '',
+      editable: false
     }
   },
   created () {
@@ -55,6 +56,16 @@ export default {
     this.getInfo()
   },
   methods: {
+    add () {
+      if (!this.editable) {
+        this.$q.dialog({
+          title: '提示',
+          message: '您没有编辑权限'
+        })
+        return
+      }
+      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + this.code.type.key)
+    },
     getInfo () {
       request(
         'qrcode/detail?qrCodeId=' + this.qrCodeId,
@@ -66,6 +77,7 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.code = response.data.resultMsg.code
           this.other = response.data.resultMsg.other
+          this.editable = response.data.resultMsg.editable
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

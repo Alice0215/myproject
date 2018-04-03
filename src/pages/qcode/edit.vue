@@ -138,6 +138,8 @@
   export default {
     data () {
       return {
+        qrCodeId: '',
+        form: {},
         projectId: 1,
         amount: '',
         contactNumber: '',
@@ -152,6 +154,14 @@
       }
     },
     methods: {
+      async load () {
+        this.$q.loading.show()
+        let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
+        this.$q.loading.hide()
+        if (resp) {
+          this.form = resp
+        }
+      },
       cancelUploadImage (index) {
         this.imageArray.splice(index, 1)
       },
@@ -222,7 +232,9 @@
         this.$router.push('allUser')
       }
     },
-    mounted () {
+    async mounted () {
+      this.qrCodeId = this.$route.query.id
+      this.load()
       this.$nextTick(() => {
         this.topButtonsClicked(0)
       })
