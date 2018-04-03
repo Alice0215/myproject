@@ -56,13 +56,15 @@
     },
     methods: {
       cancelUploadImage (index) {
+        this.$q.loading.show()
         let img = this.imageArray[index]
-        deleteFiles(img.contentUrl, this.imageArray, index)
+        deleteFiles(img.contentUrl, index)
       },
       openCamera () {
         console.log('open camera')
         if (navigator.camera) {
           navigator.camera.getPicture(imgData => {
+            this.$q.loading.show()
             uploadFiles(imgData)
           }, errorMsg => {
             console.log(errorMsg)
@@ -73,9 +75,13 @@
     mounted () {
       eventBus.$on('upload-success', resp => {
         console.log(resp)
+        this.$q.loading.hide()
         this.imageArray.push(resp)
       })
       eventBus.$on('delete-success', (params) => {
+        this.$q.loading.hide()
+        let index = parseInt(params.idx)
+        this.imageArray.splice(index, 1)
         this.$q.dialog({
           title: '提示',
           message: params.msg
@@ -117,6 +123,11 @@
       border-width: 1px;
       border-color: lightgray;
       border-radius: 8px;
+    }
+
+    .img-close {
+      margin-left: 80px;
+      margin-top: -190px;
     }
   }
 </style>

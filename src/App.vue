@@ -19,6 +19,7 @@
     },
     mounted () {
       eventBus.$on('request-error', params => {
+        this.$q.loading.hide()
         this.$q.dialog({
           title: '提示',
           message: params.msg
