@@ -70,7 +70,6 @@ export default {
           ).then(response => {
             if (response.data.resultCode === 'SUCCESS') {
               this.loading = false
-              console.log(this.list)
               let list = response.data.resultMsg
               if (list.length === 0 || !list.length) {
                 that.hasLoadAll = true

@@ -54,6 +54,11 @@ export default [
     name: 'qcodeDetail'
   },
   {
+    path: '/qcode/addPlant',
+    component: () => import('pages/qcode/addPlant'),
+    name: 'qcodeAddPlant'
+  },
+  {
     path: '/qcode/edit',
     component: () => import('pages/qcode/edit'),
     name: 'qcodeEdit'

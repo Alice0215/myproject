@@ -169,8 +169,8 @@ export default {
   },
   created () {
     this.projectId = this.$route.query.projectId
-    this.getInfo()
     this.getCount()
+    this.getInfo()
   }
 }
 </script>

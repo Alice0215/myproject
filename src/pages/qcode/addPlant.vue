@@ -1,0 +1,263 @@
+<template>
+  <q-layout id="qcode-page">
+    <q-toolbar class='header'>
+      <q-toolbar class='fix'>
+        <a @click="$router.go(-1)">
+          <q-item-side left icon='keyboard arrow left' class='reback'/>
+          返回</a>
+        <q-toolbar-title class='header-title'>
+          添加植物
+        </q-toolbar-title>
+         <q-item-side right/>
+      </q-toolbar>
+    </q-toolbar>
+    <div class='full-width card qr-info'>
+        <div class="col-12 row mt-6 justify-between">
+          <div class="col-7 row">
+              <q-input
+                v-model="qrCodeForm.alias"
+                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'
+              />
+          </div>
+          <div class="col-4 row">
+              <span class="col-4 lineHeight-32">数量</span>
+              <q-input class="col-7 border-1 ml-2 h-35  p-8" v-model="plantCount"></q-input>
+          </div>
+        </div>
+        <q-select
+          v-model="formData.category"
+          placeholder='苗木分类选项' class='full-width h-35 p-8 border-1'
+          :options="plantCategory"
+        />
+        <div id="single-plant" >
+          <div class="row justify-between">
+            <div class="col-6 row mt-4">
+              <span class="col-3 lineHeight-30">胸径</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-35  p-8" v-model="formData.xiongJing"></q-input>
+              <span class="col-1 lineHeight-32 ml-4">cm</span>
+            </div>
+            <div class="col-6 row mt-4">
+              <span class="col-3 lineHeight-30">高度</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-35  p-8" v-model="formData.gaoDu"></q-input>
+              <span class="col-1 lineHeight-32 ml-4">cm</span>
+            </div>
+            <div class="col-6 row mt-4">
+              <span class="col-3 lineHeight-30">地径</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-35  p-8" v-model="formData.diJing"></q-input>
+              <span class="col-1 lineHeight-32 ml-4">cm</span>
+            </div>
+            <div class="col-6 row mt-4">
+              <span class="col-3 lineHeight-30">冠幅</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-35  p-8" v-model="formData.guanFu"></q-input>
+              <span class="col-1 lineHeight-32 ml-4">cm</span>
+            </div>
+            <div class="col-6 row mt-4">
+              <span class="col-3 lineHeight-30">蓬径</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-35  p-8" v-model="formData.pengJing"></q-input>
+              <span class="col-1 lineHeight-32 ml-4">cm</span>
+            </div>
+
+            <div class="col-12 row mt-4 justify-between">
+              <div class="col-5 row">
+                <span class="col-5 lineHeight-32">分支数量</span>
+                <q-input type="number" class="col-5 border-1 ml-2 h-35  p-8" v-model="formData.branch"></q-input>
+                <span class="col-1 lineHeight-32 ml-4">个</span>
+              </div>
+              <div class="col-5 row">
+                <span class="col-4 lineHeight-32">几年生</span>
+                <q-input class="col-7 border-1 ml-2 h-30  p-8" v-model="formData.year"></q-input>
+              </div>
+            </div>
+            <div class="row mt-8 col-12">
+              <span class="col-1 lineHeight-32">其他</span>
+              <q-input v-model="formData.other" class="col-10 ml-8 border-1 h-35  p-8"></q-input>
+            </div>
+          </div>
+          <q-input v-model="formData.source" placeholder="苗原地" class='login-input mt-10'></q-input>
+          <q-input v-model="formData.dealer" placeholder="苗木商名称" class='login-input'></q-input>
+          <q-input v-model="formData.otherFeature" placeholder="苗木其他信息" class='login-input'></q-input>
+        </div>
+        <div class="mt-10">
+          <q-item-side left icon='place' class='inline newicon'></q-item-side>
+          <q-item-tile sublabel lines='1' class='inline text-center'>
+            河南省郑州市
+          </q-item-tile>
+        </div>
+        <q-input
+          v-model="qrCodeForm.description"
+          placeholder="输入备注信息"
+          type="textarea"
+          hide-underline class="login-input mt-10"/>
+        <div>
+          <q-list class="mt-6 bg-white pb-8">
+            <q-list-header>现场拍照</q-list-header>
+            <div class="row">
+              <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+                <img class="full-height full-width" :src="v">
+                <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
+              </div>
+              <div class="w-100 h-100 ml-10">
+                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+              </div>
+            </div>
+          </q-list>
+        </div>
+      </div>
+      <q-btn class="full-width btn" @click='add()'>添加</q-btn>
+  </q-layout>
+</template>
+
+<script>
+import { request } from '../../common'
+import _ from 'lodash'
+
+export default {
+  data () {
+    return {
+      formData: {
+        category: '',
+        gaoDu: '',
+        xiongJing: '',
+        diJing: '',
+        guanFu: '',
+        pengJing: '',
+        branch: '',
+        year: '',
+        other: '',
+        otherFeature: '',
+        source: '',
+        dealer: ''
+      },
+      qrCodeForm: {
+        projectId: '',
+        qrCodeId: '',
+        description: '',
+        pictures: [],
+        alias: ''
+      },
+      plantCategory: [],
+      plantCount: '',
+      imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
+        'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
+    }
+  },
+  methods: {
+    cancelUploadImage (index) {
+      this.imageArray = this.imageArray.splice(index + 1)
+    },
+    add () {
+      let data = this.formData
+      data['qrCodeForm'] = {
+        projectId: this.qrCodeForm
+      }
+      let params = new FormData()
+      for (var key in data) {
+        params.append(key, data[key])
+      }
+      request('qrcode/single/save', 'put', data, 'json', true).then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
+          this.$q.dialog({
+            title: '提示',
+            message: '添加成功！'
+          })
+        } else {
+          console.log(response.data.resultMsg)
+        }
+      })
+    },
+    getPlantCategory () {
+      request('data/plantCategory', 'get').then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          for (var key in response.data.resultMsg) {
+            this.plantCategory.push({
+              label: response.data.resultMsg[key]['name'],
+              value: parseInt(response.data.resultMsg[key]['id'])
+            })
+          }
+        } else {
+          console.log(response.data.resultMsg)
+        }
+      })
+    }
+  },
+  created () {
+    // this.singlePlantProperties = [{ name: formData.xiongJing, value: '胸径' }, { name: formData.gaoDu, value: '高度' }, { name: formData.diJing, value: '地径' }, { name: formData.guanFu, value: '冠幅' }, { name: formData.pengJing, value: '篷径' }]
+    this.getPlantCategory()
+  }
+}
+</script>
+
+<style lang='scss'>
+@import "../../assets/css/common";
+#qcode-page {
+  .lineHeight-32 {
+    line-height: 32px;
+  }
+  .h-35 {
+    height: 35px;
+    margin-bottom: 10px;
+  }
+
+  #single-plant {
+    .row {
+      .q-input {
+        .q-no-input-spinner {
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+
+  .add-area {
+    border: 0;
+
+    .q-item {
+      border-style: solid;
+      border-width: 1px;
+      border-color: lightgray;
+      border-radius: 8px;
+    }
+  }
+  .area-input {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 8px;
+    width: 100px;
+  }
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
+
+  .top-field p {
+    margin-bottom: 10px;
+  }
+
+  .qr-info {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 30px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
+
+  .img-close {
+    margin-left: 80px;
+    margin-top: -190px;
+  }
+
+  .camera-button {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 1px;
+    box-shadow: none !important;
+  }
+}
+</style>
