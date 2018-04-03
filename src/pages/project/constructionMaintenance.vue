@@ -29,7 +29,15 @@
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header>现场拍照</q-list-header>
-      <q-btn icon="camera" @click="openCamera"/>
+      <div class="row">
+        <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+          <img class="full-height full-width" :src="v.previewUrl">
+          <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
+        </div>
+        <div class="w-100 h-100 ml-10">
+          <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
+        </div>
+      </div>
     </q-list>
   </q-layout>
 </template>
@@ -42,10 +50,15 @@
     data () {
       return {
         tags: ['裁植修建', '苗木假植', '灌水'],
-        remark: ''
+        remark: '',
+        imageArray: []
       }
     },
     methods: {
+      cancelUploadImage (index) {
+        let img = this.imageArray[index]
+        deleteFiles(img.contentUrl, this.imageArray, index)
+      },
       openCamera () {
         console.log('open camera')
         if (navigator.camera) {
@@ -60,10 +73,18 @@
     mounted () {
       eventBus.$on('upload-success', resp => {
         console.log(resp)
+        this.imageArray.push(resp)
+      })
+      eventBus.$on('delete-success', (params) => {
+        this.$q.dialog({
+          title: '提示',
+          message: params.msg
+        })
       })
     },
     beforeDestroy () {
       eventBus.$off('upload-success')
+      eventBus.$off('delete-success')
     }
   }
 </script>

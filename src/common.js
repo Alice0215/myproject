@@ -109,11 +109,14 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
  * @param filePath 文件相对路径
  * @returns {Promise<void>}
  */
-async function deleteFiles (filePath) {
+async function deleteFiles (filePath, imageArray = null, index = null) {
   let resp = await request('file/delete?relativePath=' + filePath)
   if (resp) {
+    if (!_.isNull(imageArray) && _.isNull(index)) {
+      this.imageArray.splice(index, 1)
+    }
     let msg = '删除成功'
-    eventBus.$emit('request-error', {
+    eventBus.$emit('delete-success', {
       msg
     })
   }
@@ -129,7 +132,14 @@ async function uploadFiles (fileData) {
   fD.append('file', fileBlob)
   let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
   if (uploadReq) {
-    eventBus.$emit('upload-success', uploadReq)
+    if (uploadReq.indexOf('fs\\') > -1) {
+      uploadReq = uploadReq.replace('fs\\', '')
+    }
+    let previewUrl = server.THUMBNAIL_API + uploadReq
+    eventBus.$emit('upload-success', {
+      'previewUrl': previewUrl,
+      'contentUrl': uploadReq
+    })
   }
 }
 
