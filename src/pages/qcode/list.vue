@@ -25,7 +25,7 @@
         <div class='nav-title'>
             <span class='hover'>二维码列表</span>
             <span @click="$router.push('/add')">维护记录</span>
-            <q-select v-model='qrtype' :options='qrtypes' placeholder='类型 ∨' class="type"/>
+            <q-select v-model='type' placeholder='类型 ∨' class="type" @input="inputChange" :options='qrtypes'/>
         </div>
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
@@ -61,31 +61,30 @@ export default {
   data () {
     return {
       list: '',
-      loading: false,
       pageNo: 1,
-      hasLoadAll: false,
-      qrtype: '',
+      hasLoadAll: true,
       projectId: '',
       projectDesc: '',
       location: '',
       total: '',
       active: '',
+      type: '',
       qrtypes: [
         {
           label: '单株植物',
-          value: '1'
+          value: 'SINGLE'
         },
         {
           label: '片区植物',
-          value: '2'
+          value: 'AREA'
         },
         {
           label: '工具',
-          value: '3'
+          value: 'EQUIPMENT'
         },
         {
           label: '其它',
-          value: '4'
+          value: 'OTHER'
         }
       ]
     }
@@ -94,17 +93,10 @@ export default {
     async  load (index, done) {
       setTimeout(() => {
         if (!this.hasLoadAll) {
-          this.loading = true
           request(
-            'qrcode/list?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20',
-            'get',
-            '',
-            'json',
-            true
-          ).then(response => {
+            'qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
             if (response.data.resultCode === 'SUCCESS') {
               let that = this
-              this.loading = false
               let list = response.data.resultMsg
               if (list.length === 0 || !list.length) {
                 this.hasLoadAll = true
@@ -113,6 +105,7 @@ export default {
               if (list.length < 20) {
                 that.hasLoadAll = true
               } else {
+                this.hasLoadAll = false
                 that.pageNo++
               }
               if (that.list.length > 0) {
@@ -126,14 +119,31 @@ export default {
         }
       }, 2000)
     },
+    initList () {
+      request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          let that = this
+          let list = response.data.resultMsg
+          if (list.length === 0 || !list.length) {
+            this.hasLoadAll = true
+            return
+          }
+          if (list.length < 20) {
+            that.hasLoadAll = true
+          } else {
+            that.pageNo++
+            this.hasLoadAll = false
+          }
+          if (that.list.length > 0) {
+            that.list = that.list.concat(list)
+          } else {
+            that.list = list
+          }
+        }
+      })
+    },
     getInfo () {
-      request(
-        'project/detail?projectId=' + this.projectId,
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
+      request('project/detail?projectId=' + this.projectId, 'get', null, 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           if (response.data.resultMsg.location) {
             this.location = response.data.resultMsg.location.formattedAddress
@@ -148,16 +158,17 @@ export default {
       })
     },
     getCount () {
-      request(
-        'qrcode/count?projectId=' + this.projectId,
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
+      this.$q.loading.show()
+      request('qrcode/count?projectId=' + this.projectId + '&type=' + this.type, 'get', null, 'json', true).then(response => {
+        this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
           this.total = response.data.resultMsg.total
-          this.active = response.data.resultMsg.active
+          console.log(response.data.resultMsg.active)
+          if (response.data.resultMsg.active === null) {
+            this.active = 0
+          } else {
+            this.active = parseInt(response.data.resultMsg.active)
+          }
         } else {
           this.$q.dialog({
             title: '提示',
@@ -165,12 +176,20 @@ export default {
           })
         }
       })
+    },
+    inputChange () {
+      this.hasLoadAll = false
+      this.pageNo = 1
+      this.list = ''
+      this.getCount()
+      this.initList()
     }
   },
   created () {
     this.projectId = this.$route.query.projectId
     this.getCount()
     this.getInfo()
+    this.initList()
   }
 }
 </script>

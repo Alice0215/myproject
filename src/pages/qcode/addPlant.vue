@@ -88,8 +88,7 @@
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
-        <div>
-          <q-list class="mt-6 bg-white pb-8">
+          <div class="mt-6 bg-white pb-8">
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
@@ -100,9 +99,8 @@
                 <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
               </div>
             </div>
-          </q-list>
+          </div>
         </div>
-      </div>
       <q-btn class="full-width btn" @click='add()'>添加</q-btn>
   </q-layout>
 </template>
