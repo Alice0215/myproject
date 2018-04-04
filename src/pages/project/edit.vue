@@ -11,7 +11,7 @@
     </q-toolbar>
     <div class="full-width card">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+        <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
                   class="login-input" disable  placeholder="输入地址/定位地址"/>
         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
           <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
@@ -161,8 +161,8 @@ export default {
         if (response.data.resultCode === 'SUCCESS') {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
-          if (response.data.location && response.data.location.formattedAddress) {
-            this.formData.address = response.data.location.formattedAddress
+          if (response.data.resultMsg.location) {
+            this.formData.address = response.data.resultMsg.location.formattedAddress
           }
           if (response.data.resultMsg.projectJobList.length > 0) {
             let userId = JSON.parse(localStorage.getItem('user')).userId

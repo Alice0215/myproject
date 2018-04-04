@@ -4,7 +4,7 @@
         <q-toolbar class='header'>
           <a @click="$router.push('/')"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
-            项目名称
+            {{projectName}}
             </q-toolbar-title>
          <router-link :to="{ path: '/project/userList?id='+projectId}">
          <q-item-side right icon='group' @click='$router.go(-1)' class='group'/>
@@ -16,7 +16,7 @@
               简介：{{projectDesc}}
              </q-item-tile>
               <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
-                <q-item-tile sublabel lines='1' class='inline text-center'>
+                <q-item-tile sublabel lines='1' class='inline text-center location'>
                {{location}}
                 </q-item-tile>
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
@@ -32,7 +32,7 @@
            <q-infinite-scroll :handler="load">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
           :key="item.id" >
-              <router-link :to="{ path: '/qcode/detail?id='+item.id }">
+              <router-link :to="{ path: '/qcode/detail?id='+item.id+'&type='+type }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
@@ -44,7 +44,7 @@
            </q-infinite-scroll>
         </q-scroll-area>
         <div  class="btn-field">
-         <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add')">申请制作二维码</q-btn>
+         <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add?projectId='+projectId)">申请制作二维码</q-btn>
         </div>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
@@ -64,6 +64,7 @@ export default {
       pageNo: 1,
       hasLoadAll: true,
       projectId: '',
+      projectName: '',
       projectDesc: '',
       location: '',
       total: '',
@@ -149,6 +150,7 @@ export default {
             this.location = response.data.resultMsg.location.formattedAddress
           }
           this.projectDesc = response.data.resultMsg.projectDesc
+          this.projectName = response.data.resultMsg.projectName
         } else {
           this.$q.dialog({
             title: '提示',
@@ -163,7 +165,6 @@ export default {
         this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
           this.total = response.data.resultMsg.total
-          console.log(response.data.resultMsg.active)
           if (response.data.resultMsg.active === null) {
             this.active = 0
           } else {
@@ -200,6 +201,10 @@ export default {
   font-size: 12px;
   line-height: 23px;
   min-height: 50px;
+}
+.location {
+  max-width: 180px;
+  display: inline-block;
 }
 .qcount {
   padding: 15px 15px 0px;
