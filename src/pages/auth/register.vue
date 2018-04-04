@@ -1,5 +1,5 @@
 <template>
-  <div class='card'>
+  <div class='card' id="register">
     <div class='register-title'>
         <span class='hover'>个人注册</span>
         <span @click='partyregister()'>机构注册</span>
@@ -8,7 +8,7 @@
       <q-field  @blur="$v.form.username.$touch"
         @keyup.enter="submit"
         :error="$v.form.username.$error"
-        error-label="请属于用户名">
+        error-label="请填写用户名">
       <q-input
         v-model="form.username"
         placeholder='用户名' class='login-input'
@@ -17,7 +17,7 @@
       <q-field  @blur="$v.form.fullname.$touch"
         @keyup.enter="submit"
         :error="$v.form.fullname.$error"
-         error-label="请属于真实姓名">
+         error-label="请填写真实姓名">
       <q-input
         v-model="form.fullname"
         placeholder='真实姓名' class='login-input'
@@ -116,8 +116,11 @@ export default {
       if (this.$v.form.$error) {
         return false
       }
-      if (!/^(\w){6,20}$/.test(this.$v.form.phone)) {
-        this.$q.notify('请输入正确的手机号')
+      if (!(/^\d{11}$/.test(this.form.phone))) {
+        this.$q.dialog({
+          title: '提示',
+          message: '请输入正确的手机号'
+        })
         return false
       }
       let deviceType = 1
@@ -216,9 +219,16 @@ export default {
   text-align: center;
   margin-bottom: 40px;
 }
-a {
-  font-size: 14px;
-  display: inline-block !important;
-  color: #1aad19 !important;
+#register{
+  .log {
+    text-align: center;
+    margin-top: 30px;
+  }
+  a {
+    font-size: 14px;
+    display: inline-block !important;
+    color: #1aad19 !important;
+  }
+
 }
 </style>
