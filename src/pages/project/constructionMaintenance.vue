@@ -29,39 +29,68 @@
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header>现场拍照</q-list-header>
-      <q-btn icon="camera" @click="openCamera"/>
+      <div class="row">
+        <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+          <img class="full-height full-width" :src="v.previewUrl">
+          <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
+        </div>
+        <div class="w-100 h-100 ml-10">
+          <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
+        </div>
+      </div>
     </q-list>
   </q-layout>
 </template>
 
 <script>
-  import { request, dataURLtoFile } from '../../common'
+  import { request, deleteFiles, uploadFiles } from '../../common'
+  import eventBus from '../../eventBus'
 
   export default {
     data () {
       return {
         tags: ['裁植修建', '苗木假植', '灌水'],
-        remark: ''
+        remark: '',
+        imageArray: []
       }
     },
     methods: {
+      cancelUploadImage (index) {
+        this.$q.loading.show()
+        let img = this.imageArray[index]
+        deleteFiles(img.contentUrl, index)
+      },
       openCamera () {
         console.log('open camera')
         if (navigator.camera) {
           navigator.camera.getPicture(imgData => {
-            this.upload(imgData)
+            this.$q.loading.show()
+            uploadFiles(imgData)
           }, errorMsg => {
             console.log(errorMsg)
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
-      },
-      async upload (fileData) {
-        let fileBlob = dataURLtoFile(fileData)
-        let fD = new FormData()
-        fD.append('file', fileBlob)
-        let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
-        console.log(uploadReq)
       }
+    },
+    mounted () {
+      eventBus.$on('upload-success', resp => {
+        console.log(resp)
+        this.$q.loading.hide()
+        this.imageArray.push(resp)
+      })
+      eventBus.$on('delete-success', (params) => {
+        this.$q.loading.hide()
+        let index = parseInt(params.idx)
+        this.imageArray.splice(index, 1)
+        this.$q.dialog({
+          title: '提示',
+          message: params.msg
+        })
+      })
+    },
+    beforeDestroy () {
+      eventBus.$off('upload-success')
+      eventBus.$off('delete-success')
     }
   }
 </script>
@@ -94,6 +123,11 @@
       border-width: 1px;
       border-color: lightgray;
       border-radius: 8px;
+    }
+
+    .img-close {
+      margin-left: 80px;
+      margin-top: -190px;
     }
   }
 </style>
