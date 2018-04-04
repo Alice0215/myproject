@@ -133,30 +133,38 @@ export default {
           } else {
             this.code = response.data.resultMsg
           }
-          if (this.code.type.key === 'SINGLE') {
+          if (this.code.type) {
+            if (this.code.type.key === 'SINGLE') {
+              this.danzhu = true
+              this.pianqu = false
+              this.gongju = false
+              this.qita = false
+            }
+            if (this.code.type.key === 'AREA') {
+              this.danzhu = false
+              this.pianqu = true
+              this.gongju = false
+              this.qita = false
+            }
+            if (this.code.type.key === 'EQUIPMENT') {
+              this.danzhu = false
+              this.pianqu = false
+              this.gongju = true
+              this.qita = false
+            }
+            if (this.code.type.key === 'OTHER') {
+              this.danzhu = false
+              this.pianqu = false
+              this.gongju = false
+              this.qita = true
+            }
+          } else {
             this.danzhu = true
             this.pianqu = false
             this.gongju = false
             this.qita = false
           }
-          if (this.code.type.key === 'AREA') {
-            this.danzhu = false
-            this.pianqu = true
-            this.gongju = false
-            this.qita = false
-          }
-          if (this.code.type.key === 'EQUIPMENT') {
-            this.danzhu = false
-            this.pianqu = false
-            this.gongju = true
-            this.qita = false
-          }
-          if (this.code.type.key === 'OTHER') {
-            this.danzhu = false
-            this.pianqu = false
-            this.gongju = false
-            this.qita = true
-          }
+
           this.other = response.data.resultMsg.other
           this.editable = response.data.resultMsg.editable
         } else {

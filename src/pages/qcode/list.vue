@@ -16,9 +16,7 @@
               简介：{{projectDesc}}
              </q-item-tile>
               <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
-                <q-item-tile sublabel lines='1' class='inline text-center location'>
-               {{location}}
-                </q-item-tile>
+              <q-item-tile sublabel lines='1' class='inline text-center location'>{{location}}</q-item-tile>
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
@@ -30,8 +28,7 @@
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
-              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list"
-          :key="item.id" >
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list":key="item.id" >
               <router-link :to="{ path: '/qcode/detail?id='+item.id+'&type='+type }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
