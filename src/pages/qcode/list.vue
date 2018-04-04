@@ -29,7 +29,7 @@
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list":key="item.id" >
-              <router-link :to="{ path: '/qcode/detail?id='+item.id+'&type='+type }">
+              <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+type }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>

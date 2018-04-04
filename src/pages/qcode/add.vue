@@ -41,13 +41,12 @@ export default {
         contactPerson: this.contactPerson
       }
       request('qrcode/batch', 'post', data, 'json', true).then(response => {
-        console.log(response)
         if (response.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
             title: '提示',
             message: '添加成功！'
           })
-          this.$router.push('qcode/list?projectId=' + this.projectId)
+          this.$router.push('/qcode/list?projectId=' + this.projectId)
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

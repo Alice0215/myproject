@@ -171,7 +171,7 @@ export default {
       this.$router.push('/login')
     },
     async getparty () {
-      this.$axios.get('api/party/all').then(response => {
+      request('party/all', 'get').then(response => {
         for (var key in response.data.resultMsg) {
           this.organizations.push({
             label: response.data.resultMsg[key]['partyName'],

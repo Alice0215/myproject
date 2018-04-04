@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="$router.go(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
+             <a @click="$router.push('/qcode/list?projectId='+projectId)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
               {{code.alias}}
             </q-toolbar-title>
@@ -96,6 +96,7 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      projectId: '',
       qrCodeId: '',
       code: {},
       other: '',
@@ -110,6 +111,7 @@ export default {
   created () {
     this.qrCodeId = this.$route.query.id
     this.type = this.$route.query.type
+    this.projectId = this.$route.query.projectId
     this.getInfo()
   },
   methods: {
