@@ -20,6 +20,7 @@
 
         </p>
       </div>
+      <!--<div v-show="showType">-->
       <div>
         <span>类型</span>
         <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
@@ -29,7 +30,7 @@
       </div>
       <div class="qr-info">
         <q-input
-          v-model="amount"
+          v-model="form.alias"
           :placeholder="namePlaceholder" class='login-input'
         />
         <q-select
@@ -44,9 +45,9 @@
             :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
           />
           <q-select
-            v-model="amount"
+            v-model="form.category"
             placeholder='苗木分类选项' class='login-input mb-2'
-            :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+            :options="plantCategoryArray"
           />
           <div class="row justify-between">
             <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
@@ -57,27 +58,27 @@
             <div class="col-12 row mt-4 justify-between">
               <div class="col-5 row">
                 <span class="col-5 lineHeight-32">分支数量</span>
-                <q-input type="number" class="col-4 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+                <q-input type="number" class="col-4 border-1 ml-2 h-32 p-8" v-model="form.branch"></q-input>
                 <span class="col-2 lineHeight-32 ml-4">个</span>
               </div>
               <div class="col-5 row">
                 <span class="col-4 lineHeight-32">几年生</span>
-                <q-input class="col-7 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+                <q-input class="col-7 border-1 ml-2 h-32 p-8" v-model="form.year"></q-input>
               </div>
             </div>
             <div class="row mt-8 col-12">
               <span class="col-1 lineHeight-32">其他</span>
-              <q-input v-model="amount" class="col-10 ml-8 border-1 h-32 p-8"></q-input>
+              <q-input v-model="form.otherFeature" class="col-10 ml-8 border-1 h-32 p-8"></q-input>
             </div>
           </div>
-          <q-input v-model="amount" placeholder="苗原地" class='login-input mt-10'></q-input>
-          <q-input v-model="amount" placeholder="苗木商名称" class='login-input'></q-input>
-          <q-input v-model="amount" placeholder="苗木其他信息" class='login-input'></q-input>
+          <q-input v-model="form.source" placeholder="苗原地" class='login-input mt-10'></q-input>
+          <q-input v-model="form.dealer" placeholder="苗木商名称" class='login-input'></q-input>
+          <q-input v-model="form.other" placeholder="苗木其他信息" class='login-input'></q-input>
         </div>
         <div class="mt-10">
           <q-item-side left icon='place' class='inline newicon'></q-item-side>
-          <q-item-tile sublabel lines='1' class='inline text-center'>
-            河南省郑州市
+          <q-item-tile sublabel lines='1' class='inline text-center' label>
+            {{ form.locationJson }}
           </q-item-tile>
         </div>
         <q-input
@@ -139,6 +140,8 @@
   export default {
     data () {
       return {
+        typeKey: null,
+        showType: false,
         qrCodeId: '',
         form: {},
         projectId: 1,
@@ -150,7 +153,8 @@
         namePlaceholder: '植物名称',
         areaShow: false,
         singleShow: false,
-        imageArray: []
+        imageArray: [],
+        plantCategoryArray: []
       }
     },
     methods: {
@@ -242,6 +246,16 @@
       chooseUser (jobType) {
         this.formData.jobType = jobType
         this.$router.push('allUser')
+      },
+      async getPlantCategory () {
+        let resp = await request('data/plantCategory')
+        if (resp) {
+          this.plantCategoryArray = resp.data.resultMsg
+          _.forEach(this.plantCategoryArray, (v, key) => {
+            v.label = v.name
+            v.value = v.id
+          })
+        }
       }
     },
     async mounted () {
@@ -260,7 +274,12 @@
         })
       })
       this.qrCodeId = this.$route.query.id
+      this.typeKey = this.$route.query.typeKey
+      if (this.typeKey === 'null') {
+        this.showType = true
+      }
       this.load()
+      this.getPlantCategory()
       this.$nextTick(() => {
         this.topButtonsClicked(0)
       })
