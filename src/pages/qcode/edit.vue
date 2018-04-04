@@ -120,7 +120,7 @@
                 <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
               </div>
               <div class="w-100 h-100 ml-10">
-                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+                <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
               </div>
             </div>
           </q-list>
@@ -132,7 +132,7 @@
 </template>
 
 <script>
-  import { request } from '../../common'
+  import { request, uploadFiles, deleteFiles } from '../../common'
   import _ from 'lodash'
 
   export default {
@@ -149,8 +149,7 @@
         namePlaceholder: '植物名称',
         areaShow: false,
         singleShow: false,
-        imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
-          'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
+        imageArray: []
       }
     },
     methods: {
@@ -162,8 +161,20 @@
           this.form = resp
         }
       },
+      openCamera () {
+        if (navigator.camera) {
+          navigator.camera.getPicture(imgData => {
+            this.$q.loading.show()
+            uploadFiles(imgData)
+          }, errorMsg => {
+            console.log(errorMsg)
+          }, {destinationType: Camera.DestinationType.DATA_URL})
+        }
+      },
       cancelUploadImage (index) {
-        this.imageArray.splice(index, 1)
+        this.$q.loading.show()
+        let img = this.imageArray[index]
+        deleteFiles(img.contentUrl, index)
       },
       topButtonsClicked (index) {
         _.forEach(this.buttonsColor, (v, k) => {
@@ -233,11 +244,29 @@
       }
     },
     async mounted () {
+      eventBus.$on('upload-success', resp => {
+        console.log(resp)
+        this.$q.loading.hide()
+        this.imageArray.push(resp)
+      })
+      eventBus.$on('delete-success', (params) => {
+        this.$q.loading.hide()
+        let index = parseInt(params.idx)
+        this.imageArray.splice(index, 1)
+        this.$q.dialog({
+          title: '提示',
+          message: params.msg
+        })
+      })
       this.qrCodeId = this.$route.query.id
       this.load()
       this.$nextTick(() => {
         this.topButtonsClicked(0)
       })
+    },
+    beforeDestroy () {
+      eventBus.$off('upload-success')
+      eventBus.$off('delete-success')
     }
   }
 </script>
