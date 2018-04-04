@@ -32,9 +32,6 @@ export default {
       localStorage.setItem('username', v)
     }
   },
-  mounted () {
-    this.username = localStorage.getItem('username')
-  },
   methods: {
     register () {
       this.$router.push('/register')
