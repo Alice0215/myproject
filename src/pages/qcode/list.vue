@@ -44,7 +44,7 @@
            </q-infinite-scroll>
         </q-scroll-area>
         <div  class="btn-field">
-         <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add')">申请制作二维码</q-btn>
+         <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add?projectId='+projectId)">申请制作二维码</q-btn>
         </div>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />

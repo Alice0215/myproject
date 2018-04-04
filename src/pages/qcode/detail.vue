@@ -96,7 +96,7 @@ import { request } from '../../common'
 export default {
   data () {
     return {
-      qrCodeId: 1,
+      qrCodeId: '',
       code: {},
       other: '',
       type: '',

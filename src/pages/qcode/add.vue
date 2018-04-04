@@ -23,11 +23,14 @@ import { request } from '../../common'
 export default {
   data () {
     return {
-      projectId: 1,
+      projectId: '',
       amount: '',
       contactNumber: '',
       contactPerson: ''
     }
+  },
+  created () {
+    this.projectId = this.$route.query.projectId
   },
   methods: {
     add () {
@@ -44,6 +47,7 @@ export default {
             title: '提示',
             message: '添加成功！'
           })
+          this.$router.push('qcode/list?projectId=' + this.projectId)
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({
@@ -80,7 +84,7 @@ export default {
 .card {
   padding-top: 10px;
 }
-.header-title{
+.header-title {
   margin-right: 30px;
 }
 input:not(.no-style):hover {
