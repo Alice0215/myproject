@@ -50,6 +50,13 @@ export default {
         password: this.password,
         deviceType: deviceType
       }
+      if (this.password === '' || this.username === '') {
+        this.$q.dialog({
+          title: '提示',
+          message: '请输入您的账号和密码！'
+        })
+        return false
+      }
       let params = new URLSearchParams()
       for (var key in data) {
         params.append(key, data[key])
