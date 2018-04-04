@@ -121,7 +121,11 @@ export default {
         })
         return
       }
-      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + this.code.type.key)
+      let key = null
+      if (this.code.type) {
+        key = this.code.type.key
+      }
+      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + key)
     },
     getInfo () {
       this.$q.loading.show()
