@@ -23,7 +23,7 @@
         <div class='nav-title'>
             <span class='hover'>二维码列表</span>
             <span @click="$router.push('/add')">维护记录</span>
-            <q-select v-model='type' placeholder='类型 ∨' class="type" @input="inputChange" :options='qrtypes'/>
+            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes'/>
         </div>
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
@@ -43,6 +43,18 @@
         <div  class="btn-field">
          <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add?projectId='+projectId)">申请制作二维码</q-btn>
         </div>
+        <div v-if="weihu">
+          <q-item  class="full-width underline users"  >
+            <q-item-side icon="account circle" />
+            <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
+            <q-item-side right  icon="keyboard_arrow_right" />
+          </q-item>
+          <q-item  class="full-width underline users"  >
+            <q-item-side icon="account circle" />
+            <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
+            <q-item-side right  icon="keyboard_arrow_right" />
+          </q-item>
+        </div>
          <q-tabs class="footer">
           <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -57,6 +69,8 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      qrcode: true,
+      weihu: false,
       list: '',
       pageNo: 1,
       hasLoadAll: true,
