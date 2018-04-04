@@ -28,10 +28,9 @@
         <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
-        <q-input
-          v-model="amount"
-          :placeholder="namePlaceholder" class='login-input'
-        />
+        <q-input v-model="alias" placeholder="植物名称" class='login-input'>
+            <q-autocomplete @search="searchTerm" @selected="selected" />
+        </q-input>
         <q-select
           v-model="amount"
           placeholder='默认项目名称' class='login-input'
@@ -132,238 +131,253 @@
 </template>
 
 <script>
-  import { request, uploadFiles, deleteFiles } from '../../common'
-  import _ from 'lodash'
-  import eventBus from '../../eventBus'
+import { request, uploadFiles, deleteFiles } from '../../common'
+import { filter } from 'quasar'
+import _ from 'lodash'
+import eventBus from '../../eventBus'
 
-  export default {
-    data () {
-      return {
-        qrCodeId: '',
-        form: {},
-        projectId: 1,
-        amount: '',
-        contactNumber: '',
-        contactPerson: '',
-        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
-        buttonsColor: ['black', 'black', 'black', 'black'],
-        namePlaceholder: '植物名称',
-        areaShow: false,
-        singleShow: false,
-        imageArray: []
+export default {
+  data () {
+    return {
+      qrCodeId: '',
+      form: {},
+      projectId: 1,
+      amount: '',
+      contactNumber: '',
+      contactPerson: '',
+      singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
+      buttonsColor: ['black', 'black', 'black', 'black'],
+      namePlaceholder: '植物名称',
+      areaShow: false,
+      singleShow: false,
+      alias: '',
+      imageArray: [],
+      aliasList: []
+    }
+  },
+  methods: {
+    searchTerm (alias, done) {
+      request('data/term?type=PLANT&start=' + this.alias + '&top=10', 'get').then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          setTimeout(() => {
+            done(filter(alias, { field: 'value', list: model }))
+          }, 1000)
+        }
+      })
+    },
+    selected (item) {
+      this.$q.notify(`Selected suggestion "${item.label}"`)
+    },
+    async load () {
+      this.$q.loading.show()
+      let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
+      this.$q.loading.hide()
+      if (resp) {
+        this.form = resp
       }
     },
-    methods: {
-      async load () {
-        this.$q.loading.show()
-        let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
-        this.$q.loading.hide()
-        if (resp) {
-          this.form = resp
+    openCamera () {
+      if (navigator.camera) {
+        navigator.camera.getPicture(imgData => {
+          this.$q.loading.show()
+          uploadFiles(imgData)
+        }, errorMsg => {
+          console.log(errorMsg)
+        }, { destinationType: Camera.DestinationType.DATA_URL })
+      }
+    },
+    cancelUploadImage (index) {
+      this.$q.loading.show()
+      let img = this.imageArray[index]
+      deleteFiles(img.contentUrl, index)
+    },
+    topButtonsClicked (index) {
+      _.forEach(this.buttonsColor, (v, k) => {
+        if (k === index) {
+          this.$set(this.buttonsColor, k, 'green')
+        } else {
+          this.$set(this.buttonsColor, k, 'black')
         }
-      },
-      openCamera () {
-        if (navigator.camera) {
-          navigator.camera.getPicture(imgData => {
-            this.$q.loading.show()
-            uploadFiles(imgData)
-          }, errorMsg => {
-            console.log(errorMsg)
-          }, {destinationType: Camera.DestinationType.DATA_URL})
-        }
-      },
-      cancelUploadImage (index) {
-        this.$q.loading.show()
-        let img = this.imageArray[index]
-        deleteFiles(img.contentUrl, index)
-      },
-      topButtonsClicked (index) {
-        _.forEach(this.buttonsColor, (v, k) => {
-          if (k === index) {
-            this.$set(this.buttonsColor, k, 'green')
-          } else {
-            this.$set(this.buttonsColor, k, 'black')
-          }
-        })
-        switch (index) {
-          case 0:
-            this.singleShow = true
-            this.areaShow = false
-            this.namePlaceholder = '植物名称'
-            break
-          case 1:
-            this.singleShow = false
-            this.areaShow = true
-            this.namePlaceholder = '输入片区名称'
-            break
-          case 2:
-            this.singleShow = false
-            this.areaShow = false
-            this.namePlaceholder = '输入名称'
-            break
-          case 3:
-            this.singleShow = false
-            this.areaShow = false
-            this.namePlaceholder = '输入名称'
-            break
-          default:
-            break
-        }
-      },
-      add () {
-        let data = {
-          projectId: this.projectId,
-          amount: this.amount,
-          contactNumber: this.contactNumber,
-          contactPerson: this.contactPerson
-        }
-        request('qrcode/batch', 'post', data, 'json', true).then(response => {
-          console.log(response)
-          if (response.data.resultCode === 'SUCCESS') {
+      })
+      switch (index) {
+        case 0:
+          this.singleShow = true
+          this.areaShow = false
+          this.namePlaceholder = '植物名称'
+          break
+        case 1:
+          this.singleShow = false
+          this.areaShow = true
+          this.namePlaceholder = '输入片区名称'
+          break
+        case 2:
+          this.singleShow = false
+          this.areaShow = false
+          this.namePlaceholder = '输入名称'
+          break
+        case 3:
+          this.singleShow = false
+          this.areaShow = false
+          this.namePlaceholder = '输入名称'
+          break
+        default:
+          break
+      }
+    },
+    add () {
+      let data = {
+        projectId: this.projectId,
+        amount: this.amount,
+        contactNumber: this.contactNumber,
+        contactPerson: this.contactPerson
+      }
+      request('qrcode/batch', 'post', data, 'json', true).then(response => {
+        console.log(response)
+        if (response.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '保存成功！'
+          })
+        } else {
+          if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({
               title: '提示',
-              message: '保存成功！'
+              message: response.data.resultMsg.hint
             })
           } else {
-            if (response.data.resultCode === 'ERROR') {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg.hint
-              })
-            } else {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg
-              })
-            }
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
           }
-        })
-      },
-      chooseUser (jobType) {
-        this.formData.jobType = jobType
-        this.$router.push('allUser')
-      }
-    },
-    async mounted () {
-      eventBus.$on('upload-success', resp => {
-        console.log(resp)
-        this.$q.loading.hide()
-        this.imageArray.push(resp)
-      })
-      eventBus.$on('delete-success', (params) => {
-        this.$q.loading.hide()
-        let index = parseInt(params.idx)
-        this.imageArray.splice(index, 1)
-        this.$q.dialog({
-          title: '提示',
-          message: params.msg
-        })
-      })
-      this.qrCodeId = this.$route.query.id
-      this.load()
-      this.$nextTick(() => {
-        this.topButtonsClicked(0)
+        }
       })
     },
-    beforeDestroy () {
-      eventBus.$off('upload-success')
-      eventBus.$off('delete-success')
+    chooseUser (jobType) {
+      this.formData.jobType = jobType
+      this.$router.push('allUser')
     }
+  },
+  async mounted () {
+    eventBus.$on('upload-success', resp => {
+      console.log(resp)
+      this.$q.loading.hide()
+      this.imageArray.push(resp)
+    })
+    eventBus.$on('delete-success', (params) => {
+      this.$q.loading.hide()
+      let index = parseInt(params.idx)
+      this.imageArray.splice(index, 1)
+      this.$q.dialog({
+        title: '提示',
+        message: params.msg
+      })
+    })
+    this.qrCodeId = this.$route.query.id
+    this.load()
+    this.$nextTick(() => {
+      this.topButtonsClicked(0)
+    })
+  },
+  beforeDestroy () {
+    eventBus.$off('upload-success')
+    eventBus.$off('delete-success')
   }
+}
 </script>
 
 <style lang='scss'>
-  @import "../../assets/css/common";
+@import "../../assets/css/common";
 
-  #qcode-page {
+#qcode-page {
+  .lineHeight-32 {
+    line-height: 32px;
+  }
 
-    .lineHeight-32 {
-      line-height: 32px;
-    }
-
-    #single-plant {
-      .row {
-        .q-input {
-          .q-no-input-spinner {
-            margin-top: 16px;
-          }
+  #single-plant {
+    .row {
+      .q-input {
+        .q-no-input-spinner {
+          margin-top: 16px;
         }
       }
     }
+  }
 
-    .add-area {
-      border: 0;
+  .add-area {
+    border: 0;
 
-      .q-item {
-        border-style: solid;
-        border-width: 1px;
-        border-color: lightgray;
-        border-radius: 8px;
-      }
-    }
-
-    .area-input {
+    .q-item {
       border-style: solid;
       border-width: 1px;
       border-color: lightgray;
       border-radius: 8px;
-      width: 100px;
-    }
-
-    .reback {
-      min-width: auto !important;
-    }
-
-    .underline {
-      border-bottom: 1px solid #cccccc;
-      margin-top: 20px;
-    }
-
-    .card {
-      margin-bottom: 0px;
-      padding: 30px 15px;
-      min-height: 160px;
-    }
-
-    input:not(.no-style):hover {
-      border-bottom: none;
-    }
-
-    .q-if-inner {
-      min-height: 30px !important;
-      padding-bottom: 10px;
-    }
-
-    .q-if-control.q-icon {
-      padding-bottom: 6px;
-    }
-
-    .top-field p {
-      margin-bottom: 10px;
-    }
-
-    .qr-info {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #333333;
-      margin-bottom: 30px;
-      p {
-        margin-bottom: 5px;
-      }
-    }
-
-    .img-close {
-      margin-left: 80px;
-      margin-top: -190px;
-    }
-
-    .camera-button {
-      border-style: solid;
-      border-width: 1px;
-      border-color: lightgray;
-      border-radius: 1px;
-      box-shadow: none !important;
     }
   }
 
+  .area-input {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 8px;
+    width: 100px;
+  }
+
+  .reback {
+    min-width: auto !important;
+  }
+
+  .underline {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 20px;
+  }
+
+  .card {
+    margin-bottom: 0px;
+    padding: 30px 15px;
+    min-height: 160px;
+  }
+
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+
+  .q-if-inner {
+    min-height: 30px !important;
+    padding-bottom: 10px;
+  }
+
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
+
+  .top-field p {
+    margin-bottom: 10px;
+  }
+
+  .qr-info {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 30px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
+
+  .img-close {
+    margin-left: 80px;
+    margin-top: -190px;
+  }
+
+  .camera-button {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 1px;
+    box-shadow: none !important;
+  }
+}
 </style>
