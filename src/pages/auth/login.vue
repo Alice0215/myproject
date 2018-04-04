@@ -1,5 +1,5 @@
 <template>
-  <div class='card'>
+  <div class='card' id="login">
     <p class='log'>
       <img src='statics/logo.png'/>
     </p>
@@ -98,13 +98,17 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.log {
-  text-align: center;
-  margin-top: 30px;
+#login{
+  .log {
+    text-align: center;
+    margin-top: 30px;
+  }
+  a {
+    font-size: 14px;
+    display: inline-block !important;
+    color: #1aad19 !important;
+  }
+
 }
-a {
-  font-size: 14px;
-  display: inline-block !important;
-  color: #1aad19 !important;
-}
+
 </style>

@@ -16,7 +16,7 @@
               简介：{{projectDesc}}
              </q-item-tile>
               <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
-              <q-item-tile sublabel lines='1' class='inline text-center location'>{{location}}</q-item-tile>
+              <q-item-tile sublabel lines='1' class='text-center location'>{{location}}</q-item-tile>
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
@@ -201,7 +201,7 @@ export default {
 }
 .location {
   max-width: 180px;
-  display: inline-block;
+  display: inline-block !important;
 }
 .qcount {
   padding: 15px 15px 0px;
