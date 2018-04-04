@@ -45,7 +45,6 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     }
     return resp
   }
-  console.log(resp.data.resultMsg)
   const code = resp.data.resultCode
   const msg = resp.data.resultMsg
   if (code === 'SUCCESS') {

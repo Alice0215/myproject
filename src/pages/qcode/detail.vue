@@ -18,7 +18,7 @@
           <q-btn class="show-qr">查看二维码</q-btn>
         </p>
       </div>
-      <div class="qr-info">
+      <div class="qr-info" v-if="danzhu">
         <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
         <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
         <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
@@ -35,7 +35,58 @@
           </span>
         </p>
       </div>
-      <q-btn class="full-width bg-color qr-btn show-qr" @click='add()'>编辑基础信息</q-btn>
+       <div class="qr-info" v-if="pianqu">
+        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
+        <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
+        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p>苗木分类：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p class="param"><span>胸径：{{code.xiongJing}}cm</span><span>高度：{{code.gaoDu}}cm</span><span>冠幅：14cm</span></p>
+        <p>苗木商名称：<span v-if="code.dealer">{{code.dealer}}</span></p>
+        <p>苗木其它信息：</p>
+        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="code.location"></q-item-side>{{code.location}}</p>
+        <p>{{code.description}}</p>
+        <p class="pic-field" >
+          <span v-for="item in code.pictures" v-bind:key="item.id">
+            <img :src="item.filePath"/>
+          </span>
+        </p>
+      </div>
+      <div class="qr-info"  v-if="gongju">
+        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
+        <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
+        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p>苗木分类：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p class="param"><span>胸径：{{code.xiongJing}}cm</span><span>高度：{{code.gaoDu}}cm</span><span>冠幅：14cm</span></p>
+        <p>苗木商名称：<span v-if="code.dealer">{{code.dealer}}</span></p>
+        <p>苗木其它信息：</p>
+        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="code.location"></q-item-side>{{code.location}}</p>
+        <p>{{code.description}}</p>
+        <p class="pic-field" >
+          <span v-for="item in code.pictures" v-bind:key="item.id">
+            <img :src="item.filePath"/>
+          </span>
+        </p>
+      </div>
+      <div class="qr-info" v-if="qita">
+        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
+        <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
+        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p>苗木分类：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p class="param"><span>胸径：{{code.xiongJing}}cm</span><span>高度：{{code.gaoDu}}cm</span><span>冠幅：{{code.guanfu}}cm</span></p>
+        <p>苗木商名称：<span v-if="code.dealer">{{code.dealer}}</span></p>
+        <p>苗木其它信息：</p>
+        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="code.location"></q-item-side>{{code.location}}</p>
+        <p>{{code.description}}</p>
+        <p class="pic-field" >
+          <span v-for="item in code.pictures" v-bind:key="item.id">
+            <img :src="item.filePath"/>
+          </span>
+        </p>
+      </div>
+      <q-btn class="full-width bg-color qr-btn show-qr" v-if="editable" @click='add()'>编辑基础信息</q-btn>
     </div>
   </div>
 </template>
@@ -48,11 +99,17 @@ export default {
       qrCodeId: 1,
       code: {},
       other: '',
+      type: '',
+      danzhu: true,
+      pianqu: false,
+      gongju: false,
+      qita: false,
       editable: false
     }
   },
   created () {
     this.qrCodeId = this.$route.query.id
+    this.type = this.$route.query.type
     this.getInfo()
   },
   methods: {
@@ -67,15 +124,39 @@ export default {
       this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + this.code.type.key)
     },
     getInfo () {
-      request(
-        'qrcode/detail?qrCodeId=' + this.qrCodeId,
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
+      this.$q.loading.show()
+      request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true).then(response => {
+        this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
-          this.code = response.data.resultMsg.code
+          if (response.data.resultMsg.code) {
+            this.code = response.data.resultMsg.code
+          } else {
+            this.code = response.data.resultMsg
+          }
+          if (this.code.type.key === 'SINGLE') {
+            this.danzhu = true
+            this.pianqu = false
+            this.gongju = false
+            this.qita = false
+          }
+          if (this.code.type.key === 'AREA') {
+            this.danzhu = false
+            this.pianqu = true
+            this.gongju = false
+            this.qita = false
+          }
+          if (this.code.type.key === 'EQUIPMENT') {
+            this.danzhu = false
+            this.pianqu = false
+            this.gongju = true
+            this.qita = false
+          }
+          if (this.code.type.key === 'OTHER') {
+            this.danzhu = false
+            this.pianqu = false
+            this.gongju = false
+            this.qita = true
+          }
           this.other = response.data.resultMsg.other
           this.editable = response.data.resultMsg.editable
         } else {
@@ -111,14 +192,11 @@ export default {
     margin-bottom: 3px;
   }
 }
-.param{
-  span{
+.param {
+  span {
     display: inline-block;
     padding: 0px 4px;
   }
-}
-.card {
-  padding: 0px 15px;
 }
 .qr-info {
   margin-top: 15px;
@@ -129,15 +207,15 @@ export default {
     color: #333333;
   }
 }
-.address{
+.address {
   margin-top: 12px;
   margin-bottom: 12px;
 }
-.qr-btn{
+.qr-btn {
   margin-bottom: 30px;
   padding: 10px 5px;
 }
-.pic-field img{
+.pic-field img {
   width: 32%;
   height: auto;
   margin-right: 1%;
