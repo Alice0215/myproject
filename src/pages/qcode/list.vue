@@ -1,6 +1,6 @@
 
 <template>
-    <q-layout class='list bg-color'>
+    <q-layout class='list bg-color' id="qr-list">
         <q-toolbar class='header'>
           <a @click="$router.push('/')"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
@@ -21,14 +21,15 @@
             </q-toolbar-title>
         </q-toolbar>
         <div class='nav-title'>
-            <span class='hover'>二维码列表</span>
-            <span @click="$router.push('/add')">维护记录</span>
-            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes'/>
+            <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
+            <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
+            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode"/>
         </div>
+        <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
-              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list":key="item.id" >
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id" >
               <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+type }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
@@ -36,23 +37,26 @@
               </router-link>
              </q-item-tile>
             <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
-                <q-spinner name="dots" slot="message" :size="40"></q-spinner>
+              <q-spinner name="dots" slot="message" :size="40"></q-spinner>
             </div>
            </q-infinite-scroll>
         </q-scroll-area>
         <div  class="btn-field">
          <q-btn class='full-width bg-color show-qr add-qcode'  @click="$router.push('add?projectId='+projectId)">申请制作二维码</q-btn>
         </div>
-        <div v-if="weihu">
+        </div>
+        <div v-if="weihu" class="bg-white">
           <q-item  class="full-width underline users"  >
-            <q-item-side icon="account circle" />
             <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
-            <q-item-side right  icon="keyboard_arrow_right" />
+            <span class="user">2018-02-20</span>
+            <q-item-side right icon="account circle" class="account"/>
+            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
           </q-item>
-          <q-item  class="full-width underline users"  >
-            <q-item-side icon="account circle" />
+           <q-item  class="full-width underline users"  >
             <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
-            <q-item-side right  icon="keyboard_arrow_right" />
+            <span class="user">2018-02-20</span>
+            <q-item-side right icon="account circle" class="account"/>
+            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
           </q-item>
         </div>
          <q-tabs class="footer">
@@ -72,6 +76,7 @@ export default {
       qrcode: true,
       weihu: false,
       list: '',
+      joblist: [],
       pageNo: 1,
       hasLoadAll: true,
       projectId: '',
@@ -81,6 +86,7 @@ export default {
       total: '',
       active: '',
       type: '',
+      tabClass: ['hover', ''],
       qrtypes: [
         {
           label: '单株植物',
@@ -195,6 +201,48 @@ export default {
       this.list = ''
       this.getCount()
       this.initList()
+    },
+    chooseTab (index) {
+      _.forEach(this.tabClass, (v, k) => {
+        if (k === index) {
+          this.$set(this.tabClass, k, 'hover')
+        } else {
+          this.$set(this.tabClass, k, '')
+        }
+      })
+      if (index === 0) {
+        this.qrcode = true
+        this.weihu = false
+      } else {
+        this.qrcode = false
+        this.weihu = true
+      }
+      this.hasLoadAll = false
+      this.pageNo = 1
+      this.list = ''
+    },
+    getjobGroup () {
+      request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          let that = this
+          let list = response.data.resultMsg
+          if (list.length === 0 || !list.length) {
+            this.hasLoadAll = true
+            return
+          }
+          if (list.length < 20) {
+            that.hasLoadAll = true
+          } else {
+            that.pageNo++
+            this.hasLoadAll = false
+          }
+          if (that.list.length > 0) {
+            that.joblist = that.list.concat(list)
+          } else {
+            that.joblist = list
+          }
+        }
+      })
     }
   },
   created () {
@@ -208,64 +256,80 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.project-info {
-  font-size: 12px;
-  line-height: 23px;
-  min-height: 50px;
-}
-.location {
-  max-width: 180px;
-  display: inline-block !important;
-}
-.qcount {
-  padding: 15px 15px 0px;
-  margin-bottom: 3px;
-}
-.header {
-  margin-bottom: 0px;
-}
-.qfield {
-  width: 100%;
-  height: 300px;
-  padding: 15px;
-  background-color: #f5f5f5;
-  .item {
+#qr-list {
+  .project-info {
+    font-size: 12px;
+    line-height: 23px;
+    min-height: 50px;
+  }
+  .location {
+    max-width: 180px;
+    display: inline-block !important;
+  }
+  .qcount {
+    padding: 15px 15px 0px;
+    margin-bottom: 3px;
+  }
+  .header {
+    margin-bottom: 0px;
+  }
+  .qfield {
     width: 100%;
-    height: 50px;
-    background-color: white;
-    border: 1px solid #dfdfdf;
-    border-radius: 3px;
-    padding: 10px;
-    margin-bottom: 10px;
-    line-height: 28px;
-    .qfield-mtitle {
-      font-size: 14px;
-      padding-right: 100px;
+    height: 300px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    .item {
+      width: 100%;
+      height: 50px;
+      background-color: white;
+      border: 1px solid #dfdfdf;
+      border-radius: 3px;
+      padding: 10px;
+      margin-bottom: 10px;
+      line-height: 28px;
+      .qfield-mtitle {
+        font-size: 14px;
+        padding-right: 100px;
+      }
     }
   }
-}
-.qfield .item .qfield-stitle {
-  font-size: 12px;
-}
-.newicon .q-icon,
-.newicon .q-icon.material-icons,
-.icon-error .q-icon.material-icons {
-  font-size: 18px;
-  color: #999999;
-}
-.group {
-  margin-right: 10px;
-}
-.add-qcode {
-  border-radius: 5px;
-  height: 45px;
-  background-color: #f1f1f5;
-}
-.btn-field {
-  padding: 15px;
-  width: 100%;
-}
-.type .q-if-control {
-  display: none !important;
+  .qfield .item .qfield-stitle {
+    font-size: 12px;
+  }
+  .newicon .q-icon,
+  .newicon .q-icon.material-icons,
+  .icon-error .q-icon.material-icons {
+    font-size: 18px;
+    color: #999999;
+  }
+  .group {
+    margin-right: 10px;
+  }
+  .add-qcode {
+    border-radius: 5px;
+    height: 45px;
+    background-color: #f1f1f5;
+  }
+  .btn-field {
+    padding: 15px;
+    width: 100%;
+  }
+  .type .q-if-control {
+    display: none !important;
+  }
+  .users {
+    font-size: 14px;
+  }
+  .user {
+    min-width: auto;
+    padding-left: 8px;
+  }
+  .account .q-item-icon {
+    font-size: 22px;
+  }
+  .record-right {
+    margin-left: 0px;
+    min-width: 20px;
+  }
 }
 </style>

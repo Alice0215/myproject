@@ -2,14 +2,14 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix" >
-            <a @click="$router.go(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
+            <a @click="$router.push('/')"> <q-item-side left  icon="keyboard arrow left"/></a>
             <q-toolbar-title class="header-title">
             新建项目
             </q-toolbar-title>
            <q-item-side right/>
        </q-toolbar>
     </q-toolbar>
-    <div class="full-width card">
+    <div class="full-width card" id="project-add">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
         <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
                   class="login-input" disable  placeholder="输入地址/定位地址"/>
@@ -176,25 +176,20 @@ export default {
     margin-left: 3px;
   }
 }
-
-.underline {
-  border-bottom: 1px solid #cccccc;
-  margin-top: 20px;
-}
-.btn {
-  background-color: #1aad19;
-  color: white;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
-.q-if-inner {
-  min-height: 30px !important;
-  padding-bottom: 10px;
-}
-.q-if-control.q-icon {
-  padding-bottom: 6px;
+#project-add {
+  .underline {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 20px;
+  }
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+  .q-if-inner {
+    min-height: 30px !important;
+    padding-bottom: 10px;
+  }
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
 }
 </style>

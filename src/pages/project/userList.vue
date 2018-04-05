@@ -1,6 +1,6 @@
 <template>
 
-  <div class="main">
+  <div class="main" id="userList">
     <q-toolbar class="header">
     <q-toolbar class="fix">
         <a @click="$router.go(-1)" class="top-nav-left">关闭</a>
@@ -91,39 +91,33 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.user-item-header {
-  background-color: #f7f7f7;
-  color: #666666;
-  font-size: 13px;
-}
-.user-item:hover {
-  background: none;
-}
-.search-field {
-  background: #cccccc;
-  height: 50px;
-}
-.search-field .btn {
-  background-color: white;
-  text-align: center;
-  width: 96%;
-  margin-left: 2%;
-}
-.header {
-  margin-bottom: 0px;
-}
-.fix {
-  border-bottom: none;
-}
-.user {
-  min-width: auto;
-}
-.underline {
-  border-bottom: 1px solid #cccccc;
-}
-
-.card {
-  margin-bottom: 0px;
-  min-height: 160px;
+#userList {
+  .user-item-header {
+    background-color: #f7f7f7;
+    color: #666666;
+    font-size: 13px;
+  }
+  .user-item:hover {
+    background: none;
+  }
+  .search-field {
+    background: #cccccc;
+    height: 50px;
+  }
+  .search-field .btn {
+    background-color: white;
+    text-align: center;
+    width: 96%;
+    margin-left: 2%;
+  }
+  .header {
+    margin-bottom: 0px;
+  }
+  .fix {
+    border-bottom: none;
+  }
+  .user {
+    min-width: auto;
+  }
 }
 </style>

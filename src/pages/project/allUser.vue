@@ -116,7 +116,4 @@ export default {
 .user {
   min-width: auto;
 }
-.underline {
-  border-bottom: 1px solid #cccccc;
-}
 </style>
