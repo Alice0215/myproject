@@ -76,11 +76,11 @@ export default {
           localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
           localStorage.setItem('token', response.data.resultMsg.userToken)
           localStorage.setItem('partyId', response.data.resultMsg.partyId)
+          this.$router.push('/')
           this.$q.dialog({
             title: '提示',
             message: '登录成功！'
           })
-          this.$router.push('/')
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

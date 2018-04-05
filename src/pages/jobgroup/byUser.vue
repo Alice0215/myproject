@@ -40,9 +40,14 @@
         </div>
        <q-infinite-scroll :handler="getlist" class="scroll-field">
         <div  v-for="item in list" :key="item.id">
-          <q-item  v-ripple.mat class="full-width underline user-item">
-            <q-item-side icon="account circle" class="user"/>
-            <q-item-main :label="item.description" />
+            <q-item  v-ripple.mat class="full-width underline user-item">
+            <div>
+              {{item.description}}
+              <div>{{item.createTime}}</div>
+            </div>
+             <q-item-main />
+            <span class="user">{{item.description}}</span>
+            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
           </q-item>
         </div>
       </q-infinite-scroll>
@@ -57,7 +62,7 @@
       <q-scroll-area class="fit q-pa-sm">
          <q-item  v-ripple.mat class="full-width user-item  underline">
         </q-item>
-        <q-item  v-ripple.mat class="full-width user-item ">
+        <q-item  v-ripple.mat class="full-width user-item " >
           <q-item-side left icon="account circle" class="record-right active"/>
             <q-item-main  :label="`编辑资料`" />
         </q-item>
@@ -65,7 +70,7 @@
           <q-item-side left icon="account balance wallet" class="record-right active"/>
             <q-item-main  :label="`账号管理`" />
         </q-item>
-        <q-item  v-ripple.mat class="full-width user-item ">
+        <q-item  v-ripple.mat class="full-width user-item"  @click.native="logOut">
           <q-item-side left icon="exit to app" class="record-right active"/>
             <q-item-main  :label="`退出登录`" />
         </q-item>
@@ -95,27 +100,35 @@ export default {
   methods: {
     async getlist (index, done) {
       let userId = JSON.parse(localStorage.getItem('user')).userId
-      request('jobGroup/list/byUser?userId=' + userId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          let that = this
-          let list = response.data.resultMsg
-          if (list.length === 0 || !list.length) {
-            that.hasLoadAll = true
-            return
+      if (!this.hasLoadAll) {
+        request('jobGroup/list/byUser?userId=' + userId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+          if (response.data.resultCode === 'SUCCESS') {
+            let that = this
+            let list = response.data.resultMsg
+            if (list.length === 0 || !list.length) {
+              that.hasLoadAll = true
+              return
+            }
+            if (list.length < 20) {
+              that.hasLoadAll = true
+            } else {
+              that.pageNo++
+            }
+            if (that.list.length > 0) {
+              that.list = that.list.concat(list)
+            } else {
+              that.list = list
+            }
+            done()
           }
-          if (list.length < 20) {
-            that.hasLoadAll = true
-          } else {
-            that.pageNo++
-          }
-          if (that.list.length > 0) {
-            that.list = that.list.concat(list)
-          } else {
-            that.list = list
-          }
-          done()
-        }
-      })
+        })
+      }
+    },
+    logOut () {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+      localStorage.removeItem('partyId')
+      this.$router.push('/')
     }
   }
 }
