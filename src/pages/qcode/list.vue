@@ -214,28 +214,30 @@ export default {
       this.initData()
     },
     getjobGroup (index, done) {
-      request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          let that = this
-          let list = response.data.resultMsg
-          if (list.length === 0 || !list.length) {
-            this.hasLoadAll = true
-            return
+      if (!this.hasLoadAll) {
+        request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+          if (response.data.resultCode === 'SUCCESS') {
+            let that = this
+            let list = response.data.resultMsg
+            if (list.length === 0 || !list.length) {
+              this.hasLoadAll = true
+              return
+            }
+            if (list.length < 20) {
+              that.hasLoadAll = true
+            } else {
+              that.pageNo++
+              this.hasLoadAll = false
+            }
+            if (that.joblist.length > 0) {
+              that.joblist = that.joblist.concat(list)
+            } else {
+              that.joblist = list
+            }
+            done()
           }
-          if (list.length < 20) {
-            that.hasLoadAll = true
-          } else {
-            that.pageNo++
-            this.hasLoadAll = false
-          }
-          if (that.joblist.length > 0) {
-            that.joblist = that.joblist.concat(list)
-          } else {
-            that.joblist = list
-          }
-          done()
-        }
-      })
+        })
+      }
     },
     initData () {
       this.hasLoadAll = false

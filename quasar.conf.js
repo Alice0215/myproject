@@ -78,7 +78,8 @@ module.exports = function (ctx) {
         'QBtnGroup',
         'QInnerLoading',
         'QSpinnerGears',
-        'QAutocomplete'
+        'QAutocomplete',
+        'QLayoutFooter'
       ],
       directives: [
         'Ripple'
