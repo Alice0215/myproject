@@ -152,12 +152,7 @@ export default {
     getInfo () {
       let that = this
       request(
-        'project/detail?projectId=' + this.formData.projectId,
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
+        'project/detail?projectId=' + this.formData.projectId, 'get', '', 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc

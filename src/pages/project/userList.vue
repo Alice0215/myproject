@@ -93,7 +93,7 @@ export default {
 @import "../../assets/css/common";
 #userList {
   .user-item-header {
-    background-color: #f7f7f7;
+    background-color:#F5F5F5;
     color: #666666;
     font-size: 13px;
   }

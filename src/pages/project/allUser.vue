@@ -1,6 +1,6 @@
 <template>
 
-  <div class="main">
+  <div class="main" id="allUser">
     <q-toolbar class="header">
     <q-toolbar class="fix">
        <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>
@@ -50,7 +50,6 @@ export default {
       for (let item of this.userParams) {
         this.ids.push(parseInt(item['userId']))
       }
-      console.log(this.ids)
     }
 
     if (this.$route.query.projectId) {
@@ -91,8 +90,6 @@ export default {
         this.userParams = [...this.userParams, userInfo]
         eventBus.$emit('users', userInfo)
       }
-      console.log(this.ids)
-      console.log(this.userParams)
     }
   }
 }
@@ -100,20 +97,22 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.user-item:hover {
-  background: none;
-}
-.search-field {
-  background: #cccccc;
-  height: 50px;
-}
-.search-field .btn {
-  background-color: white;
-  text-align: center;
-  width: 96%;
-  margin-left: 2%;
-}
-.user {
-  min-width: auto;
+#allUser {
+  .user-item:hover {
+    background: none;
+  }
+  .search-field {
+    background: #cccccc;
+    height: 50px;
+  }
+  .search-field .btn {
+    background-color: white;
+    text-align: center;
+    width: 96%;
+    margin-left: 2%;
+  }
+  .user {
+    min-width: auto;
+  }
 }
 </style>

@@ -7,7 +7,7 @@
             {{projectName}}
             </q-toolbar-title>
          <router-link :to="{ path: '/project/userList?id='+projectId}">
-         <q-item-side right icon='group' @click='$router.go(-1)' class='group'/>
+         <q-item-side right icon='group' class='group'/>
         </router-link>
         </q-toolbar>
         <q-toolbar>
@@ -46,24 +46,20 @@
         </div>
         </div>
         <div v-if="weihu" class="bg-white">
-          <q-item  class="full-width underline users"  >
-            <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
-            <span class="user">2018-02-20</span>
-            <q-item-side right icon="account circle" class="account"/>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
-           <q-item  class="full-width underline users"  >
-            <q-item-main :label="`国槐01`" /><span class="user">苗木栽培</span>
-            <span class="user">2018-02-20</span>
-            <q-item-side right icon="account circle" class="account"/>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
+          <q-infinite-scroll :handler="getjobGroup">
+            <q-item  sublabel lines='1' class="full-width underline users"  v-for="vo in joblist" :key="vo.id" >
+              <q-item-main :label="vo.description" /><span class="user">{{vo.description}}</span>
+              <span class="user">{{vo.createTime}}</span>
+              <q-item-side right icon="account circle" class="account"/>
+              <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
+            </q-item>
+          </q-infinite-scroll>
         </div>
          <q-tabs class="footer">
-          <q-route-tab slot="title" icon="apps" to="/qcode/list" replace label="我的项目" class="menu" />
+          <q-route-tab slot="title" icon="dashboard" to="/qcode/list" replace label="我的项目" class="menu" />
           <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
           <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
-          <q-route-tab slot="title" icon="person" to="/" replace label="我的" class="menu"/>
+          <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
         </q-tabs>
     </q-layout>
 </template>
@@ -196,9 +192,7 @@ export default {
       })
     },
     inputChange () {
-      this.hasLoadAll = false
-      this.pageNo = 1
-      this.list = ''
+      this.initData()
       this.getCount()
       this.initList()
     },
@@ -217,11 +211,9 @@ export default {
         this.qrcode = false
         this.weihu = true
       }
-      this.hasLoadAll = false
-      this.pageNo = 1
-      this.list = ''
+      this.initData()
     },
-    getjobGroup () {
+    getjobGroup (index, done) {
       request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           let that = this
@@ -236,13 +228,20 @@ export default {
             that.pageNo++
             this.hasLoadAll = false
           }
-          if (that.list.length > 0) {
-            that.joblist = that.list.concat(list)
+          if (that.joblist.length > 0) {
+            that.joblist = that.joblist.concat(list)
           } else {
             that.joblist = list
           }
+          done()
         }
       })
+    },
+    initData () {
+      this.hasLoadAll = false
+      this.pageNo = 1
+      this.list = ''
+      this.joblist = []
     }
   },
   created () {
