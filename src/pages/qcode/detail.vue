@@ -127,6 +127,8 @@ export default {
       if (this.code.type) {
         key = this.code.type.key
       }
+      localStorage.setItem('qrCodeId', this.qrCodeId)
+      localStorage.setItem('typeKey', key)
       this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + key)
     },
     getInfo () {

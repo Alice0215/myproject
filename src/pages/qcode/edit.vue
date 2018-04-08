@@ -2,7 +2,7 @@
   <q-layout id="qcode-page">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="$router.go(-1)">
+        <a @click="goBack">
           <q-item-side left icon='keyboard arrow left' class='reback'/>
           返回</a>
         <q-toolbar-title class='header-title'>
@@ -32,10 +32,9 @@
         <q-input v-model="alias" placeholder="植物名称" class='login-input'>
           <q-autocomplete @search="searchTerm" @selected="selected"/>
         </q-input>
-        <q-select
-          v-model="amount"
-          placeholder='默认项目名称' class='login-input'
-          :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+        <q-input
+          v-model="projectName"
+          placeholder='默认项目名称' class='login-input' readonly @click.native="chooseProject"
         />
         <div id="single-plant" v-show="singleShow">
           <q-select
@@ -156,10 +155,20 @@
         imageArray: [],
         plantCategoryArray: [],
         alias: '',
-        aliasList: []
+        aliasList: [],
+        projectName: ''
       }
     },
     methods: {
+      goBack () {
+        if (!_.isNull(localStorage.getItem('choose-project'))) {
+          localStorage.removeItem('choose-project')
+        }
+        this.$router.go(-1)
+      },
+      chooseProject () {
+        this.$router.push('/choose/project')
+      },
       searchTerm (alias, done) {
         request('data/term?type=PLANT&start=' + this.alias + '&top=10', 'get').then(response => {
           if (response.data.resultCode === 'SUCCESS') {
@@ -274,8 +283,7 @@
           })
         }
       }
-    }
-    ,
+    },
     async mounted () {
       eventBus.$on('upload-success', resp => {
         console.log(resp)
@@ -295,6 +303,12 @@
       this.typeKey = this.$route.query.typeKey
       if (this.typeKey === 'null') {
         this.showType = true
+      }
+      let project = JSON.parse(localStorage.getItem('choose-project'))
+      console.log(project)
+      if (!_.isNull(project)) {
+        this.form.project = project
+        this.projectName = project.projectName
       }
       this.load()
       this.getPlantCategory()
