@@ -7,6 +7,14 @@ const server = {
   THUMBNAIL_API: host + 'fs/ls/thumbnail/'
 }
 
+const plantType = {
+  SINGLE: 'single',
+  AREA: 'area',
+  DEVICE: 'device',
+  OTHER: 'other'
+}
+
 export {
-  server
+  server,
+  plantType
 }

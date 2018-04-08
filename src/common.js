@@ -76,11 +76,11 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     return null
   }
   if (code === 'ERROR') {
-    let errMsg = resp.data.resultMsg.hint
+    let msg = resp.data.resultMsg.hint
     if (batchRequest > 0) {
       batchRequest--
       eventBus.$emit('request-error', {
-        errMsg,
+        msg,
         resp,
         code
       })

@@ -50,6 +50,7 @@
         // return 'qcode/List?projectId' + projectId
       },
       async load (index, done) {
+        // todo 有入口了需要清楚这些
         localStorage.setItem('qrCodeId', '250')
         let that = this
         setTimeout(() => {

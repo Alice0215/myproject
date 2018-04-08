@@ -24,12 +24,12 @@
       <div>
         <span>类型</span>
         <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
-        <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区职务" size="xs"/>
+        <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区植物" size="xs"/>
         <q-btn outline :color="buttonsColor[2]" @click="topButtonsClicked(2)" label="设备" size="xs"/>
         <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
-        <q-input v-model="alias" placeholder="植物名称" class='login-input'>
+        <q-input v-model="form.alias" placeholder="植物名称" class='login-input'>
           <q-autocomplete @search="searchTerm" @selected="selected"/>
         </q-input>
         <q-input
@@ -49,8 +49,8 @@
           />
           <div class="row justify-between">
             <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
-              <span class="col-3 lineHeight-32">{{v}}</span>
-              <q-input type="number" class="col-6 border-1 ml-2 h-32 p-8" v-model="amount"></q-input>
+              <span class="col-3 lineHeight-32">{{v.name}}</span>
+              <q-input type="number" class="col-6 border-1 ml-2 h-32 p-8" v-model="v.value"></q-input>
               <span class="col-2 lineHeight-32 ml-4">cm</span>
             </div>
             <div class="col-12 row mt-4 justify-between">
@@ -80,7 +80,7 @@
           </q-item-tile>
         </div>
         <q-input
-          v-model="amount"
+          v-model="form.description"
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
@@ -88,7 +88,7 @@
           <q-item class="p-2">
             <q-item-side> 片区面积</q-item-side>
             <q-item-main class="area-input">
-              <q-input type="number" v-model="amount"></q-input>
+              <q-input type="number" v-model="form.acreage"></q-input>
             </q-item-main>
             <q-item-main label="平方米"></q-item-main>
           </q-item>
@@ -125,7 +125,7 @@
           </q-list>
         </div>
       </div>
-      <q-btn class="full-width btn">保存</q-btn>
+      <q-btn class="full-width btn" @click="save">保存</q-btn>
     </div>
   </q-layout>
 </template>
@@ -135,6 +135,7 @@
   import { filter } from 'quasar'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
+  import { plantType } from '../../const'
 
   export default {
     data () {
@@ -147,7 +148,11 @@
         amount: '',
         contactNumber: '',
         contactPerson: '',
-        singlePlantProperties: ['胸径', '高度', '地径', '冠幅', '篷径'],
+        singlePlantProperties: [{'name': '胸径', 'value': ''},
+          {'name': '高度', 'value': ''},
+          {'name': '地径', 'value': ''},
+          {'name': '冠幅', 'value': ''},
+          {'name': '篷径', 'value': ''}],
         buttonsColor: ['black', 'black', 'black', 'black'],
         namePlaceholder: '植物名称',
         areaShow: false,
@@ -156,10 +161,52 @@
         plantCategoryArray: [],
         alias: '',
         aliasList: [],
-        projectName: ''
+        projectName: '',
+        type: ''
       }
     },
     methods: {
+      async save () {
+        let form = {}
+        let url = ''
+        form.projectId = this.form.project.id
+        form.qrCodeId = this.qrCodeId
+        form.alias = this.form.alias
+        form.description = this.form.description
+        if (this.imageArray.length > 0) {
+          form.pictures = _.map(this.imageArray, 'contentUrl')
+        }
+        form.locationJson = this.form.locationJson
+        if (this.type === plantType.SINGLE) {
+          url = 'qrcode/single/save'
+          form.category = this.form.category
+          form.xiongJing = this.form.xiongJing
+          form.diJing = this.form.diJing
+          form.gaoDu = this.form.gaoDu
+          form.guanFu = this.form.guanFu
+          form.pengJing = this.form.pengJing
+          form.branch = this.form.branch
+          form.year = this.form.year
+          form.otherFeature = this.form.otherFeature
+          form.source = this.form.source
+          form.dealer = this.form.dealer
+          form.other = this.form.other
+          form.singleId = this.form.singleId
+        } else if (this.type === plantType.AREA) {
+          url = 'qrcode/area/save'
+          form.acreage = this.form.acreage
+        } else if (this.type === plantType.DEVICE) {
+          url = 'qrcode/equipment/save'
+        } else if (this.type === plantType.OTHER) {
+          url = 'qrcode/other/save'
+        }
+        console.log(form)
+        let resp = await request(url, 'put', form, 'json', true)
+        if (resp) {
+          console.log(resp)
+          // TODO 保存成功的提示
+        }
+      },
       goBack () {
         if (!_.isNull(localStorage.getItem('choose-project'))) {
           localStorage.removeItem('choose-project')
@@ -170,7 +217,7 @@
         this.$router.push('/choose/project')
       },
       searchTerm (alias, done) {
-        request('data/term?type=PLANT&start=' + this.alias + '&top=10', 'get').then(response => {
+        request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
           if (response.data.resultCode === 'SUCCESS') {
             console.log(response.data.resultMsg)
             let model = response.data.resultMsg.map(item => ({label: String(item['name']), value: item['name']}))
@@ -218,21 +265,25 @@
           case 0:
             this.singleShow = true
             this.areaShow = false
+            this.type = plantType.SINGLE
             this.namePlaceholder = '植物名称'
             break
           case 1:
             this.singleShow = false
             this.areaShow = true
+            this.type = plantType.AREA
             this.namePlaceholder = '输入片区名称'
             break
           case 2:
             this.singleShow = false
             this.areaShow = false
+            this.type = plantType.DEVICE
             this.namePlaceholder = '输入名称'
             break
           case 3:
             this.singleShow = false
             this.areaShow = false
+            this.type = plantType.OTHER
             this.namePlaceholder = '输入名称'
             break
           default:
@@ -309,8 +360,9 @@
       if (!_.isNull(project)) {
         this.form.project = project
         this.projectName = project.projectName
+      } else {
+        this.load()
       }
-      this.load()
       this.getPlantCategory()
       this.$nextTick(() => {
         this.topButtonsClicked(0)
