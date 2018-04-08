@@ -68,6 +68,11 @@ export default [
     component: () => import('pages/project/map')
   },
   {
+    path: '/jobGroup/byUser',
+    component: () => import('pages/jobGroup/byUser'),
+    name: 'groupByUser'
+  },
+  {
     path: '/project/maintenance',
     component: () => import('pages/project/constructionMaintenance.vue')
   },

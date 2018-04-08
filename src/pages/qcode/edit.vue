@@ -29,10 +29,9 @@
         <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
-        <q-input
-          v-model="form.alias"
-          :placeholder="namePlaceholder" class='login-input'
-        />
+        <q-input v-model="alias" placeholder="植物名称" class='login-input'>
+          <q-autocomplete @search="searchTerm" @selected="selected"/>
+        </q-input>
         <q-select
           v-model="amount"
           placeholder='默认项目名称' class='login-input'
@@ -134,6 +133,7 @@
 
 <script>
   import { request, uploadFiles, deleteFiles } from '../../common'
+  import { filter } from 'quasar'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
 
@@ -154,10 +154,26 @@
         areaShow: false,
         singleShow: false,
         imageArray: [],
-        plantCategoryArray: []
+        plantCategoryArray: [],
+        alias: '',
+        aliasList: []
       }
     },
     methods: {
+      searchTerm (alias, done) {
+        request('data/term?type=PLANT&start=' + this.alias + '&top=10', 'get').then(response => {
+          if (response.data.resultCode === 'SUCCESS') {
+            console.log(response.data.resultMsg)
+            let model = response.data.resultMsg.map(item => ({label: String(item['name']), value: item['name']}))
+            setTimeout(() => {
+              done(filter(alias, {field: 'value', list: model}))
+            }, 1000)
+          }
+        })
+      },
+      selected (item) {
+        this.$q.notify(`Selected suggestion "${item.label}"`)
+      },
       async load () {
         this.$q.loading.show()
         let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
@@ -222,26 +238,27 @@
           contactPerson: this.contactPerson
         }
         request('qrcode/batch', 'post', data, 'json', true).then(response => {
-          console.log(response)
-          if (response.data.resultCode === 'SUCCESS') {
-            this.$q.dialog({
-              title: '提示',
-              message: '保存成功！'
-            })
-          } else {
-            if (response.data.resultCode === 'ERROR') {
+            console.log(response)
+            if (response.data.resultCode === 'SUCCESS') {
               this.$q.dialog({
                 title: '提示',
-                message: response.data.resultMsg.hint
+                message: '保存成功！'
               })
             } else {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg
-              })
+              if (response.data.resultCode === 'ERROR') {
+                this.$q.dialog({
+                  title: '提示',
+                  message: response.data.resultMsg.hint
+                })
+              } else {
+                this.$q.dialog({
+                  title: '提示',
+                  message: response.data.resultMsg
+                })
+              }
             }
           }
-        })
+        )
       },
       chooseUser (jobType) {
         this.formData.jobType = jobType
@@ -257,7 +274,8 @@
           })
         }
       }
-    },
+    }
+    ,
     async mounted () {
       eventBus.$on('upload-success', resp => {
         console.log(resp)
@@ -295,7 +313,6 @@
   @import "../../assets/css/common";
 
   #qcode-page {
-
     .lineHeight-32 {
       line-height: 32px;
     }
@@ -384,5 +401,4 @@
       box-shadow: none !important;
     }
   }
-
 </style>

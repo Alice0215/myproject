@@ -77,7 +77,9 @@ module.exports = function (ctx) {
         'QRouteTab',
         'QBtnGroup',
         'QInnerLoading',
-        'QSpinnerGears'
+        'QSpinnerGears',
+        'QAutocomplete',
+        'QLayoutFooter'
       ],
       directives: [
         'Ripple'

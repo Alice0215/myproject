@@ -114,13 +114,13 @@ input:not(.no-style):hover {
   color: $primary !important;
 }
 .q-tabs-position-top .q-tabs-bar{
-  color: $primary !important;
-}
-.inline {
-  display: inline;
+  color:$bgcolor !important;
 }
 .bg-color{
   background-color:  $bgcolor;
+}
+.underline {
+  border-bottom: 1px solid #cccccc;
 }
 .btn {
   background-color: #1aad19;

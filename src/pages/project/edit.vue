@@ -9,7 +9,7 @@
            <q-item-side right/>
        </q-toolbar>
     </q-toolbar>
-    <div class="full-width card">
+    <div class="full-width card" id="edit">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
         <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
                   class="login-input" disable  placeholder="输入地址/定位地址"/>
@@ -152,12 +152,7 @@ export default {
     getInfo () {
       let that = this
       request(
-        'project/detail?projectId=' + this.formData.projectId,
-        'get',
-        '',
-        'json',
-        true
-      ).then(response => {
+        'project/detail?projectId=' + this.formData.projectId, 'get', '', 'json', true).then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           this.formData.projectName = response.data.resultMsg.projectName
           this.formData.projectDesc = response.data.resultMsg.projectDesc
@@ -248,30 +243,20 @@ export default {
     margin-left: 3px;
   }
 }
-
-.underline {
-  border-bottom: 1px solid #cccccc;
-  margin-top: 20px;
-}
-.card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
-}
-.btn {
-  background-color: #1aad19;
-  color: white;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
-.q-if-inner {
-  min-height: 30px !important;
-  padding-bottom: 10px;
-}
-.q-if-control.q-icon {
-  padding-bottom: 6px;
+#edit {
+  .underline {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 20px;
+  }
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+  .q-if-inner {
+    min-height: 30px !important;
+    padding-bottom: 10px;
+  }
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
 }
 </style>
