@@ -13,35 +13,13 @@
     </q-toolbar>
     <div class="full-width record-list">
         <q-item  v-ripple.mat class="full-width user-item-header">
-          <q-item-main label=" 操作记录" />
+          <q-item-main label="操作记录" />
        </q-item>
-
-        <div>
-          <q-item  v-ripple.mat class="full-width underline user-item">
-            <div>
-              测试
-              <div>2018-02-20</div>
-            </div>
-             <q-item-main />
-            <span class="user">项目A</span>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
-        </div>
-        <div>
-          <q-item  v-ripple.mat class="full-width underline user-item">
-            <div>
-              测试
-              <div>2018-02-20</div>
-            </div>
-             <q-item-main />
-            <span class="user">项目A</span>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
-        </div>
        <q-infinite-scroll :handler="getlist" class="scroll-field">
         <div  v-for="item in list" :key="item.id">
             <q-item  v-ripple.mat class="full-width underline user-item">
             <div>
+              <!--jobs[i].action.name-->
               {{item.description}}
               <div>{{item.createTime}}</div>
             </div>

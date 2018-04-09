@@ -23,7 +23,7 @@
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
             <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
-            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode"/>
+            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
         </div>
         <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
@@ -47,8 +47,8 @@
         </div>
         <div v-if="weihu" class="bg-white">
           <q-infinite-scroll :handler="getjobGroup">
-            <q-item  sublabel lines='1' class="full-width underline users"  v-for="vo in joblist" :key="vo.id" >
-              <q-item-main :label="vo.alias" /><span class="user">{{vo.description}}</span>
+            <q-item  sublabel lines='1' class="full-width underline users"  v-for="vo in joblist" :key="vo.id" @click.native="$router.push('/jobGroup/detail?jobGroupId='+vo.id)" >
+              <q-item-main v-if="vo.code" :label="vo.code.alias" /><span class="user" v-if="vo.code">{{vo.code.description}}</span>
               <span class="user">{{vo.createTime}}</span>
               <q-item-side right icon="account circle" class="account"/>
               <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />

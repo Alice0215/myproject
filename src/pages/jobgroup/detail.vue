@@ -1,0 +1,147 @@
+<template>
+  <div id="detail">
+    <q-toolbar class='header'>
+        <q-toolbar class='fix'>
+            <a @click="$router.back(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <q-toolbar-title class='header-title'>
+             操作详情
+            </q-toolbar-title>
+            <a class="top-nav-right"></a>
+       </q-toolbar>
+    </q-toolbar>
+    <div class='full-width card'>
+      <div class="qr-info">
+        <p>植物名称<span v-if="code.identifier">{{code.identifier}}</span></p>
+        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
+        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>操作员：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>时间：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
+        <p>苗木栽培：</p>
+        <span>栽植修建</span>
+        <span>栽植修建</span>
+        <p>备注信息：</p>
+        <p>{{code.description}}</p>
+        <p>现场照片：</p>
+        <p class="pic-field" >
+          <span v-for="item in code.pictures" v-bind:key="item.id">
+            <img :src="picUrl+item.filePath"/>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { request } from '../../common'
+import { server } from '../../const'
+export default {
+  data () {
+    return {
+      projectId: '',
+      qrCodeId: '',
+      code: {},
+      routeUrl: '',
+      danzhu: true,
+      pianqu: false,
+      gongju: false,
+      qita: false,
+      editable: false,
+      topTitle: '',
+      qrImgUrl: '',
+      info: '',
+      qrRecord: '',
+      picUrl: ''
+
+    }
+  },
+  created () {
+    this.jobGroupId = this.$route.query.jobGroupId
+    this.picUrl = server.THUMBNAIL_API
+    this.getInfo()
+  },
+  methods: {
+    getInfo () {
+      this.$q.loading.show()
+      request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true).then(response => {
+        this.$q.loading.hide()
+        if (response.data.resultCode === 'SUCCESS') {
+          this.info = response.data.resultMsg
+          if (response.data.resultMsg.code) {
+            this.code = response.data.resultMsg.code
+          } else {
+            this.code = response.data.resultMsg
+          }
+        } else {
+          if (response.data.resultCode === 'ERROR') {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg.hint
+            })
+          } else {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
+          }
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang='scss'>
+@import "../../assets/css/common";
+#detail {
+  .reback {
+    min-width: auto !important;
+  }
+  .qr-img {
+    width: 124px;
+    height: 124px;
+    padding: 2px;
+    border: 1px solid #bbbbbb;
+    margin-bottom: 10px;
+  }
+  .underline {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 20px;
+  }
+  .top-field {
+    p {
+      margin-bottom: 3px;
+    }
+  }
+  .param {
+    span {
+      display: inline-block;
+      padding: 0px 4px;
+    }
+  }
+  .qr-info {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    p {
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333333;
+      line-height: 23px;
+    }
+  }
+  .address {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  .qr-btn {
+    margin-bottom: 30px;
+    padding: 10px 5px;
+  }
+  .pic-field img {
+    width: 32%;
+    height: auto;
+    margin-right: 1%;
+  }
+}
+</style>

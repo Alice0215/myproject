@@ -37,19 +37,19 @@ export default {
   data () {
     return {
       pageNo: 1,
-      projectId: '',
+      codeId: '',
       hasLoadAll: false,
       list: []
     }
   },
   created () {
-    this.projectId = this.$route.query.projectId
+    this.codeId = this.$route.query.codeId
     this.getlist()
   },
   methods: {
     async getlist (index, done) {
       if (!this.hasLoadAll) {
-        request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+        request('jobGroup/list/byCode?codeId=' + this.codeId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
           if (response.data.resultCode === 'SUCCESS') {
             let that = this
             let list = response.data.resultMsg

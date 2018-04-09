@@ -75,12 +75,17 @@ export default [
   {
     path: '/jobGroup/record',
     component: () => import('pages/jobGroup/record'),
-    name: 'groupRecord'
+    name: 'jobRecord'
   },
   {
     path: '/jobGroup/groupRecord',
-    component: () => import('pages/jobGroup/record'),
-    name: 'groupRecord1'
+    component: () => import('pages/jobGroup/groupRecord'),
+    name: 'jobGroupRecord'
+  },
+  {
+    path: '/jobGroup/detail',
+    component: () => import('pages/jobGroup/detail'),
+    name: 'jobDetail'
   },
   {
     path: '/project/maintenance',

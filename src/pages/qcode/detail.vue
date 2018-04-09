@@ -138,10 +138,10 @@ export default {
           }
           if (this.danzhu || this.pianqu) {
             this.qrRecord = '养护记录'
-            this.routeUrl = '/jobGroup/groupRecord?projectId=' + this.projectId
+            this.routeUrl = '/jobGroup/groupRecord?codeId=' + this.qrCodeId
           } else if (this.gongju) {
             this.qrRecord = '领用记录'
-            this.routeUrl = '/jobGroup/record?projectId=' + this.projectId
+            this.routeUrl = '/jobGroup/record?codeId=' + this.qrCodeId
           } else {
             this.qrRecord = ''
           }
@@ -202,6 +202,7 @@ export default {
       margin-bottom: 5px;
       font-size: 14px;
       color: #333333;
+      line-height: 23px;
     }
   }
   .address {
