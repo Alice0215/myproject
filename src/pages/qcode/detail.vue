@@ -6,7 +6,7 @@
             <q-toolbar-title class='header-title'>
               {{code.alias}}
             </q-toolbar-title>
-            <a class="top-nav-right" @click="$router.push('/jobGroup/record')">{{qrRecord}}</a>
+            <a class="top-nav-right" @click="$router.push(routeUrl)">{{qrRecord}}</a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
@@ -49,7 +49,7 @@ export default {
       projectId: '',
       qrCodeId: '',
       code: {},
-      other: '',
+      routeUrl: '',
       type: '',
       danzhu: true,
       pianqu: false,
@@ -138,14 +138,15 @@ export default {
           }
           if (this.danzhu || this.pianqu) {
             this.qrRecord = '养护记录'
+            this.routeUrl = '/jobGroup/groupRecord?projectId=' + this.projectId
           } else if (this.gongju) {
             this.qrRecord = '领用记录'
+            this.routeUrl = '/jobGroup/record?projectId=' + this.projectId
           } else {
             this.qrRecord = ''
           }
           this.qrImgUrl = server.THUMBNAIL_QR + this.code.batch.batchNo + '/' + this.qrCodeId + '.png'
           //  server.THUMBNAIL_API
-          this.other = response.data.resultMsg.other
           this.editable = response.data.resultMsg.editable
         } else {
           if (response.data.resultCode === 'ERROR') {

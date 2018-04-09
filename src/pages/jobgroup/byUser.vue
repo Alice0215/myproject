@@ -99,9 +99,8 @@ export default {
   },
   methods: {
     async getlist (index, done) {
-      let userId = JSON.parse(localStorage.getItem('user')).userId
       if (!this.hasLoadAll) {
-        request('jobGroup/list/byUser?userId=' + userId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+        request('jobGroup/list/byUser?pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
           if (response.data.resultCode === 'SUCCESS') {
             let that = this
             let list = response.data.resultMsg

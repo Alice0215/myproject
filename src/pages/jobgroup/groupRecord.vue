@@ -5,17 +5,21 @@
     <q-toolbar class="fix">
        <a @click="$router.back(-1)"><q-item-side left icon="keyboard arrow left"/></a>
         <q-toolbar-title class="header-title">
-        设备领用记录
+        养护记录
         </q-toolbar-title>
         <q-item-side right/>
     </q-toolbar>
     </q-toolbar>
     <div class="full-width record-list">
+        <!--<q-item  v-ripple.mat class="full-width user-item-header">
+          <q-item-main label="2018年03月" />
+           <q-item-side right icon="event note" class="note"/>
+        </q-item>-->
        <q-infinite-scroll :handler="getlist" class="scroll-field">
         <div  v-for="item in list" :key="item.id">
             <q-item  v-ripple.mat class="full-width underline user-item">
               <q-item-side icon="account circle" />
-              {{item.user.fullname}}
+              {{item.name}}
               <q-item-main />
             <span class="user"> {{item.project.createTime}}</span>
             <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
@@ -45,7 +49,7 @@ export default {
   methods: {
     async getlist (index, done) {
       if (!this.hasLoadAll) {
-        request('equipment/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
+        request('jobGroup/list/byProject?projectId=' + this.projectId + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
           if (response.data.resultCode === 'SUCCESS') {
             let that = this
             let list = response.data.resultMsg

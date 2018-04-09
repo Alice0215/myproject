@@ -78,6 +78,11 @@ export default [
     name: 'groupRecord'
   },
   {
+    path: '/jobGroup/groupRecord',
+    component: () => import('pages/jobGroup/record'),
+    name: 'groupRecord1'
+  },
+  {
     path: '/project/maintenance',
     component: () => import('pages/project/constructionMaintenance.vue')
   },
