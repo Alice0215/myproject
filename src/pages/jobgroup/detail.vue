@@ -11,20 +11,20 @@
     </q-toolbar>
     <div class='full-width card'>
       <div class="qr-info">
-        <p>植物名称<span v-if="code.identifier">{{code.identifier}}</span></p>
-        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
-        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
-        <p>操作员：<span v-if="code.project">{{code.project.projectName}}</span></p>
-        <p>时间：<span v-if="code.project">{{code.project.projectName}}</span></p>
+        <p>植物名称<span v-if="info.code">{{info.code.alias}}</span></p>
+        <p>二维码编号：<span v-if="info.code">{{info.code.identifier}}</span></p>
+        <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
+        <p>操作员：<span v-if="info.user">{{info.user.username}}</span></p>
+        <p>时间：<span v-if="info.createTime">{{info.createTime}}</span></p>
         <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
         <p>苗木栽培：</p>
         <span>栽植修建</span>
         <span>栽植修建</span>
         <p>备注信息：</p>
-        <p>{{code.description}}</p>
+        <p>{{info.description}}</p>
         <p>现场照片：</p>
         <p class="pic-field" >
-          <span v-for="item in code.pictures" v-bind:key="item.id">
+          <span v-for="item in info.pictures" v-bind:key="item.id">
             <img :src="picUrl+item.filePath"/>
           </span>
         </p>
@@ -39,19 +39,8 @@ import { server } from '../../const'
 export default {
   data () {
     return {
-      projectId: '',
-      qrCodeId: '',
-      code: {},
-      routeUrl: '',
-      danzhu: true,
-      pianqu: false,
-      gongju: false,
-      qita: false,
-      editable: false,
-      topTitle: '',
-      qrImgUrl: '',
+      jobGroupId: '',
       info: '',
-      qrRecord: '',
       picUrl: ''
 
     }
@@ -68,11 +57,6 @@ export default {
         this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
-          if (response.data.resultMsg.code) {
-            this.code = response.data.resultMsg.code
-          } else {
-            this.code = response.data.resultMsg
-          }
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({
