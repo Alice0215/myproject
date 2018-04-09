@@ -38,9 +38,9 @@
         />
         <div id="single-plant" v-show="singleShow">
           <q-select
-            v-model="amount"
+            v-model="form.areaId"
             placeholder='所属片区' class='login-input'
-            :options="[{label: '1', value: '1'}, {label: '2', value: '2'}]"
+            :options="areaBranches"
           />
           <q-select
             v-model="form.category"
@@ -162,10 +162,25 @@
         alias: '',
         aliasList: [],
         projectName: '',
-        type: ''
+        type: '',
+        areaBranches: []
       }
     },
     methods: {
+      async getAreaBranch () {
+        this.areaBranches = []
+        // todo projectID需要改变
+        let resp = await request('qrcode/list?projectId=1&type=' + this.type, 'get', null, null, true)
+        if (resp) {
+          let branches = resp.data.resultMsg
+          _.forEach(branches, v => {
+            let branch = {}
+            branch.label = v.alias
+            branch.value = v.id
+            this.areaBranches.push(branch)
+          })
+        }
+      },
       openMap () {
         this.saveLocalData()
         this.$router.push('/project/map?from=qrCode')
@@ -190,6 +205,7 @@
         form.projectId = this.form.project.id
         form.qrCodeId = this.qrCodeId
         form.alias = this.form.alias
+        form.areaId = this.form.areaId
         form.description = this.form.description
         if (this.imageArray.length > 0) {
           form.pictures = _.map(this.imageArray, 'contentUrl')
@@ -403,6 +419,8 @@
       this.getPlantCategory()
       this.$nextTick(() => {
         this.topButtonsClicked(0)
+        // todo 检查 typeKey
+        this.getAreaBranch()
       })
     },
     beforeDestroy () {

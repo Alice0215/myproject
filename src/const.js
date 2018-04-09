@@ -8,10 +8,10 @@ const server = {
 }
 
 const plantType = {
-  SINGLE: 'single',
-  AREA: 'area',
-  DEVICE: 'device',
-  OTHER: 'other'
+  SINGLE: 'SINGLE',
+  AREA: 'AREA',
+  DEVICE: 'DEVICE',
+  OTHER: 'OTHER'
 }
 
 export {
