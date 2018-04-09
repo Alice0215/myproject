@@ -46,6 +46,10 @@ export default {
       if (data.info === 'OK') {
         eventBus.$emit('user_location', geoInfo)
         localStorage.setItem('user_location', geoInfo)
+        if (this.$route.query.from === 'qrCode') {
+          this.$router.back()
+          return
+        }
         if (this.$route.query.projectId) {
           this.$router.push('/project/edit?id=' + this.$route.query.projectId)
         } else {
