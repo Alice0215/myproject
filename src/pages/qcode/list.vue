@@ -30,7 +30,7 @@
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id" >
-              <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+type }">
+              <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key }">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
@@ -48,7 +48,7 @@
         <div v-if="weihu" class="bg-white">
           <q-infinite-scroll :handler="getjobGroup">
             <q-item  sublabel lines='1' class="full-width underline users"  v-for="vo in joblist" :key="vo.id" >
-              <q-item-main :label="vo.description" /><span class="user">{{vo.description}}</span>
+              <q-item-main :label="vo.alias" /><span class="user">{{vo.description}}</span>
               <span class="user">{{vo.createTime}}</span>
               <q-item-side right icon="account circle" class="account"/>
               <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
@@ -276,7 +276,7 @@ export default {
   }
   .qfield {
     width: 100%;
-    height: 300px;
+    height: 290px;
     padding: 15px;
     background-color: #f5f5f5;
     .item {
@@ -314,6 +314,7 @@ export default {
   .btn-field {
     padding: 15px;
     width: 100%;
+    padding-top: 0px;
   }
   .type .q-if-control {
     display: none !important;

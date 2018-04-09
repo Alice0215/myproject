@@ -3,24 +3,23 @@
   <div class="main" id="my">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <q-item-side left/>
+       <q-item-side left icon="keyboard arrow left"/>
         <q-toolbar-title class="header-title">
-        我的
+        设备领用记录
         </q-toolbar-title>
-         <q-btn   flat round dense icon="settings" @click="leftDrawer = !leftDrawer"/>
-        <!--<q-item-side right icon='settings' class='group'/>-->
+        <q-item-side right/>
     </q-toolbar>
     </q-toolbar>
     <div class="full-width record-list">
         <q-item  v-ripple.mat class="full-width user-item-header">
-          <q-item-main label=" 操作记录" />
+          <q-item-main label="2018年03月" />
+           <q-item-side right icon="event note" class="note"/>
        </q-item>
 
         <div>
           <q-item  v-ripple.mat class="full-width underline user-item">
             <div>
               测试
-              <div>2018-02-20</div>
             </div>
              <q-item-main />
             <span class="user">项目A</span>
@@ -31,7 +30,6 @@
           <q-item  v-ripple.mat class="full-width underline user-item">
             <div>
               测试
-              <div>2018-02-20</div>
             </div>
              <q-item-main />
             <span class="user">项目A</span>
@@ -53,30 +51,6 @@
       </q-infinite-scroll>
     </div>
   </div>
-
-   <q-layout-drawer
-      side="right"
-      v-model="leftDrawer"
-    >
-      <!-- QScrollArea is optional -->
-      <q-scroll-area class="fit q-pa-sm">
-         <q-item  v-ripple.mat class="full-width user-item  underline">
-        </q-item>
-        <q-item  v-ripple.mat class="full-width user-item " >
-          <q-item-side left icon="account circle" class="record-right active"/>
-            <q-item-main  :label="`编辑资料`" />
-        </q-item>
-        <q-item  v-ripple.mat class="full-width user-item ">
-          <q-item-side left icon="account balance wallet" class="record-right active"/>
-            <q-item-main  :label="`账号管理`" />
-        </q-item>
-        <q-item  v-ripple.mat class="full-width user-item"  @click.native="logOut">
-          <q-item-side left icon="exit to app" class="record-right active"/>
-            <q-item-main  :label="`退出登录`" />
-        </q-item>
-        <!-- Content here -->
-      </q-scroll-area>
-    </q-layout-drawer>
     <q-tabs class="footer">
         <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu" />
         <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
@@ -139,6 +113,9 @@ export default {
 #my {
   .record-list {
     border-top: 1px solid #cccccc;
+  }
+  .note .q-item-letter, .q-item-icon{
+    font-size: 20px;
   }
   .user-item-header {
     background-color: #f5f5f5;
