@@ -95,6 +95,10 @@ export default [
     path: '/choose/project',
     component: () => import('pages/choose/chooseProject.vue')
   },
+  {
+    path: '/qcode/scan',
+    component: () => import('pages/qcode/scan.vue')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')
