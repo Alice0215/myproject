@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="$router.push('/qcode/list?projectId='+projectId)"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
+             <a @click="back"><q-item-side left  icon='keyboard arrow left' class='reback'/>返回</a>
             <q-toolbar-title class='header-title'>
               {{code.alias}}
             </q-toolbar-title>
@@ -115,6 +115,11 @@ export default {
     this.getInfo()
   },
   methods: {
+    back () {
+      localStorage.removeItem('qrCodeId')
+      localStorage.removeItem('typeKey')
+      this.$router.push('/qcode/list?projectId=' + this.projectId)
+    },
     add () {
       if (!this.editable) {
         this.$q.dialog({
@@ -127,6 +132,8 @@ export default {
       if (this.code.type) {
         key = this.code.type.key
       }
+      localStorage.setItem('qrCodeId', this.qrCodeId)
+      localStorage.setItem('typeKey', key)
       this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + key)
     },
     getInfo () {
