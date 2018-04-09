@@ -79,7 +79,7 @@
     </q-layout-drawer>
     <q-tabs class="footer">
         <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu" />
-        <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
+        <q-route-tab slot="title" icon="view_array" to="/qcode/scan" replace label="扫二维码" class="menu"/>
         <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
         <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
       </q-tabs>
