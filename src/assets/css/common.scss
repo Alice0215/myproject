@@ -14,13 +14,12 @@ a {
   display: inherit;
 
   &:hover, &:active, &:focus {
-    color: $primary;
-    text-decoration: underline;
+    color: none;
+    text-decoration: none;
   }
 
   &.link {
     color: $primary;
-
     &:hover, &:active, &:focus {
       color: darken($primary, 10%);
       text-decoration: underline;

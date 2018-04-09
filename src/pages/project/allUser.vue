@@ -3,7 +3,8 @@
   <div class="main" id="allUser">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>
+       <a @click="$router.back(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
+       <!--<router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>-->
         <q-toolbar-title class="header-title">
         {{title}}
         </q-toolbar-title>
@@ -23,6 +24,7 @@
         </q-item>
         </div>
     </div>
+    <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }"><q-btn class="full-width btn">完成设置</q-btn></router-link>
   </div>
 </template>
 

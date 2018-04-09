@@ -165,18 +165,18 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.users {
-  font-size: 14px;
-  .user {
-    padding: 3px;
-    text-align: center;
-    display: inline-block;
-    background-color: #dcdcdc;
-    border-radius: 2px;
-    margin-left: 3px;
-  }
-}
 #project-add {
+  .users {
+    font-size: 14px;
+    .user {
+      padding: 3px;
+      text-align: center;
+      display: inline-block;
+      background-color: #dcdcdc;
+      border-radius: 2px;
+      margin-left: 3px;
+    }
+  }
   .underline {
     border-bottom: 1px solid #cccccc;
     margin-top: 20px;
