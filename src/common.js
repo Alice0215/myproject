@@ -158,9 +158,20 @@ async function uploadFiles (fileData) {
   }
 }
 
+/**
+ * 清除 localStory
+ * @param name localStory名
+ */
+function removeLocalStory (name) {
+  if (!_.isNull(localStorage.getItem(name))) {
+    localStorage.removeItem(name)
+  }
+}
+
 export {
   request,
   dataURLtoFile,
   deleteFiles,
-  uploadFiles
+  uploadFiles,
+  removeLocalStory
 }

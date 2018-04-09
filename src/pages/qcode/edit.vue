@@ -111,7 +111,7 @@
           </q-list>
         </div>
         <div>
-          <q-list class="mt-6 bg-white pb-8">
+          <q-list class="mt-6 bg-white pb-8" id="camera-list">
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-  import { request, uploadFiles, deleteFiles } from '../../common'
+  import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
   import { filter } from 'quasar'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
@@ -148,11 +148,11 @@
         amount: '',
         contactNumber: '',
         contactPerson: '',
-        singlePlantProperties: [{'name': '胸径', 'value': ''},
-          {'name': '高度', 'value': ''},
-          {'name': '地径', 'value': ''},
-          {'name': '冠幅', 'value': ''},
-          {'name': '篷径', 'value': ''}],
+        singlePlantProperties: [{'name': '胸径', 'value': '', 'key': 'xiongJing'},
+          {'name': '高度', 'value': '', 'key': 'gaoDu'},
+          {'name': '地径', 'value': '', 'key': 'diJing'},
+          {'name': '冠幅', 'value': '', 'key': 'guanFu'},
+          {'name': '篷径', 'value': '', 'key': 'pengJing'}],
         buttonsColor: ['black', 'black', 'black', 'black'],
         namePlaceholder: '植物名称',
         areaShow: false,
@@ -166,9 +166,18 @@
       }
     },
     methods: {
+      setSinglePropertyToForm () {
+        _.forEach(this.singlePlantProperties, (v, k) => {
+          if (v.value.toString().length > 0) {
+            let propertyKey = v.key.toString()
+            this.form[propertyKey] = v.value
+          }
+        })
+      },
       async save () {
         let form = {}
         let url = ''
+        this.setSinglePropertyToForm()
         form.projectId = this.form.project.id
         form.qrCodeId = this.qrCodeId
         form.alias = this.form.alias
@@ -208,12 +217,17 @@
         }
       },
       goBack () {
-        if (!_.isNull(localStorage.getItem('choose-project'))) {
-          localStorage.removeItem('choose-project')
-        }
+        removeLocalStory('choose-project')
+        removeLocalStory('qrcode-image')
+        removeLocalStory('qrcode-form')
+        removeLocalStory('qrcode-single-property')
         this.$router.go(-1)
       },
       chooseProject () {
+        this.setSinglePropertyToForm()
+        localStorage.setItem('qrcode-form', JSON.stringify(this.form))
+        localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
+        localStorage.setItem('qrcode-single-property', JSON.stringify(this.singlePlantProperties))
         this.$router.push('/choose/project')
       },
       searchTerm (alias, done) {
@@ -356,11 +370,23 @@
         this.showType = true
       }
       let project = JSON.parse(localStorage.getItem('choose-project'))
-      console.log(project)
+      let form = JSON.parse(localStorage.getItem('qrcode-form'))
+      let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
+      let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
+      if (!_.isNull(form)) {
+        this.form = form
+      }
+      if (!_.isNull(imageArray)) {
+        this.imageArray = imageArray
+      }
       if (!_.isNull(project)) {
         this.form.project = project
         this.projectName = project.projectName
-      } else {
+      }
+      if (!_.isNull(singleProperty)) {
+        this.singlePlantProperties = singleProperty
+      }
+      if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
         this.load()
       }
       this.getPlantCategory()
@@ -465,6 +491,10 @@
       border-color: lightgray;
       border-radius: 1px;
       box-shadow: none !important;
+    }
+
+    #camera-list {
+      border: 0;
     }
   }
 </style>
