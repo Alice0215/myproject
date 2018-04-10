@@ -1,6 +1,16 @@
 <template>
   <q-layout id="scan-page">
-
+    <q-toolbar class='header'>
+      <q-toolbar class='fix'>
+        <a @click="back">
+          <q-item-side left icon='keyboard arrow left' class='reback'/>
+          返回</a>
+        <q-toolbar-title class='header-title'>
+          扫描二维码
+        </q-toolbar-title>
+        <q-item-side right/>
+      </q-toolbar>
+    </q-toolbar>
   </q-layout>
 </template>
 
@@ -10,6 +20,15 @@
       return {}
     },
     methods: {
+      back () {
+        if (window.QRScanner) {
+          window.QRScanner.cancelScan(statu => {
+            console.log(statu)
+          })
+          window.QRScanner.hide()
+        }
+        this.$router.back()
+      },
       openScan () {
         if (window.QRScanner) {
           window.QRScanner.prepare((err, status) => {
