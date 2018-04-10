@@ -21,7 +21,7 @@
         </p>
       </div>
       <!--<div v-show="showType">-->
-      <div>
+      <div v-show="showType">
         <span>类型</span>
         <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
         <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区植物" size="xs"/>
@@ -65,8 +65,8 @@
               </div>
             </div>
             <div class="row mt-8 col-12">
-              <span class="col-1 lineHeight-32">其他</span>
-              <q-input v-model="form.otherFeature" class="col-10 ml-8 border-1 h-32 p-8"></q-input>
+              <span class="col-2 lineHeight-32">其他</span>
+              <q-input v-model="form.otherFeature" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
             </div>
           </div>
           <q-input v-model="form.source" placeholder="苗原地" class='login-input mt-10'></q-input>
@@ -127,6 +127,13 @@
       </div>
       <q-btn class="full-width btn" @click="save">保存</q-btn>
     </div>
+    <q-alert
+      type="positive"
+      class="fixed-center"
+      v-show="showAlert"
+    >
+      保存成功
+    </q-alert>
   </q-layout>
 </template>
 
@@ -163,7 +170,8 @@
         aliasList: [],
         projectName: '',
         type: '',
-        areaBranches: []
+        areaBranches: [],
+        showAlert: false
       }
     },
     methods: {
@@ -236,9 +244,14 @@
         }
         console.log(form)
         let resp = await request(url, 'put', form, 'json', true)
-        if (resp) {
+        if (resp.data.resultCode === 'SUCCESS') {
           console.log(resp)
-          // TODO 保存成功的提示
+          this.showAlert = true
+          setTimeout(() => {
+            this.showAlert = false
+            // TODO 保存成功的跳转
+            this.goBack()
+          }, 1000)
         }
       },
       goBack () {
@@ -272,8 +285,12 @@
         let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
         this.$q.loading.hide()
         if (resp) {
-          this.form = resp
+          this.form = resp.data.resultMsg
+          this.projectName = this.form.project.projectName
+          this.form.formattedAddress = this.form.location.formattedAddress
         }
+        console.log('load')
+        console.log(this.form)
       },
       openCamera () {
         if (navigator.camera) {
@@ -304,6 +321,7 @@
             this.areaShow = false
             this.type = plantType.SINGLE
             this.namePlaceholder = '植物名称'
+            this.getAreaBranch()
             break
           case 1:
             this.singleShow = false
@@ -391,6 +409,12 @@
       if (this.typeKey === 'null') {
         this.showType = true
       }
+      let index = 0
+      if (!this.showType) {
+        await this.load()
+        let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
+        index = _.indexOf(keyArray, this.typeKey)
+      }
       let project = JSON.parse(localStorage.getItem('choose-project'))
       let form = JSON.parse(localStorage.getItem('qrcode-form'))
       let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
@@ -413,15 +437,10 @@
         this.form.formattedAddress = position.formattedAddress
         this.form.locationJson = JSON.stringify(position)
       }
-      if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
-        this.load()
-      }
-      this.getPlantCategory()
       this.$nextTick(() => {
-        this.topButtonsClicked(0)
-        // todo 检查 typeKey
-        this.getAreaBranch()
+        this.topButtonsClicked(index)
       })
+      this.getPlantCategory()
     },
     beforeDestroy () {
       eventBus.$off('upload-success')

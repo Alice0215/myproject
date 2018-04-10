@@ -7,9 +7,11 @@ import eventBus from './eventBus'
 
 let batchRequest = Number.MAX_SAFE_INTEGER
 
-async function request (url, method = 'get', data = {}, responseType = 'json', project = false) {
+async function request (url, method = 'get', data = {}, responseType = 'json', project = false, absoluteUrl = false) {
   const endpoint = project ? server.PROJECT_API : server.API
-  url = endpoint + url
+  if (!absoluteUrl) {
+    url = endpoint + url
+  }
   let params = null
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {
     params = data
