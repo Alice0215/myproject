@@ -78,7 +78,7 @@
         </div>
         <div class="mt-10">
           <q-item-tile sublabel lines='1' class='inline text-center' @click.native="openMap">
-            <q-search icon="place"  v-model="address" placeholder="获取当前位置" class='login-input mt-10'disable />
+            <q-search icon="place"  v-model="address" placeholder="获取当前位置" class='login-input mt-10' disable />
           </q-item-tile>
         </div>
         <q-input
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { request } from '../../common'
+import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
 import _ from 'lodash'
 
 export default {
@@ -137,11 +137,12 @@ export default {
     }
   },
   methods: {
-    cancelUploadImage (index) {
-      this.imageArray = this.imageArray.splice(index + 1)
-    },
     add () {
       localStorage.setItem('singles', JSON.stringify(this.formData))
+      removeLocalStory('user_location')
+      removeLocalStory('qrcode-image')
+      removeLocalStory('qrcode-form')
+      this.$router.back()
     },
     openMap () {
       this.saveLocalData()
@@ -150,6 +151,21 @@ export default {
     saveLocalData () {
       localStorage.setItem('qrcode-form', JSON.stringify(this.formData))
       localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
+    },
+    openCamera () {
+      if (navigator.camera) {
+        navigator.camera.getPicture(imgData => {
+          this.$q.loading.show()
+          uploadFiles(imgData)
+        }, errorMsg => {
+          console.log(errorMsg)
+        }, { destinationType: Camera.DestinationType.DATA_URL })
+      }
+    },
+    cancelUploadImage (index) {
+      this.$q.loading.show()
+      let img = this.imageArray[index]
+      deleteFiles(img.contentUrl, index)
     },
     getPlantCategory () {
       request('data/plantCategory', 'get').then(response => {
@@ -167,6 +183,14 @@ export default {
     }
   },
   async mounted () {
+    if (this.$route.query.index) {
+      let index = this.$route.query.index
+      let oldData = JSON.parse(localStorage.getItem('oldData'))
+      if (!_.isNull(oldData)) {
+        this.formData = oldData[index]
+      }
+    }
+
     this.getPlantCategory()
     let geoInfo = JSON.parse(localStorage.getItem('user_location'))
     let form = JSON.parse(localStorage.getItem('qrcode-form'))
@@ -179,7 +203,7 @@ export default {
     }
     if (!_.isNull(geoInfo)) {
       this.address = geoInfo.formattedAddress
-      this.formData.locationJson = geoInfo
+      this.formData.locationJson = JSON.stringify(geoInfo)
     }
   }
 }

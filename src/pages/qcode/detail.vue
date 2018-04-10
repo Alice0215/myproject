@@ -105,41 +105,10 @@ export default {
           } else {
             this.code = response.data.resultMsg
           }
-          if (this.code.type) {
-            if (this.code.type.key === 'SINGLE') {
-              this.danzhu = true
-              this.pianqu = false
-              this.gongju = false
-              this.qita = false
-            }
-            if (this.code.type.key === 'AREA') {
-              this.danzhu = false
-              this.pianqu = true
-              this.gongju = false
-              this.qita = false
-            }
-            if (this.code.type.key === 'EQUIPMENT') {
-              this.danzhu = false
-              this.pianqu = false
-              this.gongju = true
-              this.qita = false
-            }
-            if (this.code.type.key === 'OTHER') {
-              this.danzhu = false
-              this.pianqu = false
-              this.gongju = false
-              this.qita = true
-            }
-          } else {
-            this.danzhu = true
-            this.pianqu = false
-            this.gongju = false
-            this.qita = false
-          }
-          if (this.danzhu || this.pianqu) {
+          if (this.code.type.key === 'SINGLE' || this.code.type.key === 'AREA') {
             this.qrRecord = '养护记录'
             this.routeUrl = '/jobGroup/groupRecord?codeId=' + this.qrCodeId
-          } else if (this.gongju) {
+          } else if (this.code.type.key === 'EQUIPMENT') {
             this.qrRecord = '领用记录'
             this.routeUrl = '/jobGroup/record?codeId=' + this.qrCodeId
           } else {

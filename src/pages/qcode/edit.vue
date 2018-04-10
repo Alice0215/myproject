@@ -29,7 +29,7 @@
         <q-btn outline :color="buttonsColor[3]" @click="topButtonsClicked(3)" label="其他" size="xs"/>
       </div>
       <div class="qr-info">
-        <q-input v-model="form.alias" placeholder="植物名称" class='login-input'>
+        <q-input v-model="form.alias" :placeholder="namePlaceholder" class='login-input'>
           <q-autocomplete @search="searchTerm" @selected="selected"/>
         </q-input>
         <q-input
@@ -94,17 +94,17 @@
           </q-item>
           <q-list class="add-area">
             <q-list-header class="p-2 h-40">添加植物信息</q-list-header>
-            <q-item  @click.native="$router.push('addPlant')">
+            <q-item @click.native="addPlant">
               <q-item-side label>新增植物..</q-item-side>
               <q-item-main></q-item-main>
             </q-item>
-            <q-item class="mt-8">
-              <q-item-side label>槐树</q-item-side>
+            <q-item class="mt-8" v-for="v, i in form.singles" :key="i">
+              <q-item-side label>{{v.alias}}</q-item-side>
               <q-item-main></q-item-main>
               <q-item-side right>
-                <span class="mr-6">数量: 3</span>
+                <span class="mr-6">数量: {{v.amount}}</span>
                 <q-icon class="mt--5" name="fas fa-edit"></q-icon>
-                <span class="mr-6"> 编辑</span>
+                <span class="mr-6" @click="editPlant(i)"> 编辑</span>
               </q-item-side>
             </q-item>
           </q-list>
@@ -142,16 +142,16 @@ export default {
       typeKey: null,
       showType: false,
       qrCodeId: '',
-      form: {},
+      form: {singles: []},
       projectId: 1,
       amount: '',
       contactNumber: '',
       contactPerson: '',
-      singlePlantProperties: [{'name': '胸径', 'value': '', 'key': 'xiongJing'},
-        {'name': '高度', 'value': '', 'key': 'gaoDu'},
-        {'name': '地径', 'value': '', 'key': 'diJing'},
-        {'name': '冠幅', 'value': '', 'key': 'guanFu'},
-        {'name': '篷径', 'value': '', 'key': 'pengJing'}],
+      singlePlantProperties: [{ 'name': '胸径', 'value': '', 'key': 'xiongJing' },
+        { 'name': '高度', 'value': '', 'key': 'gaoDu' },
+        { 'name': '地径', 'value': '', 'key': 'diJing' },
+        { 'name': '冠幅', 'value': '', 'key': 'guanFu' },
+        { 'name': '篷径', 'value': '', 'key': 'pengJing' }],
       buttonsColor: ['black', 'black', 'black', 'black'],
       namePlaceholder: '植物名称',
       areaShow: false,
@@ -174,7 +174,7 @@ export default {
         let branches = resp.data.resultMsg
         _.forEach(branches, v => {
           let branch = {}
-          branch.label = v.alias
+          branch.label = v.alias + '-' + v.identifier
           branch.value = v.id
           this.areaBranches.push(branch)
         })
@@ -228,6 +228,7 @@ export default {
       } else if (this.type === plantType.AREA) {
         url = 'qrcode/area/save'
         form.acreage = this.form.acreage
+        form.singles = this.form.singles
       } else if (this.type === plantType.DEVICE) {
         url = 'qrcode/equipment/save'
       } else if (this.type === plantType.OTHER) {
@@ -252,13 +253,23 @@ export default {
       this.saveLocalData()
       this.$router.push('/choose/project')
     },
+    addPlant () {
+      this.setSinglePropertyToForm()
+      this.saveLocalData()
+      this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey)
+    },
+    editPlant (i) {
+      this.setSinglePropertyToForm()
+      this.saveLocalData()
+      this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
+    },
     searchTerm (alias, done) {
-      request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
+      request('data/term?type=' + this.type + '&start=' + this.form.alias + '&top=10', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           console.log(response.data.resultMsg)
-          let model = response.data.resultMsg.map(item => ({label: String(item['name']), value: item['name']}))
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
           setTimeout(() => {
-            done(filter(alias, {field: 'value', list: model}))
+            done(filter(alias, { field: 'value', list: model }))
           }, 1000)
         }
       })
@@ -281,7 +292,7 @@ export default {
           uploadFiles(imgData)
         }, errorMsg => {
           console.log(errorMsg)
-        }, {destinationType: Camera.DestinationType.DATA_URL})
+        }, { destinationType: Camera.DestinationType.DATA_URL })
       }
     },
     cancelUploadImage (index) {
@@ -356,10 +367,6 @@ export default {
       }
       )
     },
-    chooseUser (jobType) {
-      this.formData.jobType = jobType
-      this.$router.push('allUser')
-    },
     async getPlantCategory () {
       let resp = await request('data/plantCategory')
       if (resp) {
@@ -395,6 +402,11 @@ export default {
     let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
     let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
     let position = JSON.parse(localStorage.getItem('user_location'))
+    let singles = JSON.parse(localStorage.getItem('singles'))
+    if (!_.isNull(singles)) {
+      this.form.singles.push(singles)
+      console.log(this.form.singles)
+    }
     if (!_.isNull(form)) {
       this.form = form
     }
@@ -430,92 +442,86 @@ export default {
 </script>
 
 <style lang='scss'>
-  @import "../../assets/css/common";
+@import "../../assets/css/common";
 
-  #qcode-page {
-    .lineHeight-32 {
-      line-height: 32px;
-    }
+#qcode-page {
+  .lineHeight-32 {
+    line-height: 32px;
+  }
 
-    #single-plant {
-      .row {
-        .q-input {
-          .q-no-input-spinner {
-            margin-top: 16px;
-          }
+  #single-plant {
+    .row {
+      .q-input {
+        .q-no-input-spinner {
+          margin-top: 16px;
         }
       }
     }
+  }
 
-    .add-area {
-      border: 0;
+  .add-area {
+    border: 0;
 
-      .q-item {
-        border-style: solid;
-        border-width: 1px;
-        border-color: lightgray;
-        border-radius: 8px;
-      }
-    }
-
-    .area-input {
+    .q-item {
       border-style: solid;
       border-width: 1px;
       border-color: lightgray;
       border-radius: 8px;
-      width: 100px;
-    }
-
-    .reback {
-      min-width: auto !important;
-    }
-
-    .underline {
-      border-bottom: 1px solid #cccccc;
-      margin-top: 20px;
-    }
-    input:not(.no-style):hover {
-      border-bottom: none;
-    }
-
-    .q-if-inner {
-      min-height: 30px !important;
-      padding-bottom: 10px;
-    }
-
-    .q-if-control.q-icon {
-      padding-bottom: 6px;
-    }
-
-    .top-field p {
-      margin-bottom: 10px;
-    }
-
-    .qr-info {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #333333;
-      margin-bottom: 30px;
-      p {
-        margin-bottom: 5px;
-      }
-    }
-
-    .img-close {
-      margin-left: 80px;
-      margin-top: -190px;
-    }
-
-    .camera-button {
-      border-style: solid;
-      border-width: 1px;
-      border-color: lightgray;
-      border-radius: 1px;
-      box-shadow: none !important;
-    }
-
-    #camera-list {
-      border: 0;
     }
   }
+
+  .area-input {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 8px;
+    width: 100px;
+  }
+  .reback {
+    min-width: auto !important;
+  }
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+
+  .q-if-inner {
+    min-height: 30px !important;
+    padding-bottom: 10px;
+  }
+
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
+
+  .top-field p {
+    margin-bottom: 10px;
+  }
+
+  .qr-info {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 30px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
+
+  .img-close {
+    margin-left: 80px;
+    margin-top: -190px;
+  }
+
+  .camera-button {
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 1px;
+    box-shadow: none !important;
+  }
+
+  #camera-list {
+    border: 0;
+  }
+}
 </style>
