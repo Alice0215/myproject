@@ -21,7 +21,7 @@
         </p>
       </div>
       <!--<div v-show="showType">-->
-      <div>
+      <div v-show="showType">
         <span>类型</span>
         <q-btn outline :color="buttonsColor[0]" @click="topButtonsClicked(0)" label="单株植物" size="xs"/>
         <q-btn outline :color="buttonsColor[1]" @click="topButtonsClicked(1)" label="片区植物" size="xs"/>
@@ -65,8 +65,8 @@
               </div>
             </div>
             <div class="row mt-8 col-12">
-              <span class="col-1 lineHeight-32">其他</span>
-              <q-input v-model="form.otherFeature" class="col-10 ml-8 border-1 h-32 p-8"></q-input>
+              <span class="col-2 lineHeight-32">其他</span>
+              <q-input v-model="form.otherFeature" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
             </div>
           </div>
           <q-input v-model="form.source" placeholder="苗原地" class='login-input mt-10'></q-input>
@@ -126,17 +126,23 @@
       </div>
       <q-btn class="full-width btn" @click="save">保存</q-btn>
     </div>
+    <q-alert
+      type="positive"
+      class="fixed-center"
+      v-show="showAlert"
+    >
+      保存成功
+    </q-alert>
   </q-layout>
 </template>
 
 <script>
-  import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
-  import { filter } from 'quasar'
-  import _ from 'lodash'
-  import eventBus from '../../eventBus'
-  import { plantType } from '../../const'
+import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
+import { filter } from 'quasar'
+import _ from 'lodash'
+import eventBus from '../../eventBus'
+import { plantType } from '../../const'
 
-<<<<<<< HEAD
 export default {
   data () {
     return {
@@ -148,11 +154,11 @@ export default {
       amount: '',
       contactNumber: '',
       contactPerson: '',
-      singlePlantProperties: [{ 'name': '胸径', 'value': '', 'key': 'xiongJing' },
-        { 'name': '高度', 'value': '', 'key': 'gaoDu' },
-        { 'name': '地径', 'value': '', 'key': 'diJing' },
-        { 'name': '冠幅', 'value': '', 'key': 'guanFu' },
-        { 'name': '篷径', 'value': '', 'key': 'pengJing' }],
+      singlePlantProperties: [{'name': '胸径', 'value': '', 'key': 'xiongJing'},
+        {'name': '高度', 'value': '', 'key': 'gaoDu'},
+        {'name': '地径', 'value': '', 'key': 'diJing'},
+        {'name': '冠幅', 'value': '', 'key': 'guanFu'},
+        {'name': '篷径', 'value': '', 'key': 'pengJing'}],
       buttonsColor: ['black', 'black', 'black', 'black'],
       namePlaceholder: '植物名称',
       areaShow: false,
@@ -163,7 +169,8 @@ export default {
       aliasList: [],
       projectName: '',
       type: '',
-      areaBranches: []
+      areaBranches: [],
+      showAlert: false
     }
   },
   methods: {
@@ -195,279 +202,89 @@ export default {
         if (v.value.toString().length > 0) {
           let propertyKey = v.key.toString()
           this.form[propertyKey] = v.value
-=======
-  export default {
-    data () {
-      return {
-        typeKey: null,
-        showType: false,
-        qrCodeId: '',
-        form: {singles: []},
-        projectId: 1,
-        amount: '',
-        contactNumber: '',
-        contactPerson: '',
-        singlePlantProperties: [{'name': '胸径', 'value': '', 'key': 'xiongJing'},
-          {'name': '高度', 'value': '', 'key': 'gaoDu'},
-          {'name': '地径', 'value': '', 'key': 'diJing'},
-          {'name': '冠幅', 'value': '', 'key': 'guanFu'},
-          {'name': '篷径', 'value': '', 'key': 'pengJing'}],
-        buttonsColor: ['black', 'black', 'black', 'black'],
-        namePlaceholder: '植物名称',
-        areaShow: false,
-        singleShow: false,
-        imageArray: [],
-        plantCategoryArray: [],
-        alias: '',
-        aliasList: [],
-        projectName: '',
-        type: '',
-        areaBranches: [],
-        showAlert: false
+        }
+      })
+    },
+    async save () {
+      let form = {}
+      let url = ''
+      this.setSinglePropertyToForm()
+      form.projectId = this.form.project.id
+      form.qrCodeId = this.qrCodeId
+      form.alias = this.form.alias
+      form.areaId = this.form.areaId
+      form.description = this.form.description
+      if (this.imageArray.length > 0) {
+        form.pictures = _.map(this.imageArray, 'contentUrl')
+      }
+      form.locationJson = this.form.locationJson
+      if (this.type === plantType.SINGLE) {
+        url = 'qrcode/single/save'
+        form.category = this.form.category
+        form.xiongJing = this.form.xiongJing
+        form.diJing = this.form.diJing
+        form.gaoDu = this.form.gaoDu
+        form.guanFu = this.form.guanFu
+        form.pengJing = this.form.pengJing
+        form.branch = this.form.branch
+        form.year = this.form.year
+        form.otherFeature = this.form.otherFeature
+        form.source = this.form.source
+        form.dealer = this.form.dealer
+        form.other = this.form.other
+        form.singleId = this.form.singleId
+      } else if (this.type === plantType.AREA) {
+        url = 'qrcode/area/save'
+        form.acreage = this.form.acreage
+      } else if (this.type === plantType.DEVICE) {
+        url = 'qrcode/equipment/save'
+      } else if (this.type === plantType.OTHER) {
+        url = 'qrcode/other/save'
+      }
+      console.log(form)
+      let resp = await request(url, 'put', form, 'json', true)
+      if (resp.data.resultCode === 'SUCCESS') {
+        console.log(resp)
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+          // TODO 保存成功的跳转
+          this.goBack()
+        }, 1000)
       }
     },
-    methods: {
-      async getAreaBranch () {
-        this.areaBranches = []
-        // todo projectID需要改变
-        let resp = await request('qrcode/list?projectId=1&type=' + this.type, 'get', null, null, true)
-        if (resp) {
-          let branches = resp.data.resultMsg
-          _.forEach(branches, v => {
-            let branch = {}
-            branch.label = v.alias + '-' + v.identifier
-            branch.value = v.id
-            this.areaBranches.push(branch)
-          })
-        }
-      },
-      openMap () {
-        this.saveLocalData()
-        this.$router.push('/project/map?from=qrCode')
-      },
-      saveLocalData () {
-        localStorage.setItem('qrcode-form', JSON.stringify(this.form))
-        localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
-        localStorage.setItem('qrcode-single-property', JSON.stringify(this.singlePlantProperties))
-      },
-      setSinglePropertyToForm () {
-        _.forEach(this.singlePlantProperties, (v, k) => {
-          if (v.value.toString().length > 0) {
-            let propertyKey = v.key.toString()
-            this.form[propertyKey] = v.value
-          }
-        })
-      },
-      async save () {
-        let form = {}
-        let url = ''
-        this.setSinglePropertyToForm()
-        form.projectId = this.form.project.id
-        form.qrCodeId = this.qrCodeId
-        form.alias = this.form.alias
-        form.areaId = this.form.areaId
-        form.description = this.form.description
-        if (this.imageArray.length > 0) {
-          form.pictures = _.map(this.imageArray, 'contentUrl')
-        }
-        form.locationJson = this.form.locationJson
-        if (this.type === plantType.SINGLE) {
-          url = 'qrcode/single/save'
-          form.category = this.form.category
-          form.xiongJing = this.form.xiongJing
-          form.diJing = this.form.diJing
-          form.gaoDu = this.form.gaoDu
-          form.guanFu = this.form.guanFu
-          form.pengJing = this.form.pengJing
-          form.branch = this.form.branch
-          form.year = this.form.year
-          form.otherFeature = this.form.otherFeature
-          form.source = this.form.source
-          form.dealer = this.form.dealer
-          form.other = this.form.other
-          form.singleId = this.form.singleId
-        } else if (this.type === plantType.AREA) {
-          url = 'qrcode/area/save'
-          form.acreage = this.form.acreage
-        } else if (this.type === plantType.DEVICE) {
-          url = 'qrcode/equipment/save'
-        } else if (this.type === plantType.OTHER) {
-          url = 'qrcode/other/save'
-        }
-        console.log(form)
-        let resp = await request(url, 'put', form, 'json', true)
-        if (resp.data.resultCode === 'SUCCESS') {
-          console.log(resp)
-          this.showAlert = true
+    goBack () {
+      removeLocalStory('choose-project')
+      removeLocalStory('qrcode-image')
+      removeLocalStory('qrcode-form')
+      removeLocalStory('qrcode-single-property')
+      this.$router.go(-1)
+    },
+    chooseProject () {
+      this.setSinglePropertyToForm()
+      this.saveLocalData()
+      this.$router.push('/choose/project')
+    },
+    addPlant () {
+      this.setSinglePropertyToForm()
+      this.saveLocalData()
+      this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey)
+    },
+    editPlant (i) {
+      this.setSinglePropertyToForm()
+      this.saveLocalData()
+      this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
+    },
+    searchTerm (alias, done) {
+      request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
+          let model = response.data.resultMsg.map(item => ({label: String(item['name']), value: item['name']}))
           setTimeout(() => {
-            this.showAlert = false
-            // TODO 保存成功的跳转
-            this.goBack()
+            done(filter(alias, {field: 'value', list: model}))
           }, 1000)
         }
-      },
-      goBack () {
-        removeLocalStory('choose-project')
-        removeLocalStory('qrcode-image')
-        removeLocalStory('qrcode-form')
-        removeLocalStory('qrcode-single-property')
-        this.$router.go(-1)
-      },
-      chooseProject () {
-        this.setSinglePropertyToForm()
-        this.saveLocalData()
-        this.$router.push('/choose/project')
-      },
-      addPlant () {
-        this.setSinglePropertyToForm()
-        this.saveLocalData()
-        this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey)
-      },
-      editPlant (i) {
-        this.setSinglePropertyToForm()
-        this.saveLocalData()
-        this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
-      },
-      searchTerm (alias, done) {
-        request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
-            console.log(response.data.resultMsg)
-            let model = response.data.resultMsg.map(item => ({label: String(item['name']), value: item['name']}))
-            setTimeout(() => {
-              done(filter(alias, {field: 'value', list: model}))
-            }, 1000)
-          }
-        })
-      },
-      selected (item) {
-        this.$q.notify(`Selected suggestion "${item.label}"`)
-      },
-      async load () {
-        this.$q.loading.show()
-        let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
-        this.$q.loading.hide()
-        if (resp) {
-          this.form = resp.data.resultMsg
-          this.projectName = this.form.project.projectName
-          this.form.formattedAddress = this.form.location.formattedAddress
-        }
-        console.log('load')
-        console.log(this.form)
-      },
-      openCamera () {
-        if (navigator.camera) {
-          navigator.camera.getPicture(imgData => {
-            this.$q.loading.show()
-            uploadFiles(imgData)
-          }, errorMsg => {
-            console.log(errorMsg)
-          }, {destinationType: Camera.DestinationType.DATA_URL})
-        }
-      },
-      cancelUploadImage (index) {
-        this.$q.loading.show()
-        let img = this.imageArray[index]
-        deleteFiles(img.contentUrl, index)
-      },
-      topButtonsClicked (index) {
-        _.forEach(this.buttonsColor, (v, k) => {
-          if (k === index) {
-            this.$set(this.buttonsColor, k, 'green')
-          } else {
-            this.$set(this.buttonsColor, k, 'black')
-          }
-        })
-        switch (index) {
-          case 0:
-            this.singleShow = true
-            this.areaShow = false
-            this.type = plantType.SINGLE
-            this.namePlaceholder = '植物名称'
-            this.getAreaBranch()
-            break
-          case 1:
-            this.singleShow = false
-            this.areaShow = true
-            this.type = plantType.AREA
-            this.namePlaceholder = '输入片区名称'
-            break
-          case 2:
-            this.singleShow = false
-            this.areaShow = false
-            this.type = plantType.DEVICE
-            this.namePlaceholder = '输入名称'
-            break
-          case 3:
-            this.singleShow = false
-            this.areaShow = false
-            this.type = plantType.OTHER
-            this.namePlaceholder = '输入名称'
-            break
-          default:
-            break
-        }
-      },
-      add () {
-        let data = {
-          projectId: this.projectId,
-          amount: this.amount,
-          contactNumber: this.contactNumber,
-          contactPerson: this.contactPerson
-        }
-        request('qrcode/batch', 'post', data, 'json', true).then(response => {
-            console.log(response)
-            if (response.data.resultCode === 'SUCCESS') {
-              this.$q.dialog({
-                title: '提示',
-                message: '保存成功！'
-              })
-            } else {
-              if (response.data.resultCode === 'ERROR') {
-                this.$q.dialog({
-                  title: '提示',
-                  message: response.data.resultMsg.hint
-                })
-              } else {
-                this.$q.dialog({
-                  title: '提示',
-                  message: response.data.resultMsg
-                })
-              }
-            }
-          }
-        )
-      },
-      chooseUser (jobType) {
-        this.formData.jobType = jobType
-        this.$router.push('allUser')
-      },
-      async getPlantCategory () {
-        let resp = await request('data/plantCategory')
-        if (resp) {
-          this.plantCategoryArray = resp.data.resultMsg
-          _.forEach(this.plantCategoryArray, (v, key) => {
-            v.label = v.name
-            v.value = v.id
-          })
->>>>>>> origin/develop
-        }
-      }
-    },
-    async mounted () {
-      eventBus.$on('upload-success', resp => {
-        this.$q.loading.hide()
-        this.imageArray.push(resp)
       })
-      eventBus.$on('delete-success', (params) => {
-        this.$q.loading.hide()
-        let index = parseInt(params.idx)
-        this.imageArray.splice(index, 1)
-        this.$q.dialog({
-          title: '提示',
-          message: params.msg
-        })
-      })
-<<<<<<< HEAD
     },
     selected (item) {
       this.$q.notify(`Selected suggestion "${item.label}"`)
@@ -477,52 +294,99 @@ export default {
       let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
       this.$q.loading.hide()
       if (resp) {
-        this.form = resp
-=======
-      this.qrCodeId = this.$route.query.id
-      this.typeKey = this.$route.query.typeKey
-      if (this.typeKey === 'null') {
-        this.showType = true
+        this.form = resp.data.resultMsg
+        this.projectName = this.form.project.projectName
+        this.form.formattedAddress = this.form.location.formattedAddress
       }
-      let index = 0
-      if (!this.showType) {
-        await this.load()
-        let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
-        index = _.indexOf(keyArray, this.typeKey)
+      console.log('load')
+      console.log(this.form)
+    },
+    openCamera () {
+      if (navigator.camera) {
+        navigator.camera.getPicture(imgData => {
+          this.$q.loading.show()
+          uploadFiles(imgData)
+        }, errorMsg => {
+          console.log(errorMsg)
+        }, {destinationType: Camera.DestinationType.DATA_URL})
       }
-      let project = JSON.parse(localStorage.getItem('choose-project'))
-      let form = JSON.parse(localStorage.getItem('qrcode-form'))
-      let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
-      let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
-      let position = JSON.parse(localStorage.getItem('user_location'))
-      let singles = JSON.parse(localStorage.getItem('singles'))
-      if (!_.isNull(singles)) {
-        this.form.singles.push(singles)
-        console.log(this.form.singles)
+    },
+    cancelUploadImage (index) {
+      this.$q.loading.show()
+      let img = this.imageArray[index]
+      deleteFiles(img.contentUrl, index)
+    },
+    topButtonsClicked (index) {
+      _.forEach(this.buttonsColor, (v, k) => {
+        if (k === index) {
+          this.$set(this.buttonsColor, k, 'green')
+        } else {
+          this.$set(this.buttonsColor, k, 'black')
+        }
+      })
+      switch (index) {
+        case 0:
+          this.singleShow = true
+          this.areaShow = false
+          this.type = plantType.SINGLE
+          this.namePlaceholder = '植物名称'
+          this.getAreaBranch()
+          break
+        case 1:
+          this.singleShow = false
+          this.areaShow = true
+          this.type = plantType.AREA
+          this.namePlaceholder = '输入片区名称'
+          break
+        case 2:
+          this.singleShow = false
+          this.areaShow = false
+          this.type = plantType.DEVICE
+          this.namePlaceholder = '输入名称'
+          break
+        case 3:
+          this.singleShow = false
+          this.areaShow = false
+          this.type = plantType.OTHER
+          this.namePlaceholder = '输入名称'
+          break
+        default:
+          break
       }
-      if (!_.isNull(form)) {
-        this.form = form
->>>>>>> origin/develop
+    },
+    add () {
+      let data = {
+        projectId: this.projectId,
+        amount: this.amount,
+        contactNumber: this.contactNumber,
+        contactPerson: this.contactPerson
       }
-      if (!_.isNull(imageArray)) {
-        this.imageArray = imageArray
+      request('qrcode/batch', 'post', data, 'json', true).then(response => {
+        console.log(response)
+        if (response.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '保存成功！'
+          })
+        } else {
+          if (response.data.resultCode === 'ERROR') {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg.hint
+            })
+          } else {
+            this.$q.dialog({
+              title: '提示',
+              message: response.data.resultMsg
+            })
+          }
+        }
       }
-      if (!_.isNull(project)) {
-        this.form.project = project
-        this.projectName = project.projectName
-      }
-      if (!_.isNull(singleProperty)) {
-        this.singlePlantProperties = singleProperty
-      }
-      if (!_.isNull(position)) {
-        this.form.formattedAddress = position.formattedAddress
-        this.form.locationJson = JSON.stringify(position)
-      }
-      if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
-        this.load()
-      }
-<<<<<<< HEAD
       )
+    },
+    chooseUser (jobType) {
+      this.formData.jobType = jobType
+      this.$router.push('allUser')
     },
     async getPlantCategory () {
       let resp = await request('data/plantCategory')
@@ -554,6 +418,12 @@ export default {
     if (this.typeKey === 'null') {
       this.showType = true
     }
+    let index = 0
+    if (!this.showType) {
+      await this.load()
+      let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
+      index = _.indexOf(keyArray, this.typeKey)
+    }
     let project = JSON.parse(localStorage.getItem('choose-project'))
     let form = JSON.parse(localStorage.getItem('qrcode-form'))
     let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
@@ -584,28 +454,16 @@ export default {
     if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
       this.load()
     }
-    this.getPlantCategory()
     this.$nextTick(() => {
-      this.topButtonsClicked(0)
-      // todo 检查 typeKey
-      this.getAreaBranch()
+      this.topButtonsClicked(index)
     })
+    this.getPlantCategory()
   },
   beforeDestroy () {
     eventBus.$off('upload-success')
     eventBus.$off('delete-success')
-=======
-      this.$nextTick(() => {
-        this.topButtonsClicked(index)
-      })
-      this.getPlantCategory()
-    },
-    beforeDestroy () {
-      eventBus.$off('upload-success')
-      eventBus.$off('delete-success')
-    }
->>>>>>> origin/develop
   }
+}
 </script>
 
 <style lang='scss'>
