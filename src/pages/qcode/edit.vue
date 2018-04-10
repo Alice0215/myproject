@@ -97,7 +97,6 @@
             <q-item  @click.native="$router.push('addPlant')">
               <q-item-side label>新增植物..</q-item-side>
               <q-item-main></q-item-main>
-              <q-item-side right icon="keyboard_arrow_right"></q-item-side>
             </q-item>
             <q-item class="mt-8">
               <q-item-side label>槐树</q-item-side>

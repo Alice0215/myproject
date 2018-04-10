@@ -14,13 +14,13 @@
         <div class="col-12 row mt-6 justify-between">
           <div class="col-7 row">
               <q-input
-                v-model="qrCodeForm.alias"
+                v-model="formData.alias"
                 placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'
               />
           </div>
           <div class="col-4 row">
               <span class="col-4 lineHeight-32">数量</span>
-              <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="plantCount"></q-input>
+              <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="formData.amount"></q-input>
           </div>
         </div>
         <q-select
@@ -77,13 +77,12 @@
           <q-input v-model="formData.otherFeature" placeholder="苗木其他信息" class='login-input'></q-input>
         </div>
         <div class="mt-10">
-          <q-item-side left icon='place' class='inline newicon'></q-item-side>
           <q-item-tile sublabel lines='1' class='inline text-center' @click.native="openMap">
-            获取当前位置
+            <q-search icon="place"  v-model="address" placeholder="获取当前位置" class='login-input mt-10'disable />
           </q-item-tile>
         </div>
         <q-input
-          v-model="qrCodeForm.description"
+          v-model="formData.description"
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
@@ -123,19 +122,18 @@ export default {
         other: '',
         otherFeature: '',
         source: '',
-        dealer: ''
-      },
-      qrCodeForm: {
-        projectId: '',
-        qrCodeId: '',
-        description: '',
+        dealer: '',
+        status: 1,
+        locationJson: '',
         pictures: [],
-        alias: ''
+        amount: '',
+        singleId: '',
+        alias: '',
+        description: ''
       },
       plantCategory: [],
-      plantCount: '',
-      imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
-        'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
+      imageArray: [],
+      address: ''
     }
   },
   methods: {
@@ -143,25 +141,7 @@ export default {
       this.imageArray = this.imageArray.splice(index + 1)
     },
     add () {
-      let data = this.formData
-      data['qrCodeForm'] = {
-        projectId: this.qrCodeForm
-      }
-      let params = new FormData()
-      for (var key in data) {
-        params.append(key, data[key])
-      }
-      request('qrcode/single/save', 'put', data, 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          console.log(response.data.resultMsg)
-          this.$q.dialog({
-            title: '提示',
-            message: '添加成功！'
-          })
-        } else {
-          console.log(response.data.resultMsg)
-        }
-      })
+      localStorage.setItem('singles', JSON.stringify(this.formData))
     },
     openMap () {
       this.saveLocalData()
@@ -186,8 +166,21 @@ export default {
       })
     }
   },
-  created () {
+  async mounted () {
     this.getPlantCategory()
+    let geoInfo = JSON.parse(localStorage.getItem('user_location'))
+    let form = JSON.parse(localStorage.getItem('qrcode-form'))
+    let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
+    if (!_.isNull(form)) {
+      this.formData = form
+    }
+    if (!_.isNull(imageArray)) {
+      this.imageArray = imageArray
+    }
+    if (!_.isNull(geoInfo)) {
+      this.address = geoInfo.formattedAddress
+      this.formData.locationJson = geoInfo
+    }
   }
 }
 </script>
