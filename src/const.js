@@ -11,7 +11,7 @@ const server = {
 const plantType = {
   SINGLE: 'SINGLE',
   AREA: 'AREA',
-  DEVICE: 'DEVICE',
+  DEVICE: 'EQUIPMENT',
   OTHER: 'OTHER'
 }
 
