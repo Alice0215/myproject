@@ -243,9 +243,14 @@
         }
         console.log(form)
         let resp = await request(url, 'put', form, 'json', true)
-        if (resp) {
+        if (resp.data.resultCode === 'SUCCESS') {
           console.log(resp)
-          // TODO 保存成功的提示
+          this.showAlert = true
+          setTimeout(() => {
+            this.showAlert = false
+            // TODO 保存成功的跳转
+            this.goBack()
+          }, 1000)
         }
       },
       goBack () {
@@ -259,6 +264,16 @@
         this.setSinglePropertyToForm()
         this.saveLocalData()
         this.$router.push('/choose/project')
+      },
+      addPlant () {
+        this.setSinglePropertyToForm()
+        this.saveLocalData()
+        this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey)
+      },
+      editPlant (i) {
+        this.setSinglePropertyToForm()
+        this.saveLocalData()
+        this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
       },
       searchTerm (alias, done) {
         request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
@@ -279,8 +294,12 @@
         let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
         this.$q.loading.hide()
         if (resp) {
-          this.form = resp
+          this.form = resp.data.resultMsg
+          this.projectName = this.form.project.projectName
+          this.form.formattedAddress = this.form.location.formattedAddress
         }
+        console.log('load')
+        console.log(this.form)
       },
       openCamera () {
         if (navigator.camera) {
@@ -311,6 +330,7 @@
             this.areaShow = false
             this.type = plantType.SINGLE
             this.namePlaceholder = '植物名称'
+            this.getAreaBranch()
             break
           case 1:
             this.singleShow = false
@@ -398,11 +418,22 @@
       if (this.typeKey === 'null') {
         this.showType = true
       }
+      let index = 0
+      if (!this.showType) {
+        await this.load()
+        let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
+        index = _.indexOf(keyArray, this.typeKey)
+      }
       let project = JSON.parse(localStorage.getItem('choose-project'))
       let form = JSON.parse(localStorage.getItem('qrcode-form'))
       let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
       let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
       let position = JSON.parse(localStorage.getItem('user_location'))
+      let singles = JSON.parse(localStorage.getItem('singles'))
+      if (!_.isNull(singles)) {
+        this.form.singles.push(singles)
+        console.log(this.form.singles)
+      }
       if (!_.isNull(form)) {
         this.form = form
       }
@@ -423,12 +454,10 @@
       if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
         this.load()
       }
-      this.getPlantCategory()
       this.$nextTick(() => {
-        this.topButtonsClicked(0)
-        // todo 检查 typeKey
-        this.getAreaBranch()
+        this.topButtonsClicked(index)
       })
+      this.getPlantCategory()
     },
     beforeDestroy () {
       eventBus.$off('upload-success')
