@@ -1,10 +1,9 @@
 <template>
-  <q-layout id="qcode-page">
+  <q-layout id="qcode-page-add">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="$router.go(-1)">
-          <q-item-side left icon='keyboard arrow left' class='reback'/>
-          返回</a>
+        <a @click="$router.back(-1)">
+          <q-item-side left icon='keyboard arrow left' class='reback'/></a>
         <q-toolbar-title class='header-title'>
           添加植物
         </q-toolbar-title>
@@ -21,7 +20,7 @@
           </div>
           <div class="col-4 row">
               <span class="col-4 lineHeight-32">数量</span>
-              <q-input class="col-7 border-1 ml-2 h-35  p-8" v-model="plantCount"></q-input>
+              <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="plantCount"></q-input>
           </div>
         </div>
         <q-select
@@ -79,8 +78,8 @@
         </div>
         <div class="mt-10">
           <q-item-side left icon='place' class='inline newicon'></q-item-side>
-          <q-item-tile sublabel lines='1' class='inline text-center'>
-            河南省郑州市
+          <q-item-tile sublabel lines='1' class='inline text-center' @click.native="openMap">
+            获取当前位置
           </q-item-tile>
         </div>
         <q-input
@@ -164,6 +163,14 @@ export default {
         }
       })
     },
+    openMap () {
+      this.saveLocalData()
+      this.$router.push('/project/map?from=qrCode')
+    },
+    saveLocalData () {
+      localStorage.setItem('qrcode-form', JSON.stringify(this.formData))
+      localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
+    },
     getPlantCategory () {
       request('data/plantCategory', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
@@ -180,7 +187,6 @@ export default {
     }
   },
   created () {
-    // this.singlePlantProperties = [{ name: formData.xiongJing, value: '胸径' }, { name: formData.gaoDu, value: '高度' }, { name: formData.diJing, value: '地径' }, { name: formData.guanFu, value: '冠幅' }, { name: formData.pengJing, value: '篷径' }]
     this.getPlantCategory()
   }
 }
@@ -188,7 +194,7 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-#qcode-page {
+#qcode-page-add {
   .lineHeight-32 {
     line-height: 32px;
   }
@@ -227,10 +233,6 @@ export default {
   input:not(.no-style):hover {
     border-bottom: none;
   }
-  .q-if-control.q-icon {
-    padding-bottom: 6px;
-  }
-
   .top-field p {
     margin-bottom: 10px;
   }
