@@ -175,7 +175,7 @@
           let branches = resp.data.resultMsg
           _.forEach(branches, v => {
             let branch = {}
-            branch.label = v.alias
+            branch.label = v.alias + '-' + v.identifier
             branch.value = v.id
             this.areaBranches.push(branch)
           })
