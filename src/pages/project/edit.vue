@@ -39,7 +39,7 @@ export default {
         projectName: '',
         projectDesc: '',
         address: '',
-        locationJson: {},
+        locationJson: '',
         TMlable: [],
         TLlable: [],
         TMSelect: [],
@@ -102,7 +102,7 @@ export default {
       this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
       if (this.formData.geoInfo !== null && this.formData.geoInfo.formattedAddress) {
         this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = this.formData.geoInfo
+        this.formData.locationJson = JSON.stringify(this.formData.geoInfo)
       }
       localStorage.removeItem('user_location')
     } else {
@@ -118,6 +118,9 @@ export default {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
         'projectJobs': projectJobs
+      }
+      if (this.formData.locationJson !== '') {
+        data.locationJson = this.formData.locationJson
       }
       let params = new URLSearchParams()
       for (var key in data) {
