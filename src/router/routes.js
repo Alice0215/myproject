@@ -92,6 +92,10 @@ export default [
     component: () => import('pages/project/constructionMaintenance.vue')
   },
   {
+    path: '/project/jobs',
+    component: () => import('pages/project/jobs.vue')
+  },
+  {
     path: '/choose/project',
     component: () => import('pages/choose/chooseProject.vue')
   },

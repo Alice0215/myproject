@@ -105,31 +105,32 @@
 
 <script>
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
+import eventBus from '../../eventBus'
 import _ from 'lodash'
 
 export default {
   data () {
     return {
       formData: {
-        category: '',
-        gaoDu: '',
-        xiongJing: '',
-        diJing: '',
-        guanFu: '',
-        pengJing: '',
-        branch: '',
-        year: '',
-        other: '',
-        otherFeature: '',
-        source: '',
-        dealer: '',
-        status: 1,
-        locationJson: '',
-        pictures: [],
-        amount: '',
-        singleId: '',
-        alias: '',
-        description: ''
+        // category: '',
+        // gaoDu: '',
+        // xiongJing: '',
+        // diJing: '',
+        // guanFu: '',
+        // pengJing: '',
+        // branch: '',
+        // year: '',
+        // other: '',
+        // otherFeature: '',
+        // source: '',
+        // dealer: '',
+        // status: 1,
+        // locationJson: '',
+        // pictures: [],
+        // amount: '',
+        // singleId: '',
+        // alias: '',
+        // description: ''
       },
       plantCategory: [],
       imageArray: [],
@@ -183,6 +184,20 @@ export default {
     }
   },
   async mounted () {
+    eventBus.$on('upload-success', resp => {
+      console.log(resp)
+      this.$q.loading.hide()
+      this.imageArray.push(resp)
+    })
+    eventBus.$on('delete-success', (params) => {
+      this.$q.loading.hide()
+      let index = parseInt(params.idx)
+      this.imageArray.splice(index, 1)
+      this.$q.dialog({
+        title: '提示',
+        message: params.msg
+      })
+    })
     if (this.$route.query.index) {
       let index = this.$route.query.index
       let oldData = JSON.parse(localStorage.getItem('oldData'))
@@ -205,6 +220,10 @@ export default {
       this.address = geoInfo.formattedAddress
       this.formData.locationJson = JSON.stringify(geoInfo)
     }
+  },
+  beforeDestroy () {
+    eventBus.$off('upload-success')
+    eventBus.$off('delete-success')
   }
 }
 </script>

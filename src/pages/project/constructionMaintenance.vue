@@ -3,17 +3,17 @@
     <q-list>
       <q-item link class="full-width bg-white">
         <q-item-side>
-          <q-item-tile class="color-black mb-8 mt-10">国槐01234</q-item-tile>
-          <q-item-tile icon="place" class="mb-8">
-            <label class="color-black font-12">河南省郑州市</label>
+          <q-item-tile class="color-black mb-8 mt-10">{{QrInfo.alias}}</q-item-tile>
+          <q-item-tile icon="place" class="mb-8" @click.native="openMap">
+            <label class="color-black font-12">获取当前位置</label>
           </q-item-tile>
         </q-item-side>
         <q-item-main>
         </q-item-main>
-        <q-item-side right icon="fas fa-qrcode color-black"/>
+        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+qrCodeId+'&type='+qrtype)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
       </q-item>
-      <q-item class="mt-6">
+      <q-item class="mt-6" @click.native="chooseJob">
         <q-item-side label class="font-14">工作内容选择</q-item-side>
         <q-item-main></q-item-main>
         <q-item-side right icon="keyboard_arrow_right" class="color-gray"></q-item-side>
@@ -25,12 +25,12 @@
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header>备注信息</q-list-header>
-      <q-input class="remark-field" v-model="remark" type="textarea" placeholder="请输入备注信息" rows="6" hide-underline/>
+      <q-input class="remark-field" v-model="form.description" type="textarea" placeholder="请输入备注信息" rows="6" hide-underline/>
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
-        <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
+        <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
           <img class="full-height full-width" :src="v.previewUrl">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
@@ -43,91 +43,119 @@
 </template>
 
 <script>
-  import { request, deleteFiles, uploadFiles } from '../../common'
-  import eventBus from '../../eventBus'
+import { request, deleteFiles, uploadFiles } from '../../common'
+import eventBus from '../../eventBus'
 
-  export default {
-    data () {
-      return {
-        tags: ['裁植修建', '苗木假植', '灌水'],
-        remark: '',
-        imageArray: []
-      }
-    },
-    methods: {
-      cancelUploadImage (index) {
-        this.$q.loading.show()
-        let img = this.imageArray[index]
-        deleteFiles(img.contentUrl, index)
+export default {
+  data () {
+    return {
+      form: {
+        codeId: 240,
+        description: '',
+        pictures: [],
+        jobs: []
       },
-      openCamera () {
-        console.log('open camera')
-        if (navigator.camera) {
-          navigator.camera.getPicture(imgData => {
-            this.$q.loading.show()
-            uploadFiles(imgData)
-          }, errorMsg => {
-            console.log(errorMsg)
-          }, {destinationType: Camera.DestinationType.DATA_URL})
-        }
+      qrtype: '',
+      tags: ['裁植修建', '苗木假植', '灌水'],
+      QrInfo: {}
+    }
+  },
+  methods: {
+    cancelUploadImage (index) {
+      this.$q.loading.show()
+      let img = this.pictures[index]
+      deleteFiles(img.contentUrl, index)
+    },
+    openCamera () {
+      console.log('open camera')
+      if (navigator.camera) {
+        navigator.camera.getPicture(imgData => {
+          this.$q.loading.show()
+          uploadFiles(imgData)
+        }, errorMsg => {
+          console.log(errorMsg)
+        }, { destinationType: Camera.DestinationType.DATA_URL })
       }
     },
-    mounted () {
-      eventBus.$on('upload-success', resp => {
-        console.log(resp)
-        this.$q.loading.hide()
-        this.imageArray.push(resp)
-      })
-      eventBus.$on('delete-success', (params) => {
-        this.$q.loading.hide()
-        let index = parseInt(params.idx)
-        this.imageArray.splice(index, 1)
-        this.$q.dialog({
-          title: '提示',
-          message: params.msg
-        })
-      })
+    async getQrInfo () {
+      this.areaBranches = []
+      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
+      if (resp) {
+        this.QrInfo = resp.data.resultMsg
+      }
     },
-    beforeDestroy () {
-      eventBus.$off('upload-success')
-      eventBus.$off('delete-success')
+    save () {
+      let resp = request('jobGroup/create', 'post', this.form, 'json', true)
+      if (resp) {
+        console.log(resp)
+        // TODO 保存成功的提示
+      }
+    },
+    openMap () {
+      localStorage.setItem('oldInfo', JSON.stringify(this.form))
+      this.$router.push('/project/map?from=qrCode')
+    },
+    chooseJob () {
+      this.$router.push('jobs')
     }
+  },
+  mounted () {
+    eventBus.$on('upload-success', resp => {
+      console.log(resp)
+      this.$q.loading.hide()
+      this.pictures.push(resp)
+    })
+    eventBus.$on('delete-success', (params) => {
+      this.$q.loading.hide()
+      let index = parseInt(params.idx)
+      this.pictures.splice(index, 1)
+      this.$q.dialog({
+        title: '提示',
+        message: params.msg
+      })
+    })
+    this.getQrInfo()
+  },
+  beforeDestroy () {
+    eventBus.$off('upload-success')
+    eventBus.$off('delete-success')
   }
+}
 </script>
 
 <style lang="scss">
-  #maintenace-page {
-    width: 100%;
-    height: 100%;
-    background-color: #F5F5F5;
+#maintenace-page {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
 
-    .q-list {
-      border: 0;
-      padding: 0;
-    }
-
-    .q-item {
-      background-color: white;
-    }
-
-    .q-item-side {
-      color: black;
-    }
-
-    .remark-field {
-      padding: 2px;
-      width: 96%;
-      left: 2%;
-      font-size: 14px;
-      border-style: solid;
-      border-width: 1px;
-      border-color: lightgray;
-      border-radius: 8px;
-    }
-
-    .img-close {
-      margin-left: 80px;
-      margin-top: -190px;
-    }
+  .q-list {
+    border: 0;
+    padding: 0;
   }
+
+  .q-item {
+    background-color: white;
+  }
+
+  .q-item-side {
+    color: black;
+  }
+
+  .remark-field {
+    padding: 2px;
+    width: 96%;
+    left: 2%;
+    font-size: 14px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    border-radius: 8px;
+  }
+
+  .img-close {
+    margin-left: 80px;
+    margin-top: -190px;
+  }
+}
 </style>
