@@ -209,15 +209,17 @@ export default {
       let form = {}
       let url = ''
       this.setSinglePropertyToForm()
-      form.projectId = this.form.project.id
-      form.qrCodeId = this.qrCodeId
-      form.alias = this.form.alias
+      let qrCodeForm = {}
+      qrCodeForm.projectId = this.form.project.id
+      qrCodeForm.qrCodeId = this.qrCodeId
+      qrCodeForm.alias = this.form.alias
       form.areaId = this.form.areaId
-      form.description = this.form.description
+      qrCodeForm.description = this.form.description
       if (this.imageArray.length > 0) {
-        form.pictures = _.map(this.imageArray, 'contentUrl')
+        qrCodeForm.pictures = _.map(this.imageArray, 'contentUrl')
       }
-      form.locationJson = this.form.locationJson
+      qrCodeForm.locationJson = this.form.locationJson
+      form.qrCodeForm = qrCodeForm
       if (this.type === plantType.SINGLE) {
         url = 'qrcode/single/save'
         form.category = this.form.category
