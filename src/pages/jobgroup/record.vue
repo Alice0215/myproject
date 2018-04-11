@@ -3,7 +3,7 @@
   <div class="main" id="my">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <a @click="$router.back(-1)"><q-item-side left icon="keyboard arrow left"/></a>
+       <a @click="$router.goBack()"><q-item-side left icon="keyboard arrow left"/></a>
         <q-toolbar-title class="header-title">
         设备领用记录
         </q-toolbar-title>

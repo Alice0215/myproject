@@ -2,7 +2,7 @@
 <template>
     <q-layout class='list bg-color' id="qr-list">
         <q-toolbar class='header'>
-          <a @click="$router.push('/')"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+          <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
             <q-toolbar-title class='header-title text-center'>
             {{projectName}}
             </q-toolbar-title>
@@ -26,7 +26,7 @@
             <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
         </div>
         <div v-if="qrcode">
-        <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.go(-1)' class='float-right icon-error'/></p>
+        <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
               <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id" >
