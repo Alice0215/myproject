@@ -15,7 +15,10 @@
         <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
       </q-item>
        <q-item class="bg-primary jobs-tags" v-if="names.length>0">
-        <q-chips-input v-model="names" chips-bg-color="white" color="amber" chips-color="lightGray"/>
+          <q-chips-input icon-right="close"  @input="value => remove(value)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
+          <!-- <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
+          {{v}}
+        </q-chip> -->
       </q-item>
       <div class="parent" v-for="item in lists" :key="item.id">
         <div  @click="getChildList(item.id,item.name)">
@@ -52,6 +55,16 @@ export default {
     }
   },
   methods: {
+    remove (name) {
+      console.log(name)
+      let index = this.names.findIndex(v => v === name)
+      console.log(index)
+      this.ids.splice(index, 1)
+      this.jobs.splice(index, 1)
+    },
+    log (name, data) {
+      console.log(name, JSON.stringify(data))
+    },
     async getList () {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
       this.lists = resp.data.resultMsg
@@ -86,18 +99,21 @@ export default {
     },
     toSave () {
       let info = { 'names': this.names, 'jobs': this.jobs, 'ids': this.ids }
-      localStorage.setItem('jobs', JSON.stringify(info))
+      let form = JSON.parse(localStorage.getItem('form'))
+      form.tags = this.names
+      form.jobs = this.jobs
+      form.jobObg = info
+      localStorage.setItem('form', JSON.stringify(form))
       this.$router.back()
     }
   },
   mounted () {
     this.getList()
-    let jobObg = JSON.parse(localStorage.getItem('jobObg'))
-    console.log(jobObg)
-    if (!_.isNull(jobObg)) {
-      this.ids = jobObg.ids
-      this.names = jobObg.names
-      this.jobs = jobObg.jobs
+    let jobObg = JSON.parse(localStorage.getItem('form'))
+    if (jobObg.jobObg.ids) {
+      this.ids = jobObg.jobObg.ids
+      this.names = jobObg.jobObg.names
+      this.jobs = jobObg.jobObg.jobs
       localStorage.removeItem('jobs')
     }
   }
