@@ -75,7 +75,7 @@ export default {
       }
     },
     choose (id, name) {
-      let job = { 'description': name, 'actionId': id }
+      let job = { 'description': '', 'actionId': id }
       if (this.ids.indexOf(id) !== -1) {
         this.jobs.splice(this.jobs.findIndex(v => v === job), 1)
         this.names.splice(this.names.findIndex(v => v === name), 1)

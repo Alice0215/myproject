@@ -28,7 +28,7 @@
         <q-item-side right icon="keyboard_arrow_right" class="color-gray"></q-item-side>
       </q-item>
       <q-item-separator class="mt-0 mb-0"/>
-      <q-item>
+      <q-item v-if="form.tags.length>0">
         <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
       </q-item>
     </q-list>
@@ -46,7 +46,7 @@
         <div class="w-100 h-100 ml-10">
           <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
-        <q-btn class="full-width btn" @click="save()">{{title}}</q-btn>
+        <q-btn class="full-width btn" @click="operate()">{{title}}</q-btn>
       </div>
     </q-list>
   </q-layout>
@@ -102,7 +102,30 @@ export default {
       if (resp) {
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
-        this.form.jobs = resp.data.resultMsg.jobs
+        let jobs = resp.data.resultMsg.jobs
+        for (var key in jobs) {
+          let editData = {}
+          if (jobs[key]['id']) {
+            editData.jobId = jobs[key]['id']
+          }
+          if (jobs[key]['action']) {
+            editData.actionId = parseInt(jobs[key]['action']['id'])
+            this.form.tags.push(jobs[key]['action']['name'])
+          }
+          if (jobs[key]['description']) {
+            editData.description = jobs[key]['description']
+          }
+          if (editData.actionId) {
+            this.form.jobs.push(editData)
+          }
+        }
+      }
+    },
+    operate () {
+      if (this.jobGroupId !== 'null') {
+        this.edit()
+      } else {
+        this.save()
       }
     },
     save () {
@@ -112,35 +135,33 @@ export default {
         'jobs': this.form.jobs,
         'pictures': this.form.pictures
       }
-      let resp = request('jobGroup/create', 'post', data, 'json', true)
-      if (resp) {
-        this.$q.dialog({
-          title: '提示',
-          message: '添加成功'
-        })
-      }
+      request('jobGroup/create', 'post', data, 'json', true).then(resp => {
+        if (resp.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '添加成功'
+          })
+        }
+      })
     },
     edit () {
       let data = {
-        'codeId': this.codeId,
+        'jobGroupId': this.jobGroupId,
         'description': this.form.description,
         'jobs': this.form.jobs,
         'pictures': this.form.pictures
       }
-      let resp = request('jobGroup/edit', 'post', data, 'json', true)
-      if (resp) {
-        this.$q.dialog({
-          title: '提示',
-          message: '修改成功'
-        })
-      }
+      request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
+        if (resp.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '修改成功'
+          })
+        }
+      })
     },
     saveLocalData () {
       localStorage.setItem('form', JSON.stringify(this.form))
-    },
-    openMap () {
-      this.saveLocalData()
-      this.$router.push('/project/map?from=qrCode')
     },
     chooseJob () {
       this.$router.push('jobs')
@@ -208,7 +229,7 @@ export default {
   }
 
   .remark-field {
-    padding: 2px;
+    padding: 8px 10px;
     width: 96%;
     left: 2%;
     font-size: 14px;
