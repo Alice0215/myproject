@@ -63,7 +63,8 @@ export default {
         description: '',
         pictures: [],
         jobs: [],
-        tags: []
+        tags: [],
+        jobObg: []
       },
       codeId: '',
       qrtype: '',
@@ -103,6 +104,7 @@ export default {
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
+        // this.form.jobObg = jobs
         for (var key in jobs) {
           let editData = {}
           if (jobs[key]['id']) {
@@ -164,6 +166,7 @@ export default {
       localStorage.setItem('form', JSON.stringify(this.form))
     },
     chooseJob () {
+      localStorage.setItem('jobObg', JSON.stringify(this.form.jobObg))
       this.$router.push('jobs')
     }
   },
@@ -194,6 +197,7 @@ export default {
     if (!_.isNull(jobs)) {
       this.form.tags = jobs.names
       this.form.jobs = jobs.jobs
+      this.form.jobObg = jobs
       localStorage.removeItem('jobs')
     }
     if (!_.isNull(form)) {

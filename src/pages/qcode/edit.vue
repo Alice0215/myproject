@@ -297,8 +297,12 @@ export default {
       this.$q.loading.hide()
       if (resp) {
         this.form = resp.data.resultMsg
-        this.projectName = this.form.project.projectName
-        this.form.formattedAddress = this.form.location.formattedAddress
+        if (this.form.project) {
+          this.projectName = this.form.project.projectName
+        }
+        if (this.form.location) {
+          this.form.formattedAddress = this.form.location.formattedAddress
+        }
       }
       console.log('load')
       console.log(this.form)

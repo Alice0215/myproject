@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class="header mb-0">
       <q-toolbar class="fix">
-        <router-link :to="{ path: urlName }" class="top-nav-left">关闭</router-link>
+        <a @click="back" class="top-nav-left">关闭</a>
         <q-toolbar-title class="header-title">
           选择项目
         </q-toolbar-title>
@@ -43,6 +43,9 @@
       }
     },
     methods: {
+      back () {
+        this.$router.back()
+      },
       toDetail (item) {
         console.log(item)
         localStorage.setItem('choose-project', JSON.stringify(item))
@@ -50,8 +53,6 @@
         // return 'qcode/List?projectId' + projectId
       },
       async load (index, done) {
-        // todo 有入口了需要清楚这些
-        localStorage.setItem('qrCodeId', '250')
         let that = this
         setTimeout(() => {
           if (!this.hasLoadAll) {

@@ -64,6 +64,14 @@
         }
         this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
       },
+      cancelScan () {
+        if (window.QRScanner) {
+          window.QRScanner.cancelScan(statu => {
+            console.log(statu)
+          })
+          window.QRScanner.hide()
+        }
+      },
       openScan () {
         if (window.QRScanner) {
           window.QRScanner.prepare((err, status) => {
@@ -78,10 +86,7 @@
                 } else {
                   console.log(content)
                   this.handleScanResult(content)
-                  window.QRScanner.cancelScan(statu => {
-                    console.log(statu)
-                  })
-                  window.QRScanner.hide()
+                  this.cancelScan()
                 }
               })
               window.QRScanner.show(sta => {
@@ -99,6 +104,10 @@
     },
     mounted () {
       this.openScan()
+    },
+    destroyed () {
+      this.cancelScan()
+      console.log('关闭扫描')
     }
   }
 </script>

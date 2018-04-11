@@ -14,7 +14,7 @@
       <q-item class="full-width bg-primary jobs-title" v-if="names.length>0">
         <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
       </q-item>
-       <q-item class="bg-primary jobs-tags">
+       <q-item class="bg-primary jobs-tags" v-if="names.length>0">
         <q-chips-input v-model="names" chips-bg-color="white" color="amber" chips-color="lightGray"/>
       </q-item>
       <div class="parent" v-for="item in lists" :key="item.id">
@@ -51,9 +51,6 @@ export default {
       jobs: []
     }
   },
-  mounted () {
-    this.getList()
-  },
   methods: {
     async getList () {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
@@ -88,10 +85,20 @@ export default {
       console.log(this.jobs)
     },
     toSave () {
-      let info = { 'names': this.names, 'jobs': this.jobs }
-      console.log(info)
+      let info = { 'names': this.names, 'jobs': this.jobs, 'ids': this.ids }
       localStorage.setItem('jobs', JSON.stringify(info))
       this.$router.back()
+    }
+  },
+  mounted () {
+    this.getList()
+    let jobObg = JSON.parse(localStorage.getItem('jobObg'))
+    console.log(jobObg)
+    if (!_.isNull(jobObg)) {
+      this.ids = jobObg.ids
+      this.names = jobObg.names
+      this.jobs = jobObg.jobs
+      localStorage.removeItem('jobs')
     }
   }
 }
