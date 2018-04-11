@@ -1,59 +1,104 @@
 <template>
 
   <div class="main" id="allUser">
-    <q-toolbar class="header">
-    <q-toolbar class="fix">
-       <router-link  :to="{ path: urlname }" class="top-nav-left"><q-item-side left  icon="keyboard arrow left"/>返回</router-link>
-        <q-toolbar-title class="header-title">类型 </q-toolbar-title>
-        <router-link  :to="{ path: urlname}" class="top-nav-left"><q-item-side right/>保存</router-link>
-    </q-toolbar>
+     <q-toolbar class='header'>
+        <q-toolbar class='fix'>
+             <a @click="$router.back(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <q-toolbar-title class='header-title'>
+              类型
+            </q-toolbar-title>
+            <a class="top-nav-right" @click="toSave">保存</a>
+       </q-toolbar>
     </q-toolbar>
     <div class="full-width">
-        <div  v-for="item in lists"
-          :key="item.id"  @click="addUser()">
-         <q-item  v-ripple.mat class="full-width underline user-item">
-            <q-item-main :label="item.name" />
-            <q-item-side right icon="done" v-show="true" v-if="ids.indexOf(item.id) !== -1"/>
+      <q-item class="full-width bg-primary jobs-title" v-if="names.length>0">
+        <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
+      </q-item>
+       <q-item class="bg-primary jobs-tags" v-if="names.length>0">
+        <q-chips-input v-model="names" chips-bg-color="white" color="amber" chips-color="lightGray"/>
+      </q-item>
+      <div class="parent" v-for="item in lists" :key="item.id">
+        <div  @click="getChildList(item.id,item.name)">
+        <q-item  v-ripple.mat class="full-width underline user-item">
+          <q-item-main :label="item.name" />
+          <q-item-side right icon="done" class="active" v-if="ids.indexOf(item.id) !== -1"/>
+          <q-item-side right icon="arrow drop down" v-if="!hasChildren[item.id]"/>
         </q-item>
         </div>
+         <div class="child bg-primary" v-if="parentId===item.id" v-for="vo in children" :key="vo.id" >
+          <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(vo.id,vo.name)">
+            <q-item-main :label="vo.name" />
+            <q-item-side right icon="done" class="active" v-if="ids.indexOf(vo.id) !== -1" />
+          </q-item>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { request } from '../../common'
-import eventBus from '../../eventBus'
 export default {
   data () {
     return {
-      urlname: '',
       lists: [],
-      isShow: false,
-      ids: []
+      parentId: '',
+      children: [],
+      hasChildren: [],
+      isOpen: false,
+      ids: [],
+      names: [],
+      jobs: []
     }
-  },
-  mounted () {
-    this.getList()
   },
   methods: {
     async getList () {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
       this.lists = resp.data.resultMsg
     },
-    getChildList (parentId) {
-      let resp = request('data/jobAction/parent?parentId=' + parentId, 'get')
-      this.lists = resp.data.resultMsg
-    },
-    addUser (fullname, userId) {
-      let userInfo = { 'fullname': fullname, 'userId': userId }
-      if (this.ids.indexOf(userId) !== -1) {
-        this.userParams.splice(this.userParams.findIndex(v => v === userInfo), 1)
-        this.ids.splice(this.ids.findIndex(v => v === userId), 1)
+    async getChildList (parentId, parentName) {
+      this.parentId = parentId
+      if (!this.isOpen) {
+        let resp = await request('data/jobAction/parent?parentId=' + parentId, 'get')
+        this.children = resp.data.resultMsg
+        this.isOpen = true
+        if (this.children.length === 0 || !this.children.length) {
+          this.hasChildren[parentId] = true
+          this.choose(parentId, parentName)
+        }
       } else {
-        this.ids.push(userId)
-        this.userParams = [...this.userParams, userInfo]
-        eventBus.$emit('users', userInfo)
+        this.isOpen = false
+        this.children = []
       }
+    },
+    choose (id, name) {
+      let job = { 'description': '', 'actionId': id }
+      if (this.ids.indexOf(id) !== -1) {
+        this.jobs.splice(this.jobs.findIndex(v => v === job), 1)
+        this.names.splice(this.names.findIndex(v => v === name), 1)
+        this.ids.splice(this.ids.findIndex(v => v === id), 1)
+      } else {
+        this.ids.push(id)
+        this.names.push(name)
+        this.jobs = [...this.jobs, job]
+      }
+      console.log(this.jobs)
+    },
+    toSave () {
+      let info = { 'names': this.names, 'jobs': this.jobs, 'ids': this.ids }
+      localStorage.setItem('jobs', JSON.stringify(info))
+      this.$router.back()
+    }
+  },
+  mounted () {
+    this.getList()
+    let jobObg = JSON.parse(localStorage.getItem('jobObg'))
+    console.log(jobObg)
+    if (!_.isNull(jobObg)) {
+      this.ids = jobObg.ids
+      this.names = jobObg.names
+      this.jobs = jobObg.jobs
+      localStorage.removeItem('jobs')
     }
   }
 }
@@ -62,6 +107,13 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #allUser {
+  .jobs-title {
+    padding-top: 3px !important;
+    padding-bottom: 1px !important;
+  }
+  .jobs-tags {
+    padding-top: 0px;
+  }
   .user-item:hover {
     background: none;
   }
@@ -77,6 +129,9 @@ export default {
   }
   .user {
     min-width: auto;
+  }
+  .child {
+    padding-left: 26px;
   }
 }
 </style>

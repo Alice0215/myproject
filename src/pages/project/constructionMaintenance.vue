@@ -1,11 +1,20 @@
 <template>
   <q-layout id="maintenace-page" class="fit">
+   <q-toolbar class='header'>
+        <q-toolbar class='fix'>
+             <a @click="$router.back(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <q-toolbar-title class='header-title'>
+              施工养护
+            </q-toolbar-title>
+            <a class="top-nav-right">历史记录</a>
+       </q-toolbar>
+    </q-toolbar>
     <q-list>
       <q-item link class="full-width bg-white">
         <q-item-side>
           <q-item-tile class="color-black mb-8 mt-10">{{QrInfo.alias}}</q-item-tile>
-          <q-item-tile icon="place" class="mb-8" @click.native="openMap">
-            <label class="color-black font-12">获取当前位置</label>
+          <q-item-tile icon="place" class="mb-8">
+            <label class="color-black font-12" v-if="QrInfo.location">{{QrInfo.location.formattedAddress}}</label>
           </q-item-tile>
         </q-item-side>
         <q-item-main>
@@ -19,8 +28,8 @@
         <q-item-side right icon="keyboard_arrow_right" class="color-gray"></q-item-side>
       </q-item>
       <q-item-separator class="mt-0 mb-0"/>
-      <q-item>
-        <q-chips-input v-model="tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
+      <q-item v-if="form.tags.length>0">
+        <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
       </q-item>
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
@@ -37,6 +46,7 @@
         <div class="w-100 h-100 ml-10">
           <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
+        <q-btn class="full-width btn" @click="operate()">{{title}}</q-btn>
       </div>
     </q-list>
   </q-layout>
@@ -50,14 +60,17 @@ export default {
   data () {
     return {
       form: {
-        codeId: 240,
         description: '',
         pictures: [],
-        jobs: []
+        jobs: [],
+        tags: [],
+        jobObg: []
       },
+      codeId: '',
       qrtype: '',
-      tags: ['裁植修建', '苗木假植', '灌水'],
-      QrInfo: {}
+      jobGroupId: '',
+      QrInfo: {},
+      title: '添加'
     }
   },
   methods: {
@@ -79,27 +92,87 @@ export default {
     },
     async getQrInfo () {
       this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
+      let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
       if (resp) {
         this.QrInfo = resp.data.resultMsg
       }
     },
-    save () {
-      let resp = request('jobGroup/create', 'post', this.form, 'json', true)
+    async getDetail () {
+      this.areaBranches = []
+      let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
-        console.log(resp)
-        // TODO 保存成功的提示
+        this.form.description = resp.data.resultMsg.description
+        this.form.pictures = resp.data.resultMsg.pictures
+        let jobs = resp.data.resultMsg.jobs
+        // this.form.jobObg = jobs
+        for (var key in jobs) {
+          let editData = {}
+          if (jobs[key]['id']) {
+            editData.jobId = jobs[key]['id']
+          }
+          if (jobs[key]['action']) {
+            editData.actionId = parseInt(jobs[key]['action']['id'])
+            this.form.tags.push(jobs[key]['action']['name'])
+          }
+          if (jobs[key]['description']) {
+            editData.description = jobs[key]['description']
+          }
+          if (editData.actionId) {
+            this.form.jobs.push(editData)
+          }
+        }
       }
     },
-    openMap () {
-      localStorage.setItem('oldInfo', JSON.stringify(this.form))
-      this.$router.push('/project/map?from=qrCode')
+    operate () {
+      if (this.jobGroupId !== 'null') {
+        this.edit()
+      } else {
+        this.save()
+      }
+    },
+    save () {
+      let data = {
+        'codeId': this.codeId,
+        'description': this.form.description,
+        'jobs': this.form.jobs,
+        'pictures': this.form.pictures
+      }
+      request('jobGroup/create', 'post', data, 'json', true).then(resp => {
+        if (resp.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '添加成功'
+          })
+        }
+      })
+    },
+    edit () {
+      let data = {
+        'jobGroupId': this.jobGroupId,
+        'description': this.form.description,
+        'jobs': this.form.jobs,
+        'pictures': this.form.pictures
+      }
+      request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
+        if (resp.data.resultCode === 'SUCCESS') {
+          this.$q.dialog({
+            title: '提示',
+            message: '修改成功'
+          })
+        }
+      })
+    },
+    saveLocalData () {
+      localStorage.setItem('form', JSON.stringify(this.form))
     },
     chooseJob () {
+      localStorage.setItem('jobObg', JSON.stringify(this.form.jobObg))
       this.$router.push('jobs')
     }
   },
   mounted () {
+    this.codeId = this.$route.query.codeId
+    this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
@@ -115,6 +188,22 @@ export default {
       })
     })
     this.getQrInfo()
+    if (this.jobGroupId !== 'null') {
+      this.getDetail()
+      this.title = '修改'
+    }
+    let jobs = JSON.parse(localStorage.getItem('jobs'))
+    let form = JSON.parse(localStorage.getItem('form'))
+    if (!_.isNull(jobs)) {
+      this.form.tags = jobs.names
+      this.form.jobs = jobs.jobs
+      this.form.jobObg = jobs
+      localStorage.removeItem('jobs')
+    }
+    if (!_.isNull(form)) {
+      this.form = form
+      localStorage.removeItem('form')
+    }
   },
   beforeDestroy () {
     eventBus.$off('upload-success')
@@ -124,6 +213,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../assets/css/common";
 #maintenace-page {
   width: 100%;
   height: 100%;
@@ -143,7 +233,7 @@ export default {
   }
 
   .remark-field {
-    padding: 2px;
+    padding: 8px 10px;
     width: 96%;
     left: 2%;
     font-size: 14px;
