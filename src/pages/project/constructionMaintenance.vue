@@ -1,11 +1,20 @@
 <template>
   <q-layout id="maintenace-page" class="fit">
+   <q-toolbar class='header'>
+        <q-toolbar class='fix'>
+             <a @click="$router.back(-1)"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <q-toolbar-title class='header-title'>
+              施工养护
+            </q-toolbar-title>
+            <a class="top-nav-right">历史记录</a>
+       </q-toolbar>
+    </q-toolbar>
     <q-list>
       <q-item link class="full-width bg-white">
         <q-item-side>
           <q-item-tile class="color-black mb-8 mt-10">{{QrInfo.alias}}</q-item-tile>
-          <q-item-tile icon="place" class="mb-8" @click.native="openMap">
-            <label class="color-black font-12">获取当前位置</label>
+          <q-item-tile icon="place" class="mb-8">
+            <label class="color-black font-12" v-if="QrInfo.location">{{QrInfo.location.formattedAddress}}</label>
           </q-item-tile>
         </q-item-side>
         <q-item-main>
@@ -20,7 +29,7 @@
       </q-item>
       <q-item-separator class="mt-0 mb-0"/>
       <q-item>
-        <q-chips-input v-model="tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
+        <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
       </q-item>
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
@@ -37,7 +46,7 @@
         <div class="w-100 h-100 ml-10">
           <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
-        <q-btn class="full-width btn" @click="save()">保存</q-btn>
+        <q-btn class="full-width btn" @click="save()">{{title}}</q-btn>
       </div>
     </q-list>
   </q-layout>
@@ -51,16 +60,16 @@ export default {
   data () {
     return {
       form: {
-        codeId: 240,
         description: '',
         pictures: [],
-        location: '',
-        jobGroupId: '',
-        jobs: []
+        jobs: [],
+        tags: []
       },
+      codeId: '',
       qrtype: '',
-      tags: ['裁植修建', '苗木假植', '灌水'],
-      QrInfo: {}
+      jobGroupId: '',
+      QrInfo: {},
+      title: '添加'
     }
   },
   methods: {
@@ -82,7 +91,7 @@ export default {
     },
     async getQrInfo () {
       this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
+      let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
       if (resp) {
         this.QrInfo = resp.data.resultMsg
       }
@@ -91,21 +100,46 @@ export default {
       this.areaBranches = []
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
-        this.description = resp.data.resultMsg.description
-        this.location = resp.data.resultMsg.location
-        this.pictures = resp.data.resultMsg.pictures
-        this.jobs = resp.data.resultMsg.jobs
+        this.form.description = resp.data.resultMsg.description
+        this.form.pictures = resp.data.resultMsg.pictures
+        this.form.jobs = resp.data.resultMsg.jobs
       }
     },
     save () {
-      let resp = request('jobGroup/create', 'post', this.form, 'json', true)
+      let data = {
+        'codeId': this.codeId,
+        'description': this.form.description,
+        'jobs': this.form.jobs,
+        'pictures': this.form.pictures
+      }
+      let resp = request('jobGroup/create', 'post', data, 'json', true)
       if (resp) {
-        console.log(resp)
-        // TODO 保存成功的提示
+        this.$q.dialog({
+          title: '提示',
+          message: '添加成功'
+        })
       }
     },
+    edit () {
+      let data = {
+        'codeId': this.codeId,
+        'description': this.form.description,
+        'jobs': this.form.jobs,
+        'pictures': this.form.pictures
+      }
+      let resp = request('jobGroup/edit', 'post', data, 'json', true)
+      if (resp) {
+        this.$q.dialog({
+          title: '提示',
+          message: '修改成功'
+        })
+      }
+    },
+    saveLocalData () {
+      localStorage.setItem('form', JSON.stringify(this.form))
+    },
     openMap () {
-      localStorage.setItem('oldInfo', JSON.stringify(this.form))
+      this.saveLocalData()
       this.$router.push('/project/map?from=qrCode')
     },
     chooseJob () {
@@ -113,6 +147,8 @@ export default {
     }
   },
   mounted () {
+    this.codeId = this.$route.query.codeId
+    this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
@@ -128,6 +164,21 @@ export default {
       })
     })
     this.getQrInfo()
+    if (this.jobGroupId !== 'null') {
+      this.getDetail()
+      this.title = '修改'
+    }
+    let jobs = JSON.parse(localStorage.getItem('jobs'))
+    let form = JSON.parse(localStorage.getItem('form'))
+    if (!_.isNull(jobs)) {
+      this.form.tags = jobs.names
+      this.form.jobs = jobs.jobs
+      localStorage.removeItem('jobs')
+    }
+    if (!_.isNull(form)) {
+      this.form = form
+      localStorage.removeItem('form')
+    }
   },
   beforeDestroy () {
     eventBus.$off('upload-success')
@@ -137,6 +188,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../assets/css/common";
 #maintenace-page {
   width: 100%;
   height: 100%;
