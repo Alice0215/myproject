@@ -37,6 +37,7 @@
         <div class="w-100 h-100 ml-10">
           <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
+        <q-btn class="full-width btn" @click="save()">保存</q-btn>
       </div>
     </q-list>
   </q-layout>
@@ -53,6 +54,8 @@ export default {
         codeId: 240,
         description: '',
         pictures: [],
+        location: '',
+        jobGroupId: '',
         jobs: []
       },
       qrtype: '',
@@ -82,6 +85,16 @@ export default {
       let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
       if (resp) {
         this.QrInfo = resp.data.resultMsg
+      }
+    },
+    async getDetail () {
+      this.areaBranches = []
+      let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
+      if (resp) {
+        this.description = resp.data.resultMsg.description
+        this.location = resp.data.resultMsg.location
+        this.pictures = resp.data.resultMsg.pictures
+        this.jobs = resp.data.resultMsg.jobs
       }
     },
     save () {
