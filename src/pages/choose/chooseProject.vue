@@ -44,12 +44,12 @@
     },
     methods: {
       back () {
-        this.$router.back()
+        this.$router.goBack()
       },
       toDetail (item) {
         console.log(item)
         localStorage.setItem('choose-project', JSON.stringify(item))
-        this.$router.back()
+        this.$router.goBack()
         // return 'qcode/List?projectId' + projectId
       },
       async load (index, done) {

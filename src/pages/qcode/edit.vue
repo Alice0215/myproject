@@ -260,7 +260,7 @@
         removeLocalStory('qrcode-image')
         removeLocalStory('qrcode-form')
         removeLocalStory('qrcode-single-property')
-        this.$router.go(-1)
+        this.$router.goBack()
       },
       chooseProject () {
         this.setSinglePropertyToForm()

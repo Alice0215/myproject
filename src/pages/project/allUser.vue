@@ -3,7 +3,7 @@
   <div class="main" id="allUser">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <a @click="$router.back(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
+       <a @click="$router.goBack()"> <q-item-side left  icon="keyboard arrow left"/></a>
        <!--<router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>-->
         <q-toolbar-title class="header-title">
         {{title}}

@@ -2,7 +2,7 @@
   <q-layout id="qcode-page-add">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="$router.back(-1)">
+        <a @click="$router.goBack()">
           <q-item-side left icon='keyboard arrow left' class='reback'/></a>
         <q-toolbar-title class='header-title'>
           添加植物
@@ -143,7 +143,7 @@ export default {
       removeLocalStory('user_location')
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-form')
-      this.$router.back()
+      this.$router.goBack()
     },
     openMap () {
       this.saveLocalData()

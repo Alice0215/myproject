@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import eventBus from '../eventBus'
 
 import routes from './routes'
 
@@ -20,7 +21,15 @@ const Router = new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
   routes
 })
+
+Router.goBack = function () {
+  this.isBack = true
+  console.log(this.isBack)
+  window.history.go(-1)
+}
+
 Router.beforeEach((to, from, next) => {
+  eventBus.$emit('router-back')
   const u = localStorage.getItem('user')
   if (u) {
     if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/partyregister') {

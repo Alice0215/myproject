@@ -3,7 +3,7 @@
   <div class="main" id="userList">
     <q-toolbar class="header">
     <q-toolbar class="fix">
-        <a @click="$router.go(-1)" class="top-nav-left">关闭</a>
+        <a @click="$router.goBack()" class="top-nav-left">关闭</a>
         <q-toolbar-title class="header-title">
         成员列表
         </q-toolbar-title>

@@ -34,7 +34,7 @@
           })
           window.QRScanner.hide()
         }
-        this.$router.back()
+        this.$router.goBack()
       },
       async handleScanResult (url) {
         this.borderShow = false
