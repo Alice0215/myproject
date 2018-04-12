@@ -104,14 +104,20 @@ export default {
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
-        // this.form.jobObg = jobs
+        let names = []
+        let jobObg = []
+        let ids = []
         for (var key in jobs) {
           let editData = {}
+
           if (jobs[key]['id']) {
             editData.jobId = jobs[key]['id']
           }
           if (jobs[key]['action']) {
             editData.actionId = parseInt(jobs[key]['action']['id'])
+            names.push(jobs[key]['action']['name'])
+            ids.push(jobs[key]['action']['id'])
+            jobObg = [...jobObg, { 'description': '', 'actionId': jobs[key]['action']['id'] }]
             this.form.tags.push(jobs[key]['action']['name'])
           }
           if (jobs[key]['description']) {
@@ -121,6 +127,8 @@ export default {
             this.form.jobs.push(editData)
           }
         }
+        this.form.jobObg = { 'names': names, 'jobs': jobObg, 'ids': ids }
+        console.log(this.form.jobObg)
       }
     },
     operate () {
@@ -166,7 +174,7 @@ export default {
       localStorage.setItem('form', JSON.stringify(this.form))
     },
     chooseJob () {
-      localStorage.setItem('jobObg', JSON.stringify(this.form.jobObg))
+      this.saveLocalData()
       this.$router.push('jobs')
     }
   },
@@ -188,21 +196,16 @@ export default {
       })
     })
     this.getQrInfo()
+
     if (this.jobGroupId !== 'null') {
-      this.getDetail()
       this.title = '修改'
     }
-    let jobs = JSON.parse(localStorage.getItem('jobs'))
     let form = JSON.parse(localStorage.getItem('form'))
-    if (!_.isNull(jobs)) {
-      this.form.tags = jobs.names
-      this.form.jobs = jobs.jobs
-      this.form.jobObg = jobs
-      localStorage.removeItem('jobs')
-    }
     if (!_.isNull(form)) {
       this.form = form
       localStorage.removeItem('form')
+    } else if (this.jobGroupId !== 'null') {
+      this.getDetail()
     }
   },
   beforeDestroy () {
