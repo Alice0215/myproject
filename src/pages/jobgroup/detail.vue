@@ -24,7 +24,7 @@
         <p>现场照片：</p>
         <p class="pic-field" >
           <span v-for="item in info.pictures" v-bind:key="item.id">
-            <img :src="picUrl+item.filePath"/>
+            <img :src="picUrl+item.filePath" />
           </span>
         </p>
       </div>
