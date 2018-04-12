@@ -276,7 +276,7 @@ export default {
   }
   .qfield {
     width: 100%;
-    height: 290px;
+    height: 350px;
     padding: 15px;
     background-color: #f5f5f5;
     .item {
@@ -314,7 +314,8 @@ export default {
   .btn-field {
     padding: 15px;
     width: 100%;
-    padding-top: 0px;
+    position: fixed;
+    bottom: 50px;
   }
   .type .q-if-control {
     display: none !important;
