@@ -16,9 +16,11 @@
         <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
         <p>操作员：<span v-if="info.user">{{info.user.username}}</span> <q-item-side icon="account circle" right class="float-right"/></p>
         <p>时间：<span v-if="info.createTime">{{info.createTime}}</span></p>
-        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
+        <p class="address underline"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
         <p>苗木栽培：</p>
-        <p><q-chips-input v-model="tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/></p>
+        <p v-if="info.jobs">
+          <q-chips-input v-model="tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
+        </p>
         <p>备注信息：</p>
         <p>{{info.description}}</p>
         <p>现场照片：</p>
@@ -41,7 +43,7 @@ export default {
       jobGroupId: '',
       info: '',
       picUrl: '',
-      tags: ['栽植修建', '栽植修建']
+      tags: []
 
     }
   },
@@ -57,6 +59,10 @@ export default {
         this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
+          for (let key in this.info.jobs) {
+            this.tags.push(this.info.jobs[key]['action']['name'])
+          }
+          this.tags.push()
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

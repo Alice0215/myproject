@@ -2,7 +2,7 @@
   <div id="detail">
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="back"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+             <a @click="back" class='back-a'><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
               {{code.alias}}
             </q-toolbar-title>
