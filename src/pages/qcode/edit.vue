@@ -43,7 +43,7 @@
             :options="areaBranches"
           />
           <q-select
-            v-model="form.category"
+            v-model="category"
             placeholder='苗木分类选项' class='login-input mb-2'
             :options="plantCategoryArray"
           />
@@ -138,6 +138,7 @@
 
 <script>
   import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
+  import {server} from '../../const'
   import { filter } from 'quasar'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
@@ -147,10 +148,12 @@
     data () {
       return {
         typeKey: null,
+        category: '',
+        areaId: '',
         showType: false,
         qrCodeId: '',
         form: {singles: []},
-        projectId: 1,
+        projectId: '',
         amount: '',
         contactNumber: '',
         contactPerson: '',
@@ -170,14 +173,14 @@
         projectName: '',
         type: '',
         areaBranches: [],
-        showAlert: false
+        showAlert: false,
+        topIndex: 0
       }
     },
     methods: {
       async getAreaBranch () {
         this.areaBranches = []
-        // todo projectID需要改变
-        let resp = await request('qrcode/list?projectId=1&type=' + this.type, 'get', null, null, true)
+        let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type, 'get', null, null, true)
         if (resp) {
           let branches = resp.data.resultMsg
           _.forEach(branches, v => {
@@ -205,6 +208,15 @@
           }
         })
       },
+      setFormToSingleProperty () {
+        _.forEach(this.form, (v, k) => {
+          _.forEach(this.singlePlantProperties, (plant, index) => {
+            if (plant.key === k) {
+              plant.value = v
+            }
+          })
+        })
+      },
       async save () {
         let form = {}
         let url = ''
@@ -222,7 +234,7 @@
         form.qrCodeForm = qrCodeForm
         if (this.type === plantType.SINGLE) {
           url = 'qrcode/single/save'
-          form.category = this.form.category
+          form.category = this.category
           form.xiongJing = this.form.xiongJing
           form.diJing = this.form.diJing
           form.gaoDu = this.form.gaoDu
@@ -240,8 +252,10 @@
           form.acreage = this.form.acreage
         } else if (this.type === plantType.DEVICE) {
           url = 'qrcode/equipment/save'
+          form = qrCodeForm
         } else if (this.type === plantType.OTHER) {
           url = 'qrcode/other/save'
+          form = qrCodeForm
         }
         console.log(form)
         let resp = await request(url, 'put', form, 'json', true)
@@ -250,7 +264,6 @@
           this.showAlert = true
           setTimeout(() => {
             this.showAlert = false
-            // TODO 保存成功的跳转
             this.goBack()
           }, 1000)
         }
@@ -296,14 +309,44 @@
         let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
         this.$q.loading.hide()
         if (resp) {
-          this.form = resp.data.resultMsg
-          if (this.form.project) {
-            this.projectName = this.form.project.projectName
+          let form = {}
+           form = resp.data.resultMsg
+          if (form.project) {
+            this.projectName = form.project.projectName
+            this.projectId = form.project.id.toString()
+            form.project = form.project
           }
-          if (this.form.location) {
-            this.form.formattedAddress = this.form.location.formattedAddress
+          if (form.code) {
+            if (form.code.batch) {
+              form.areaId = form.code.batch.id.toString()
+            }
+            form.alias = form.code.alias
+            if (form.code.project) {
+              this.projectName = form.code.project.projectName
+              this.projectId = form.code.project.id.toString()
+              form.project = form.code.project
+            }
           }
+          if (form.category) {
+            this.category = form.category.id.toString()
+          }
+          if (form.location) {
+            form.formattedAddress = form.location.formattedAddress
+          }
+          let imageArray = []
+          if (form.pictures) {
+            _.forEach(form.pictures, v => {
+              let previewUrl = server.THUMBNAIL_API + v.filePath
+              imageArray.push({
+                'previewUrl': previewUrl,
+                'contentUrl': v.filePath
+              })
+            })
+            this.imageArray = imageArray
+          }
+          this.form = form
         }
+        this.setFormToSingleProperty()
         console.log('load')
         console.log(this.form)
       },
@@ -323,6 +366,7 @@
         deleteFiles(img.contentUrl, index)
       },
       topButtonsClicked (index) {
+        localStorage.setItem('top-index', index)
         _.forEach(this.buttonsColor, (v, k) => {
           if (k === index) {
             this.$set(this.buttonsColor, k, 'green')
@@ -400,7 +444,7 @@
           this.plantCategoryArray = resp.data.resultMsg
           _.forEach(this.plantCategoryArray, (v, key) => {
             v.label = v.name
-            v.value = v.id
+            v.value = v.id.toString()
           })
         }
       }
@@ -421,14 +465,21 @@
       })
       this.qrCodeId = this.$route.query.id
       this.typeKey = this.$route.query.typeKey
+
       if (this.typeKey === 'null') {
         this.showType = true
       }
       let index = 0
+      let topIndex = localStorage.getItem('top-index')
+      if (_.isNull(topIndex)) {
+        let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
+        index = _.indexOf(keyArray, this.typeKey) > -1 ? _.indexOf(keyArray, this.typeKey) : 0
+      } else {
+        index = parseInt(topIndex)
+        console.log(topIndex)
+      }
       if (!this.showType) {
         await this.load()
-        let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
-        index = _.indexOf(keyArray, this.typeKey)
       }
       let project = JSON.parse(localStorage.getItem('choose-project'))
       let form = JSON.parse(localStorage.getItem('qrcode-form'))
@@ -448,6 +499,7 @@
       }
       if (!_.isNull(project)) {
         this.form.project = project
+        this.projectId = project.id
         this.projectName = project.projectName
       }
       if (!_.isNull(singleProperty)) {
@@ -461,6 +513,7 @@
         this.load()
       }
       this.$nextTick(() => {
+        console.log(index)
         this.topButtonsClicked(index)
       })
       this.getPlantCategory()
