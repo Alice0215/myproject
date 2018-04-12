@@ -81,6 +81,7 @@ export default {
   created () {
     this.formData.projectId = this.$route.query.id
     let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+    let userLocation = JSON.parse(localStorage.getItem('user_location'))
     if (!_.isNull(oldInfo)) {
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
@@ -123,9 +124,9 @@ export default {
           }
         }
       }
-    } else if (localStorage.getItem('user_location') !== null) {
-      this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
-      if (this.formData.geoInfo !== null && this.formData.geoInfo.formattedAddress) {
+    } else if (!_.isNull(userLocation)) {
+      this.formData.geoInfo = userLocation
+      if (!_.isNull(this.formData.geoInfo)) {
         this.formData.address = this.formData.geoInfo.formattedAddress
         this.formData.locationJson = JSON.stringify(this.formData.geoInfo)
       }
@@ -158,9 +159,6 @@ export default {
       request('project/edit', 'put', data, 'json', true)
         .then(response => {
           if (response.data.resultCode === 'SUCCESS') {
-            if (localStorage.getItem('oldInfo')) {
-              localStorage.removeItem('oldInfo')
-            }
             this.$q.dialog({
               title: '提示',
               message: '项目修改成功！'

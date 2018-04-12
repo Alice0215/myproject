@@ -51,9 +51,11 @@ export default {
           return
         }
         if (this.$route.query.projectId) {
-          this.$router.push('/project/edit?id=' + this.$route.query.projectId)
+          this.$router.goBack()
+          // this.$router.push('/project/edit?id=' + this.$route.query.projectId)
         } else {
-          this.$router.push('/project/add')
+          this.$router.goBack()
+          // this.$router.push('/project/add')
         }
       }
     },
