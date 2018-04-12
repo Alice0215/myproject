@@ -18,9 +18,9 @@
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
       </q-field>
        <q-field
-         @blur="$v.formData.locationJson.$touch"
+         @blur="$v.formData.address.$touch"
         @keyup.enter="edit"
-        :error="$v.formData.locationJson.$error"
+        :error="$v.formData.address.$error"
          error-label="请获取当前位置">
         <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
                   class="login-input" disable  placeholder="输入地址/定位地址"/>
@@ -50,7 +50,6 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-import eventBus from '../../eventBus'
 export default {
   data () {
     return {
@@ -75,14 +74,14 @@ export default {
   validations: {
     formData: {
       projectName: { required },
-      locationJson: { required },
+      address: { required },
       TLSelect: { required }
     }
   },
   created () {
     this.formData.projectId = this.$route.query.id
-    if (localStorage.getItem('oldInfo') && localStorage.getItem('oldInfo') !== 'undefined') {
-      let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+    let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
+    if (!_.isNull(oldInfo)) {
       this.formData = oldInfo
       localStorage.removeItem('oldInfo')
     }
@@ -131,7 +130,7 @@ export default {
         this.formData.locationJson = JSON.stringify(this.formData.geoInfo)
       }
       localStorage.removeItem('user_location')
-    } else {
+    } else if (_.isNull(oldInfo)) {
       this.getInfo()
     }
   },
@@ -244,9 +243,7 @@ export default {
       })
     },
     chooseUser (jobType) {
-      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      eventBus.$emit('type', jobType)
       if (jobType === 'TM') {
         localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
       } else {
@@ -256,7 +253,6 @@ export default {
     },
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       this.$router.push('map?projectId=' + this.formData.projectId)
     }
   }
