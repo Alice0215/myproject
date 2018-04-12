@@ -1,8 +1,8 @@
 <template>
   <div id="q-app">
-    <transition :name="transitionName">
+    <!--<transition :name="transitionName">-->
       <router-view class="child-view"></router-view>
-    </transition>
+    <!--</transition>-->
     <lg-preview></lg-preview>
   </div>
 </template>
