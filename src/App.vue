@@ -26,7 +26,7 @@
     },
     data () {
       return {
-        transitionName: 'slide-left'
+        transitionName: ''
       }
     },
     methods: {
