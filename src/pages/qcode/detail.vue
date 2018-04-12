@@ -139,6 +139,9 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #detail {
+  .top-field{
+    margin-top: 20px;
+  }
   .reback {
     min-width: auto !important;
   }

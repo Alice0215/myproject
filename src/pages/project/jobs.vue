@@ -15,7 +15,7 @@
         <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
       </q-item>
        <q-item class="bg-primary jobs-tags" v-if="names.length>0">
-          <q-chips-input icon-right="close"  @input="value => remove(value.index)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
+          <q-chips-input icon-right="close"  @input="value => remove(value)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
           <!-- <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
           {{v}}
         </q-chip> -->
