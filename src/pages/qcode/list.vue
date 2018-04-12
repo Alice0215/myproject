@@ -2,7 +2,7 @@
 <template>
     <q-layout class='list bg-color' id="qr-list">
         <q-toolbar class='header'>
-          <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+          <a @click="$router.push('/')" class='back-a'><q-item-side left  icon='keyboard arrow left' class="back-left" />返回</a>
             <q-toolbar-title class='header-title text-center'>
             {{projectName}}
             </q-toolbar-title>
@@ -23,7 +23,7 @@
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
             <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
-            <q-select v-model='type' placeholder='类型v' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
+            <q-select v-model='type' placeholder='选择类型' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
         </div>
         <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
@@ -276,7 +276,7 @@ export default {
   }
   .qfield {
     width: 100%;
-    height: 290px;
+    height: 350px;
     padding: 15px;
     background-color: #f5f5f5;
     .item {
@@ -314,7 +314,8 @@ export default {
   .btn-field {
     padding: 15px;
     width: 100%;
-    padding-top: 0px;
+    position: fixed;
+    bottom: 50px;
   }
   .type .q-if-control {
     display: none !important;

@@ -37,6 +37,17 @@ a {
   padding: 0px 15px;
   min-height: 160px;
 }
+.back-a{
+  line-height: 34px;
+  .back-left{
+    min-width: auto !important;
+    line-height: 34px;
+    .q-icon, .q-icon.material-icons{
+      font-size: 30px;
+    }
+  }
+}
+
 .login-input {
   border: 1px solid #eee;
   border-radius: 10px;

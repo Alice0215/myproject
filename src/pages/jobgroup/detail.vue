@@ -2,7 +2,7 @@
   <div id="detail">
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-            <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <a @click="$router.goBack()" class='back-a'><q-item-side left  icon='keyboard arrow left' class="back-left"/>返回</a>
             <q-toolbar-title class='header-title'>
              操作详情
             </q-toolbar-title>
@@ -11,15 +11,14 @@
     </q-toolbar>
     <div class='full-width card'>
       <div class="qr-info">
-        <p>植物名称<span v-if="info.code">{{info.code.alias}}</span></p>
+        <p>植物名称:<span v-if="info.code">{{info.code.alias}}</span></p>
         <p>二维码编号：<span v-if="info.code">{{info.code.identifier}}</span></p>
         <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
-        <p>操作员：<span v-if="info.user">{{info.user.username}}</span></p>
+        <p>操作员：<span v-if="info.user">{{info.user.username}}</span> <q-item-side icon="account circle" right class="float-right"/></p>
         <p>时间：<span v-if="info.createTime">{{info.createTime}}</span></p>
         <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
         <p>苗木栽培：</p>
-        <span>栽植修建</span>
-        <span>栽植修建</span>
+        <p><q-chips-input v-model="tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/></p>
         <p>备注信息：</p>
         <p>{{info.description}}</p>
         <p>现场照片：</p>
@@ -41,7 +40,8 @@ export default {
     return {
       jobGroupId: '',
       info: '',
-      picUrl: ''
+      picUrl: '',
+      tags: ['栽植修建', '栽植修建']
 
     }
   },
@@ -79,9 +79,6 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #detail {
-  .reback {
-    min-width: auto !important;
-  }
   .qr-img {
     width: 124px;
     height: 124px;
@@ -112,6 +109,10 @@ export default {
       font-size: 14px;
       color: #333333;
       line-height: 23px;
+    }
+    span {
+      display: inline-block;
+      padding: 0px 4px;
     }
   }
   .address {

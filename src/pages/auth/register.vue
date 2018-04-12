@@ -45,7 +45,7 @@
         :error="$v.form.phone.$error"
          error-label="请核对您的手机号">
        <q-input
-        v-model="form.phone"
+        v-model="form.phone" type="number"
         placeholder='手机号' class=' login-input'
       />
       </q-field>
@@ -68,6 +68,7 @@
         placeholder='确认密码' class=' login-input' type='password'
       />
        </q-field>
+
       <q-btn class='full-width input' @click='submit()'>注册</q-btn>
       <div class='login-field'>
           <span>已有账号？</span><a href="javascript:" @click="$router.push('/login')">立即登录</a>
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { required, email, minLength, maxLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, maxLength, sameAs, numeric } from 'vuelidate/lib/validators'
 import { request } from '../../common'
 export default {
   data () {
@@ -100,7 +101,7 @@ export default {
       fullname: { required },
       email: { required, email },
       partyId: { required },
-      phone: { required },
+      phone: { required, numeric, minLength: minLength(11), maxLength: maxLength(11) },
       password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       password_confirmation: { required,
         sameAsPassword: sameAs('password') }
@@ -114,13 +115,6 @@ export default {
       this.$v.form.$touch()
 
       if (this.$v.form.$error) {
-        return false
-      }
-      if (!(/^\d{11}$/.test(this.form.phone))) {
-        this.$q.dialog({
-          title: '提示',
-          message: '请输入正确的手机号'
-        })
         return false
       }
       let deviceType = 1
@@ -150,7 +144,7 @@ export default {
               title: '提示',
               message: '注册成功'
             })
-            this.$router.push('/')
+            return this.$router.push('/login')
           } else {
             if (response.data.resultCode === 'ERROR') {
               this.$q.dialog({
@@ -219,7 +213,7 @@ export default {
   text-align: center;
   margin-bottom: 40px;
 }
-#register{
+#register {
   .log {
     text-align: center;
     margin-top: 30px;
@@ -229,6 +223,5 @@ export default {
     display: inline-block !important;
     color: #1aad19 !important;
   }
-
 }
 </style>
