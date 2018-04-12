@@ -44,7 +44,7 @@
         :error="$v.form.phone.$error"
          error-label="请核对您的手机号">
        <q-input
-        v-model="form.phone"
+        v-model="form.phone" type="number"
         placeholder='手机号' class=' login-input'
       />
       </q-field>
@@ -77,7 +77,7 @@
 
 <script>
 import { request } from '../../common'
-import { required, email, minLength, maxLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, maxLength, sameAs, numeric } from 'vuelidate/lib/validators'
 export default {
   mounted () {
     this.getPersonal()
@@ -101,7 +101,7 @@ export default {
       fullname: { required },
       email: { required, email },
       partyName: { required },
-      phone: { required },
+      phone: { required, numeric, minLength: minLength(11), maxLength: maxLength(11) },
       password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       password_confirmation: { required,
         sameAsPassword: sameAs('password') }
@@ -122,13 +122,6 @@ export default {
     register () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
-        return false
-      }
-      if (!(/^\d{11}$/.test(this.form.phone))) {
-        this.$q.dialog({
-          title: '提示',
-          message: '请输入正确的手机号'
-        })
         return false
       }
       let deviceType = 1
@@ -215,7 +208,7 @@ input:not(.no-style):hover {
 .register-title span {
   margin-right: 50px;
 }
-#register{
+#register {
   .log {
     text-align: center;
     margin-top: 30px;
@@ -225,6 +218,5 @@ input:not(.no-style):hover {
     display: inline-block !important;
     color: #1aad19 !important;
   }
-
 }
 </style>

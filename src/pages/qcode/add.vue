@@ -10,15 +10,35 @@
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
+        <q-field   @blur="$v.contactPerson.$touch"
+        @keyup.enter="add"
+        :error="$v.contactPerson.$error"
+         error-label="请填写姓名">
         <q-input text-dark  v-model='contactPerson' placeholder='姓名' class='full-width login-input'/>
-        <q-input text-dark  v-model="contactNumber" placeholder="联系方式" class="full-width login-input"/>
+        </q-field>
+         <q-field   @blur="$v.contactNumber.$touch"
+        @keyup.enter="add"
+        :error="$v.contactNumber.$error"
+         error-label="请核对您的联系方式">
+       <q-input
+        v-model="contactNumber" type="number"
+        placeholder='联系方式' class=' full-width login-input'
+      />
+      </q-field>
+        <!-- <q-input text-dark  v-model="contactNumber" placeholder="联系方式" class="full-width login-input"/> -->
+         <q-field   @blur="$v.amount.$touch"
+        @keyup.enter="add"
+        :error="$v.amount.$error"
+         error-label="请填写申请二维码枚数">
         <q-input type="number" class="full-width login-input" v-model="amount" placeholder='输入申请二维码枚数'></q-input>
+         </q-field>
         <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
     </div>
   </div>
 </template>
 
 <script>
+import { required, minLength, maxLength, numeric } from 'vuelidate/lib/validators'
 import { request } from '../../common'
 export default {
   data () {
@@ -29,16 +49,18 @@ export default {
       contactPerson: ''
     }
   },
+  validations: {
+    contactPerson: { required },
+    contactNumber: { required, numeric, minLength: minLength(11), maxLength: maxLength(11) },
+    amount: { required, numeric }
+  },
   created () {
     this.projectId = this.$route.query.projectId
   },
   methods: {
     add () {
-      if (!(/^\d{11}$/.test(this.contactNumber))) {
-        this.$q.dialog({
-          title: '提示',
-          message: '请输入正确的联系方式'
-        })
+      this.$v.$touch()
+      if (this.$v.$error) {
         return false
       }
       let data = {

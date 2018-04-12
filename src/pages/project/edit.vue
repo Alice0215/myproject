@@ -10,26 +10,45 @@
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card" id="edit">
+      <q-field
+         @blur="$v.formData.projectName.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.projectName.$error"
+         error-label="请添加项目名称">
         <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+      </q-field>
+       <q-field
+         @blur="$v.formData.locationJson.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.locationJson.$error"
+         error-label="请获取当前位置">
         <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
                   class="login-input" disable  placeholder="输入地址/定位地址"/>
+       </q-field>
         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
           <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
               <q-item-side icon="group" />
               <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
               <q-item-side right icon="keyboard_arrow_right" />
           </q-item>
-            <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-                <q-item-side icon="group" />
-                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-                <q-item-side right  icon="keyboard_arrow_right" />
-            </q-item>
+           <q-field
+         @blur="$v.formData.TLSelect.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.TLSelect.$error"
+         error-label="请项目设置负责人">
+          <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
+              <q-item-side icon="group" />
+              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+              <q-item-side right  icon="keyboard_arrow_right" />
+          </q-item>
+           </q-field>
     </div>
     <q-btn class="full-width btn"  v-if="formData.isEdit" @click="edit()">保存更改</q-btn>
   </div>
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
 import eventBus from '../../eventBus'
 export default {
@@ -51,6 +70,13 @@ export default {
         isEdit: false
       },
       tempType: ''
+    }
+  },
+  validations: {
+    formData: {
+      projectName: { required },
+      locationJson: { required },
+      TLSelect: { required }
     }
   },
   created () {
@@ -111,6 +137,10 @@ export default {
   },
   methods: {
     edit () {
+      this.$v.formData.$touch()
+      if (this.$v.formData.$error) {
+        return false
+      }
       let projectJobs = []
       projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
       let data = {
