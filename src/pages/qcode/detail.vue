@@ -12,7 +12,7 @@
     <div class='full-width card'>
       <div class="top-field">
         <p class='text-center'>
-          <img v-bind:src="qrImgUrl" class="qr-img">
+          <img v-bind:src="qrImgUrl" v-preview="qrImgUrl" preview-nav-enable="false" class="qr-img">
         </p>
         <p class='text-center'>
           <q-btn class="show-qr">查看二维码</q-btn>
@@ -31,7 +31,7 @@
         <p>{{code.description}}</p>
         <p class="pic-field" >
           <span v-for="item in code.pictures" v-bind:key="item.id">
-            <img :src="picUrl+item.filePath"/>
+            <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
           </span>
         </p>
       </div>
@@ -60,7 +60,8 @@ export default {
       qrImgUrl: '',
       info: '',
       qrRecord: '',
-      picUrl: ''
+      picUrl: '',
+      previewApi: ''
 
     }
   },
@@ -69,6 +70,7 @@ export default {
     this.type = this.$route.query.type
     this.projectId = this.$route.query.projectId
     this.picUrl = server.THUMBNAIL_API
+    this.previewApi = server.PREVIEW_API
     this.getInfo()
   },
   methods: {

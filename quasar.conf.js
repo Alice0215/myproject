@@ -6,7 +6,8 @@ module.exports = function (ctx) {
     plugins: [
       'axios',
       'vuelidate',
-      'helper'
+      'helper',
+      'imagePreview'
     ],
     css: [
       'app.styl'

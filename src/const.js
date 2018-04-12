@@ -5,7 +5,8 @@ const server = {
   API: host + 'landscape/cm/',
   PROJECT_API: host + 'landscape/ls/',
   THUMBNAIL_QR: host + 'fs/ls/qr/',
-  THUMBNAIL_API: host + 'fs/ls/thumbnail/'
+  THUMBNAIL_API: host + 'fs/ls/thumbnail/',
+  PREVIEW_API: host + 'fs/ls/uploaded/'
 }
 
 const plantType = {
