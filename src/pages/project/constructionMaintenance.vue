@@ -178,7 +178,7 @@ export default {
         'pictures': this.form.pictures
       }
       request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
-        if (resp.data.resultCode === 'SUCCESS') {
+        if (resp && resp.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
             title: '提示',
             message: '修改成功'
