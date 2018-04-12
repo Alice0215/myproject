@@ -15,8 +15,11 @@
             <q-item-tile sublabel lines='1'>
               简介：{{projectDesc}}
              </q-item-tile>
-              <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
-              <q-item-tile sublabel lines='1' class='text-center location'>{{location}}</q-item-tile>
+              <!-- <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side> -->
+              <q-item-tile sublabel lines='1' icon="place" class="mb-8 newicon" v-if="location">
+                  <label class="color-black font-12 location">{{location}}</label>
+              </q-item-tile>
+              <!-- <q-item-tile sublabel lines='1' class='text-center location'>{{location}}</q-item-tile> -->
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
@@ -273,6 +276,11 @@ export default {
   }
   .header {
     margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .newicon{
+    color: #999999;
+    font-size: 18px;
   }
   .qfield {
     width: 100%;

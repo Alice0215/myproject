@@ -8,7 +8,7 @@
       <q-field  @blur="$v.form.partyName.$touch"
         @keyup.enter="submit"
         :error="$v.form.partyName.$error"
-         error-label="请填写机构名称">
+         error-label="机构名称为长度不超过45的必填项">
         <q-input v-model="form.partyName" placeholder="机构名称" class="login-input"
         />
       </q-field>
@@ -100,7 +100,7 @@ export default {
       username: { required },
       fullname: { required },
       email: { required, email },
-      partyName: { required },
+      partyName: { required, maxLength: maxLength(45) },
       phone: { required, numeric, minLength: minLength(11), maxLength: maxLength(11) },
       password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       password_confirmation: { required,
