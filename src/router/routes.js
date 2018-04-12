@@ -103,6 +103,10 @@ export default [
     path: '/qcode/scan',
     component: () => import('pages/qcode/scan.vue')
   },
+  {
+    path: '/qcode/view',
+    component: () => import('pages/qcode/viewQRCode.vue')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')

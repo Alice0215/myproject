@@ -15,7 +15,7 @@
           <img v-bind:src="qrImgUrl" v-preview="qrImgUrl" preview-nav-enable="false" class="qr-img">
         </p>
         <p class='text-center'>
-          <q-btn class="show-qr">查看二维码</q-btn>
+          <q-btn class="show-qr" @click="goToView">查看二维码</q-btn>
         </p>
       </div>
       <div class="qr-info">
@@ -74,6 +74,10 @@ export default {
     this.getInfo()
   },
   methods: {
+    goToView () {
+      localStorage.setItem('qrcode-preview', this.qrImgUrl)
+      this.$router.push('/qcode/view')
+    },
     back () {
       localStorage.removeItem('qrCodeId')
       localStorage.removeItem('typeKey')
