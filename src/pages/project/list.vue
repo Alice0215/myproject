@@ -7,8 +7,8 @@
             </q-toolbar-title>
        </q-toolbar>
         </q-toolbar>
-        <q-item class="list-list" >
-             <span class="add-btn" @click="$router.push('project/add')">+</span>
+        <q-item class="list-list"  @click.native="$router.push('project/add')" >
+             <span class="add-btn">+</span>
             <q-item-main class="add-field">
             创建项目
             </q-item-main>
@@ -111,7 +111,7 @@ export default {
     border-radius: 5px;
     color: white;
     font-size: 60px;
-    line-height: 75px;
+    line-height: 68px;
     text-align: center;
   }
   .add-field {

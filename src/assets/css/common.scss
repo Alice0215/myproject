@@ -37,6 +37,13 @@ a {
   padding: 0px 15px;
   min-height: 160px;
 }
+.back-a{
+  line-height: 40px;
+  .back-left{
+    min-width: auto !important;
+  }
+}
+
 .login-input {
   border: 1px solid #eee;
   border-radius: 10px;

@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' @click='$router.goBack()' class='reback'/></a>
+             <a @click="$router.goBack()" class="back-a"><q-item-side left  icon='keyboard arrow left' @click='$router.goBack()' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
               填写信息
             </q-toolbar-title>
@@ -10,11 +10,11 @@
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
-        <input text-dark required v-model='contactPerson' placeholder='姓名' class='full-width login-input'>
-        <q-input text-dark required v-model="contactNumber" placeholder="联系方式" class="full-width login-input"/>
+        <q-input text-dark  v-model='contactPerson' placeholder='姓名' class='full-width login-input'/>
+        <q-input text-dark  v-model="contactNumber" placeholder="联系方式" class="full-width login-input"/>
         <q-input type="number" class="full-width login-input" v-model="amount" placeholder='输入申请二维码枚数'></q-input>
+        <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
     </div>
-    <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
   </div>
 </template>
 
@@ -79,9 +79,6 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.reback {
-  min-width: auto !important;
-}
 .header-title {
   margin-right: 30px;
 }

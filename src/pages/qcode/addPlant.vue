@@ -2,8 +2,8 @@
   <q-layout id="qcode-page-add">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="$router.goBack()">
-          <q-item-side left icon='keyboard arrow left' class='reback'/></a>
+        <a @click="$router.goBack()" class="back-a">
+          <q-item-side left icon='keyboard arrow left' class='back-left'/>返回</a>
         <q-toolbar-title class='header-title'>
           添加植物
         </q-toolbar-title>

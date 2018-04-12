@@ -157,7 +157,7 @@ export default {
             title: '提示',
             message: '注册成功'
           })
-          this.$router.push('/')
+          return this.$router.push('/login')
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({

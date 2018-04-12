@@ -2,7 +2,7 @@
   <div id="detail">
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-            <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+            <a @click="$router.goBack()"><q-item-side left  icon='keyboard arrow left' class='back-a'/>返回</a>
             <q-toolbar-title class='header-title'>
              操作详情
             </q-toolbar-title>
@@ -79,9 +79,6 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #detail {
-  .reback {
-    min-width: auto !important;
-  }
   .qr-img {
     width: 124px;
     height: 124px;

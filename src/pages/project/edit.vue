@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix" >
-            <a @click="$router.push('/qcode/list?projectId='+formData.projectId)"> <q-item-side left  icon="keyboard arrow left"/></a>
+            <a class="back-a" @click="$router.push('/qcode/list?projectId='+formData.projectId)"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>返回</a>
             <q-toolbar-title class="header-title">
             项目设置
             </q-toolbar-title>

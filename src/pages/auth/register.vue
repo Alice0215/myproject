@@ -68,6 +68,7 @@
         placeholder='确认密码' class=' login-input' type='password'
       />
        </q-field>
+
       <q-btn class='full-width input' @click='submit()'>注册</q-btn>
       <div class='login-field'>
           <span>已有账号？</span><a href="javascript:" @click="$router.push('/login')">立即登录</a>
@@ -150,7 +151,7 @@ export default {
               title: '提示',
               message: '注册成功'
             })
-            this.$router.push('/')
+            return this.$router.push('/login')
           } else {
             if (response.data.resultCode === 'ERROR') {
               this.$q.dialog({
