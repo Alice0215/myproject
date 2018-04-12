@@ -15,7 +15,7 @@
         <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
       </q-item>
        <q-item class="bg-primary jobs-tags" v-if="names.length>0">
-          <q-chips-input icon-right="close"  @input="value => remove(value)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
+          <q-chips-input icon-right="close"  @input="value => remove(value.index)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
           <!-- <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
           {{v}}
         </q-chip> -->
@@ -55,15 +55,17 @@ export default {
     }
   },
   methods: {
-    remove (name) {
-      console.log(name)
-      let index = this.names.findIndex(v => v === name)
+    remove (names) {
+      console.log(names)
+      let index = 0
+      for (var key in this.names) {
+        if (names.indexOf(this.names.key) === -1) {
+          index = key
+        }
+      }
       console.log(index)
       this.ids.splice(index, 1)
       this.jobs.splice(index, 1)
-    },
-    log (name, data) {
-      console.log(name, JSON.stringify(data))
     },
     async getList () {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
