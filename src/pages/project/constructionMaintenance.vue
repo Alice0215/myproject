@@ -22,11 +22,17 @@
         <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+qrCodeId+'&type='+qrtype)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
       </q-item>
-      <q-item class="mt-6" @click.native="chooseJob">
-        <q-item-side label class="font-14">工作内容选择</q-item-side>
-        <q-item-main></q-item-main>
-        <q-item-side right icon="keyboard_arrow_right" class="color-gray"></q-item-side>
-      </q-item>
+       <q-field
+         @blur="$v.form.tags.$touch"
+        @keyup.enter="operate"
+        :error="$v.form.tags.$error"
+         error-label="请先选择工作内容">
+          <q-item class="mt-6" @click.native="chooseJob">
+            <q-item-side label class="font-14">工作内容选择</q-item-side>
+            <q-item-main></q-item-main>
+            <q-item-side right icon="keyboard_arrow_right" class="color-gray"></q-item-side>
+          </q-item>
+       </q-field>
       <q-item-separator class="mt-0 mb-0"/>
       <q-item v-if="form.tags.length>0">
         <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
@@ -54,6 +60,7 @@
 
 <script>
 import { request, deleteFiles, uploadFiles } from '../../common'
+import { required } from 'vuelidate/lib/validators'
 import eventBus from '../../eventBus'
 
 export default {
@@ -71,6 +78,11 @@ export default {
       jobGroupId: '',
       QrInfo: {},
       title: '添加'
+    }
+  },
+  validations: {
+    form: {
+      tags: { required }
     }
   },
   methods: {
@@ -132,6 +144,10 @@ export default {
       }
     },
     operate () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        return false
+      }
       if (this.jobGroupId !== 'null') {
         this.edit()
       } else {
