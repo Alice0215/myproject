@@ -10,6 +10,7 @@
 
   import eventBus from './eventBus'
   import _ from 'lodash'
+  import {removeLocalStory} from './common'
 
   function backEvent () {
     eventBus.$emit('backButton-clicked')
@@ -30,6 +31,15 @@
       }
     },
     methods: {
+      deleteLocalStory () {
+        removeLocalStory('qrCodeId')
+        removeLocalStory('typeKey')
+        removeLocalStory('top-index')
+        removeLocalStory('qrcode-form')
+        removeLocalStory('qrcode-image')
+        removeLocalStory('qrcode-single-property')
+        removeLocalStory('choose-project')
+      },
       exitApp () {
         if (navigator.app) {
           navigator.app.exitApp()
@@ -40,6 +50,7 @@
       }
     },
     mounted () {
+      this.deleteLocalStory()
       eventBus.$on('router-back', () => {
         let isBack = this.$router.isBack
         if (isBack) {

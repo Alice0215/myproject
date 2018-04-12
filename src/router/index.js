@@ -24,7 +24,6 @@ const Router = new VueRouter({
 
 Router.goBack = function () {
   this.isBack = true
-  console.log(this.isBack)
   window.history.go(-1)
 }
 

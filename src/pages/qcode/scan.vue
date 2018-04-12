@@ -105,9 +105,8 @@
     mounted () {
       this.openScan()
     },
-    destroyed () {
+    beforeDestroy () {
       this.cancelScan()
-      console.log('关闭扫描')
     }
   }
 </script>

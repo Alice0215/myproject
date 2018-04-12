@@ -76,7 +76,6 @@ export default {
       localStorage.removeItem('qrCodeId')
       localStorage.removeItem('typeKey')
       this.$router.goBack()
-      // this.$router.push('/qcode/list?projectId=' + this.projectId)
     },
     add () {
       if (!this.editable) {
