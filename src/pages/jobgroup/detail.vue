@@ -30,7 +30,7 @@
           </span>
         </p>
       </div>
-      <q-btn v-if="info.editable" class="full-width btn" @click="$router.push('/project/maintenance?codeId=&jobGroupId=' + jobGroupId)">编辑</q-btn>
+      <q-btn v-if="info.editable" class="full-width bg-color qr-btn show-qr" @click="$router.push('/project/maintenance?codeId=&jobGroupId=' + jobGroupId)">编辑</q-btn>
     </div>
   </div>
 </template>

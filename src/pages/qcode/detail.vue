@@ -22,7 +22,7 @@
         <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
         <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
         <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
-        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span></p>
+        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span><span v-if="info.alias">{{info.alias}}</span></p>
         <p>苗木分类：<span v-if="info.category">{{info.category.name}}</span></p>
         <p class="param"><span>胸径：{{info.xiongJing}}cm</span><span>高度：{{info.gaoDu}}cm</span><span>冠幅：{{info.guanFu}}cm</span></p>
         <p>苗木商名称：<span v-if="info.dealer">{{info.dealer}}</span></p>

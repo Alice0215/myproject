@@ -133,7 +133,7 @@ export default {
     }
   },
   methods: {
-    add () {
+    async add () {
       this.$v.formData.$touch()
       if (this.$v.formData.$error) {
         return false
@@ -150,28 +150,13 @@ export default {
         'locationJson': locationJson,
         'projectJobs': projectJobs
       }
-      request('project/create', 'post', data, 'json', true).then(response => {
+      await request('project/create', 'post', data, 'json', true).then(response => {
         if (response && response.data.resultCode === 'SUCCESS') {
-          if (localStorage.getItem('oldInfo')) {
-            localStorage.removeItem('oldInfo')
-          }
           this.$q.dialog({
             title: '提示',
             message: '项目添加成功！'
           })
           this.$router.push('/')
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
-          }
         }
       })
     },
