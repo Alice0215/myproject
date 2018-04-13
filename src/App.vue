@@ -73,7 +73,7 @@ export default {
         $('#preview-cover').click()
       } else {
         console.log(this.$router.currentRoute.path)
-        let exitArray = ['/', '/login', '/partyregister', '/register']
+        let exitArray = ['/', '/login']
         if (_.indexOf(exitArray, this.$router.currentRoute.path) > -1) {
           this.$q.notify({
             message: '再按一次退出',
