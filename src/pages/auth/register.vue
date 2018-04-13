@@ -113,7 +113,6 @@ export default {
   methods: {
     submit () {
       this.$v.form.$touch()
-
       if (this.$v.form.$error) {
         return false
       }

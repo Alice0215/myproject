@@ -13,10 +13,16 @@
     <div class='full-width card qr-info'>
         <div class="col-12 row mt-6 justify-between">
           <div class="col-7 row">
+            <q-field
+         @blur="$v.form.alias.$touch"
+        @keyup.enter="save"
+        :error="$v.form.alias.$error"
+         error-label="请添加植物名称">
               <q-input
                 v-model="formData.alias"
                 placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'
               />
+            </q-field>
           </div>
           <div class="col-4 row">
               <span class="col-4 lineHeight-32">数量</span>
@@ -104,6 +110,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
 import eventBus from '../../eventBus'
 import _ from 'lodash'
@@ -112,33 +119,23 @@ export default {
   data () {
     return {
       formData: {
-        // category: '',
-        // gaoDu: '',
-        // xiongJing: '',
-        // diJing: '',
-        // guanFu: '',
-        // pengJing: '',
-        // branch: '',
-        // year: '',
-        // other: '',
-        // otherFeature: '',
-        // source: '',
-        // dealer: '',
-        // status: 1,
-        // locationJson: '',
-        // pictures: [],
-        // amount: '',
-        // singleId: '',
-        // alias: '',
-        // description: ''
       },
       plantCategory: [],
       imageArray: [],
       address: ''
     }
   },
+  validations: {
+    form: {
+      alias: { required }
+    }
+  },
   methods: {
     add () {
+      this.$v.$touch()
+      if (this.$v.$error) {
+        return false
+      }
       localStorage.setItem('singles', JSON.stringify(this.formData))
       removeLocalStory('user_location')
       removeLocalStory('qrcode-image')
@@ -236,7 +233,7 @@ export default {
   }
   .h-35 {
     height: 35px;
-    margin-bottom: 10px;
+    margin-top: 10px;
   }
 
   #single-plant {

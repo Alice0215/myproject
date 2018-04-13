@@ -2,7 +2,7 @@
   <div id="detail">
     <q-toolbar class='header'>
         <q-toolbar class='fix'>
-             <a @click="back"><q-item-side left  icon='keyboard arrow left' class='reback'/></a>
+             <a @click="back" class='back-a'><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
               {{code.alias}}
             </q-toolbar-title>
@@ -22,14 +22,14 @@
         <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
         <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
         <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
-        <p>苗木名称：<span v-if="info.alias">{{info.alias}}</span></p>
+        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span></p>
         <p>苗木分类：<span v-if="info.category">{{info.category.name}}</span></p>
         <p class="param"><span>胸径：{{info.xiongJing}}cm</span><span>高度：{{info.gaoDu}}cm</span><span>冠幅：{{info.guanFu}}cm</span></p>
         <p>苗木商名称：<span v-if="info.dealer">{{info.dealer}}</span></p>
         <p>苗木其它信息：</p>
-        <p class="address"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
-        <p>{{code.description}}</p>
-        <p class="pic-field" >
+        <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.location">{{info.location}}</span></p>
+        <p class="address"> {{code.description}}</p>
+        <p class="address pic-field" >
           <span v-for="item in code.pictures" v-bind:key="item.id">
             <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
           </span>
@@ -146,9 +146,6 @@ export default {
 #detail {
   .top-field{
     margin-top: 20px;
-  }
-  .reback {
-    min-width: auto !important;
   }
   .qr-img {
     width: 124px;

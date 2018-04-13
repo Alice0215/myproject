@@ -102,10 +102,19 @@ export default {
       }
     },
     logOut () {
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
-      localStorage.removeItem('partyId')
-      this.$router.push('/')
+      this.$q.dialog({
+        title: '提示',
+        message: '您确定要退出吗？',
+        cancel: '取消',
+        ok: '确定'
+      }).then(() => {
+        localStorage.removeItem('user')
+        localStorage.removeItem('token')
+        localStorage.removeItem('partyId')
+        this.$router.push('/')
+      }).catch(() => {
+        this.leftDrawer = false
+      })
     }
   }
 }

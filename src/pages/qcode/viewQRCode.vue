@@ -2,13 +2,13 @@
   <q-layout id="view-qrcode">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="back">
-          <q-item-side left icon='keyboard arrow left' class='reback'/>
+        <a @click="back" class='back-a'>
+          <q-item-side left icon='keyboard arrow left' class='back-left'/>
           返回</a>
-        <q-toolbar-title class='header-title'>
+        <q-toolbar-title class='header-title '>
           二维码
         </q-toolbar-title>
-        <a class="top-nav-right"></a>
+        <a class="top-nav-right no-info"></a>
       </q-toolbar>
     </q-toolbar>
     <div class="text-center mt-40">
@@ -79,12 +79,11 @@
 
 <style lang="scss">
   @import "../../assets/css/common";
-
   #view-qrcode {
     background-color: #000000;
 
     .bottom-big-button {
-      width: calc(100% - 40px) !important;
+      width:  calc(100% - 40px) !important;
       position: absolute;
       margin-left: 20px !important;
       bottom: 4px;

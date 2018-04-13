@@ -151,7 +151,7 @@ export default {
         'projectJobs': projectJobs
       }
       request('project/create', 'post', data, 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
+        if (response && response.data.resultCode === 'SUCCESS') {
           if (localStorage.getItem('oldInfo')) {
             localStorage.removeItem('oldInfo')
           }

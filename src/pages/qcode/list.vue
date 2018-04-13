@@ -15,26 +15,33 @@
             <q-item-tile sublabel lines='1'>
               简介：{{projectDesc}}
              </q-item-tile>
-              <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side>
-              <q-item-tile sublabel lines='1' class='text-center location'>{{location}}</q-item-tile>
+              <q-item-tile sublabel lines='1' icon="place" class="mb-8 newicon" v-if="location">
+                  <label class="color-black font-12 location">{{location}}</label>
+              </q-item-tile>
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
             <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
-            <q-select v-model='type' placeholder='选择类型' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
+            <q-btn-dropdown :label="type_lable" class="block qr-type" v-model="dropdown">
+              <q-list link>
+                <q-item v-for="k in qrtypes" :key="k.value" @click.native="changeType(k.value,k.label),dropdown = false" >
+                  <q-item-main>
+                    <q-item-tile label>{{k.label}}</q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
         </div>
         <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
-              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id" >
-              <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key }">
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id"  @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
-              </router-link>
              </q-item-tile>
             <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
               <q-spinner name="dots" slot="message" :size="40"></q-spinner>
@@ -69,6 +76,8 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      type_lable: '类型',
+      dropdown: false,
       qrcode: true,
       weihu: false,
       list: '',
@@ -132,6 +141,12 @@ export default {
           })
         }
       }, 2000)
+    },
+    changeType (value, lable) {
+      this.type_lable = lable
+      this.type = value
+      console.log(value)
+      this.inputChange()
     },
     initList () {
       request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
@@ -273,6 +288,17 @@ export default {
   }
   .header {
     margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .newicon {
+    color: #999999;
+    font-size: 18px;
+  }
+  .qr-type {
+    width: 100%;
+  }
+  .nav-title .q-btn {
+    box-shadow: none;
   }
   .qfield {
     width: 100%;
@@ -290,7 +316,7 @@ export default {
       line-height: 28px;
       .qfield-mtitle {
         font-size: 14px;
-        padding-right: 100px;
+        padding-right: 50px;
       }
     }
   }

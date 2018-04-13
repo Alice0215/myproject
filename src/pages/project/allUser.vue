@@ -45,7 +45,7 @@ export default {
       ids: []
     }
   },
-  created () {
+  mounted () {
     this.type = this.$route.query.type
     if (localStorage.getItem('selectedUser')) {
       this.userParams = JSON.parse(localStorage.getItem('selectedUser'))
@@ -69,8 +69,6 @@ export default {
     } else {
       this.title = '项目负责人'
     }
-  },
-  mounted () {
     this.getUsers()
   },
   methods: {

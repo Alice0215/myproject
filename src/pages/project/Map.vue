@@ -1,5 +1,9 @@
 <template>
   <q-layout id="map-page">
+    <a @click="$router.goBack()" >
+     <q-toolbar class='fix'>
+     </q-toolbar>
+    </a>
     <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
     </iframe>
   </q-layout>
@@ -51,9 +55,11 @@ export default {
           return
         }
         if (this.$route.query.projectId) {
-          this.$router.push('/project/edit?id=' + this.$route.query.projectId)
+          this.$router.goBack()
+          // this.$router.push('/project/edit?id=' + this.$route.query.projectId)
         } else {
-          this.$router.push('/project/add')
+          this.$router.goBack()
+          // this.$router.push('/project/add')
         }
       }
     },
@@ -119,6 +125,13 @@ export default {
     width: 100%;
     height: 100%;
     border: 0;
+  }
+  .fix {
+    top: 0;
+    z-index: 100;
+    position: fixed;
+    width: 48px;
+    background: none !important;
   }
 }
 </style>
