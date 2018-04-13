@@ -45,13 +45,18 @@
             placeholder='所属片区' class='login-input'
             :options="areaBranches"
           />
-          <q-field
-         @blur="$v.category.$touch"
+          <q-select v-if="type !== 'SINGLE'"
+            v-model="category"
+            placeholder='苗木分类选项' class='login-input mb-2'
+            :options="plantCategoryArray"
+          />
+            <q-field v-if="type === 'SINGLE'"
+         @blur="$v.scategory.$touch"
         @keyup.enter="save"
-        :error="$v.category.$error"
+        :error="$v.scategory.$error"
          error-label="请选择苗木分类">
           <q-select
-            v-model="category"
+            v-model="scategory"
             placeholder='苗木分类选项' class='login-input mb-2'
             :options="plantCategoryArray"
           />
@@ -159,6 +164,7 @@ export default {
     return {
       typeKey: null,
       category: '',
+      scategory: '',
       areaId: '',
       showType: false,
       qrCodeId: '',
@@ -189,7 +195,7 @@ export default {
     }
   },
   validations: {
-    category: { required, numeric },
+    scategory: { required, numeric },
     form: {
       alias: { required }
     }
@@ -255,7 +261,7 @@ export default {
       form.qrCodeForm = qrCodeForm
       if (this.type === plantType.SINGLE) {
         url = 'qrcode/single/save'
-        form.category = this.category
+        form.category = this.scategory
         form.xiongJing = this.form.xiongJing
         form.diJing = this.form.diJing
         form.gaoDu = this.form.gaoDu
@@ -350,6 +356,7 @@ export default {
         }
         if (form.category) {
           this.category = form.category.id.toString()
+          this.scategory = form.category.id.toString()
         }
         if (form.location) {
           form.formattedAddress = form.location.formattedAddress
