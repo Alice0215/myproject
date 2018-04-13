@@ -8,7 +8,7 @@
         <q-toolbar-title class="header-title">
         {{title}}
         </q-toolbar-title>
-        <q-item-side right/>
+        <q-item-side right class="no-info"/>
     </q-toolbar>
     </q-toolbar>
     <!--<div class="search-field">

@@ -2,13 +2,13 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix" >
-            <a @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+            <a  @click="$router.push('/')" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
               返回
             </a>
             <q-toolbar-title class="header-title">
             新建项目
             </q-toolbar-title>
-           <q-item-side right/>
+           <q-item-side right class="no-info"/>
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card" id="project-add">

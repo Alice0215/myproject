@@ -6,7 +6,7 @@
             <q-toolbar-title class='header-title'>
              操作详情
             </q-toolbar-title>
-            <a class="top-nav-right"></a>
+            <a class="no-info"></a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>

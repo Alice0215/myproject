@@ -7,7 +7,7 @@
         <q-toolbar-title class="header-title">
         设备领用记录
         </q-toolbar-title>
-        <q-item-side right/>
+        <q-item-side right class="no-info"/>
     </q-toolbar>
     </q-toolbar>
     <div class="full-width record-list">
