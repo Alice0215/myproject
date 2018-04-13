@@ -7,18 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 		0FDBC0561D364FBA93480385 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D105150E9C124CF5A0D467B4 /* AVFoundation.framework */; };
 		10AC0D93080342A4BB5639DA /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 001243EA766F4CD391EFC1DA /* ImageIO.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1B839025CE664C198F4EAE0A /* CDVJpegHeaderWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = BEE6874E06EF4E769875CFE7 /* CDVJpegHeaderWriter.m */; };
 		1BAB009FDB964516BA632A8A /* UIImage+CropScaleOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3139C8FA5B0B4BD4A5917784 /* UIImage+CropScaleOrientation.m */; };
-=======
-		0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0207DA571B56EA530066E2B4 /* Images.xcassets */; };
-		0814224C4B5A482D8F154FBB /* UIImage+CropScaleOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = DF704C9846134B5ABBB65484 /* UIImage+CropScaleOrientation.m */; };
-		0EBB4972AE4A4EA9953CE309 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E1CEEAD6C44D2A4928B18 /* CDVLocation.m */; };
-		129F431DA14B47C2AF3AE8ED /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7D6C6EF96648968523A204 /* CDVViewController+SplashScreen.m */; };
-		12B27677DA1C4879A1F31652 /* CDVCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = CA729904E6D04BD8A86A65EC /* CDVCamera.m */; };
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 		1D3623260D0F684500981E51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		301BF552109A68D80062928A /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF535109A57CC0062928A /* libCordova.a */; };
@@ -30,17 +22,10 @@
 		52B34FC52080D74900282A65 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52B34FC42080D74900282A65 /* Images.xcassets */; };
 		53C273749D0B4059A2E9DC88 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 563045B8771C430996DB558D /* CDVLocation.m */; };
 		6AFF5BF91D6E424B00AB3073 /* CDVLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */; };
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 		7A09D8C38DF24A18979DB64E /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876B53E5FA847B781B8BE5A /* CDVSplashScreen.m */; };
 		98FA497793DF46ABA663C899 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = F55076FC481C4B849CF4E94D /* CDVViewController+SplashScreen.m */; };
 		A109E641A01141FA8E9BCC79 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF8D21880C14B6D861B0BA8 /* CoreLocation.framework */; };
 		DFDC585FCB204C0190E71400 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304744ABE4DD43C39601376F /* QRScanner.swift */; };
-=======
-		6BFE7880F8B142B095DDF569 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD0C60C5E60B4DAD81BE8427 /* CoreLocation.framework */; };
-		6D2B06F4218A405B828227AA /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA8F8A9B88647758CD95A2A /* QRScanner.swift */; };
-		76A587C511CD4EFEBBF82447 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F36E6D4EB4C4BA283E6FD56 /* CDVSplashScreen.m */; };
-		76EBF1BD08C64ECEA2929601 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0117A217630441DA9258D8D7 /* AVFoundation.framework */; };
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +70,6 @@
 		3047A50F1AB8059700498E2A /* build-debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "build-debug.xcconfig"; path = "cordova/build-debug.xcconfig"; sourceTree = SOURCE_ROOT; };
 		3047A5101AB8059700498E2A /* build-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "build-release.xcconfig"; path = "cordova/build-release.xcconfig"; sourceTree = SOURCE_ROOT; };
 		3047A5111AB8059700498E2A /* build.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = build.xcconfig; path = cordova/build.xcconfig; sourceTree = SOURCE_ROOT; };
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 		3139C8FA5B0B4BD4A5917784 /* UIImage+CropScaleOrientation.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "UIImage+CropScaleOrientation.m"; path = "cordova-plugin-camera/UIImage+CropScaleOrientation.m"; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* E园林-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "E园林-Prefix.pch"; sourceTree = "<group>"; };
 		52B34FC02080D68400282A65 /* PgyUpdate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PgyUpdate.framework; sourceTree = "<group>"; };
@@ -108,36 +92,6 @@
 		ED33DF2A687741AEAF9F8254 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		F55076FC481C4B849CF4E94D /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "E园林/config.xml"; sourceTree = "<group>"; };
-=======
-		3250A1B1C91140A98B683E9E /* CDVSplashScreen.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVSplashScreen.h; path = "cordova-plugin-splashscreen/CDVSplashScreen.h"; sourceTree = "<group>"; };
-		32CA4F630368D1EE00C91783 /* E园林_Dev-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "E园林_Dev-Prefix.pch"; sourceTree = "<group>"; };
-		4DA8F8A9B88647758CD95A2A /* QRScanner.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = QRScanner.swift; path = "cordova-plugin-qrscanner/QRScanner.swift"; sourceTree = "<group>"; };
-		5257145720807EAA00DE6C0B /* PgySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PgySDK.framework; sourceTree = "<group>"; };
-		5257145920807EAA00DE6C0B /* PgyUpdate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PgyUpdate.framework; sourceTree = "<group>"; };
-		5257145C20807F2400DE6C0B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		5257145E20807F2B00DE6C0B /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		5257146020807F3400DE6C0B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		5257146220807F4100DE6C0B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		5257146420807F5200DE6C0B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		581422D62D144A6F9D3B9B4A /* UIImage+CropScaleOrientation.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "UIImage+CropScaleOrientation.h"; path = "cordova-plugin-camera/UIImage+CropScaleOrientation.h"; sourceTree = "<group>"; };
-		6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CDVLaunchScreen.storyboard; path = "E园林_Dev/CDVLaunchScreen.storyboard"; sourceTree = SOURCE_ROOT; };
-		6D0E1CEEAD6C44D2A4928B18 /* CDVLocation.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVLocation.m; path = "cordova-plugin-geolocation/CDVLocation.m"; sourceTree = "<group>"; };
-		77B1B6C5B5854945B1BDB842 /* CDVCamera.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVCamera.h; path = "cordova-plugin-camera/CDVCamera.h"; sourceTree = "<group>"; };
-		7F672E5C17B24B83949031A5 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* E园林_Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "E园林_Dev-Info.plist"; path = "E园林_Dev/E园林_Dev-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = SOURCE_ROOT; };
-		9F36E6D4EB4C4BA283E6FD56 /* CDVSplashScreen.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVSplashScreen.m; path = "cordova-plugin-splashscreen/CDVSplashScreen.m"; sourceTree = "<group>"; };
-		AC486B7FA5CB4BADB622EDA3 /* CDVJpegHeaderWriter.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVJpegHeaderWriter.m; path = "cordova-plugin-camera/CDVJpegHeaderWriter.m"; sourceTree = "<group>"; };
-		AFAE9481E4814C1297053879 /* CDVLocation.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVLocation.h; path = "cordova-plugin-geolocation/CDVLocation.h"; sourceTree = "<group>"; };
-		CA729904E6D04BD8A86A65EC /* CDVCamera.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVCamera.m; path = "cordova-plugin-camera/CDVCamera.m"; sourceTree = "<group>"; };
-		DD0C60C5E60B4DAD81BE8427 /* CoreLocation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		DF704C9846134B5ABBB65484 /* UIImage+CropScaleOrientation.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "UIImage+CropScaleOrientation.m"; path = "cordova-plugin-camera/UIImage+CropScaleOrientation.m"; sourceTree = "<group>"; };
-		E1592D1DD4704D1799499FD1 /* CDVExif.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVExif.h; path = "cordova-plugin-camera/CDVExif.h"; sourceTree = "<group>"; };
-		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
-		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
-		ED33DF2A687741AEAF9F8254 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
-		EED54E899D564E168E682631 /* CDVJpegHeaderWriter.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVJpegHeaderWriter.h; path = "cordova-plugin-camera/CDVJpegHeaderWriter.h"; sourceTree = "<group>"; };
-		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "E园林_Dev/config.xml"; sourceTree = "<group>"; };
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,8 +265,8 @@
 				LastUpgradeCheck = 510;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = 7C28F7BSM7;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 8MV9D4HDTG;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -425,14 +379,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 				CODE_SIGN_STYLE = Manual;
-=======
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 7C28F7BSM7;
+				DEVELOPMENT_TEAM = 8MV9D4HDTG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/E园林",
@@ -446,16 +395,9 @@
 				INFOPLIST_FILE = "E园林/E园林-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 				PRODUCT_NAME = "E园林";
 				PROVISIONING_PROFILE = "74ec3d4c-98c5-41d1-8ab4-cf2446d3baa7";
 				PROVISIONING_PROFILE_SPECIFIER = eyuanlin_dev;
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = com.eyuanlin.dev;
-				PRODUCT_NAME = "E园林_Dev";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -473,14 +415,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 				CODE_SIGN_STYLE = Manual;
-=======
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = 7C28F7BSM7;
+				DEVELOPMENT_TEAM = 8MV9D4HDTG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/E园林",
@@ -492,16 +429,9 @@
 				INFOPLIST_FILE = "E园林/E园林-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-<<<<<<< HEAD:src-cordova/platforms/ios/E园林.xcodeproj/project.pbxproj
 				PRODUCT_NAME = "E园林";
 				PROVISIONING_PROFILE = "cea54d9e-ad07-4725-a145-86342d5dc69a";
 				PROVISIONING_PROFILE_SPECIFIER = eyuanlin_pro;
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = com.eyuanlin.dev;
-				PRODUCT_NAME = "E园林_Dev";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
->>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev.xcodeproj/project.pbxproj
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
