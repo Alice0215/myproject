@@ -527,11 +527,11 @@ export default {
     if (!_.isNull(form)) {
       this.form = form
     }
-    if (!_.isNull(singles) && this.typeKey === 'AREA') {
+    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       console.log(singles)
       this.form.singles.push(singles)
       console.log(this.form.singles)
-      // localStorage.removeItem('singles')
+      localStorage.removeItem('singles')
       // console.log(this.form.singles)
     }
     if (!_.isNull(imageArray)) {

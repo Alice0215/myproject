@@ -208,9 +208,10 @@ export default {
         message: params.msg
       })
     })
+    let i = this.$route.query.index
     let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
     if (!_.isNull(oldData)) {
-      this.formData = oldData['singles']
+      this.formData = oldData['singles'][i]
     }
     let formData = JSON.parse(localStorage.getItem('qrcode-form-add'))
     if (!_.isNull(formData)) {
