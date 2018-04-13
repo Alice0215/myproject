@@ -1,5 +1,5 @@
 {
-    "name": "com.eyuanlin.app",
+    "name": "com.eyuanlin.dev.app",
     "displayName": "E园林",
     "version": "1.0.0",
     "description": "A sample Apache Cordova application that responds to the deviceready event.",
@@ -11,6 +11,8 @@
     "license": "Apache-2.0",
     "dependencies": {
         "cordova-android": "6.3.0",
+        "cordova-ios": "^4.5.4",
+        "cordova-plugin-add-swift-support": "^1.7.2",
         "cordova-plugin-camera": "^4.0.2",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-pgyer": "git+https://github.com/charleyw/cordova-plugin-pgyer.git",
@@ -23,7 +25,8 @@
             "cordova-plugin-whitelist": {},
             "cordova-plugin-camera": {},
             "cordova-plugin-qrscanner": {},
-            "cordova-plugin-splashscreen": {}
+            "cordova-plugin-splashscreen": {},
+            "cordova-plugin-add-swift-support": {}
         },
         "platforms": [
             "android"
