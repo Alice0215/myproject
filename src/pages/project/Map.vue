@@ -29,9 +29,7 @@ export default {
   data () {
     return {
       loading: false,
-      lng: 113.6951,
-      lat: 34.77944,
-      src: 'https://m.amap.com/picker/?center=113.6951,34.77944&key=d18fb1ffb12982910e0ab4c6ffd7ee6e',
+      src: '',
       position: {}
     }
   },
@@ -102,10 +100,7 @@ export default {
         AMap.event.addListener(geolocation, 'complete', (d) => {
           let getLng = d.position.getLng()
           let getLat = d.position.getLat()
-          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLng + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
-          this.lng = getLng
-          this.lat = getLat
-          console.log(this.lng)
+          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -127,7 +122,7 @@ export default {
     }
   },
   async mounted () {
-    // this.getGeolocation()
+    this.getGeolocation()
     this.$nextTick(() => {
       document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
       let iframe = document.getElementById('map_frame').contentWindow

@@ -106,7 +106,7 @@ export default {
       this.areaBranches = []
       let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
       if (resp) {
-        this.QrInfo = resp.data.resultMsg
+        this.QrInfo = resp.data.resultMsg.code
       }
     },
     async getDetail () {
@@ -212,7 +212,7 @@ export default {
         message: params.msg
       })
     })
-    if (this.jobGroupId !== 'null') {
+    if (this.$route.query.jobGroupId) {
       this.title = '修改'
     } else {
       this.getQrInfo()
@@ -221,7 +221,7 @@ export default {
     if (!_.isNull(form)) {
       this.form = form
       localStorage.removeItem('form')
-    } else if (this.jobGroupId !== 'null') {
+    } else if (this.$route.query.jobGroupId) {
       this.getDetail()
     }
   },
