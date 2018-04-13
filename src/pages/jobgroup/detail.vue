@@ -6,7 +6,7 @@
             <q-toolbar-title class='header-title'>
              操作详情
             </q-toolbar-title>
-            <a class="top-nav-right"></a>
+            <a class="no-info"></a>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
@@ -30,6 +30,7 @@
           </span>
         </p>
       </div>
+      <q-btn v-if="info.editable" class="full-width bg-color qr-btn show-qr" @click="$router.push('/project/maintenance?codeId=&jobGroupId=' + jobGroupId)">编辑</q-btn>
     </div>
   </div>
 </template>

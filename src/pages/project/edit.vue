@@ -6,7 +6,7 @@
             <q-toolbar-title class="header-title">
             项目设置
             </q-toolbar-title>
-           <q-item-side right/>
+           <q-item-side right class="no-info"/>
        </q-toolbar>
     </q-toolbar>
     <div class="full-width card" id="edit">
@@ -259,7 +259,8 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.users {
+#edit {
+  .users {
   font-size: 14px;
   .user {
     padding: 3px;
@@ -270,7 +271,6 @@ export default {
     margin-left: 3px;
   }
 }
-#edit {
   .underline {
     border-bottom: 1px solid #cccccc;
     margin-top: 20px;

@@ -6,7 +6,7 @@
             <q-toolbar-title class='header-title'>
               填写信息
             </q-toolbar-title>
-             <q-item-side right/>
+             <q-item-side right class="no-info"/>
        </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
@@ -16,7 +16,7 @@
          error-label="请填写姓名">
         <q-input text-dark  v-model='contactPerson' placeholder='姓名' class='full-width login-input'/>
         </q-field>
-         <q-field   @blur="$v.contactNumber.$touch"
+         <q-field  @blur="$v.contactNumber.$touch"
         @keyup.enter="add"
         :error="$v.contactNumber.$error"
          error-label="请核对您的联系方式">
@@ -101,12 +101,6 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.header-title {
-  margin-right: 30px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
 .q-if-inner {
   min-height: 30px !important;
   padding-bottom: 10px;

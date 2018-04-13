@@ -7,7 +7,7 @@
         <q-toolbar-title class="header-title">
         养护记录
         </q-toolbar-title>
-        <q-item-side right/>
+        <q-item-side class="no-info" right/>
     </q-toolbar>
     </q-toolbar>
     <div class="full-width record-list">

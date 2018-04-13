@@ -19,74 +19,73 @@
 </template>
 
 <script>
-  import { removeLocalStory } from '../../common'
+import { removeLocalStory } from '../../common'
 
-  export default {
-    data () {
-      return {
-        qrcodeUrl: ''
-      }
-    },
-    methods: {
-      async save () {
-        let img = new Image()
-        img.setAttribute('crossOrigin', 'Anonymous')
-        img.onload = function () {
-          let canvas = document.createElement('canvas')
-          canvas.height = img.height
-          canvas.width = img.width
-          let ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-          let baseUrl = canvas.toDataURL()
-          console.log(baseUrl)  // 输出 Data URI
-          if (window.imageSaver) {
-            window.imageSaver.saveBase64Image({
-              data: baseUrl,
-              prefix: 'eyuanlin_',
-              format: 'JPG',
-              quality: 100,
-              mediaScanner: false
-            }, (filePath) => {
-              console.log('保存成功')
-              console.log(filePath)
-            }, (err) => {
-              console.log(err)
-            })
-          }
-        }
-        img.src = this.qrcodeUrl
-        // if (cordova.plugins.saveToPhotoAlbum) {
-        //   cordova.plugins.saveToPhotoAlbum.save(this.qrcodeUrl, (nativeUrl) => {
-        //     console.log(nativeUrl)
-        //     this.$q.notify('保存成功')
-        //   }, (err) => {
-        //     console.log(err)
-        //   })
-        // }
-      },
-      back () {
-        this.$router.goBack()
-      }
-    },
-    mounted () {
-      this.qrcodeUrl = localStorage.getItem('qrcode-preview')
-    },
-    beforeDestroy () {
-      removeLocalStory('qrcode-preview')
+export default {
+  data () {
+    return {
+      qrcodeUrl: ''
     }
+  },
+  methods: {
+    async save () {
+      let img = new Image()
+      img.setAttribute('crossOrigin', 'Anonymous')
+      img.onload = function () {
+        let canvas = document.createElement('canvas')
+        canvas.height = img.height
+        canvas.width = img.width
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0)
+        let baseUrl = canvas.toDataURL()
+        console.log(baseUrl) // 输出 Data URI
+        if (window.imageSaver) {
+          window.imageSaver.saveBase64Image({
+            data: baseUrl,
+            prefix: 'eyuanlin_',
+            format: 'JPG',
+            quality: 100,
+            mediaScanner: false
+          }, (filePath) => {
+            console.log('保存成功')
+            console.log(filePath)
+          }, (err) => {
+            console.log(err)
+          })
+        }
+      }
+      img.src = this.qrcodeUrl
+      // if (cordova.plugins.saveToPhotoAlbum) {
+      //   cordova.plugins.saveToPhotoAlbum.save(this.qrcodeUrl, (nativeUrl) => {
+      //     console.log(nativeUrl)
+      //     this.$q.notify('保存成功')
+      //   }, (err) => {
+      //     console.log(err)
+      //   })
+      // }
+    },
+    back () {
+      this.$router.goBack()
+    }
+  },
+  mounted () {
+    this.qrcodeUrl = localStorage.getItem('qrcode-preview')
+  },
+  beforeDestroy () {
+    removeLocalStory('qrcode-preview')
   }
+}
 </script>
 
 <style lang="scss">
-  @import "../../assets/css/common";
-  #view-qrcode {
-    background-color: #000000;
-
-    .bottom-big-button {
-      width:  calc(100% - 40px) !important;
-      position: absolute;
-      margin-left: 20px !important;
-      bottom: 4px;
-    }
+@import "../../assets/css/common";
+#view-qrcode {
+  background-color: #000000;
+  .bottom-big-button {
+    width: calc(100% - 40px) !important;
+    position: absolute;
+    margin-left: 20px !important;
+    bottom: 4px;
   }
+}
 </style>
