@@ -2,13 +2,13 @@
   <q-layout id="qcode-page">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="goBack">
-          <q-item-side left icon='keyboard arrow left' class='reback'/>
+        <a @click="goBack" class='back-a'>
+          <q-item-side left icon='keyboard arrow left' class='back-left'/>
           返回</a>
         <q-toolbar-title class='header-title'>
           二维码名称
         </q-toolbar-title>
-        <a class="top-nav-right"></a>
+        <a class="top-nav-right no-info"></a>
       </q-toolbar>
     </q-toolbar>
     <div class='full-width card'>
@@ -606,6 +606,7 @@ export default {
 
   .top-field p {
     margin-bottom: 10px;
+    margin-top: 20px;
   }
 
   .qr-info {

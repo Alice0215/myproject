@@ -15,11 +15,9 @@
             <q-item-tile sublabel lines='1'>
               简介：{{projectDesc}}
              </q-item-tile>
-              <!-- <q-item-side left icon='place' class='inline newicon' v-if="location"></q-item-side> -->
               <q-item-tile sublabel lines='1' icon="place" class="mb-8 newicon" v-if="location">
                   <label class="color-black font-12 location">{{location}}</label>
               </q-item-tile>
-              <!-- <q-item-tile sublabel lines='1' class='text-center location'>{{location}}</q-item-tile> -->
               <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
@@ -32,12 +30,10 @@
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
-              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id" >
-              <router-link :to="{ path: '/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key }">
+              <q-item-tile sublabel lines='1' class='item text-left' v-for="item in list" :key="item.id"  @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
                <span class="qfield-mtitle">{{item.alias}}</span>
                <span class="qfield-stitle" v-if="item.type">{{item.type.value}}</span>
                <span class="qfield-stitle"> {{item.createTime}} {{item.description}}</span>
-              </router-link>
              </q-item-tile>
             <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
               <q-spinner name="dots" slot="message" :size="40"></q-spinner>
@@ -298,7 +294,7 @@ export default {
       line-height: 28px;
       .qfield-mtitle {
         font-size: 14px;
-        padding-right: 100px;
+        padding-right: 50px;
       }
     }
   }

@@ -87,6 +87,9 @@ input:not(.no-style):hover {
   padding: 0px;
   z-index: 100;
 }
+.no-info{
+  min-width: 45px;
+}
 .fix {
   text-align: center;
   font-size: 14px;
