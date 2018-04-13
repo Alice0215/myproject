@@ -82,7 +82,8 @@ module.exports = function (ctx) {
         'QAutocomplete',
         'QLayoutFooter',
         'QAlert',
-        'QChip'
+        'QChip',
+        'QBtnDropdown'
       ],
       directives: [
         'Ripple'

@@ -24,7 +24,15 @@
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
             <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
-            <q-select v-model='type' placeholder='选择类型' class="type" @input="inputChange" :options='qrtypes' v-if="qrcode" icon="expand more"/>
+            <q-btn-dropdown :label="type_lable" class="block qr-type" v-model="dropdown">
+              <q-list link>
+                <q-item v-for="k in qrtypes" :key="k.value" @click.native="changeType(k.value,k.label),dropdown = false" >
+                  <q-item-main>
+                    <q-item-tile label>{{k.label}}</q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
         </div>
         <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
@@ -68,6 +76,8 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      type_lable: '类型',
+      dropdown: false,
       qrcode: true,
       weihu: false,
       list: '',
@@ -131,6 +141,12 @@ export default {
           })
         }
       }, 2000)
+    },
+    changeType (value, lable) {
+      this.type_lable = lable
+      this.type = value
+      console.log(value)
+      this.inputChange()
     },
     initList () {
       request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
@@ -274,9 +290,15 @@ export default {
     margin-bottom: 0px;
     font-size: 14px;
   }
-  .newicon{
+  .newicon {
     color: #999999;
     font-size: 18px;
+  }
+  .qr-type {
+    width: 100%;
+  }
+  .nav-title .q-btn {
+    box-shadow: none;
   }
   .qfield {
     width: 100%;
