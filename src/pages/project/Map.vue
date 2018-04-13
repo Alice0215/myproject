@@ -1,11 +1,20 @@
 <template>
   <q-layout id="map-page">
-    <a @click="$router.goBack()" >
-     <q-toolbar class='fix'>
-     </q-toolbar>
-    </a>
-    <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
-    </iframe>
+    <q-toolbar class="header">
+      <q-toolbar class="fix" >
+          <a  @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
+          获取当前位置
+          </q-toolbar-title>
+          <q-item-side right class="no-info"/>
+      </q-toolbar>
+    </q-toolbar>
+    <!-- <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
+    </iframe> -->
+    <div id="map_frame">
+    </div>
   </q-layout>
 </template>
 
@@ -64,7 +73,10 @@ export default {
       }
     },
     async getGeolocation () {
-      let mapObj = new AMap.Map('iCenter')
+      let mapObj = new AMap.Map('map_frame', {
+        resizeEnable: true, // 自适应大小
+        zoom: 13// 初始视窗
+      })
       mapObj.plugin('AMap.Geolocation', function () {
         let geolocation = new AMap.Geolocation({
           enableHighAccuracy: true, // 是否使用高精度定位，默认:true
@@ -104,14 +116,15 @@ export default {
     }
   },
   async mounted () {
-    this.$nextTick(() => {
-      document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
-      let iframe = document.getElementById('map_frame').contentWindow
-      document.getElementById('map_frame').onload = function () {
-        iframe.postMessage('hello', 'https://m.amap.com/picker/')
-      }
-      window.addEventListener('message', this.receivedMessage, false)
-    })
+    this.getGeolocation()
+    // this.$nextTick(() => {
+    //   document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
+    //   let iframe = document.getElementById('map_frame').contentWindow
+    //   document.getElementById('map_frame').onload = function () {
+    //     iframe.postMessage('hello', 'https://m.amap.com/picker/')
+    //   }
+    //   window.addEventListener('message', this.receivedMessage, false)
+    // })
   },
   beforeDestroy () {
     window.removeEventListener('message', this.receivedMessage)
@@ -119,19 +132,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang='scss'>
+@import "../../assets/css/common";
 #map-page {
   #map_frame {
     width: 100%;
-    height: 100%;
+    height: 600px;
     border: 0;
   }
-  .fix {
-    top: 0;
-    z-index: 100;
-    position: fixed;
-    width: 48px;
-    background: none !important;
-  }
+  // .fix {
+  //   top: 0;
+  //   z-index: 100;
+  //   position: fixed;
+  //   width: 48px;
+  //   background: none !important;
+  // }
 }
 </style>
