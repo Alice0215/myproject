@@ -197,7 +197,7 @@ export default {
   methods: {
     async getAreaBranch () {
       this.areaBranches = []
-      let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type, 'get', null, null, true)
+      let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
       if (resp) {
         let branches = resp.data.resultMsg
         _.forEach(branches, v => {
@@ -329,15 +329,18 @@ export default {
       if (resp) {
         let form = {}
         form = resp.data.resultMsg
+        if (form.code) {
+          form.project = form.code.project
+        }
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
           form.project = form.project
         }
+        if (form.area && form.area.code) {
+          form.areaId = form.area.code.id.toString()
+        }
         if (form.code) {
-          if (form.code.batch) {
-            form.areaId = form.code.batch.id.toString()
-          }
           form.alias = form.code.alias
           if (form.code.project) {
             this.projectName = form.code.project.projectName
@@ -352,8 +355,14 @@ export default {
           form.formattedAddress = form.location.formattedAddress
         }
         let imageArray = []
-        if (form.pictures) {
-          _.forEach(form.pictures, v => {
+        let formPictures = []
+        if (form.pictures && form.pictures.length > 0) {
+          formPictures = form.pictures
+        } else if (form.code.pictures.length > 0) {
+          formPictures = form.code.pictures
+        }
+        if (formPictures.length > 0) {
+          _.forEach(formPictures, v => {
             let previewUrl = server.THUMBNAIL_API + v.filePath
             imageArray.push({
               'previewUrl': previewUrl,
@@ -547,6 +556,7 @@ export default {
   beforeDestroy () {
     eventBus.$off('upload-success')
     eventBus.$off('delete-success')
+    removeLocalStory('top-index')
   }
 }
 </script>
