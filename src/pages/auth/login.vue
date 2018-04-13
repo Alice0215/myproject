@@ -1,5 +1,5 @@
 <template>
-  <div class='card'>
+  <div class='card' id="login">
     <p class='log'>
       <img src='statics/logo.png'/>
     </p>
@@ -32,9 +32,6 @@ export default {
       localStorage.setItem('username', v)
     }
   },
-  mounted () {
-    this.username = localStorage.getItem('username')
-  },
   methods: {
     register () {
       this.$router.push('/register')
@@ -52,6 +49,13 @@ export default {
         username: this.username,
         password: this.password,
         deviceType: deviceType
+      }
+      if (this.password === '' || this.username === '') {
+        this.$q.dialog({
+          title: '提示',
+          message: '请输入您的账号和密码！'
+        })
+        return false
       }
       let params = new URLSearchParams()
       for (var key in data) {
@@ -72,10 +76,6 @@ export default {
           localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
           localStorage.setItem('token', response.data.resultMsg.userToken)
           localStorage.setItem('partyId', response.data.resultMsg.partyId)
-          this.$q.dialog({
-            title: '提示',
-            message: '登录成功！'
-          })
           this.$router.push('/')
         } else {
           if (response.data.resultCode === 'ERROR') {
@@ -98,13 +98,17 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.log {
-  text-align: center;
-  margin-top: 30px;
+#login{
+  .log {
+    text-align: center;
+    margin-top: 30px;
+  }
+  a {
+    font-size: 14px;
+    display: inline-block !important;
+    color: #1aad19 !important;
+  }
+
 }
-a {
-  font-size: 14px;
-  display: inline-block !important;
-  color: #1aad19 !important;
-}
+
 </style>

@@ -1,10 +1,9 @@
 <template>
-  <q-layout id="qcode-page">
+  <q-layout id="qcode-page-add">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="$router.go(-1)">
-          <q-item-side left icon='keyboard arrow left' class='reback'/>
-          返回</a>
+        <a @click="$router.goBack()" class="back-a">
+          <q-item-side left icon='keyboard arrow left' class='back-left'/>返回</a>
         <q-toolbar-title class='header-title'>
           添加植物
         </q-toolbar-title>
@@ -14,14 +13,21 @@
     <div class='full-width card qr-info'>
         <div class="col-12 row mt-6 justify-between">
           <div class="col-7 row">
+            <q-field
+         @blur="$v.formData.alias.$touch"
+        @keyup.enter="save"
+        :error="$v.formData.alias.$error"
+         error-label="请添加植物名称">
               <q-input
-                v-model="qrCodeForm.alias"
-                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'
-              />
+                v-model="formData.alias"
+                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'>
+              <q-autocomplete @search="searchTerm"/>
+              </q-input>
+            </q-field>
           </div>
           <div class="col-4 row">
               <span class="col-4 lineHeight-32">数量</span>
-              <q-input class="col-7 border-1 ml-2 h-35  p-8" v-model="plantCount"></q-input>
+              <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="formData.amount"></q-input>
           </div>
         </div>
         <q-select
@@ -78,13 +84,12 @@
           <q-input v-model="formData.otherFeature" placeholder="苗木其他信息" class='login-input'></q-input>
         </div>
         <div class="mt-10">
-          <q-item-side left icon='place' class='inline newicon'></q-item-side>
-          <q-item-tile sublabel lines='1' class='inline text-center'>
-            河南省郑州市
+          <q-item-tile sublabel lines='1' class='inline text-center' @click.native="openMap">
+            <q-search icon="place"  v-model="address" placeholder="获取当前位置" class='login-input mt-10' disable />
           </q-item-tile>
         </div>
         <q-input
-          v-model="qrCodeForm.description"
+          v-model="formData.description"
           placeholder="输入备注信息"
           type="textarea"
           hide-underline class="login-input mt-10"/>
@@ -92,11 +97,11 @@
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
-                <img class="full-height full-width" :src="v">
+                <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.previewUrl">
                 <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
               </div>
               <div class="w-100 h-100 ml-10">
-                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+                <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
               </div>
             </div>
           </div>
@@ -106,63 +111,74 @@
 </template>
 
 <script>
-import { request } from '../../common'
+import { required } from 'vuelidate/lib/validators'
+import { filter } from 'quasar'
+import { server } from '../../const'
+import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
+import eventBus from '../../eventBus'
 import _ from 'lodash'
 
 export default {
   data () {
     return {
       formData: {
-        category: '',
-        gaoDu: '',
-        xiongJing: '',
-        diJing: '',
-        guanFu: '',
-        pengJing: '',
-        branch: '',
-        year: '',
-        other: '',
-        otherFeature: '',
-        source: '',
-        dealer: ''
-      },
-      qrCodeForm: {
-        projectId: '',
-        qrCodeId: '',
-        description: '',
-        pictures: [],
-        alias: ''
       },
       plantCategory: [],
-      plantCount: '',
-      imageArray: ['http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png',
-        'http://ohowtsnso.bkt.clouddn.com/markdown/20180327152350.png']
+      imageArray: [],
+      address: '',
+      previewApi: ''
+    }
+  },
+  validations: {
+    formData: {
+      alias: { required }
     }
   },
   methods: {
-    cancelUploadImage (index) {
-      this.imageArray = this.imageArray.splice(index + 1)
-    },
     add () {
-      let data = this.formData
-      data['qrCodeForm'] = {
-        projectId: this.qrCodeForm
+      this.$v.$touch()
+      if (this.$v.$error) {
+        return false
       }
-      let params = new FormData()
-      for (var key in data) {
-        params.append(key, data[key])
-      }
-      request('qrcode/single/save', 'put', data, 'json', true).then(response => {
+      localStorage.setItem('singles', JSON.stringify(this.formData))
+      removeLocalStory('user_location')
+      removeLocalStory('qrcode-image')
+      removeLocalStory('qrcode-form')
+      this.$router.goBack()
+    },
+    searchTerm (alias, done) {
+      request('data/term?type=PLANT&start=' + this.formData.alias + '&top=10', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           console.log(response.data.resultMsg)
-          this.$q.dialog({
-            title: '提示',
-            message: '添加成功！'
-          })
-        } else {
-          console.log(response.data.resultMsg)
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          setTimeout(() => {
+            done(filter(alias, { field: 'value', list: model }))
+          }, 1000)
         }
       })
+    },
+    openMap () {
+      this.saveLocalData()
+      this.$router.push('/project/map?from=qrCode')
+    },
+    saveLocalData () {
+      localStorage.setItem('qrcode-form', JSON.stringify(this.formData))
+      localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
+    },
+    openCamera () {
+      if (navigator.camera) {
+        navigator.camera.getPicture(imgData => {
+          this.$q.loading.show()
+          uploadFiles(imgData)
+        }, errorMsg => {
+          console.log(errorMsg)
+        }, { destinationType: Camera.DestinationType.DATA_URL })
+      }
+    },
+    cancelUploadImage (index) {
+      this.$q.loading.show()
+      let img = this.imageArray[index]
+      deleteFiles(img.contentUrl, index)
     },
     getPlantCategory () {
       request('data/plantCategory', 'get').then(response => {
@@ -179,22 +195,56 @@ export default {
       })
     }
   },
-  created () {
-    // this.singlePlantProperties = [{ name: formData.xiongJing, value: '胸径' }, { name: formData.gaoDu, value: '高度' }, { name: formData.diJing, value: '地径' }, { name: formData.guanFu, value: '冠幅' }, { name: formData.pengJing, value: '篷径' }]
+  async mounted () {
+    this.previewApi = server.PREVIEW_API
+    eventBus.$on('upload-success', resp => {
+      console.log(resp)
+      this.$q.loading.hide()
+      this.imageArray.push(resp)
+    })
+    eventBus.$on('delete-success', (params) => {
+      this.$q.loading.hide()
+      let index = parseInt(params.idx)
+      this.imageArray.splice(index, 1)
+      this.$q.dialog({
+        title: '提示',
+        message: params.msg
+      })
+    })
+    let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
+    if (!_.isNull(oldData)) {
+      this.formData = oldData['singles']
+    }
+
     this.getPlantCategory()
+    let geoInfo = JSON.parse(localStorage.getItem('user_location'))
+    let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
+    if (!_.isNull(imageArray)) {
+      this.imageArray = imageArray
+      localStorage.removeItem('qrcode-image')
+    }
+    if (!_.isNull(geoInfo)) {
+      this.address = geoInfo.formattedAddress
+      this.formData.locationJson = JSON.stringify(geoInfo)
+      localStorage.removeItem('user_location')
+    }
+  },
+  beforeDestroy () {
+    eventBus.$off('upload-success')
+    eventBus.$off('delete-success')
   }
 }
 </script>
 
 <style lang='scss'>
 @import "../../assets/css/common";
-#qcode-page {
+#qcode-page-add {
   .lineHeight-32 {
     line-height: 32px;
   }
   .h-35 {
     height: 35px;
-    margin-bottom: 10px;
+    margin-top: 10px;
   }
 
   #single-plant {
@@ -227,16 +277,11 @@ export default {
   input:not(.no-style):hover {
     border-bottom: none;
   }
-  .q-if-control.q-icon {
-    padding-bottom: 6px;
-  }
-
   .top-field p {
     margin-bottom: 10px;
   }
 
   .qr-info {
-    margin-top: 30px;
     font-size: 14px;
     color: #333333;
     margin-bottom: 30px;

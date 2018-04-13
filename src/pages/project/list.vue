@@ -1,5 +1,5 @@
 <template>
-    <q-list class="list">
+    <q-list class="list" id="project-list">
         <q-toolbar class="header">
         <q-toolbar class="fix">
             <q-toolbar-title class="header-title">
@@ -7,16 +7,15 @@
             </q-toolbar-title>
        </q-toolbar>
         </q-toolbar>
-        <q-item class="list-list">
-             <span class="add-btn" @click="$router.push('project/add')">+</span>
+        <q-item class="list-list"  @click.native="$router.push('project/add')" >
+             <span class="add-btn">+</span>
             <q-item-main class="add-field">
             创建项目
             </q-item-main>
         </q-item>
         <q-infinite-scroll :handler="load" class="scroll-field">
         <q-item multiline  v-for="item in list"
-          :key="item.id" class="list-list">
-          <a href='javascript:' @click="$router.push('qcode/list?projectId='+item.id)">
+          :key="item.id" class="list-list"  @click.native="$router.push('qcode/list?projectId='+item.id)">
            <q-item-side class="add-btn" />
             <q-item-main>
             <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
@@ -24,17 +23,16 @@
             {{item.projectDesc}}
             </q-item-tile>
             </q-item-main>
-          </a>
         </q-item>
         <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
           <q-spinner name="dots" slot="message" :size="40"></q-spinner>
         </div>
       </q-infinite-scroll>
       <q-tabs class="footer">
-        <q-route-tab slot="title" icon="apps" to="/" replace label="我的项目" class="menu" />
-        <q-route-tab slot="title" icon="view_array" to="/" replace label="扫二维码" class="menu"/>
+        <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu" />
+        <q-route-tab slot="title" icon="view_array" to="/qcode/scan" append label="扫二维码" class="menu"/>
         <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
-        <q-route-tab slot="title" icon="person" to="/" replace label="我的" class="menu"/>
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
       </q-tabs>
     </q-list>
 </template>
@@ -96,35 +94,38 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "../../assets/css/common";
 .list {
-  padding: 0px;
-  border: none;
-}
-.scroll-field {
-  margin-bottom: 63px;
-}
-.add-btn {
-  width: 75px;
-  height: 75px;
-  background-color: #dcdcdc;
-  border-radius: 5px;
-  color: white;
-  font-size: 60px;
-  line-height: 75px;
-  text-align: center;
-}
-.add-field {
-  padding-left: 10px;
-}
-.title {
-  font-size: 16px;
-  color: black;
-  padding-top: 10px;
-}
-.content {
-  font-size: 14px;
-  color: #666666 !important;
-  margin-top: 5px;
+    padding: 0px;
+    border: none;
+  }
+@import "../../assets/css/common";
+#project-list {
+
+  .scroll-field {
+    margin-bottom: 63px;
+  }
+  .add-btn {
+    width: 75px;
+    height: 75px;
+    background-color: #dcdcdc;
+    border-radius: 5px;
+    color: white;
+    font-size: 60px;
+    line-height: 68px;
+    text-align: center;
+  }
+  .add-field {
+    padding-left: 10px;
+  }
+  .title {
+    font-size: 16px;
+    color: black;
+    padding-top: 10px;
+  }
+  .content {
+    font-size: 14px;
+    color: #666666 !important;
+    margin-top: 5px;
+  }
 }
 </style>

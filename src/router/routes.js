@@ -68,8 +68,44 @@ export default [
     component: () => import('pages/project/map')
   },
   {
+    path: '/jobGroup/byUser',
+    component: () => import('pages/jobGroup/byUser'),
+    name: 'groupByUser'
+  },
+  {
+    path: '/jobGroup/record',
+    component: () => import('pages/jobGroup/record'),
+    name: 'jobRecord'
+  },
+  {
+    path: '/jobGroup/groupRecord',
+    component: () => import('pages/jobGroup/groupRecord'),
+    name: 'jobGroupRecord'
+  },
+  {
+    path: '/jobGroup/detail',
+    component: () => import('pages/jobGroup/detail'),
+    name: 'jobDetail'
+  },
+  {
     path: '/project/maintenance',
     component: () => import('pages/project/constructionMaintenance.vue')
+  },
+  {
+    path: '/project/jobs',
+    component: () => import('pages/project/jobs.vue')
+  },
+  {
+    path: '/choose/project',
+    component: () => import('pages/choose/chooseProject.vue')
+  },
+  {
+    path: '/qcode/scan',
+    component: () => import('pages/qcode/scan.vue')
+  },
+  {
+    path: '/qcode/view',
+    component: () => import('pages/qcode/viewQRCode.vue')
   },
   { // Always leave this as last one
     path: '*',

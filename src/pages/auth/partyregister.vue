@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" id="register">
     <div class="register-title">
         <span @click="partyregister()">个人注册</span>
         <span class="hover">机构注册</span>
@@ -8,14 +8,14 @@
       <q-field  @blur="$v.form.partyName.$touch"
         @keyup.enter="submit"
         :error="$v.form.partyName.$error"
-         error-label="请填写机构名称">
+         error-label="机构名称为长度不超过45的必填项">
         <q-input v-model="form.partyName" placeholder="机构名称" class="login-input"
         />
       </q-field>
        <q-field  @blur="$v.form.username.$touch"
         @keyup.enter="submit"
         :error="$v.form.username.$error"
-        error-label="请属于用户名">
+        error-label="请填写用户名">
       <q-input
         v-model="form.username"
         placeholder='用户名' class='login-input'
@@ -24,7 +24,7 @@
      <q-field  @blur="$v.form.fullname.$touch"
         @keyup.enter="submit"
         :error="$v.form.fullname.$error"
-         error-label="请属于真实姓名">
+         error-label="请填写真实姓名">
       <q-input
         v-model="form.fullname"
         placeholder='真实姓名' class='login-input'
@@ -44,7 +44,7 @@
         :error="$v.form.phone.$error"
          error-label="请核对您的手机号">
        <q-input
-        v-model="form.phone"
+        v-model="form.phone" type="number"
         placeholder='手机号' class=' login-input'
       />
       </q-field>
@@ -69,12 +69,15 @@
        </q-field>
     </div>
     <q-btn class="full-width main-color-bg input" @click="register()">注册</q-btn>
+     <div class='login-field'>
+          <span>已有账号？</span><a href="javascript:" @click="$router.push('/login')">立即登录</a>
+      </div>
   </div>
 </template>
 
 <script>
 import { request } from '../../common'
-import { required, email, minLength, maxLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, maxLength, sameAs, numeric } from 'vuelidate/lib/validators'
 export default {
   mounted () {
     this.getPersonal()
@@ -97,8 +100,8 @@ export default {
       username: { required },
       fullname: { required },
       email: { required, email },
-      partyName: { required },
-      phone: { required },
+      partyName: { required, maxLength: maxLength(45) },
+      phone: { required, numeric, minLength: minLength(11), maxLength: maxLength(11) },
       password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       password_confirmation: { required,
         sameAsPassword: sameAs('password') }
@@ -119,10 +122,6 @@ export default {
     register () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
-        return false
-      }
-      if (!/^(\w){6,20}$/.test(this.$v.form.phone)) {
-        this.$q.notify('请输入正确的手机号')
         return false
       }
       let deviceType = 1
@@ -151,7 +150,7 @@ export default {
             title: '提示',
             message: '注册成功'
           })
-          this.$router.push('/')
+          return this.$router.push('/login')
         } else {
           if (response.data.resultCode === 'ERROR') {
             this.$q.dialog({
@@ -174,13 +173,18 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.card {
+#register{
+  .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
 }
 button {
   margin-bottom: 4%;
+}
+.login-field {
+  text-align: center;
+  margin-bottom: 40px;
 }
 h4 {
   font-weight: 300;
@@ -209,4 +213,15 @@ input:not(.no-style):hover {
 .register-title span {
   margin-right: 50px;
 }
+.log {
+    text-align: center;
+    margin-top: 30px;
+  }
+  a {
+    font-size: 14px;
+    display: inline-block !important;
+    color: #1aad19 !important;
+  }
+}
+
 </style>

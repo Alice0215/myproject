@@ -1,19 +1,19 @@
 <template>
 
-  <div class="main">
+  <div class="main" >
     <q-toolbar class="header">
     <q-toolbar class="fix">
-       <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>
+       <a @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>返回</a>
         <q-toolbar-title class="header-title">
         {{title}}
         </q-toolbar-title>
-        <q-item-side right/>
+        <q-item-side right class="no-info"/>
     </q-toolbar>
     </q-toolbar>
     <!--<div class="search-field">
         <q-search v-model="key_word"  placeholder="搜索" class="btn" />
     </div>-->
-    <div class="full-width">
+    <div class="full-width" id="allUser">
         <div  v-for="user in users"
           :key="user.userId"  @click="addUser(user.fullname,user.userId)">
          <q-item  v-ripple.mat class="full-width underline user-item">
@@ -22,6 +22,7 @@
             <q-item-side right icon="done" v-show="true" v-if="ids.indexOf(user.userId) !== -1"/>
         </q-item>
         </div>
+         <router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="full-btn"><q-btn class="full-width btn">完成设置</q-btn></router-link>
     </div>
   </div>
 </template>
@@ -43,14 +44,14 @@ export default {
       ids: []
     }
   },
-  created () {
+  mounted () {
     this.type = this.$route.query.type
     if (localStorage.getItem('selectedUser')) {
       this.userParams = JSON.parse(localStorage.getItem('selectedUser'))
+      localStorage.removeItem('selectedUser')
       for (let item of this.userParams) {
         this.ids.push(parseInt(item['userId']))
       }
-      console.log(this.ids)
     }
 
     if (this.$route.query.projectId) {
@@ -67,8 +68,6 @@ export default {
     } else {
       this.title = '项目负责人'
     }
-  },
-  mounted () {
     this.getUsers()
   },
   methods: {
@@ -91,8 +90,6 @@ export default {
         this.userParams = [...this.userParams, userInfo]
         eventBus.$emit('users', userInfo)
       }
-      console.log(this.ids)
-      console.log(this.userParams)
     }
   }
 }
@@ -100,23 +97,25 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.user-item:hover {
-  background: none;
-}
-.search-field {
-  background: #cccccc;
-  height: 50px;
-}
-.search-field .btn {
-  background-color: white;
-  text-align: center;
-  width: 96%;
-  margin-left: 2%;
-}
-.user {
-  min-width: auto;
-}
-.underline {
-  border-bottom: 1px solid #cccccc;
+#allUser {
+  .user-item:hover {
+    background: none;
+  }
+  .search-field {
+    background: #cccccc;
+    height: 50px;
+  }
+  .search-field .btn {
+    background-color: white;
+    text-align: center;
+    width: 96%;
+    margin-left: 2%;
+  }
+  .user {
+    min-width: auto;
+  }
+  .full-btn{
+    padding: 0px 15px;
+  }
 }
 </style>

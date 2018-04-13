@@ -2,34 +2,55 @@
   <div>
     <q-toolbar class="header">
         <q-toolbar class="fix" >
-            <a @click="$router.go(-1)"> <q-item-side left  icon="keyboard arrow left"/></a>
+            <a  @click="$router.push('/')" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+              返回
+            </a>
             <q-toolbar-title class="header-title">
             新建项目
             </q-toolbar-title>
-           <q-item-side right/>
+           <q-item-side right class="no-info"/>
        </q-toolbar>
     </q-toolbar>
-    <div class="full-width card">
-        <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
-                  class="login-input" disable  placeholder="输入地址/定位地址"/>
-        <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-          <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
+    <div class="full-width card" id="project-add">
+      <q-field
+         @blur="$v.formData.projectName.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.projectName.$error"
+         error-label="请添加项目名称">
+      <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+      </q-field>
+      <q-field
+         @blur="$v.formData.locationJson.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.locationJson.$error"
+         error-label="请获取当前位置">
+      <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+                class="login-input" disable  placeholder="输入地址/定位地址"/>
+      </q-field>
+      <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+        <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
+            <q-item-side icon="group" />
+            <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+            <q-item-side right icon="keyboard_arrow_right" />
+        </q-item>
+         <q-field
+         @blur="$v.formData.TLSelect.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.TLSelect.$error"
+         error-label="请项目设置负责人">
+          <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
               <q-item-side icon="group" />
-              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-              <q-item-side right icon="keyboard_arrow_right" />
+              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+              <q-item-side right  icon="keyboard_arrow_right" />
           </q-item>
-            <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-                <q-item-side icon="group" />
-                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-                <q-item-side right  icon="keyboard_arrow_right" />
-            </q-item>
+         </q-field>
+          <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
     </div>
-    <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
   </div>
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
 import eventBus from '../../eventBus'
 export default {
@@ -49,6 +70,13 @@ export default {
         geoInfo: null
       },
       tempType: ''
+    }
+  },
+  validations: {
+    formData: {
+      projectName: { required },
+      locationJson: { required },
+      TLSelect: { required }
     }
   },
   created () {
@@ -105,7 +133,11 @@ export default {
     }
   },
   methods: {
-    add () {
+    async add () {
+      this.$v.formData.$touch()
+      if (this.$v.formData.$error) {
+        return false
+      }
       let projectJobs = []
       let locationJson = ''
       if (this.formData.locationJson !== '') {
@@ -118,28 +150,13 @@ export default {
         'locationJson': locationJson,
         'projectJobs': projectJobs
       }
-      request('project/create', 'post', data, 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          if (localStorage.getItem('oldInfo')) {
-            localStorage.removeItem('oldInfo')
-          }
+      await request('project/create', 'post', data, 'json', true).then(response => {
+        if (response && response.data.resultCode === 'SUCCESS') {
           this.$q.dialog({
             title: '提示',
             message: '项目添加成功！'
           })
           this.$router.push('/')
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
-          }
         }
       })
     },
@@ -165,36 +182,31 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.users {
-  font-size: 14px;
-  .user {
-    padding: 3px;
-    text-align: center;
-    display: inline-block;
-    background-color: #dcdcdc;
-    border-radius: 2px;
-    margin-left: 3px;
+#project-add {
+  .users {
+    font-size: 14px;
+    .user {
+      padding: 3px;
+      text-align: center;
+      display: inline-block;
+      background-color: #dcdcdc;
+      border-radius: 2px;
+      margin-left: 3px;
+    }
   }
-}
-
-.underline {
-  border-bottom: 1px solid #cccccc;
-  margin-top: 20px;
-}
-.btn {
-  background-color: #1aad19;
-  color: white;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-input:not(.no-style):hover {
-  border-bottom: none;
-}
-.q-if-inner {
-  min-height: 30px !important;
-  padding-bottom: 10px;
-}
-.q-if-control.q-icon {
-  padding-bottom: 6px;
+  .underline {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 20px;
+  }
+  input:not(.no-style):hover {
+    border-bottom: none;
+  }
+  .q-if-inner {
+    min-height: 30px !important;
+    padding-bottom: 10px;
+  }
+  .q-if-control.q-icon {
+    padding-bottom: 6px;
+  }
 }
 </style>

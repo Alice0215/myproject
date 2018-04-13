@@ -14,13 +14,12 @@ a {
   display: inherit;
 
   &:hover, &:active, &:focus {
-    color: $primary;
-    text-decoration: underline;
+    color: none;
+    text-decoration: none;
   }
 
   &.link {
     color: $primary;
-
     &:hover, &:active, &:focus {
       color: darken($primary, 10%);
       text-decoration: underline;
@@ -38,6 +37,17 @@ a {
   padding: 0px 15px;
   min-height: 160px;
 }
+.back-a{
+  line-height: 34px;
+  .back-left{
+    min-width: auto !important;
+    line-height: 34px;
+    .q-icon, .q-icon.material-icons{
+      font-size: 30px;
+    }
+  }
+}
+
 .login-input {
   border: 1px solid #eee;
   border-radius: 10px;
@@ -64,7 +74,7 @@ input:not(.no-style):hover {
 }
 .q-if-error{
   border: 1px solid red !important;
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 .hover {
   padding-bottom: 10px;
@@ -75,8 +85,10 @@ input:not(.no-style):hover {
 .fix{
   background-color: #f7f7f7 !important;
   padding: 0px;
-  margin-bottom: 15px;
   z-index: 100;
+}
+.no-info{
+  min-width: 45px;
 }
 .fix {
   text-align: center;
@@ -114,16 +126,16 @@ input:not(.no-style):hover {
   color: $primary !important;
 }
 .q-tabs-position-top .q-tabs-bar{
-  color: $primary !important;
-}
-.inline {
-  display: inline;
+  color:$bgcolor !important;
 }
 .bg-color{
   background-color:  $bgcolor;
 }
+.underline {
+  border-bottom: 1px solid #cccccc;
+}
 .btn {
-  background-color: #1aad19;
+  background-color: $primary;
   color: white;
   margin-bottom: 20px;
   height: 50px;
@@ -131,7 +143,7 @@ input:not(.no-style):hover {
   margin-top: 20px;
 }
 .nav-title {
-  height: 80px;
+  height: 95px;
   text-align: center;
   width: 100%;
   color: #101010;
@@ -157,4 +169,7 @@ input:not(.no-style):hover {
   box-shadow: none;
   background-color: white;
   min-height: auto;
+}
+.q-item{
+  padding-top: 15px;
 }

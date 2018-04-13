@@ -1,7 +1,23 @@
 <template>
   <q-layout id="map-page">
-    <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
+    <!-- <q-toolbar class="header">
+      <q-toolbar class="fix" >
+          <a  @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
+          获取当前位置
+          </q-toolbar-title>
+          <q-item-side right class="no-info"/>
+      </q-toolbar>
+    </q-toolbar> -->
+       <a  @click="$router.goBack()" ><q-toolbar class="fix" >
+      </q-toolbar>
+       </a>
+    <iframe :src="src" id="map_frame">
     </iframe>
+    <div id="map">
+    </div>
   </q-layout>
 </template>
 
@@ -13,6 +29,7 @@ export default {
   data () {
     return {
       loading: false,
+      src: '',
       position: {}
     }
   },
@@ -46,15 +63,24 @@ export default {
       if (data.info === 'OK') {
         eventBus.$emit('user_location', geoInfo)
         localStorage.setItem('user_location', geoInfo)
+        if (this.$route.query.from === 'qrCode') {
+          this.$router.goBack()
+          return
+        }
         if (this.$route.query.projectId) {
-          this.$router.push('/project/edit?id=' + this.$route.query.projectId)
+          this.$router.goBack()
+          // this.$router.push('/project/edit?id=' + this.$route.query.projectId)
         } else {
-          this.$router.push('/project/add')
+          this.$router.goBack()
+          // this.$router.push('/project/add')
         }
       }
     },
     async getGeolocation () {
-      let mapObj = new AMap.Map('iCenter')
+      let mapObj = new AMap.Map('map_frame', {
+        resizeEnable: true, // 自适应大小
+        zoom: 13// 初始视窗
+      })
       mapObj.plugin('AMap.Geolocation', function () {
         let geolocation = new AMap.Geolocation({
           enableHighAccuracy: true, // 是否使用高精度定位，默认:true
@@ -72,12 +98,14 @@ export default {
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
-          console.log(d)
+          let getLng = d.position.getLng()
+          let getLat = d.position.getLat()
+          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
         }) // 返回定位出错信息
-      })
+      }.bind(this))
     },
     receivedMessage (e) {
       console.log(e)
@@ -91,9 +119,20 @@ export default {
         this.position.lat = lngLatArray[1]
       }
       this.getAdressByGeocoder(lngLatArray)
+    },
+    getCurrentPosition () {
+      if (  navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success => {
+          console.log(success)
+        }, err => {
+          console.log(err)
+        })
+      }
     }
   },
   async mounted () {
+    this.getCurrentPosition()
+    this.getGeolocation()
     this.$nextTick(() => {
       document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
       let iframe = document.getElementById('map_frame').contentWindow
@@ -109,12 +148,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang='scss'>
+@import "../../assets/css/common";
 #map-page {
   #map_frame {
     width: 100%;
     height: 100%;
     border: 0;
+  }
+  #map {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .fix {
+    top: 0;
+    z-index: 100;
+    position: fixed;
+    width: 48px;
+    background: none !important;
   }
 }
 </style>
