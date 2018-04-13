@@ -16,6 +16,8 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <icon src="res/icon/logoe.png" />
+        <splash src="res/screen/bgE.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -24,4 +26,5 @@
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
     <plugin name="cordova-plugin-qrscanner" spec="^2.5.0" />
     <engine name="android" spec="6.3.0" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
 </widget>
