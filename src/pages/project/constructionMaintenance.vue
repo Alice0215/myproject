@@ -46,7 +46,7 @@
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
-          <img class="full-height full-width" :src="v.previewUrl">
+          <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.previewUrl">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -61,6 +61,7 @@
 <script>
 import { request, deleteFiles, uploadFiles } from '../../common'
 import { required } from 'vuelidate/lib/validators'
+import { server } from '../../const'
 import eventBus from '../../eventBus'
 
 export default {
@@ -71,6 +72,7 @@ export default {
         pictures: [],
         jobs: [],
         tags: [],
+        previewApi: '',
         jobObg: []
       },
       codeId: '',
@@ -196,6 +198,7 @@ export default {
     }
   },
   mounted () {
+    this.previewApi = server.PREVIEW_API
     this.codeId = this.$route.query.codeId
     this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {

@@ -97,11 +97,11 @@
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
-                <img class="full-height full-width" :src="v" >
+                <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.previewUrl">
                 <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
               </div>
               <div class="w-100 h-100 ml-10">
-                <q-btn icon="camera alt" size="35px" class="camera-button full-height full-width"/>
+                <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
               </div>
             </div>
           </div>
@@ -113,6 +113,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { filter } from 'quasar'
+import { server } from '../../const'
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
 import eventBus from '../../eventBus'
 import _ from 'lodash'
@@ -124,7 +125,8 @@ export default {
       },
       plantCategory: [],
       imageArray: [],
-      address: ''
+      address: '',
+      previewApi: ''
     }
   },
   validations: {
@@ -194,6 +196,7 @@ export default {
     }
   },
   async mounted () {
+    this.previewApi = server.PREVIEW_API
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
