@@ -14,7 +14,7 @@
     <div class="text-center mt-40">
       <img :src="qrcodeUrl">
     </div>
-    <q-btn class="full-width btn bottom-big-button" @click='save()'>保存到手机相册</q-btn>
+    <!--<q-btn class="full-width btn bottom-big-button" @click='save()'>保存到手机相册</q-btn>-->
   </q-layout>
 </template>
 
@@ -79,10 +79,8 @@ export default {
 
 <style lang="scss">
 @import "../../assets/css/common";
-
 #view-qrcode {
   background-color: #000000;
-
   .bottom-big-button {
     width: calc(100% - 40px) !important;
     position: absolute;
