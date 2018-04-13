@@ -19,7 +19,7 @@
         </q-item-side>
         <q-item-main>
         </q-item-main>
-        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+qrCodeId+'&type='+qrtype)"/>
+        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+codeId+'&type='+qrtype)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
       </q-item>
        <q-field
@@ -90,7 +90,7 @@ export default {
   methods: {
     cancelUploadImage (index) {
       this.$q.loading.show()
-      let img = this.pictures[index]
+      let img = this.form.pictures[index]
       deleteFiles(img.contentUrl, index)
     },
     openCamera () {
@@ -116,6 +116,8 @@ export default {
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         this.QrInfo = resp.data.resultMsg.code
+        this.codeId = resp.data.resultMsg.code.id
+        console.log(this.codeId)
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
@@ -151,7 +153,8 @@ export default {
       if (this.$v.form.$error) {
         return false
       }
-      if (this.jobGroupId !== 'null') {
+      if (this.jobGroupId !== undefined) {
+        console.log(this.jobGroupId)
         this.edit()
       } else {
         this.save()
@@ -199,17 +202,20 @@ export default {
   },
   mounted () {
     this.previewApi = server.PREVIEW_API
-    this.codeId = this.$route.query.codeId
+    if (!_.isNull(this.$route.query.codeId)) {
+      this.codeId = this.$route.query.codeId
+    }
+
     this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
-      this.pictures.push(resp)
+      this.form.pictures.push(resp)
     })
     eventBus.$on('delete-success', (params) => {
       this.$q.loading.hide()
       let index = parseInt(params.idx)
-      this.pictures.splice(index, 1)
+      this.form.pictures.splice(index, 1)
       this.$q.dialog({
         title: '提示',
         message: params.msg

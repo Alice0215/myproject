@@ -2,8 +2,8 @@
   <q-layout id="scan-page">
     <q-toolbar class='header'>
       <q-toolbar class='fix'>
-        <a @click="back">
-          <q-item-side left icon='keyboard arrow left' class='reback'/>
+        <a @click="back" class="back-a">
+          <q-item-side left icon='keyboard arrow left' class='back-left'/>
           返回</a>
         <q-toolbar-title class='header-title'>
           扫描二维码

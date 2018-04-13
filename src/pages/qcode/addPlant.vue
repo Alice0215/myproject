@@ -141,9 +141,6 @@ export default {
         return false
       }
       localStorage.setItem('singles', JSON.stringify(this.formData))
-      removeLocalStory('user_location')
-      removeLocalStory('qrcode-image')
-      removeLocalStory('qrcode-form')
       this.$router.goBack()
     },
     searchTerm (alias, done) {
@@ -162,8 +159,8 @@ export default {
       this.$router.push('/project/map?from=qrCode')
     },
     saveLocalData () {
-      localStorage.setItem('qrcode-form', JSON.stringify(this.formData))
-      localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
+      localStorage.setItem('qrcode-form-add', JSON.stringify(this.formData))
+      localStorage.setItem('qrcode-image-add', JSON.stringify(this.imageArray))
     },
     openCamera () {
       if (navigator.camera) {
@@ -215,13 +212,18 @@ export default {
     if (!_.isNull(oldData)) {
       this.formData = oldData['singles']
     }
+    let formData = JSON.parse(localStorage.getItem('qrcode-form-add'))
+    if (!_.isNull(formData)) {
+      this.formData = formData
+      localStorage.removeItem('qrcode-form-add')
+    }
 
     this.getPlantCategory()
     let geoInfo = JSON.parse(localStorage.getItem('user_location'))
-    let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
+    let imageArray = JSON.parse(localStorage.getItem('qrcode-image-add'))
     if (!_.isNull(imageArray)) {
       this.imageArray = imageArray
-      localStorage.removeItem('qrcode-image')
+      localStorage.removeItem('qrcode-image-add')
     }
     if (!_.isNull(geoInfo)) {
       this.address = geoInfo.formattedAddress
