@@ -13,6 +13,9 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <feature name="Geolocation">
+        <param name="android-package" value="org.apache.cordova.GeoBroker" />
+    </feature>
     <platform name="android">
         <allow-intent href="market:*" />
         <icon src="res/icon/logoe.png" />
@@ -45,4 +48,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.2" />
     <engine name="android" spec="6.3.0" />
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
 </widget>
