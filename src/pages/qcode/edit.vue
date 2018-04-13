@@ -493,7 +493,6 @@ export default {
     if (_.isNull(topIndex)) {
       let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
       index = _.indexOf(keyArray, this.typeKey) > -1 ? _.indexOf(keyArray, this.typeKey) : 0
-      index = 2
     } else {
       index = parseInt(topIndex)
       console.log(topIndex)
