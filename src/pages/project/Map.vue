@@ -13,6 +13,8 @@
     </q-toolbar>
     <!-- <iframe src="https://m.amap.com/picker/?key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map_frame">
     </iframe> -->
+     <iframe src="https://m.amap.com/around/?locations=113.6951,34.77944&keywords=写字楼,小区,学校&defaultIndex=3&defaultView=&searchRadius=5000&key=d18fb1ffb12982910e0ab4c6ffd7ee6e" id="map">
+    </iframe>
     <div id="map_frame">
     </div>
   </q-layout>
@@ -26,6 +28,8 @@ export default {
   data () {
     return {
       loading: false,
+      lng: 113.6951,
+      lat: 34.77944,
       position: {}
     }
   },
@@ -95,6 +99,12 @@ export default {
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
           console.log(d)
+          let lng = d.position.getLng()
+          let Lat = d.position.getLat()
+          console.log(d.position.getLng())
+          console.log(d.position.getLat())
+          // this.lng = lng
+          // this.lat = Lat
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -137,8 +147,12 @@ export default {
 #map-page {
   #map_frame {
     width: 100%;
-    height: 600px;
+    height: 0px;
     border: 0;
+  }
+  #map {
+    width: 100%;
+    height: 100%;
   }
   // .fix {
   //   top: 0;
