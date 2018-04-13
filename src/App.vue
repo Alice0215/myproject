@@ -3,7 +3,7 @@
     <!--<transition :name="transitionName">-->
       <router-view class="child-view"></router-view>
     <!--</transition>-->
-    <lg-preview></lg-preview>
+    <lg-preview id="preview-cover"></lg-preview>
   </div>
 </template>
 
@@ -12,6 +12,7 @@
   import eventBus from './eventBus'
   import _ from 'lodash'
   import {removeLocalStory} from './common'
+  import $ from 'jquery'
 
   function backEvent () {
     eventBus.$emit('backButton-clicked')
@@ -69,24 +70,28 @@
         })
       })
       eventBus.$on('backButton-clicked', () => {
-        console.log(this.$router.currentRoute.path)
-        let exitArray = ['/', '/login']
-        if (_.indexOf(exitArray, this.$router.currentRoute.path) > -1) {
-          this.$q.notify({
-            message: '再按一次退出',
-            timeout: 3000,
-            type: 'info',
-            position: 'center'
-          })
-          document.removeEventListener('backbutton', backEvent, false) // 注销返回键
-          document.addEventListener('backbutton', this.exitApp, false) // 绑定退出事件
-          setTimeout(() => {
-            document.removeEventListener('backbutton', this.exitApp, false) // 注销返回键
-            document.addEventListener('backbutton', backEvent, false) // 返回键
-          }, 3000)
+        if ($('#preview-cover').css('display') !== 'none') {
+          $('#preview-cover').click()
         } else {
-          console.log('back')
-          this.$router.goBack()
+          console.log(this.$router.currentRoute.path)
+          let exitArray = ['/', '/login']
+          if (_.indexOf(exitArray, this.$router.currentRoute.path) > -1) {
+            this.$q.notify({
+              message: '再按一次退出',
+              timeout: 3000,
+              type: 'info',
+              position: 'center'
+            })
+            document.removeEventListener('backbutton', backEvent, false) // 注销返回键
+            document.addEventListener('backbutton', this.exitApp, false) // 绑定退出事件
+            setTimeout(() => {
+              document.removeEventListener('backbutton', this.exitApp, false) // 注销返回键
+              document.addEventListener('backbutton', backEvent, false) // 返回键
+            }, 3000)
+          } else {
+            console.log('back')
+            this.$router.goBack()
+          }
         }
       })
     }
