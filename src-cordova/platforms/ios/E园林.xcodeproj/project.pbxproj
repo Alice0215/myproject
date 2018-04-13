@@ -395,6 +395,7 @@
 				INFOPLIST_FILE = "E园林/E园林-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eyuanlin.app;
 				PRODUCT_NAME = "E园林";
 				PROVISIONING_PROFILE = "74ec3d4c-98c5-41d1-8ab4-cf2446d3baa7";
 				PROVISIONING_PROFILE_SPECIFIER = eyuanlin_dev;
@@ -429,6 +430,7 @@
 				INFOPLIST_FILE = "E园林/E园林-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eyuanlin.app;
 				PRODUCT_NAME = "E园林";
 				PROVISIONING_PROFILE = "cea54d9e-ad07-4725-a145-86342d5dc69a";
 				PROVISIONING_PROFILE_SPECIFIER = eyuanlin_pro;
