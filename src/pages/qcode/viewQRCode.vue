@@ -14,7 +14,7 @@
     <div class="text-center mt-40">
       <img :src="qrcodeUrl">
     </div>
-    <q-btn class="full-width btn bottom-big-button" @click='save()'>保存到手机相册</q-btn>
+    <!--<q-btn class="full-width btn bottom-big-button" @click='save()'>保存到手机相册</q-btn>-->
   </q-layout>
 </template>
 
