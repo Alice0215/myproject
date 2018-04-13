@@ -45,13 +45,18 @@
             placeholder='所属片区' class='login-input'
             :options="areaBranches"
           />
-          <q-field
-         @blur="$v.category.$touch"
+          <q-select v-if="type !== 'SINGLE'"
+            v-model="category"
+            placeholder='苗木分类选项' class='login-input mb-2'
+            :options="plantCategoryArray"
+          />
+            <q-field v-if="type === 'SINGLE'"
+         @blur="$v.scategory.$touch"
         @keyup.enter="save"
-        :error="$v.category.$error"
+        :error="$v.scategory.$error"
          error-label="请选择苗木分类">
           <q-select
-            v-model="category"
+            v-model="scategory"
             placeholder='苗木分类选项' class='login-input mb-2'
             :options="plantCategoryArray"
           />
@@ -159,6 +164,7 @@ export default {
     return {
       typeKey: null,
       category: '',
+      scategory: '',
       areaId: '',
       showType: false,
       qrCodeId: '',
@@ -189,7 +195,7 @@ export default {
     }
   },
   validations: {
-    category: { required, numeric },
+    scategory: { required, numeric },
     form: {
       alias: { required }
     }
@@ -197,7 +203,7 @@ export default {
   methods: {
     async getAreaBranch () {
       this.areaBranches = []
-      let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=' + this.type, 'get', null, null, true)
+      let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
       if (resp) {
         let branches = resp.data.resultMsg
         _.forEach(branches, v => {
@@ -255,7 +261,7 @@ export default {
       form.qrCodeForm = qrCodeForm
       if (this.type === plantType.SINGLE) {
         url = 'qrcode/single/save'
-        form.category = this.category
+        form.category = this.scategory
         form.xiongJing = this.form.xiongJing
         form.diJing = this.form.diJing
         form.gaoDu = this.form.gaoDu
@@ -329,15 +335,18 @@ export default {
       if (resp) {
         let form = {}
         form = resp.data.resultMsg
+        if (form.code) {
+          form.project = form.code.project
+        }
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
           form.project = form.project
         }
+        if (form.area && form.area.code) {
+          form.areaId = form.area.code.id.toString()
+        }
         if (form.code) {
-          if (form.code.batch) {
-            form.areaId = form.code.batch.id.toString()
-          }
           form.alias = form.code.alias
           if (form.code.project) {
             this.projectName = form.code.project.projectName
@@ -347,13 +356,20 @@ export default {
         }
         if (form.category) {
           this.category = form.category.id.toString()
+          this.scategory = form.category.id.toString()
         }
         if (form.location) {
           form.formattedAddress = form.location.formattedAddress
         }
         let imageArray = []
-        if (form.pictures) {
-          _.forEach(form.pictures, v => {
+        let formPictures = []
+        if (form.pictures && form.pictures.length > 0) {
+          formPictures = form.pictures
+        } else if (form.code && form.code.pictures.length > 0) {
+          formPictures = form.code.pictures
+        }
+        if (formPictures.length > 0) {
+          _.forEach(formPictures, v => {
             let previewUrl = server.THUMBNAIL_API + v.filePath
             imageArray.push({
               'previewUrl': previewUrl,
@@ -482,8 +498,10 @@ export default {
         message: params.msg
       })
     })
-    this.qrCodeId = this.$route.query.id
-    this.typeKey = this.$route.query.typeKey
+    // this.qrCodeId = this.$route.query.id
+    this.qrCodeId = localStorage.getItem('qrCodeId')
+    this.typeKey = localStorage.getItem('typeKey')
+    // this.typeKey = this.$route.query.typeKey
 
     if (this.typeKey === 'null') {
       this.showType = true
@@ -509,11 +527,11 @@ export default {
     if (!_.isNull(form)) {
       this.form = form
     }
-    if (!_.isNull(singles) && this.typeKey === 'AREA') {
+    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       console.log(singles)
       this.form.singles.push(singles)
       console.log(this.form.singles)
-      // localStorage.removeItem('singles')
+      localStorage.removeItem('singles')
       // console.log(this.form.singles)
     }
     if (!_.isNull(imageArray)) {
@@ -545,6 +563,7 @@ export default {
   beforeDestroy () {
     eventBus.$off('upload-success')
     eventBus.$off('delete-success')
+    removeLocalStory('top-index')
   }
 }
 </script>

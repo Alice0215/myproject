@@ -32,7 +32,11 @@
     <feature name="Geolocation">
         <param name="ios-package" value="CDVLocation" />
     </feature>
+<<<<<<< HEAD:src-cordova/platforms/ios/E园林/config.xml
     <name>E园林</name>
+=======
+    <name>E园林_Dev</name>
+>>>>>>> release/release04132:src-cordova/platforms/ios/E园林_Dev/config.xml
     <description>A Quasar Framework app</description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
     Apache Cordova Team
