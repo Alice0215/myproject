@@ -18,7 +18,7 @@
 
 <script>
  import {request} from '../../common'
- import {server} from '../../const'
+ import {server, plantType} from '../../const'
  import _ from 'lodash'
  export default {
     data () {
@@ -42,12 +42,12 @@
         let resp = await request(url, 'get', '', 'json', false, true)
         this.$q.loading.hide()
         let msg = resp.data.resultMsg
-        console.log(msg)
         let qrCodeId = msg.id
         let typeKey = null
         if (msg.type) {
             typeKey = msg.type.key
         }
+        console.log(typeKey)
         let imageArray = []
         if (msg.pictures) {
           _.forEach(msg.pictures, v => {
@@ -62,7 +62,11 @@
         if (_.isNull(msg.location)) {
           localStorage.setItem('user_location', msg.location)
         }
-        this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+        if (typeKey === plantType.SINGLE || typeKey === plantType.AREA) {
+          this.$router.push('/project/maintenance')
+        } else {
+          this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+        }
       },
       cancelScan () {
         if (window.QRScanner) {
