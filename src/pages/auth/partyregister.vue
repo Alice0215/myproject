@@ -173,13 +173,18 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.card {
+#register{
+  .card {
   margin-bottom: 0px;
   padding: 30px 15px;
   min-height: 160px;
 }
 button {
   margin-bottom: 4%;
+}
+.login-field {
+  text-align: center;
+  margin-bottom: 40px;
 }
 h4 {
   font-weight: 300;
@@ -208,8 +213,7 @@ input:not(.no-style):hover {
 .register-title span {
   margin-right: 50px;
 }
-#register {
-  .log {
+.log {
     text-align: center;
     margin-top: 30px;
   }
@@ -219,4 +223,5 @@ input:not(.no-style):hover {
     color: #1aad19 !important;
   }
 }
+
 </style>

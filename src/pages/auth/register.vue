@@ -185,13 +185,8 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-.card {
-  margin-bottom: 0px;
-  padding: 30px 15px;
-  min-height: 160px;
-}
-
-.register-title {
+#register {
+  .register-title {
   height: 80px;
   line-height: 80px;
   text-align: center;
@@ -212,7 +207,6 @@ export default {
   text-align: center;
   margin-bottom: 40px;
 }
-#register {
   .log {
     text-align: center;
     margin-top: 30px;
