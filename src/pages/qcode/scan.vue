@@ -42,7 +42,10 @@ export default {
       let resp = await request(url, 'get', '', 'json', false, true)
       this.$q.loading.hide()
       let msg = resp.data.resultMsg
-      let qrCodeId = msg.id
+      let qrCodeId = null
+      if (msg.code) {
+         qrCodeId = msg.code.id
+      }
       let typeKey = null
       if (msg.type) {
         typeKey = msg.type.key
