@@ -17,10 +17,12 @@
        under the License.
  */
 
-package com.eyuanlin.app;
+package com.eyuanlin.dev.app;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+import com.pgyersdk.crash.PgyCrashManager;
+import com.pgyersdk.update.PgyUpdateManager;
 
 public class MainActivity extends CordovaActivity
 {
@@ -28,6 +30,7 @@ public class MainActivity extends CordovaActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        PgyCrashManager.register(this);
 
         // enable Cordova apps to be started in the background
         Bundle extras = getIntent().getExtras();
@@ -37,5 +40,18 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PgyCrashManager.unregister();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // VersionCheck.checkNewVersion(MainActivity.this);
+        PgyUpdateManager.register(this);
+
     }
 }
