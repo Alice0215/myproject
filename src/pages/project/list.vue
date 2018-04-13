@@ -49,6 +49,12 @@ export default {
     }
   },
   mounted () {
+    if (window.QRScanner) {
+      window.QRScanner.cancelScan(statu => {
+        console.log(statu)
+      })
+      window.QRScanner.hide()
+    }
   },
   methods: {
     toDetail (projectId) {

@@ -111,6 +111,9 @@ export default {
   },
   beforeDestroy () {
     this.cancelScan()
+  },
+  destroyed () {
+    this.cancelScan()
   }
 }
 </script>
