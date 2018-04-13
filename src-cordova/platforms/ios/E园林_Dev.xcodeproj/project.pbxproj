@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0207DA571B56EA530066E2B4 /* Images.xcassets */; };
 		0814224C4B5A482D8F154FBB /* UIImage+CropScaleOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = DF704C9846134B5ABBB65484 /* UIImage+CropScaleOrientation.m */; };
@@ -30,6 +29,7 @@
 		6D2B06F4218A405B828227AA /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA8F8A9B88647758CD95A2A /* QRScanner.swift */; };
 		76A587C511CD4EFEBBF82447 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F36E6D4EB4C4BA283E6FD56 /* CDVSplashScreen.m */; };
 		76EBF1BD08C64ECEA2929601 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0117A217630441DA9258D8D7 /* AVFoundation.framework */; };
+		0EBB4972AE4A4EA9953CE309 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E1CEEAD6C44D2A4928B18 /* CDVLocation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +99,8 @@
 		ED33DF2A687741AEAF9F8254 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		EED54E899D564E168E682631 /* CDVJpegHeaderWriter.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVJpegHeaderWriter.h; path = "cordova-plugin-camera/CDVJpegHeaderWriter.h"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "E园林_Dev/config.xml"; sourceTree = "<group>"; };
+		6D0E1CEEAD6C44D2A4928B18 /* CDVLocation.m */ = {isa = PBXFileReference; name = "CDVLocation.m"; path = "cordova-plugin-geolocation/CDVLocation.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		AFAE9481E4814C1297053879 /* CDVLocation.h */ = {isa = PBXFileReference; name = "CDVLocation.h"; path = "cordova-plugin-geolocation/CDVLocation.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,8 @@
 				1F7D6C6EF96648968523A204 /* CDVViewController+SplashScreen.m */,
 				3250A1B1C91140A98B683E9E /* CDVSplashScreen.h */,
 				7F672E5C17B24B83949031A5 /* CDVViewController+SplashScreen.h */,
+				6D0E1CEEAD6C44D2A4928B18 /* CDVLocation.m */,
+				AFAE9481E4814C1297053879 /* CDVLocation.h */,
 			);
 			name = Plugins;
 			path = "E园林_Dev/Plugins";
@@ -369,6 +373,7 @@
 				6D2B06F4218A405B828227AA /* QRScanner.swift in Sources */,
 				76A587C511CD4EFEBBF82447 /* CDVSplashScreen.m in Sources */,
 				129F431DA14B47C2AF3AE8ED /* CDVViewController+SplashScreen.m in Sources */,
+				0EBB4972AE4A4EA9953CE309 /* CDVLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

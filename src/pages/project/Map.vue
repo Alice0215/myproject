@@ -119,9 +119,19 @@ export default {
         this.position.lat = lngLatArray[1]
       }
       this.getAdressByGeocoder(lngLatArray)
+    },
+    getCurrentPosition () {
+      if (  navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success => {
+          console.log(success)
+        }, err => {
+          console.log(err)
+        })
+      }
     }
   },
   async mounted () {
+    this.getCurrentPosition()
     this.getGeolocation()
     this.$nextTick(() => {
       document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
