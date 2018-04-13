@@ -482,8 +482,10 @@ export default {
         message: params.msg
       })
     })
-    this.qrCodeId = this.$route.query.id
-    this.typeKey = this.$route.query.typeKey
+    // this.qrCodeId = this.$route.query.id
+    this.qrCodeId = localStorage.getItem('qrCodeId')
+    this.typeKey = localStorage.getItem('typeKey')
+    // this.typeKey = this.$route.query.typeKey
 
     if (this.typeKey === 'null') {
       this.showType = true

@@ -45,6 +45,12 @@ export default {
       let qrCodeId = null
       if (msg.code) {
          qrCodeId = msg.code.id
+      } else {
+        qrCodeId = msg.id
+      }
+      let project = null
+      if (msg.project) {
+        project = msg.project
       }
       let typeKey = null
       if (msg.type) {
@@ -65,6 +71,9 @@ export default {
       if (_.isNull(msg.location)) {
         localStorage.setItem('user_location', msg.location)
       }
+      localStorage.setItem('qrCodeId', qrCodeId)
+      localStorage.setItem('typeKey', typeKey)
+      localStorage.setItem('choose-project', JSON.stringify(project))
       if (typeKey === plantType.SINGLE || typeKey === plantType.AREA) {
         this.$router.push('/project/maintenance?codeId=' + qrCodeId)
       } else {
