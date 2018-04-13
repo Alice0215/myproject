@@ -27,7 +27,7 @@
         <p class="param"><span>胸径：{{info.xiongJing}}cm</span><span>高度：{{info.gaoDu}}cm</span><span>冠幅：{{info.guanFu}}cm</span></p>
         <p>苗木商名称：<span v-if="info.dealer">{{info.dealer}}</span></p>
         <p>苗木其它信息：</p>
-        <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.location">{{info.location}}</span></p>
+        <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="code.location">{{code.location.formattedAddress}}</span></p>
         <p class="address"> {{code.description}}</p>
         <p class="address pic-field" >
           <span v-for="item in code.pictures" v-bind:key="item.id">

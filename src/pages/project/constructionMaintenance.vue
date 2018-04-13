@@ -113,6 +113,7 @@ export default {
       this.areaBranches = []
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
+        this.QrInfo = resp.data.resultMsg.code
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
@@ -211,10 +212,10 @@ export default {
         message: params.msg
       })
     })
-    this.getQrInfo()
-
     if (this.jobGroupId !== 'null') {
       this.title = '修改'
+    } else {
+      this.getQrInfo()
     }
     let form = JSON.parse(localStorage.getItem('form'))
     if (!_.isNull(form)) {

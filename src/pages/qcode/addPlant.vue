@@ -14,14 +14,15 @@
         <div class="col-12 row mt-6 justify-between">
           <div class="col-7 row">
             <q-field
-         @blur="$v.form.alias.$touch"
+         @blur="$v.formData.alias.$touch"
         @keyup.enter="save"
-        :error="$v.form.alias.$error"
+        :error="$v.formData.alias.$error"
          error-label="请添加植物名称">
               <q-input
                 v-model="formData.alias"
-                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'
-              />
+                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'>
+              <q-autocomplete @search="searchTerm"/>
+              </q-input>
             </q-field>
           </div>
           <div class="col-4 row">
@@ -111,6 +112,7 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators'
+import { filter } from 'quasar'
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
 import eventBus from '../../eventBus'
 import _ from 'lodash'
@@ -126,7 +128,7 @@ export default {
     }
   },
   validations: {
-    form: {
+    formData: {
       alias: { required }
     }
   },
@@ -141,6 +143,17 @@ export default {
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-form')
       this.$router.goBack()
+    },
+    searchTerm (alias, done) {
+      request('data/term?type=PLANT&start=' + this.formData.alias + '&top=10', 'get').then(response => {
+        if (response.data.resultCode === 'SUCCESS') {
+          console.log(response.data.resultMsg)
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          setTimeout(() => {
+            done(filter(alias, { field: 'value', list: model }))
+          }, 1000)
+        }
+      })
     },
     openMap () {
       this.saveLocalData()
@@ -195,27 +208,22 @@ export default {
         message: params.msg
       })
     })
-    if (this.$route.query.index) {
-      let index = this.$route.query.index
-      let oldData = JSON.parse(localStorage.getItem('oldData'))
-      if (!_.isNull(oldData)) {
-        this.formData = oldData[index]
-      }
+    let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
+    if (!_.isNull(oldData)) {
+      this.formData = oldData['singles']
     }
 
     this.getPlantCategory()
     let geoInfo = JSON.parse(localStorage.getItem('user_location'))
-    let form = JSON.parse(localStorage.getItem('qrcode-form'))
     let imageArray = JSON.parse(localStorage.getItem('qrcode-image'))
-    if (!_.isNull(form)) {
-      this.formData = form
-    }
     if (!_.isNull(imageArray)) {
       this.imageArray = imageArray
+      localStorage.removeItem('qrcode-image')
     }
     if (!_.isNull(geoInfo)) {
       this.address = geoInfo.formattedAddress
       this.formData.locationJson = JSON.stringify(geoInfo)
+      localStorage.removeItem('user_location')
     }
   },
   beforeDestroy () {
@@ -271,7 +279,6 @@ export default {
   }
 
   .qr-info {
-    margin-top: 30px;
     font-size: 14px;
     color: #333333;
     margin-bottom: 30px;

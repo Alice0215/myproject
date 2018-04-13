@@ -4,7 +4,6 @@
     <q-toolbar class="header">
     <q-toolbar class="fix">
        <a @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>返回</a>
-       <!--<router-link  :to="{ path: urlname, query:{user:JSON.stringify(userParams),type:type} }" class="top-nav-left">关闭</router-link>-->
         <q-toolbar-title class="header-title">
         {{title}}
         </q-toolbar-title>

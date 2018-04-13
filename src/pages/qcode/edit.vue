@@ -16,9 +16,6 @@
         <p class='text-center'>
           <img src='statics/qr.png'/>
         </p>
-        <p>
-
-        </p>
       </div>
       <!--<div v-show="showType">-->
       <div v-show="showType">
@@ -35,7 +32,7 @@
         :error="$v.form.alias.$error"
          :error-label="namePlaceholder">
         <q-input v-model="form.alias" :placeholder="namePlaceholder" class='login-input'>
-          <q-autocomplete @search="searchTerm" @selected="selected"/>
+          <q-autocomplete @search="searchTerm"/>
         </q-input>
          </q-field>
         <q-input
@@ -325,9 +322,6 @@ export default {
         }
       })
     },
-    selected (item) {
-      this.$q.notify(`Selected suggestion "${item.label}"`)
-    },
     async load () {
       this.$q.loading.show()
       let resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, null, true)
@@ -512,12 +506,15 @@ export default {
     let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
     let position = JSON.parse(localStorage.getItem('user_location'))
     let singles = JSON.parse(localStorage.getItem('singles'))
-    if (!_.isNull(singles)) {
-      this.form.singles.push(singles)
-      console.log(this.form.singles)
-    }
     if (!_.isNull(form)) {
       this.form = form
+    }
+    if (!_.isNull(singles) && this.typeKey === 'AREA') {
+      console.log(singles)
+      this.form.singles.push(singles)
+      console.log(this.form.singles)
+      // localStorage.removeItem('singles')
+      // console.log(this.form.singles)
     }
     if (!_.isNull(imageArray)) {
       this.imageArray = imageArray
@@ -532,6 +529,7 @@ export default {
     }
     if (!_.isNull(position)) {
       this.form.formattedAddress = position.formattedAddress
+      localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
     }
     if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
