@@ -113,7 +113,7 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
-  return new File([u8arr], filename, { type: mime })
+  return new File([u8arr], filename, {type: mime})
 }
 
 /**
@@ -169,6 +169,7 @@ function removeLocalStory (name) {
     localStorage.removeItem(name)
   }
 }
+
 
 export {
   request,
