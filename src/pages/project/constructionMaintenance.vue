@@ -185,11 +185,15 @@ export default {
       })
     },
     edit () {
+      let imgArray = []
+      if (this.form.pictures.length > 0) {
+        imgArray = _.map(this.form.pictures, 'contentUrl')
+      }
       let data = {
         'jobGroupId': this.jobGroupId,
         'description': this.form.description,
         'jobs': this.form.jobs,
-        'pictures': this.form.pictures
+        'pictures': imgArray
       }
       request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
         if (resp && resp.data.resultCode === 'SUCCESS') {
