@@ -437,6 +437,7 @@ export default {
         default:
           break
       }
+      localStorage.setItem('typeKey', this.type)
     },
     add () {
       let data = {
