@@ -1,4 +1,4 @@
-package com.eyuanlin.app;
+package com.eyuanlin.dev.app;
 
 /**
  * Created by test on 2018/4/13.
