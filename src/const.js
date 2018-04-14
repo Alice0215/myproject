@@ -1,4 +1,4 @@
-const host = 'http://60.195.68.29:8877/'
+const host = 'http://60.195.68.29:3535/'
 
 const server = {
   HOST: host,
