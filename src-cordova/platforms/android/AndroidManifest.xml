@@ -13,7 +13,7 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
         </provider>
         <activity android:name="com.pgyersdk.activity.FeedbackActivity" />
-        <meta-data android:name="PGYER_APPID" android:value="cd55ccdac22b415d53fe606d22e43b8a">
+        <meta-data android:name="PGYER_APPID" android:value="63a0479f958654c2f07094ff78bf2ea7">
         </meta-data>
     </application>
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="26" />
