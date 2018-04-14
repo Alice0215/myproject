@@ -13,7 +13,7 @@
       <div class="qr-info">
         <p>植物名称:<span v-if="info.code">{{info.code.alias}}</span></p>
         <p>二维码编号：<span v-if="info.code">{{info.code.identifier}}</span></p>
-        <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
+        <p>所属项目：<span v-if="info.code && info.code.project">{{info.code.project.projectName}}</span></p>
         <p>操作员：<span v-if="info.user">{{info.user.username}}</span> <q-item-side icon="account circle" right class="float-right"/></p>
         <p>时间：<span v-if="info.createTime">{{info.createTime}}</span></p>
         <p class="address underline"> <q-item-side left icon='place' class='inline newicon' v-if="info.location"></q-item-side>{{info.location}}</p>
