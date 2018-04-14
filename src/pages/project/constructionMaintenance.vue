@@ -12,9 +12,9 @@
     <q-list>
       <q-item link class="full-width bg-white">
         <q-item-side>
-          <q-item-tile class="color-black mb-8 mt-10">{{QrInfo.alias}}</q-item-tile>
+          <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
           <q-item-tile icon="place" class="mb-8">
-            <label class="color-black font-12" v-if="QrInfo.location">{{QrInfo.location.formattedAddress}}</label>
+            <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
           </q-item-tile>
         </q-item-side>
         <q-item-main>
@@ -73,12 +73,13 @@ export default {
         jobs: [],
         tags: [],
         previewApi: '',
-        jobObg: []
+        jobObg: [],
+        QrInfo: {}
       },
       codeId: '',
       qrtype: '',
       jobGroupId: '',
-      QrInfo: {},
+
       title: '添加'
     }
   },
@@ -108,14 +109,14 @@ export default {
       this.areaBranches = []
       let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
       if (resp) {
-        this.QrInfo = resp.data.resultMsg.code
+        this.form.QrInfo = resp.data.resultMsg.code
       }
     },
     async getDetail () {
       this.areaBranches = []
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
-        this.QrInfo = resp.data.resultMsg.code
+        this.form.QrInfo = resp.data.resultMsg.code
         this.codeId = resp.data.resultMsg.code.id
         console.log(this.codeId)
         this.form.description = resp.data.resultMsg.description
@@ -184,11 +185,15 @@ export default {
       })
     },
     edit () {
+      let imgArray = []
+      if (this.form.pictures.length > 0) {
+        imgArray = _.map(this.form.pictures, 'contentUrl')
+      }
       let data = {
         'jobGroupId': this.jobGroupId,
         'description': this.form.description,
         'jobs': this.form.jobs,
-        'pictures': this.form.pictures
+        'pictures': imgArray
       }
       request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
         if (resp && resp.data.resultCode === 'SUCCESS') {

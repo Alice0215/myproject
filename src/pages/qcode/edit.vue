@@ -242,9 +242,9 @@ export default {
     },
     async save () {
       this.$v.$touch()
-      if (this.$v.$error) {
-        return false
-      }
+      // if (this.$v.$error) {
+      //   return false
+      // }
       let form = {}
       let url = ''
       this.setSinglePropertyToForm()

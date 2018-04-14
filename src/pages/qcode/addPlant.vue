@@ -208,17 +208,20 @@ export default {
         message: params.msg
       })
     })
-    let i = this.$route.query.index
+    let i = _.isUndefined(this.$route.query.index) ? '0' : this.$route.query.index
     let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
     if (!_.isNull(oldData)) {
-      this.formData = oldData['singles'][i]
+      let single = oldData['singles'][i]
+      if (_.isNull(single.alias)) {
+        single.alias = ''
+      }
+      this.formData = single
     }
     let formData = JSON.parse(localStorage.getItem('qrcode-form-add'))
     if (!_.isNull(formData)) {
       this.formData = formData
       localStorage.removeItem('qrcode-form-add')
     }
-
     this.getPlantCategory()
     let geoInfo = JSON.parse(localStorage.getItem('user_location'))
     let imageArray = JSON.parse(localStorage.getItem('qrcode-image-add'))
