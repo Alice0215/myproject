@@ -17,11 +17,11 @@
         </q-item>-->
        <q-infinite-scroll :handler="getlist" class="scroll-field">
         <div  v-for="item in list" :key="item.id">
-            <q-item  v-ripple.mat class="full-width underline user-item">
-              <q-item-side icon="account circle" />
-              {{item.name}}
+            <q-item  v-for="job in item.jobs" :key="job.id"  v-ripple.mat class="full-width underline user-item">
+              <q-item-side icon="account circle" v-if="job.action" />
+              {{job.action.name}}
               <q-item-main />
-            <span class="user"> {{item.project.createTime}}</span>
+            <span class="user"> {{item.createTime}}</span>
             <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
           </q-item>
         </div>
@@ -44,7 +44,7 @@ export default {
   },
   created () {
     this.codeId = this.$route.query.codeId
-    this.getlist()
+    // this.getlist()
   },
   methods: {
     async getlist (index, done) {
