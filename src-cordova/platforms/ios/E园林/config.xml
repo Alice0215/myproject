@@ -45,6 +45,9 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+        <string>需要获取您的位置信息</string>
+    </edit-config>
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <icon height="180" src="res/icon/ios/icon-60@3x.png" width="180" />
