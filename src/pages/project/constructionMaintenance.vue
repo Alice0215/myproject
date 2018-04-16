@@ -6,7 +6,7 @@
             <q-toolbar-title class='header-title'>
               施工养护
             </q-toolbar-title>
-            <a class="top-nav-right">历史记录</a>
+            <a class="top-nav-right">养护记录</a>
        </q-toolbar>
     </q-toolbar>
     <q-list>
