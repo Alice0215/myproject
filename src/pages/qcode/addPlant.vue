@@ -212,6 +212,9 @@ export default {
     let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
     if (!_.isNull(oldData)) {
       let single = oldData['singles'][i]
+      if (_.isUndefined(single)) {
+        single = {'alias': ''}
+      }
       if (_.isNull(single.alias)) {
         single.alias = ''
       }
