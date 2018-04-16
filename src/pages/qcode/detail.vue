@@ -21,7 +21,7 @@
       <div class="qr-info">
         <div v-if="type==='EQUIPMENT' || type==='OTHER'">
           <p>设备名称：<span>{{info.alias}}</span></p>
-          <!-- <p>所属项目：<span v-if="info.project">{{info.project}}</span></p> -->
+          <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
           <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.location">{{info.location.formattedAddress}}</span></p>
           <p class="address" v-if="info.description"> {{info.description}}</p>
           <p class="address pic-field" v-if=" info.pictures">
@@ -36,11 +36,11 @@
         <p>所属项目：<span v-if="info.code && info.code.project">{{info.code.project.projectName}}</span></p>
         </div>
         <div v-if="type==='SINGLE'">
-        <p>植物名称：<span v-if="info.code.alias">{{info.code.alias}}</span></p>
+        <p>植物名称：<span v-if="info.code && info.code.alias">{{info.code.alias}}</span></p>
         <p>苗木分类：<span v-if="info.category">{{info.category.name}}</span></p>
         <p class="param"><span>胸径：{{info.xiongJing}}cm</span><span>高度：{{info.gaoDu}}cm</span><span>冠幅：{{info.guanFu}}cm</span></p>
         <p>苗木商名称：<span v-if="info.dealer">{{info.dealer}}</span></p>
-        <p>苗木其它信息：</p>
+        <p>苗木其它信息：<span>{{info.other}}</span></p>
         </div>
         <div v-if="type==='AREA'">
           <p>片区名称：<span v-if="info.alias">{{info.alias}}</span></p>
@@ -119,7 +119,6 @@ export default {
         this.$q.loading.hide()
         if (response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
-          console.log(this.info)
           if (this.type === 'SINGLE' || this.type === 'AREA') {
             this.topTitle = this.info.code.alias
             this.qrRecord = '养护记录'
@@ -128,10 +127,8 @@ export default {
             let singles = response.data.resultMsg.singles
             this.singles.alias = []
             for (let key in singles) {
-              console.log(singles[key]['alias'])
               this.singles.alias.push(singles[key]['alias'])
             }
-            console.log(this.singles.alias)
           } else if (this.type === 'EQUIPMENT') {
             this.topTitle = this.info.alias
             this.qrRecord = '领用记录'
