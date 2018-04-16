@@ -43,7 +43,7 @@
         <p>苗木其它信息：<span>{{info.other}}</span></p>
         </div>
         <div v-if="type==='AREA'">
-          <p>片区名称：<span v-if="info.alias">{{info.alias}}</span></p>
+          <p>片区名称：<span v-if="info.code.alias">{{info.code.alias}}</span></p>
           <p>片区面积：<span>{{info.acreage}}</span></p>
           <p>植物:</p>
           <p v-if="singles && singles.alias">

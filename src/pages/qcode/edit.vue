@@ -113,7 +113,7 @@
               <q-item-main></q-item-main>
             </q-item>
             <q-item class="mt-8" v-for="v, i in form.singles" :key="i">
-              <q-item-side label>{{v.alias}}</q-item-side>
+              <q-item-side>{{v.alias}}</q-item-side>
               <q-item-main></q-item-main>
               <q-item-side right>
                 <span class="mr-6">数量: {{v.amount}}</span>
@@ -153,11 +153,10 @@
 <script>
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
 import { required, numeric } from 'vuelidate/lib/validators'
-import { server } from '../../const'
+import { server, plantType } from '../../const'
 import { filter } from 'quasar'
 import _ from 'lodash'
 import eventBus from '../../eventBus'
-import { plantType } from '../../const'
 
 export default {
   data () {
@@ -168,7 +167,7 @@ export default {
       areaId: '',
       showType: false,
       qrCodeId: '',
-      form: { singles: [] },
+      form: {},
       projectId: '',
       amount: '',
       contactNumber: '',
@@ -252,7 +251,7 @@ export default {
       qrCodeForm.projectId = this.form.project.id
       qrCodeForm.qrCodeId = this.qrCodeId
       qrCodeForm.alias = this.form.alias
-      form.areaId = this.form.areaId
+      qrCodeForm.areaId = this.form.areaId
       qrCodeForm.description = this.form.description
       if (this.imageArray.length > 0) {
         qrCodeForm.pictures = _.map(this.imageArray, 'contentUrl')
@@ -276,7 +275,9 @@ export default {
         form.singleId = this.form.singleId
       } else if (this.type === plantType.AREA) {
         url = 'qrcode/area/save'
+        form.areaId = this.form.areaId
         form.acreage = this.form.acreage
+        form.singles = this.form.singles
       } else if (this.type === plantType.DEVICE) {
         url = 'qrcode/equipment/save'
         form = qrCodeForm
@@ -284,10 +285,8 @@ export default {
         url = 'qrcode/other/save'
         form = qrCodeForm
       }
-      console.log(form)
       let resp = await request(url, 'put', form, 'json', true)
-      if (resp.data.resultCode === 'SUCCESS') {
-        console.log(resp)
+      if (resp.data && resp.data.resultCode === 'SUCCESS') {
         this.showAlert = true
         setTimeout(() => {
           this.showAlert = false
@@ -315,6 +314,7 @@ export default {
     editPlant (i) {
       this.setSinglePropertyToForm()
       this.saveLocalData()
+      localStorage.setItem('editIndex', i + 1)
       this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
     },
     searchTerm (alias, done) {
@@ -381,11 +381,8 @@ export default {
           this.imageArray = imageArray
         }
         this.form = form
-        console.log(this.form)
       }
       this.setFormToSingleProperty()
-      console.log('load')
-      console.log(this.form)
     },
     openCamera () {
       if (navigator.camera) {
@@ -502,11 +499,12 @@ export default {
         message: params.msg
       })
     })
-    // this.qrCodeId = this.$route.query.id
-    this.qrCodeId = localStorage.getItem('qrCodeId')
-    this.typeKey = localStorage.getItem('typeKey')
-    // this.typeKey = this.$route.query.typeKey
-
+    this.qrCodeId = this.$route.query.id
+    if (this.$route.query.typeKey) {
+      this.typeKey = this.$route.query.typeKey
+    }
+    // this.qrCodeId = localStorage.getItem('qrCodeId')
+    // this.typeKey = localStorage.getItem('typeKey')
     if (this.typeKey === 'null') {
       this.showType = true
     }
@@ -528,15 +526,9 @@ export default {
     let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
     let position = JSON.parse(localStorage.getItem('user_location'))
     let singles = JSON.parse(localStorage.getItem('singles'))
+    let editIndex = JSON.parse(localStorage.getItem('editIndex'))
     if (!_.isNull(form)) {
       this.form = form
-    }
-    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
-      console.log(singles)
-      this.form.singles.push(singles)
-      console.log(this.form.singles)
-      localStorage.removeItem('singles')
-      // console.log(this.form.singles)
     }
     if (!_.isNull(imageArray)) {
       this.imageArray = imageArray
@@ -549,17 +541,26 @@ export default {
     if (!_.isNull(singleProperty)) {
       this.singlePlantProperties = singleProperty
     }
+    if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
+      this.load()
+    }
     if (!_.isNull(position)) {
       this.form.formattedAddress = position.formattedAddress
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
     }
-    if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
-      this.load()
+    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
+      if (!_.isNull(editIndex)) {
+        console.log(editIndex)
+        let index = editIndex - 1
+        this.form.singles[index] = singles
+        localStorage.removeItem('editIndex')
+      } else {
+        this.form.singles.push(singles)
+      }
+      localStorage.removeItem('singles')
     }
-    console.log(this.imageArray)
     this.$nextTick(() => {
-      console.log(index)
       this.topButtonsClicked(index)
     })
     this.getPlantCategory()
