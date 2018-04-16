@@ -80,7 +80,7 @@
             </div>
             <div class="row mt-8 col-12">
               <span class="col-2 lineHeight-32">其他</span>
-              <q-input v-model="form.otherFeature" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
+              <q-input v-model="form.other" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
             </div>
           </div>
           <q-input v-model="form.source" placeholder="苗原地" class='login-input mt-10'></q-input>
@@ -348,6 +348,8 @@ export default {
         }
         if (form.code) {
           form.alias = form.code.alias
+          form.description = form.code.description
+          form.location = form.code.location
           if (form.code.project) {
             this.projectName = form.code.project.projectName
             this.projectId = form.code.project.id.toString()
@@ -379,6 +381,7 @@ export default {
           this.imageArray = imageArray
         }
         this.form = form
+        console.log(this.form)
       }
       this.setFormToSingleProperty()
       console.log('load')
