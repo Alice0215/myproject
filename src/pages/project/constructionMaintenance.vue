@@ -162,11 +162,15 @@ export default {
       }
     },
     save () {
+      let imgArray = []
+      if (this.form.pictures.length > 0) {
+        imgArray = _.map(this.form.pictures, 'contentUrl')
+      }
       let data = {
         'codeId': this.codeId,
         'description': this.form.description,
         'jobs': this.form.jobs,
-        'pictures': this.form.pictures
+        'pictures': imgArray
       }
       request('jobGroup/create', 'post', data, 'json', true).then(resp => {
         if (resp.data.resultCode === 'SUCCESS') {
@@ -174,15 +178,22 @@ export default {
             title: '提示',
             message: '添加成功'
           })
+          setTimeout(() => {
+            this.$router.goBack()
+          }, 1000)
         }
       })
     },
     edit () {
+      let imgArray = []
+      if (this.form.pictures.length > 0) {
+        imgArray = _.map(this.form.pictures, 'contentUrl')
+      }
       let data = {
         'jobGroupId': this.jobGroupId,
         'description': this.form.description,
         'jobs': this.form.jobs,
-        'pictures': this.form.pictures
+        'pictures': imgArray
       }
       request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
         if (resp && resp.data.resultCode === 'SUCCESS') {

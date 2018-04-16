@@ -242,9 +242,9 @@ export default {
     },
     async save () {
       this.$v.$touch()
-      if (this.$v.$error) {
-        return false
-      }
+      // if (this.$v.$error) {
+      //   return false
+      // }
       let form = {}
       let url = ''
       this.setSinglePropertyToForm()
@@ -365,7 +365,7 @@ export default {
         let formPictures = []
         if (form.pictures && form.pictures.length > 0) {
           formPictures = form.pictures
-        } else if (form.code.pictures.length > 0) {
+        } else if (form.code && form.code.pictures.length > 0) {
           formPictures = form.code.pictures
         }
         if (formPictures.length > 0) {
