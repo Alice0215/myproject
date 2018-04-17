@@ -215,6 +215,9 @@ export default {
             title: '提示',
             message: '修改成功'
           })
+          setTimeout(() => {
+            this.$router.goBack()
+          }, 1000)
         }
       })
     },
