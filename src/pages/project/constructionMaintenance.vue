@@ -11,13 +11,15 @@
     </q-toolbar>
     <q-list>
       <q-item link class="full-width bg-white">
-        <q-item-side>
+        <!-- <q-item-side>
           <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
-          <q-item-tile icon="place" class="mb-8">
-            <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
+          <q-item-tile icon="place" class="mb-8 auto">
           </q-item-tile>
-        </q-item-side>
-        <q-item-main>
+        </q-item-side> -->
+        <q-item-main sublabel lines='1'>
+           <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
+            <q-item-side left class="color-gray float-left" icon="place"/>
+            <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
         </q-item-main>
         <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+codeId+'&type='+qrtype)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
@@ -74,7 +76,8 @@ export default {
         tags: [],
         previewApi: '',
         jobObg: [],
-        QrInfo: {}
+        QrInfo: {},
+        imageArray: []
       },
       codeId: '',
       qrtype: '',
@@ -125,6 +128,17 @@ export default {
         let names = []
         let jobObg = []
         let ids = []
+        if (this.form.pictures.length > 0) {
+          _.forEach(this.form.pictures, v => {
+            let previewUrl = server.THUMBNAIL_API + v.filePath
+            let imageArray = []
+            imageArray.push({
+              'previewUrl': previewUrl,
+              'contentUrl': v.filePath
+            })
+            this.form.pictures = imageArray
+          })
+        }
         for (var key in jobs) {
           let editData = {}
 
@@ -283,7 +297,9 @@ export default {
     border-color: lightgray;
     border-radius: 8px;
   }
-
+  .auto{
+    min-width: auto;
+  }
   .img-close {
     margin-left: 80px;
     margin-top: -190px;

@@ -11,7 +11,8 @@
           <q-item-side right class="no-info"/>
       </q-toolbar>
     </q-toolbar> -->
-       <a  @click="$router.goBack()" ><q-toolbar class="fix" >
+       <a  @click="$router.goBack()" >
+      <q-toolbar class="fix" >
       </q-toolbar>
        </a>
     <iframe :src="src" id="map_frame">
@@ -121,7 +122,7 @@ export default {
       this.getAdressByGeocoder(lngLatArray)
     },
     getCurrentPosition () {
-      if (  navigator.geolocation) {
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success => {
           console.log(success)
         }, err => {

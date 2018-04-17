@@ -338,6 +338,12 @@ export default {
         if (form.code) {
           form.project = form.code.project
         }
+        if (form.singles) {
+          for (let key in form.singles) {
+            form.singles[key].category = form.singles[key].category.id
+            form.singles[key].singleId = form.singles[key].id
+          }
+        }
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
@@ -551,11 +557,11 @@ export default {
     }
     if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       if (!_.isNull(editIndex)) {
-        console.log(editIndex)
         let index = editIndex - 1
         this.form.singles[index] = singles
         localStorage.removeItem('editIndex')
       } else {
+        this.form.singles = []
         this.form.singles.push(singles)
       }
       localStorage.removeItem('singles')

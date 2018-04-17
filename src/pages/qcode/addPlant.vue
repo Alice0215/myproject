@@ -30,11 +30,17 @@
               <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="formData.amount"></q-input>
           </div>
         </div>
-        <q-select
-          v-model="formData.category"
-          placeholder='苗木分类选项' class='full-width h-35 p-8 border-1'
-          :options="plantCategory"
-        />
+        <q-field
+         @blur="$v.formData.category.$touch"
+        @keyup.enter="save"
+        :error="$v.formData.category.$error"
+         error-label="请选择苗木分类">
+          <q-select
+            v-model="formData.category"
+            placeholder='苗木分类选项' class='full-width h-35 p-8 border-1'
+            :options="plantCategory"
+          />
+        </q-field>
         <div id="single-plant" >
           <div class="row justify-between">
             <div class="col-6 row mt-4">
@@ -131,7 +137,8 @@ export default {
   },
   validations: {
     formData: {
-      alias: { required }
+      alias: { required },
+      category: { required }
     }
   },
   methods: {
@@ -225,9 +232,13 @@ export default {
         single.alias = ''
       }
       if (!_.isNull(single.locationJson)) {
-        this.address = JSON.parse(single.locationJson).formattedAddress
+        console.log(single.locationJson)
+        // let location = JSON.parse(single.locationJson)
+        this.address = location.formattedAddress
+        console.log(this.address)
       }
       this.formData = single
+      this.formData.category = parseInt(single.category)
     }
     let formData = JSON.parse(localStorage.getItem('qrcode-form-add'))
     if (!_.isNull(formData)) {

@@ -20,7 +20,7 @@
       </div>
       <div class="qr-info">
         <div v-if="type==='EQUIPMENT' || type==='OTHER'">
-          <p>设备名称：<span>{{info.alias}}</span></p>
+          <p>名称：<span v-if="info.alias">{{info.alias}}</span></p>
           <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
           <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.location">{{info.location.formattedAddress}}</span></p>
           <p class="address" v-if="info.description"> {{info.description}}</p>
@@ -43,7 +43,7 @@
         <p>苗木其它信息：<span>{{info.other}}</span></p>
         </div>
         <div v-if="type==='AREA'">
-          <p>片区名称：<span v-if="info.code.alias">{{info.code.alias}}</span></p>
+          <p>片区名称：<span v-if="info.code && info.code.alias">{{info.code.alias}}</span></p>
           <p>片区面积：<span>{{info.acreage}}</span></p>
           <p>植物:</p>
           <p v-if="singles && singles.alias">
@@ -59,8 +59,8 @@
             </span>
           </p>
          </div>
+          <q-btn class="full-width bg-color qr-btn show-qr" v-if="editable" @click='add()'>编辑基础信息</q-btn>
       </div>
-      <q-btn class="full-width bg-color qr-btn show-qr" v-if="editable" @click='add()'>编辑基础信息</q-btn>
     </div>
   </div>
 </template>
