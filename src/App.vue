@@ -74,6 +74,7 @@ export default {
       } else {
         console.log(this.$router.currentRoute.path)
         let exitArray = ['/', '/login']
+        let menuArray = ['/register', '/qcode/scan', '/partyRegister', '/jobGroup/byUser']
         if (_.indexOf(exitArray, this.$router.currentRoute.path) > -1) {
           this.$q.notify({
             message: '再按一次退出',
@@ -87,6 +88,8 @@ export default {
             document.removeEventListener('backbutton', this.exitApp, false) // 注销返回键
             document.addEventListener('backbutton', backEvent, false) // 返回键
           }, 3000)
+        } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
+          this.$router.push('/')
         } else {
           console.log('back')
           this.$router.goBack()

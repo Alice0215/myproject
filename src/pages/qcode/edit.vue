@@ -32,35 +32,23 @@
         :error="$v.form.alias.$error"
          :error-label="namePlaceholder">
         <q-input v-model="form.alias" :placeholder="namePlaceholder" class='login-input'>
-          <q-autocomplete @search="searchTerm"/>
+          <q-autocomplete @search="searchTerm"  @selected="selected"/>
         </q-input>
          </q-field>
         <q-input
           v-model="projectName"
-          placeholder='默认项目名称' class='login-input' readonly @click.native="chooseProject"
-        />
+          placeholder='默认项目名称' class='login-input' readonly @click.native="chooseProject" />
         <div id="single-plant" v-show="singleShow">
           <q-select
             v-model="form.areaId"
             placeholder='所属片区' class='login-input'
             :options="areaBranches"
           />
-          <q-select v-if="type !== 'SINGLE'"
-            v-model="category"
-            placeholder='苗木分类选项' class='login-input mb-2'
-            :options="plantCategoryArray"
-          />
-            <q-field v-if="type === 'SINGLE'"
-         @blur="$v.scategory.$touch"
-        @keyup.enter="save"
-        :error="$v.scategory.$error"
-         error-label="请选择苗木分类">
           <q-select
             v-model="scategory"
             placeholder='苗木分类选项' class='login-input mb-2'
             :options="plantCategoryArray"
           />
-           </q-field>
           <div class="row justify-between">
             <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
               <span class="col-3 lineHeight-32">{{v.name}}</span>
@@ -186,7 +174,7 @@ export default {
       alias: '',
       aliasList: [],
       projectName: '',
-      type: '',
+      type: 'SINGLE',
       areaBranches: [],
       showAlert: false,
       topIndex: 0,
@@ -194,7 +182,6 @@ export default {
     }
   },
   validations: {
-    scategory: { required, numeric },
     form: {
       alias: { required }
     }
@@ -241,9 +228,10 @@ export default {
     },
     async save () {
       this.$v.$touch()
-      // if (this.$v.$error) {
-      //   return false
-      // }
+      if (this.$v.$error) {
+        return false
+      }
+
       let form = {}
       let url = ''
       this.setSinglePropertyToForm()
@@ -258,7 +246,16 @@ export default {
       }
       qrCodeForm.locationJson = this.form.locationJson
       form.qrCodeForm = qrCodeForm
+      console.log(this.type)
       if (this.type === plantType.SINGLE) {
+        console.log(this.scategory)
+        if (this.scategory === '') {
+          this.$q.dialog({
+            title: '提示',
+            message: '请先选择苗木分类'
+          })
+          return false
+        }
         url = 'qrcode/single/save'
         form.category = this.scategory
         form.xiongJing = this.form.xiongJing
@@ -286,7 +283,7 @@ export default {
         form = qrCodeForm
       }
       let resp = await request(url, 'put', form, 'json', true)
-      if (resp.data && resp.data.resultCode === 'SUCCESS') {
+      if (resp && resp.data.resultCode === 'SUCCESS') {
         this.showAlert = true
         setTimeout(() => {
           this.showAlert = false
@@ -321,12 +318,17 @@ export default {
       request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           console.log(response.data.resultMsg)
-          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: String(item['id']) }))
           setTimeout(() => {
-            done(filter(alias, { field: 'value', list: model }))
+            done(filter(alias, { field: 'label', list: model }))
           }, 1000)
         }
       })
+    },
+    selected (item) {
+      console.log(item.label)
+      this.form.alias = item.label
+      console.log(this.form.alias)
     },
     async load () {
       this.$q.loading.show()
@@ -443,7 +445,7 @@ export default {
         default:
           break
       }
-      localStorage.setItem('typeKey', this.type)
+      // localStorage.setItem('typeKey', this.type)
     },
     add () {
       let data = {
@@ -510,8 +512,11 @@ export default {
       this.typeKey = this.$route.query.typeKey
     }
     // this.qrCodeId = localStorage.getItem('qrCodeId')
-    // this.typeKey = localStorage.getItem('typeKey')
-    if (this.typeKey === 'null') {
+    // let type = localStorage.getItem('typeKey')
+    // if (_.isNull(type)) {
+    //   this.typeKey = type
+    // }
+    if (this.typeKey === null) {
       this.showType = true
     }
     let index = 0
@@ -555,13 +560,12 @@ export default {
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
     }
-    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
-      if (!_.isNull(editIndex)) {
+    if (localStorage.removeItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
+      if (localStorage.getItem('editIndex') && !_.isNull(editIndex)) {
         let index = editIndex - 1
         this.form.singles[index] = singles
         localStorage.removeItem('editIndex')
       } else {
-        this.form.singles = []
         this.form.singles.push(singles)
       }
       localStorage.removeItem('singles')
@@ -574,7 +578,7 @@ export default {
   beforeDestroy () {
     eventBus.$off('upload-success')
     eventBus.$off('delete-success')
-    removeLocalStory('top-index')
+    // removeLocalStory('top-index')
   }
 }
 </script>

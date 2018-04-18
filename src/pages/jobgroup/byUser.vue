@@ -13,14 +13,14 @@
     </q-toolbar>
     <div class="full-width record-list">
         <q-item  v-ripple.mat class="full-width user-item-header">
-          <q-item-main label="操作记录" />
+          <q-item-main label="养护记录" />
        </q-item>
        <q-infinite-scroll :handler="getlist" class="scroll-field">
         <div  v-for="item in list" :key="item.id">
             <q-item  v-ripple.mat class="full-width underline user-item">
             <div>
               <!--jobs[i].action.name-->
-              {{item.description}}
+              {{item.job.action.name}}
               <div>{{item.createTime}}</div>
             </div>
              <q-item-main />
