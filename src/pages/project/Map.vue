@@ -1,16 +1,5 @@
 <template>
   <q-layout id="map-page">
-    <!-- <q-toolbar class="header">
-      <q-toolbar class="fix" >
-          <a  @click="$router.goBack()" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
-            返回
-          </a>
-          <q-toolbar-title class="header-title">
-          获取当前位置
-          </q-toolbar-title>
-          <q-item-side right class="no-info"/>
-      </q-toolbar>
-    </q-toolbar> -->
        <a  @click="$router.goBack()" >
       <q-toolbar class="fix" >
       </q-toolbar>

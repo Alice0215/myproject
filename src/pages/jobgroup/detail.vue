@@ -130,10 +130,5 @@ export default {
     margin-bottom: 30px;
     padding: 10px 5px;
   }
-  .pic-field img {
-    width: 32%;
-    height: auto;
-    margin-right: 1%;
-  }
 }
 </style>

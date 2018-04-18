@@ -19,13 +19,14 @@
           <!-- <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
           {{v}}
         </q-chip> -->
+        <!-- <q-chip v-for="(v, i) in formData.selectedUsers" :key="v.userId" @hide="removeUser(v, i, null)" closable>{{ v.fullname }}</q-chip> -->
       </q-item>
       <div class="parent" v-for="item in lists" :key="item.id">
-        <div  @click="getChildList(item.id,item.name)">
+        <div  @click="getChildList(item.id,item.name,item.children)">
         <q-item  v-ripple.mat class="full-width underline user-item">
           <q-item-main :label="item.name" />
           <q-item-side right icon="done" class="active" v-if="ids.indexOf(item.id) !== -1"/>
-          <q-item-side right icon="arrow drop down" v-if="!hasChildren[item.id]"/>
+          <q-item-side right icon="arrow drop down" v-if="item.children"/>
         </q-item>
         </div>
          <div class="child bg-primary" v-if="parentId===item.id" v-for="vo in children" :key="vo.id" >
@@ -47,7 +48,6 @@ export default {
       lists: [],
       parentId: '',
       children: [],
-      hasChildren: [],
       isOpen: false,
       ids: [],
       names: [],
@@ -71,19 +71,21 @@ export default {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
       this.lists = resp.data.resultMsg
     },
-    async getChildList (parentId, parentName) {
+    async getChildList (parentId, parentName, children) {
       this.parentId = parentId
-      if (!this.isOpen) {
-        let resp = await request('data/jobAction/parent?parentId=' + parentId, 'get')
-        this.children = resp.data.resultMsg
-        this.isOpen = true
-        if (this.children.length === 0 || !this.children.length) {
-          this.hasChildren[parentId] = true
-          this.choose(parentId, parentName)
-        }
+      if (!children) {
+        this.choose(parentId, parentName)
       } else {
-        this.isOpen = false
-        this.children = []
+        if (!this.isOpen) {
+          let resp = await request('data/jobAction/parent?parentId=' + parentId, 'get')
+          if (resp.data) {
+            this.children = resp.data.resultMsg
+            this.isOpen = true
+          }
+        } else {
+          this.isOpen = false
+          this.children = []
+        }
       }
     },
     choose (id, name) {

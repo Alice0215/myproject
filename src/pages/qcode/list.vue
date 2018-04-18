@@ -23,7 +23,8 @@
         </q-toolbar>
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
-            <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
+            <span :class="tabClass[1]" @click="chooseTab(1)">养护记录</span>
+            <div v-if="qrcode">
             <q-btn-dropdown :label="type_lable" class="block qr-type" v-model="dropdown">
               <q-list link>
                 <q-item v-for="k in qrtypes" :key="k.value" @click.native="changeType(k.value,k.label),dropdown = false" >
@@ -33,6 +34,7 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
+            </div>
         </div>
         <div v-if="qrcode">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>

@@ -233,7 +233,6 @@ export default {
       }
       if (!_.isNull(single.locationJson)) {
         console.log(single.locationJson)
-        // let location = JSON.parse(single.locationJson)
         this.address = location.formattedAddress
         console.log(this.address)
       }

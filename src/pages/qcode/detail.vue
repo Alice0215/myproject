@@ -208,7 +208,6 @@ export default {
     padding: 10px 5px;
   }
   .pic-field img {
-    width: 32%;
     height: auto;
     margin-right: 1%;
   }
