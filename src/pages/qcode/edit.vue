@@ -524,6 +524,7 @@ export default {
     if (_.isNull(topIndex)) {
       let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
       index = _.indexOf(keyArray, this.typeKey) > -1 ? _.indexOf(keyArray, this.typeKey) : 0
+      localStorage.removeItem('top-index')
     } else {
       index = parseInt(topIndex)
       console.log(topIndex)
@@ -560,7 +561,7 @@ export default {
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
     }
-    if (localStorage.removeItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
+    if (localStorage.getItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       if (localStorage.getItem('editIndex') && !_.isNull(editIndex)) {
         let index = editIndex - 1
         this.form.singles[index] = singles
@@ -568,7 +569,7 @@ export default {
       } else {
         this.form.singles.push(singles)
       }
-      localStorage.removeItem('singles')
+      // localStorage.removeItem('singles')
     }
     this.$nextTick(() => {
       this.topButtonsClicked(index)
