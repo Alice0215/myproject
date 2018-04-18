@@ -161,8 +161,9 @@ export default {
       })
     },
     selected (item) {
+      console.log(item.label)
       this.formData.alias = item.label
-      this.formData.singleId = item.value
+      // this.formData.singleId = item.value
     },
     change () {
       this.formData.singleId = ''
