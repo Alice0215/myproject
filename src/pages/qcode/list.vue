@@ -23,7 +23,8 @@
         </q-toolbar>
         <div class='nav-title'>
             <span :class="tabClass[0]" @click="chooseTab(0)">二维码列表</span>
-            <span :class="tabClass[1]" @click="chooseTab(1)">维护记录</span>
+            <span :class="tabClass[1]" @click="chooseTab(1)">养护记录</span>
+            <div v-if="qrcode">
             <q-btn-dropdown :label="type_lable" class="block qr-type" v-model="dropdown">
               <q-list link>
                 <q-item v-for="k in qrtypes" :key="k.value" @click.native="changeType(k.value,k.label),dropdown = false" >
@@ -33,8 +34,9 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
+            </div>
         </div>
-        <div v-if="qrcode">
+        <div v-if="qrcode" class="scrool-field ">
         <p class='qcount'>二维码{{active}}/{{total}}<q-item-side right  icon='error' @click='$router.goBack()' class='float-right icon-error'/></p>
         <q-scroll-area  class='qfield'>
            <q-infinite-scroll :handler="load">
@@ -300,10 +302,17 @@ export default {
   .nav-title .q-btn {
     box-shadow: none;
   }
+  .scrool-field {
+    position: fixed;
+    top: 200px;
+    bottom: 148px;
+    left: 0px;
+    right: 0px;
+  }
   .qfield {
     width: 100%;
-    height: 350px;
-    padding: 15px;
+    height: 100%;
+    padding: 0px 15px;
     background-color: #f5f5f5;
     .item {
       width: 100%;
@@ -334,14 +343,14 @@ export default {
   }
   .add-qcode {
     border-radius: 5px;
-    height: 45px;
+    height: 35px;
     background-color: #f1f1f5;
   }
   .btn-field {
-    padding: 15px;
+    padding: 15px 15px 0px;
     width: 100%;
     position: fixed;
-    bottom: 50px;
+    bottom: 63px;
   }
   .type .q-if-control {
     display: none !important;

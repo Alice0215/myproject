@@ -117,7 +117,7 @@ export default {
       this.$q.loading.show()
       request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true).then(response => {
         this.$q.loading.hide()
-        if (response.data.resultCode === 'SUCCESS') {
+        if (response.data && response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
           if (this.type === 'SINGLE' || this.type === 'AREA') {
             this.topTitle = this.info.code.alias
@@ -208,7 +208,6 @@ export default {
     padding: 10px 5px;
   }
   .pic-field img {
-    width: 32%;
     height: auto;
     margin-right: 1%;
   }

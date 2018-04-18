@@ -161,8 +161,9 @@ export default {
       })
     },
     selected (item) {
+      console.log(item.label)
       this.formData.alias = item.label
-      this.formData.singleId = item.value
+      // this.formData.singleId = item.value
     },
     change () {
       this.formData.singleId = ''
@@ -233,7 +234,6 @@ export default {
       }
       if (!_.isNull(single.locationJson)) {
         console.log(single.locationJson)
-        // let location = JSON.parse(single.locationJson)
         this.address = location.formattedAddress
         console.log(this.address)
       }

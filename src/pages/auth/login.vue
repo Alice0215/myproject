@@ -57,7 +57,7 @@ export default {
         })
         return false
       }
-      let params = new URLSearchParams()
+      let params = new FormData()
       for (var key in data) {
         params.append(key, data[key])
       }
