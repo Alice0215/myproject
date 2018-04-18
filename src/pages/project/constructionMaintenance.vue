@@ -16,7 +16,7 @@
             <q-item-side left class="color-gray float-left" icon="place"/>
             <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
         </q-item-main>
-        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+codeId+'&type='+form.QrInfo.type.key)"/>
+        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+form.codeId+'&type='+form.QrInfo.type.key)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
       </q-item>
        <q-field
@@ -72,9 +72,9 @@ export default {
         previewApi: '',
         jobObg: [],
         QrInfo: {},
+        codeId: '',
         imageArray: []
       },
-      codeId: '',
       jobGroupId: '',
       title: '添加'
     }
@@ -103,7 +103,7 @@ export default {
     },
     async getQrInfo () {
       this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
+      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
       if (resp) {
         this.form.QrInfo = resp.data.resultMsg.code
       }
@@ -113,7 +113,7 @@ export default {
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         this.form.QrInfo = resp.data.resultMsg.code
-        this.codeId = resp.data.resultMsg.code.id
+        this.form.codeId = resp.data.resultMsg.code.id
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
@@ -172,7 +172,7 @@ export default {
         imgArray = _.map(this.form.pictures, 'contentUrl')
       }
       let data = {
-        'codeId': this.codeId,
+        'codeId': this.form.codeId,
         'description': this.form.description,
         'jobs': this.form.jobs,
         'pictures': imgArray
@@ -222,10 +222,6 @@ export default {
   },
   mounted () {
     this.previewApi = server.PREVIEW_API
-    if (!_.isNull(this.$route.query.codeId)) {
-      this.codeId = this.$route.query.codeId
-    }
-
     this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {
       console.log(resp)

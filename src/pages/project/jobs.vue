@@ -15,11 +15,11 @@
         <q-item-tile class="color-black mb-8 mt-10 bg-primary">已选工作内容</q-item-tile>
       </q-item>
        <q-item class="bg-primary jobs-tags" v-if="names.length>0">
-          <q-chips-input icon-right="close"  @input="value => remove(value)" v-model="names"  color="lightGray"  chips-color="lightGray" chips-bg-color="white" />
-          <!-- <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
+         <div class="m-10">
+          <q-chip icon-right="close" color="white" text-color="lightGray" v-for="v, i in names" :key="i" class="job-item" @click="remove(i)">
           {{v}}
-        </q-chip> -->
-        <!-- <q-chip v-for="(v, i) in formData.selectedUsers" :key="v.userId" @hide="removeUser(v, i, null)" closable>{{ v.fullname }}</q-chip> -->
+        </q-chip>
+         </div>
       </q-item>
       <div class="parent" v-for="item in lists" :key="item.id">
         <div  @click="getChildList(item.id,item.name,item.children)">
@@ -55,17 +55,10 @@ export default {
     }
   },
   methods: {
-    remove (names) {
-      console.log(names)
-      let index = 0
-      for (var key in this.names) {
-        if (names.indexOf(this.names.key) === -1) {
-          index = key
-        }
-      }
-      console.log(index)
+    remove (index) {
       this.ids.splice(index, 1)
       this.jobs.splice(index, 1)
+      this.names.splice(index, 1)
     },
     async getList () {
       let resp = await request('data/jobAction/category?category=MAINTAIN', 'get')
@@ -99,7 +92,6 @@ export default {
         this.names.push(name)
         this.jobs = [...this.jobs, job]
       }
-      console.log(this.jobs)
     },
     toSave () {
       let info = { 'names': this.names, 'jobs': this.jobs, 'ids': this.ids }

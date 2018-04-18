@@ -83,8 +83,8 @@ export default {
         }
       } else if (typeKey === plantType.EQUIPMENT || typeKey === plantType.OTHER) {
         this.$router.push('/qcode/detail?id=' + qrCodeId + 'type=' + typeKey)
-      } else if (msg.edittable) {
-        this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+      } else if (typeKey === null && msg.edittable) {
+        this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
       } else {
         this.$router.push('/qcode/detail?id=' + qrCodeId + 'type=' + typeKey)
       }

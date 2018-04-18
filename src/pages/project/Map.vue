@@ -87,11 +87,11 @@ export default {
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
-          console.log(d)
+          // console.log(d)
           let getLng = d.position.getLng()
           let getLat = d.position.getLat()
           this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
-          console.log(this.src)
+          // console.log(this.src)
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -99,7 +99,7 @@ export default {
       }.bind(this))
     },
     receivedMessage (e) {
-      console.log(e)
+      // console.log(e)
       if (_.isUndefined(e.data.location)) {
         this.getGeolocation()
       }
