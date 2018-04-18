@@ -57,7 +57,6 @@ export default {
       if (msg.type) {
         typeKey = msg.type.key
       }
-      console.log(typeKey)
       let imageArray = []
       if (msg.pictures) {
         _.forEach(msg.pictures, v => {
@@ -79,14 +78,14 @@ export default {
         if (msg.maintainable) {
           this.$router.push('/project/maintenance?codeId=' + qrCodeId)
         } else {
-          this.$router.push('/qcode/detail?id=' + qrCodeId + 'type=' + typeKey)
+          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else if (typeKey === plantType.EQUIPMENT || typeKey === plantType.OTHER) {
-        this.$router.push('/qcode/detail?id=' + qrCodeId + 'type=' + typeKey)
-      } else if (typeKey === null && msg.edittable) {
+        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+      } else if (msg.editable) {
         this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
       } else {
-        this.$router.push('/qcode/detail?id=' + qrCodeId + 'type=' + typeKey)
+        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
       }
     },
     cancelScan () {
@@ -131,6 +130,8 @@ export default {
     }
   },
   created () {
+    // let url = 'http://60.195.68.29:3535/landscape/ls/info/qr/detail/496665'
+    // this.handleScanResult(url)
     this.openScan()
   },
   beforeDestroy () {

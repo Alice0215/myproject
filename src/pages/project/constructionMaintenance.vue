@@ -4,9 +4,9 @@
         <q-toolbar class='fix'>
              <a @click="$router.goBack()" class="back-a"><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
-              施工养护
+            施工养护
             </q-toolbar-title>
-            <a class="top-nav-right">养护记录</a>
+            <a class="top-nav-right" @click="$router.push('/jobGroup/groupRecord?codeId=' + form.codeId)">养护记录</a>
        </q-toolbar>
     </q-toolbar>
     <q-list>
@@ -223,6 +223,7 @@ export default {
   mounted () {
     this.previewApi = server.PREVIEW_API
     this.jobGroupId = this.$route.query.jobGroupId
+
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
@@ -240,6 +241,7 @@ export default {
     if (this.$route.query.jobGroupId) {
       this.title = '修改'
     } else {
+      this.form.codeId = this.$route.query.codeId
       this.getQrInfo()
     }
     let form = JSON.parse(localStorage.getItem('form'))

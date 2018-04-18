@@ -155,7 +155,7 @@ export default {
       areaId: '',
       showType: false,
       qrCodeId: '',
-      form: {},
+      form: { singles: [] },
       projectId: '',
       amount: '',
       contactNumber: '',
@@ -508,6 +508,7 @@ export default {
       })
     })
     this.qrCodeId = this.$route.query.id
+
     if (this.$route.query.typeKey) {
       this.typeKey = this.$route.query.typeKey
     }
@@ -516,7 +517,7 @@ export default {
     // if (_.isNull(type)) {
     //   this.typeKey = type
     // }
-    if (this.typeKey === null) {
+    if (this.typeKey === null || _.isNull(this.typeKey) || this.typeKey === 'null') {
       this.showType = true
     }
     let index = 0
@@ -527,7 +528,6 @@ export default {
       localStorage.removeItem('top-index')
     } else {
       index = parseInt(topIndex)
-      console.log(topIndex)
     }
     if (!this.showType) {
       await this.load()
@@ -567,9 +567,11 @@ export default {
         this.form.singles[index] = singles
         localStorage.removeItem('editIndex')
       } else {
-        this.form.singles.push(singles)
+        if (this.form.singles) {
+          this.form.singles.push(singles)
+        }
       }
-      // localStorage.removeItem('singles')
+      localStorage.removeItem('singles')
     }
     this.$nextTick(() => {
       this.topButtonsClicked(index)
