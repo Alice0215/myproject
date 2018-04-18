@@ -59,15 +59,14 @@ export default {
         }
         if (this.$route.query.projectId) {
           this.$router.goBack()
-          // this.$router.push('/project/edit?id=' + this.$route.query.projectId)
         } else {
           this.$router.goBack()
-          // this.$router.push('/project/add')
         }
       }
     },
     async getGeolocation () {
-      let mapObj = new AMap.Map('map_frame', {
+      // 定位获取经纬度
+      let mapObj = new AMap.Map('map', {
         resizeEnable: true, // 自适应大小
         zoom: 13// 初始视窗
       })
@@ -76,21 +75,23 @@ export default {
           enableHighAccuracy: true, // 是否使用高精度定位，默认:true
           timeout: 10000, // 超过10秒后停止定位，默认：无穷大
           maximumAge: 0, // 定位结果缓存0毫秒，默认：0
-          convert: true, // 自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-          showButton: true, // 显示定位按钮，默认：true
+          convert: false, // 自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+          showButton: false, // 显示定位按钮，默认：true
           buttonPosition: 'LB', // 定位按钮停靠位置，默认：'LB'，左下角
           buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          showMarker: true, // 定位成功后在定位到的位置显示点标记，默认：true
-          showCircle: true, // 定位成功后用圆圈表示定位精度范围，默认：true
-          panToLocation: true, // 定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: true // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
+          showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
+          panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
+          zoomToAccuracy: false // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
         })
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
+          console.log(d)
           let getLng = d.position.getLng()
           let getLat = d.position.getLat()
           this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+          console.log(this.src)
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -100,7 +101,7 @@ export default {
     receivedMessage (e) {
       console.log(e)
       if (_.isUndefined(e.data.location)) {
-        return
+        this.getGeolocation()
       }
       let geocoder = e.data.location
       let lngLatArray = geocoder.split(',')
@@ -109,19 +110,21 @@ export default {
         this.position.lat = lngLatArray[1]
       }
       this.getAdressByGeocoder(lngLatArray)
-    },
-    getCurrentPosition () {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(success => {
-          console.log(success)
-        }, err => {
-          console.log(err)
-        })
-      }
     }
+    // getCurrentPosition () {
+    //   if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(success => {
+    //       console.log('2222')
+    //       console.log(success)
+    //     }, err => {
+    //       console.log('ccc')
+    //       console.log(err)
+    //     })
+    //   }
+    // }
   },
   async mounted () {
-    this.getCurrentPosition()
+    // this.getCurrentPosition()
     this.getGeolocation()
     this.$nextTick(() => {
       document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
@@ -143,7 +146,7 @@ export default {
 #map-page {
   #map_frame {
     width: 100%;
-    height: 100%;
+    height: 400px;
     border: 0;
   }
   #map {
@@ -157,6 +160,7 @@ export default {
     position: fixed;
     width: 48px;
     background: none !important;
+    border-bottom: none;
   }
 }
 </style>
