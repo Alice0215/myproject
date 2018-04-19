@@ -88,10 +88,12 @@ export default {
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
           // console.log(d)
+          console.log('定位成功')
           let getLng = d.position.getLng()
           let getLat = d.position.getLat()
-          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&radius=1000&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
           // console.log(this.src)
+          window.addEventListener('message', this.receivedMessage, false)
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -101,7 +103,7 @@ export default {
     receivedMessage (e) {
       // console.log(e)
       if (_.isUndefined(e.data.location)) {
-        this.getGeolocation()
+        return
       }
       let geocoder = e.data.location
       let lngLatArray = geocoder.split(',')
@@ -127,12 +129,12 @@ export default {
     // this.getCurrentPosition()
     this.getGeolocation()
     this.$nextTick(() => {
-      document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
+      // document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
+      document.getElementById('map_frame').style.height = screen.height + 'px'
       let iframe = document.getElementById('map_frame').contentWindow
       document.getElementById('map_frame').onload = function () {
         iframe.postMessage('hello', 'https://m.amap.com/picker/')
       }
-      window.addEventListener('message', this.receivedMessage, false)
     })
   },
   beforeDestroy () {
