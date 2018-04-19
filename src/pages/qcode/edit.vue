@@ -296,6 +296,7 @@ export default {
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-form')
       removeLocalStory('qrcode-single-property')
+      removeLocalStory('top-index')
       this.$router.goBack()
     },
     chooseProject () {
