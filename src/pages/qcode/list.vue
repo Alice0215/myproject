@@ -57,7 +57,7 @@
         <div v-if="weihu" class="bg-white">
           <q-infinite-scroll :handler="getjobGroup">
             <q-item  sublabel lines='1' class="full-width underline users"  v-for="vo in joblist" :key="vo.id" @click.native="$router.push('/jobGroup/detail?jobGroupId='+vo.id)" >
-              <q-item-main v-if="vo.code" :label="vo.code.alias" /><span class="user" v-if="vo.code">{{vo.code.description}}</span>
+              <q-item-main v-if="vo.code" :label="vo.code.alias" /><span class="user" v-if="vo.description">{{vo.description}}</span>
               <span class="user">{{vo.createTime}}</span>
               <q-item-side right icon="account circle" class="account"/>
               <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
