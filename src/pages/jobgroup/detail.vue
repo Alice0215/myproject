@@ -26,7 +26,7 @@
         <p>现场照片：</p>
         <p class="pic-field" >
           <span v-for="item in info.pictures" v-bind:key="item.id">
-            <img :src="picUrl+item.filePath" />
+            <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath" />
           </span>
         </p>
       </div>
@@ -42,6 +42,7 @@ export default {
   data () {
     return {
       jobGroupId: '',
+      previewApi: '',
       info: '',
       picUrl: '',
       tags: []
@@ -49,6 +50,7 @@ export default {
     }
   },
   created () {
+    this.previewApi = server.PREVIEW_API
     this.jobGroupId = this.$route.query.jobGroupId
     this.picUrl = server.THUMBNAIL_API
     this.getInfo()

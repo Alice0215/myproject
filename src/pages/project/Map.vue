@@ -101,12 +101,12 @@ export default {
       }.bind(this))
     },
     receivedMessage (e) {
-      // console.log(e)
       if (_.isUndefined(e.data.location)) {
         return
       }
       let geocoder = e.data.location
-      let lngLatArray = geocoder.split(',')
+      let lngLatArray = []
+      lngLatArray = geocoder.split(',')
       if (lngLatArray.length > 1) {
         this.position.lng = lngLatArray[0]
         this.position.lat = lngLatArray[1]

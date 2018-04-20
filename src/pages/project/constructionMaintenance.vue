@@ -43,8 +43,7 @@
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
-          <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.contentUrl">
-
+          <img :src="v.previewUrl" v-preview="previewApi+v.contentUrl" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -57,9 +56,10 @@
 </template>
 
 <script>
-import { request, deleteFiles, uploadFiles } from '../../common'
+import { request, uploadFiles, deleteFiles } from '../../common'
 import { required } from 'vuelidate/lib/validators'
 import { server } from '../../const'
+import _ from 'lodash'
 import eventBus from '../../eventBus'
 
 export default {
@@ -70,12 +70,12 @@ export default {
         pictures: [],
         jobs: [],
         tags: [],
-        previewApi: '',
         jobObg: [],
         QrInfo: {},
         codeId: '',
         imageArray: []
       },
+      previewApi: '',
       jobGroupId: '',
       title: '添加'
     }
@@ -294,8 +294,9 @@ export default {
     min-width: auto;
   }
   .img-close {
-    margin-left: 80px;
-    margin-top: -190px;
+    margin-left: 70px;
+    margin-top: -195px;
+    font-size: 28px;
   }
 }
 </style>

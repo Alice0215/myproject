@@ -120,10 +120,13 @@ export default {
         if (response.data && response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
           if (this.type === 'SINGLE' || this.type === 'AREA') {
-            this.topTitle = this.info.code.alias
+            if (!this.info.code) {
+              this.info.code = this.info
+            }
+            this.qrImgUrl = server.THUMBNAIL_QR + this.info.code.batch.batchNo + '/' + this.qrCodeId + '.png'
             this.qrRecord = '养护记录'
             this.routeUrl = '/jobGroup/groupRecord?codeId=' + this.qrCodeId
-            this.qrImgUrl = server.THUMBNAIL_QR + this.info.code.batch.batchNo + '/' + this.qrCodeId + '.png'
+
             let singles = response.data.resultMsg.singles
             this.singles.alias = []
             for (let key in singles) {
