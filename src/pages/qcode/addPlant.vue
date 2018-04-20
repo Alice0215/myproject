@@ -232,11 +232,15 @@ export default {
       if (_.isNull(single.alias)) {
         single.alias = ''
       }
-      if (!_.isNull(single.locationJson)) {
-        console.log(single.locationJson)
-        this.address = location.formattedAddress
-        console.log(this.address)
+      if (!_.isUndefined(single.location)) {
+        this.address = single.location.formattedAddress
       }
+      if (!_.isUndefined(single.locationJson)) {
+        let location = {}
+        location = JSON.parse(single.locationJson)
+        this.address = location.formattedAddress
+      }
+
       this.formData = single
       this.formData.category = parseInt(single.category)
     }

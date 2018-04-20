@@ -47,7 +47,7 @@
           <q-select
             v-model="scategory"
             placeholder='苗木分类选项' class='login-input mb-2'
-            :options="plantCategoryArray"
+            :options="plantCategoryArray" @change="changeCategory()"
           />
           <div class="row justify-between">
             <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
@@ -140,7 +140,7 @@
 
 <script>
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
-import { required, numeric } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import { server, plantType } from '../../const'
 import { filter } from 'quasar'
 import _ from 'lodash'
@@ -149,6 +149,7 @@ import eventBus from '../../eventBus'
 export default {
   data () {
     return {
+      qrImg: '',
       typeKey: null,
       category: '',
       scategory: '',
@@ -187,6 +188,41 @@ export default {
     }
   },
   methods: {
+    async getGeolocation () {
+      // 定位获取经纬度
+      let mapObj = new AMap.Map('map', {
+        resizeEnable: true, // 自适应大小
+        zoom: 13// 初始视窗
+      })
+      mapObj.plugin('AMap.Geolocation', function () {
+        let geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+          timeout: 10000, // 超过10秒后停止定位，默认：无穷大
+          maximumAge: 0, // 定位结果缓存0毫秒，默认：0
+          convert: false, // 自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+          showButton: false, // 显示定位按钮，默认：true
+          buttonPosition: 'LB', // 定位按钮停靠位置，默认：'LB'，左下角
+          buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
+          showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
+          panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
+          zoomToAccuracy: false // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+        })
+        mapObj.addControl(geolocation)
+        geolocation.getCurrentPosition()
+        AMap.event.addListener(geolocation, 'complete', (d) => {
+          let location = { 'addressComponent': d.addressComponent, 'formattedAddress': d.formattedAddress, 'position': d.position }
+          this.form.formattedAddress = location.formattedAddress
+          this.form.locationJson = JSON.stringify(location)
+        }) // 返回定位信息
+        AMap.event.addListener(geolocation, 'error', (error) => {
+          console.log(error)
+        }) // 返回定位出错信息
+      }.bind(this))
+    },
+    changeCategory () {
+      this.form.category.id = this.scategory
+    },
     async getAreaBranch () {
       this.areaBranches = []
       let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
@@ -520,6 +556,7 @@ export default {
     // }
     if (this.typeKey === null || _.isNull(this.typeKey) || this.typeKey === 'null') {
       this.showType = true
+      this.getGeolocation()
     }
     let index = 0
     let topIndex = localStorage.getItem('top-index')
@@ -656,10 +693,10 @@ export default {
   }
 
   .img-close {
-    margin-left: 80px;
-    margin-top: -190px;
+    margin-left: 70px;
+    margin-top: -195px;
+    font-size: 28px;
   }
-
   .camera-button {
     border-style: solid;
     border-width: 1px;

@@ -70,6 +70,8 @@
        </q-field>
     </div>
     <q-btn class="full-width btn"  v-if="formData.isEdit" @click="edit()">保存更改</q-btn>
+    <div id="map">
+    </div>
   </div>
 </template>
 
@@ -189,7 +191,7 @@ export default {
               title: '提示',
               message: '项目修改成功！'
             })
-            this.$router.push('/')
+            this.$router.push('/qcode/list?projectId=' + this.formData.projectId)
           } else {
             if (response.data.resultCode === 'ERROR') {
               this.$q.dialog({
