@@ -38,6 +38,7 @@ export default {
       this.$router.goBack()
     },
     async handleScanResult (url) {
+      this.cancelScan()
       this.borderShow = false
       this.$q.loading.show()
       let resp = await request(url, 'get', '', 'json', false, true)

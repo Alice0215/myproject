@@ -188,7 +188,8 @@ export default {
     }
   },
   methods: {
-    async getGeolocation () {
+    getGeolocation () {
+      this.$q.loading.show()
       // 定位获取经纬度
       let mapObj = new AMap.Map('map', {
         resizeEnable: true, // 自适应大小
@@ -211,9 +212,12 @@ export default {
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
+          console.log('定位成功')
           let location = { 'addressComponent': d.addressComponent, 'formattedAddress': d.formattedAddress, 'position': d.position }
           this.form.formattedAddress = location.formattedAddress
           this.form.locationJson = JSON.stringify(location)
+          console.log(this.form.formattedAddress)
+          this.$q.loading.hide()
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
           console.log(error)
@@ -555,8 +559,11 @@ export default {
     //   this.typeKey = type
     // }
     if (this.typeKey === null || _.isNull(this.typeKey) || this.typeKey === 'null') {
+      this.$q.loading.show()
+      setTimeout(() => {
+        this.getGeolocation()
+      }, 1000)
       this.showType = true
-      this.getGeolocation()
     }
     let index = 0
     let topIndex = localStorage.getItem('top-index')
@@ -615,6 +622,7 @@ export default {
       this.topButtonsClicked(index)
     })
     this.getPlantCategory()
+    console.log(this.form)
   },
   beforeDestroy () {
     eventBus.$off('upload-success')
