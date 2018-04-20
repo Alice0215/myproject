@@ -51,7 +51,7 @@ export default {
       TMtitle: '添加'
     }
   },
-  mounted () {
+  created () {
     this.projectId = this.$route.query.id
     this.getUsers()
     if (this.$route.query.user) {
