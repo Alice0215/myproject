@@ -156,7 +156,7 @@ export default {
       areaId: '',
       showType: false,
       qrCodeId: '',
-      form: { singles: [], locationJson: '', formattedAddress: '' },
+      form: { singles: [] },
       projectId: '',
       amount: '',
       contactNumber: '',
@@ -207,15 +207,16 @@ export default {
           showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
           showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
           panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: false, // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-          useNative: true
+          zoomToAccuracy: false // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
         })
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
+          console.log('定位成功')
           let location = { 'addressComponent': d.addressComponent, 'formattedAddress': d.formattedAddress, 'position': d.position }
           this.form.formattedAddress = location.formattedAddress
           this.form.locationJson = JSON.stringify(location)
+          console.log(this.form.formattedAddress)
           this.$q.loading.hide()
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
@@ -596,16 +597,10 @@ export default {
     if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
       this.load()
     }
-    if (!_.isNull(position) && position !== null) {
+    if (!_.isNull(position)) {
       this.form.formattedAddress = position.formattedAddress
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
-    }
-    if ((position === null) && this.showType) {
-      this.$q.loading.show()
-      setTimeout(() => {
-        this.getGeolocation()
-      }, 1000)
     }
     if (localStorage.getItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       if (localStorage.getItem('editIndex') && !_.isNull(editIndex)) {
@@ -623,6 +618,7 @@ export default {
       this.topButtonsClicked(index)
     })
     this.getPlantCategory()
+    console.log(this.form)
   },
   beforeDestroy () {
     eventBus.$off('upload-success')
