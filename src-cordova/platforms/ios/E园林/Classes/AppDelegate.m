@@ -24,7 +24,7 @@
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
 //
-static const NSString * kPgyKey = @"610fc30db68fb59865707c9616db656d";
+static const NSString * kPgyKey = @"169f36448d935167d1ba03c436bb8767";
 
 #import "AppDelegate.h"
 #import "MainViewController.h"

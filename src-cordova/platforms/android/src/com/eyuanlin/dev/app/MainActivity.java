@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.eyuanlin.app;
+package com.eyuanlin.dev.app;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

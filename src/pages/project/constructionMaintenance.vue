@@ -4,22 +4,19 @@
         <q-toolbar class='fix'>
              <a @click="$router.goBack()" class="back-a"><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
-              施工养护
+            施工养护
             </q-toolbar-title>
-            <a class="top-nav-right">历史记录</a>
+            <a class="top-nav-right" @click="$router.push('/jobGroup/groupRecord?codeId=' + form.codeId)">养护记录</a>
        </q-toolbar>
     </q-toolbar>
     <q-list>
       <q-item link class="full-width bg-white">
-        <q-item-side>
-          <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
-          <q-item-tile icon="place" class="mb-8">
+        <q-item-main sublabel lines='1'>
+           <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
+            <q-item-side left class="color-gray float-left" icon="place"/>
             <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
-          </q-item-tile>
-        </q-item-side>
-        <q-item-main>
         </q-item-main>
-        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+codeId+'&type='+qrtype)"/>
+        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+form.codeId+'&type='+form.QrInfo.type.key)"/>
         <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
       </q-item>
        <q-field
@@ -46,7 +43,7 @@
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
-          <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.previewUrl">
+          <img :src="v.previewUrl" v-preview="previewApi+v.contentUrl" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -59,9 +56,10 @@
 </template>
 
 <script>
-import { request, deleteFiles, uploadFiles } from '../../common'
+import { request, uploadFiles, deleteFiles } from '../../common'
 import { required } from 'vuelidate/lib/validators'
 import { server } from '../../const'
+import _ from 'lodash'
 import eventBus from '../../eventBus'
 
 export default {
@@ -72,14 +70,13 @@ export default {
         pictures: [],
         jobs: [],
         tags: [],
-        previewApi: '',
         jobObg: [],
-        QrInfo: {}
+        QrInfo: {},
+        codeId: '',
+        imageArray: []
       },
-      codeId: '',
-      qrtype: '',
+      previewApi: '',
       jobGroupId: '',
-
       title: '添加'
     }
   },
@@ -107,7 +104,7 @@ export default {
     },
     async getQrInfo () {
       this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.codeId, 'get', null, 'json', true)
+      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
       if (resp) {
         this.form.QrInfo = resp.data.resultMsg.code
       }
@@ -117,14 +114,24 @@ export default {
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         this.form.QrInfo = resp.data.resultMsg.code
-        this.codeId = resp.data.resultMsg.code.id
-        console.log(this.codeId)
+        this.form.codeId = resp.data.resultMsg.code.id
         this.form.description = resp.data.resultMsg.description
         this.form.pictures = resp.data.resultMsg.pictures
         let jobs = resp.data.resultMsg.jobs
         let names = []
         let jobObg = []
         let ids = []
+        if (this.form.pictures.length > 0) {
+          let imageArray = []
+          _.forEach(this.form.pictures, v => {
+            let previewUrl = server.THUMBNAIL_API + v.filePath
+            imageArray.push({
+              'previewUrl': previewUrl,
+              'contentUrl': v.filePath
+            })
+          })
+          this.form.pictures = imageArray
+        }
         for (var key in jobs) {
           let editData = {}
 
@@ -146,7 +153,6 @@ export default {
           }
         }
         this.form.jobObg = { 'names': names, 'jobs': jobObg, 'ids': ids }
-        console.log(this.form.jobObg)
       }
     },
     operate () {
@@ -167,7 +173,7 @@ export default {
         imgArray = _.map(this.form.pictures, 'contentUrl')
       }
       let data = {
-        'codeId': this.codeId,
+        'codeId': this.form.codeId,
         'description': this.form.description,
         'jobs': this.form.jobs,
         'pictures': imgArray
@@ -201,6 +207,9 @@ export default {
             title: '提示',
             message: '修改成功'
           })
+          setTimeout(() => {
+            this.$router.goBack()
+          }, 1000)
         }
       })
     },
@@ -214,11 +223,8 @@ export default {
   },
   mounted () {
     this.previewApi = server.PREVIEW_API
-    if (!_.isNull(this.$route.query.codeId)) {
-      this.codeId = this.$route.query.codeId
-    }
-
     this.jobGroupId = this.$route.query.jobGroupId
+
     eventBus.$on('upload-success', resp => {
       console.log(resp)
       this.$q.loading.hide()
@@ -236,6 +242,7 @@ export default {
     if (this.$route.query.jobGroupId) {
       this.title = '修改'
     } else {
+      this.form.codeId = this.$route.query.codeId
       this.getQrInfo()
     }
     let form = JSON.parse(localStorage.getItem('form'))
@@ -283,10 +290,13 @@ export default {
     border-color: lightgray;
     border-radius: 8px;
   }
-
+  .auto {
+    min-width: auto;
+  }
   .img-close {
-    margin-left: 80px;
-    margin-top: -190px;
+    margin-left: 70px;
+    margin-top: -195px;
+    font-size: 28px;
   }
 }
 </style>

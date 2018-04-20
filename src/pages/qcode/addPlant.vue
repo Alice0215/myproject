@@ -20,8 +20,8 @@
          error-label="请添加植物名称">
               <q-input
                 v-model="formData.alias"
-                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8'>
-              <q-autocomplete @search="searchTerm"/>
+                placeholder="植物名称" class='col-12 border-1 ml-2 h-35 p-8' @change="change">
+              <q-autocomplete @search="searchTerm"  @selected="selected"/>
               </q-input>
             </q-field>
           </div>
@@ -30,11 +30,17 @@
               <q-input type="number" class="col-7 border-1 ml-2 h-35  p-8" v-model="formData.amount"></q-input>
           </div>
         </div>
-        <q-select
-          v-model="formData.category"
-          placeholder='苗木分类选项' class='full-width h-35 p-8 border-1'
-          :options="plantCategory"
-        />
+        <q-field
+         @blur="$v.formData.category.$touch"
+        @keyup.enter="save"
+        :error="$v.formData.category.$error"
+         error-label="请选择苗木分类">
+          <q-select
+            v-model="formData.category"
+            placeholder='苗木分类选项' class='full-width h-35 p-8 border-1'
+            :options="plantCategory"
+          />
+        </q-field>
         <div id="single-plant" >
           <div class="row justify-between">
             <div class="col-6 row mt-4">
@@ -71,12 +77,12 @@
               </div>
               <div class="col-5 row">
                 <span class="col-4 lineHeight-32">几年生</span>
-                <q-input class="col-7 border-1 ml-2 h-30  p-8" v-model="formData.year"></q-input>
+                <q-input class="col-7 border-1 ml-2 h-35  p-8" v-model="formData.year"></q-input>
               </div>
             </div>
             <div class="row mt-8 col-12">
-              <span class="col-1 lineHeight-32">其他</span>
-              <q-input v-model="formData.other" class="col-10 ml-8 border-1 h-35  p-8"></q-input>
+              <span class="col-2 lineHeight-32">其他</span>
+              <q-input v-model="formData.other" class="col-9 ml-8 border-1 h-35  p-8"></q-input>
             </div>
           </div>
           <q-input v-model="formData.source" placeholder="苗原地" class='login-input mt-10'></q-input>
@@ -114,7 +120,7 @@
 import { required } from 'vuelidate/lib/validators'
 import { filter } from 'quasar'
 import { server } from '../../const'
-import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
+import { request, uploadFiles, deleteFiles } from '../../common'
 import eventBus from '../../eventBus'
 import _ from 'lodash'
 
@@ -131,7 +137,8 @@ export default {
   },
   validations: {
     formData: {
-      alias: { required }
+      alias: { required },
+      category: { required }
     }
   },
   methods: {
@@ -146,13 +153,20 @@ export default {
     searchTerm (alias, done) {
       request('data/term?type=PLANT&start=' + this.formData.alias + '&top=10', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
-          console.log(response.data.resultMsg)
-          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: String(item['id']) }))
           setTimeout(() => {
-            done(filter(alias, { field: 'value', list: model }))
+            done(filter(alias, { field: 'label', list: model }))
           }, 1000)
         }
       })
+    },
+    selected (item) {
+      console.log(item.label)
+      this.formData.alias = item.label
+      // this.formData.singleId = item.value
+    },
+    change () {
+      this.formData.singleId = ''
     },
     openMap () {
       this.saveLocalData()
@@ -210,15 +224,25 @@ export default {
     })
     let i = _.isUndefined(this.$route.query.index) ? '0' : this.$route.query.index
     let oldData = JSON.parse(localStorage.getItem('qrcode-form'))
-    if (!_.isNull(oldData)) {
+    if (!_.isNull(oldData) && !_.isUndefined(this.$route.query.index)) {
       let single = oldData['singles'][i]
       if (_.isUndefined(single)) {
-        single = {'alias': ''}
+        single = { 'alias': '' }
       }
       if (_.isNull(single.alias)) {
         single.alias = ''
       }
+      if (!_.isUndefined(single.location)) {
+        this.address = single.location.formattedAddress
+      }
+      if (!_.isUndefined(single.locationJson)) {
+        let location = {}
+        location = JSON.parse(single.locationJson)
+        this.address = location.formattedAddress
+      }
+
       this.formData = single
+      this.formData.category = parseInt(single.category)
     }
     let formData = JSON.parse(localStorage.getItem('qrcode-form-add'))
     if (!_.isNull(formData)) {
@@ -249,7 +273,10 @@ export default {
 @import "../../assets/css/common";
 #qcode-page-add {
   .lineHeight-32 {
-    line-height: 32px;
+    line-height: 50px;
+  }
+  .lineHeight-30 {
+    line-height: 50px;
   }
   .h-35 {
     height: 35px;

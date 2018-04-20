@@ -32,35 +32,23 @@
         :error="$v.form.alias.$error"
          :error-label="namePlaceholder">
         <q-input v-model="form.alias" :placeholder="namePlaceholder" class='login-input'>
-          <q-autocomplete @search="searchTerm"/>
+          <q-autocomplete @search="searchTerm"  @selected="selected"/>
         </q-input>
          </q-field>
         <q-input
           v-model="projectName"
-          placeholder='默认项目名称' class='login-input' readonly @click.native="chooseProject"
-        />
+          placeholder='默认项目名称' class='login-input' readonly @click.native="chooseProject" />
         <div id="single-plant" v-show="singleShow">
           <q-select
             v-model="form.areaId"
             placeholder='所属片区' class='login-input'
             :options="areaBranches"
           />
-          <q-select v-if="type !== 'SINGLE'"
-            v-model="category"
-            placeholder='苗木分类选项' class='login-input mb-2'
-            :options="plantCategoryArray"
-          />
-            <q-field v-if="type === 'SINGLE'"
-         @blur="$v.scategory.$touch"
-        @keyup.enter="save"
-        :error="$v.scategory.$error"
-         error-label="请选择苗木分类">
           <q-select
             v-model="scategory"
             placeholder='苗木分类选项' class='login-input mb-2'
-            :options="plantCategoryArray"
+            :options="plantCategoryArray" @change="changeCategory()"
           />
-           </q-field>
           <div class="row justify-between">
             <div class="col-5 row mt-4" v-for="v, i in singlePlantProperties" :key="i">
               <span class="col-3 lineHeight-32">{{v.name}}</span>
@@ -80,7 +68,7 @@
             </div>
             <div class="row mt-8 col-12">
               <span class="col-2 lineHeight-32">其他</span>
-              <q-input v-model="form.otherFeature" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
+              <q-input v-model="form.other" class="col-9 ml-8 border-1 h-32 p-8"></q-input>
             </div>
           </div>
           <q-input v-model="form.source" placeholder="苗原地" class='login-input mt-10'></q-input>
@@ -113,7 +101,7 @@
               <q-item-main></q-item-main>
             </q-item>
             <q-item class="mt-8" v-for="v, i in form.singles" :key="i">
-              <q-item-side label>{{v.alias}}</q-item-side>
+              <q-item-side>{{v.alias}}</q-item-side>
               <q-item-main></q-item-main>
               <q-item-side right>
                 <span class="mr-6">数量: {{v.amount}}</span>
@@ -152,23 +140,23 @@
 
 <script>
 import { request, uploadFiles, deleteFiles, removeLocalStory } from '../../common'
-import { required, numeric } from 'vuelidate/lib/validators'
-import { server } from '../../const'
+import { required } from 'vuelidate/lib/validators'
+import { server, plantType } from '../../const'
 import { filter } from 'quasar'
 import _ from 'lodash'
 import eventBus from '../../eventBus'
-import { plantType } from '../../const'
 
 export default {
   data () {
     return {
+      qrImg: '',
       typeKey: null,
       category: '',
       scategory: '',
       areaId: '',
       showType: false,
       qrCodeId: '',
-      form: { singles: [] },
+      form: { singles: [], locationJson: '', formattedAddress: '' },
       projectId: '',
       amount: '',
       contactNumber: '',
@@ -187,7 +175,7 @@ export default {
       alias: '',
       aliasList: [],
       projectName: '',
-      type: '',
+      type: 'SINGLE',
       areaBranches: [],
       showAlert: false,
       topIndex: 0,
@@ -195,12 +183,49 @@ export default {
     }
   },
   validations: {
-    scategory: { required, numeric },
     form: {
       alias: { required }
     }
   },
   methods: {
+    getGeolocation () {
+      this.$q.loading.show()
+      // 定位获取经纬度
+      let mapObj = new AMap.Map('map', {
+        resizeEnable: true, // 自适应大小
+        zoom: 13// 初始视窗
+      })
+      mapObj.plugin('AMap.Geolocation', function () {
+        let geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+          timeout: 10000, // 超过10秒后停止定位，默认：无穷大
+          maximumAge: 0, // 定位结果缓存0毫秒，默认：0
+          convert: false, // 自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+          showButton: false, // 显示定位按钮，默认：true
+          buttonPosition: 'LB', // 定位按钮停靠位置，默认：'LB'，左下角
+          buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
+          showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
+          panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
+          zoomToAccuracy: false, // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          useNative: true
+        })
+        mapObj.addControl(geolocation)
+        geolocation.getCurrentPosition()
+        AMap.event.addListener(geolocation, 'complete', (d) => {
+          let location = { 'addressComponent': d.addressComponent, 'formattedAddress': d.formattedAddress, 'position': d.position }
+          this.form.formattedAddress = location.formattedAddress
+          this.form.locationJson = JSON.stringify(location)
+          this.$q.loading.hide()
+        }) // 返回定位信息
+        AMap.event.addListener(geolocation, 'error', (error) => {
+          console.log(error)
+        }) // 返回定位出错信息
+      }.bind(this))
+    },
+    changeCategory () {
+      this.form.category.id = this.scategory
+    },
     async getAreaBranch () {
       this.areaBranches = []
       let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
@@ -242,9 +267,10 @@ export default {
     },
     async save () {
       this.$v.$touch()
-      // if (this.$v.$error) {
-      //   return false
-      // }
+      if (this.$v.$error) {
+        return false
+      }
+
       let form = {}
       let url = ''
       this.setSinglePropertyToForm()
@@ -252,14 +278,23 @@ export default {
       qrCodeForm.projectId = this.form.project.id
       qrCodeForm.qrCodeId = this.qrCodeId
       qrCodeForm.alias = this.form.alias
-      form.areaId = this.form.areaId
+      qrCodeForm.areaId = this.form.areaId
       qrCodeForm.description = this.form.description
       if (this.imageArray.length > 0) {
         qrCodeForm.pictures = _.map(this.imageArray, 'contentUrl')
       }
       qrCodeForm.locationJson = this.form.locationJson
       form.qrCodeForm = qrCodeForm
+      console.log(this.type)
       if (this.type === plantType.SINGLE) {
+        console.log(this.scategory)
+        if (this.scategory === '') {
+          this.$q.dialog({
+            title: '提示',
+            message: '请先选择苗木分类'
+          })
+          return false
+        }
         url = 'qrcode/single/save'
         form.category = this.scategory
         form.xiongJing = this.form.xiongJing
@@ -276,7 +311,9 @@ export default {
         form.singleId = this.form.singleId
       } else if (this.type === plantType.AREA) {
         url = 'qrcode/area/save'
+        form.areaId = this.form.areaId
         form.acreage = this.form.acreage
+        form.singles = this.form.singles
       } else if (this.type === plantType.DEVICE) {
         url = 'qrcode/equipment/save'
         form = qrCodeForm
@@ -284,10 +321,8 @@ export default {
         url = 'qrcode/other/save'
         form = qrCodeForm
       }
-      console.log(form)
       let resp = await request(url, 'put', form, 'json', true)
-      if (resp.data.resultCode === 'SUCCESS') {
-        console.log(resp)
+      if (resp && resp.data.resultCode === 'SUCCESS') {
         this.showAlert = true
         setTimeout(() => {
           this.showAlert = false
@@ -300,6 +335,7 @@ export default {
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-form')
       removeLocalStory('qrcode-single-property')
+      removeLocalStory('top-index')
       this.$router.goBack()
     },
     chooseProject () {
@@ -315,18 +351,24 @@ export default {
     editPlant (i) {
       this.setSinglePropertyToForm()
       this.saveLocalData()
+      localStorage.setItem('editIndex', i + 1)
       this.$router.push('addPlant?id=' + this.qrCodeId + '&typeKey=' + this.typeKey + '&index=' + i)
     },
     searchTerm (alias, done) {
       request('data/term?type=PLANT&start=' + this.form.alias + '&top=10', 'get').then(response => {
         if (response.data.resultCode === 'SUCCESS') {
           console.log(response.data.resultMsg)
-          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: item['name'] }))
+          let model = response.data.resultMsg.map(item => ({ label: String(item['name']), value: String(item['id']) }))
           setTimeout(() => {
-            done(filter(alias, { field: 'value', list: model }))
+            done(filter(alias, { field: 'label', list: model }))
           }, 1000)
         }
       })
+    },
+    selected (item) {
+      console.log(item.label)
+      this.form.alias = item.label
+      console.log(this.form.alias)
     },
     async load () {
       this.$q.loading.show()
@@ -338,6 +380,12 @@ export default {
         if (form.code) {
           form.project = form.code.project
         }
+        if (form.singles) {
+          for (let key in form.singles) {
+            form.singles[key].category = form.singles[key].category.id
+            form.singles[key].singleId = form.singles[key].id
+          }
+        }
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
@@ -348,6 +396,8 @@ export default {
         }
         if (form.code) {
           form.alias = form.code.alias
+          form.description = form.code.description
+          form.location = form.code.location
           if (form.code.project) {
             this.projectName = form.code.project.projectName
             this.projectId = form.code.project.id.toString()
@@ -381,8 +431,6 @@ export default {
         this.form = form
       }
       this.setFormToSingleProperty()
-      console.log('load')
-      console.log(this.form)
     },
     openCamera () {
       if (navigator.camera) {
@@ -437,7 +485,7 @@ export default {
         default:
           break
       }
-      localStorage.setItem('typeKey', this.type)
+      // localStorage.setItem('typeKey', this.type)
     },
     add () {
       let data = {
@@ -499,12 +547,17 @@ export default {
         message: params.msg
       })
     })
-    // this.qrCodeId = this.$route.query.id
-    this.qrCodeId = localStorage.getItem('qrCodeId')
-    this.typeKey = localStorage.getItem('typeKey')
-    // this.typeKey = this.$route.query.typeKey
+    this.qrCodeId = this.$route.query.id
 
-    if (this.typeKey === 'null') {
+    if (this.$route.query.typeKey) {
+      this.typeKey = this.$route.query.typeKey
+    }
+    // this.qrCodeId = localStorage.getItem('qrCodeId')
+    // let type = localStorage.getItem('typeKey')
+    // if (_.isNull(type)) {
+    //   this.typeKey = type
+    // }
+    if (this.typeKey === null || _.isNull(this.typeKey) || this.typeKey === 'null') {
       this.showType = true
     }
     let index = 0
@@ -512,9 +565,9 @@ export default {
     if (_.isNull(topIndex)) {
       let keyArray = [plantType.SINGLE, plantType.AREA, plantType.DEVICE, plantType.OTHER]
       index = _.indexOf(keyArray, this.typeKey) > -1 ? _.indexOf(keyArray, this.typeKey) : 0
+      localStorage.removeItem('top-index')
     } else {
       index = parseInt(topIndex)
-      console.log(topIndex)
     }
     if (!this.showType) {
       await this.load()
@@ -525,15 +578,9 @@ export default {
     let singleProperty = JSON.parse(localStorage.getItem('qrcode-single-property'))
     let position = JSON.parse(localStorage.getItem('user_location'))
     let singles = JSON.parse(localStorage.getItem('singles'))
+    let editIndex = JSON.parse(localStorage.getItem('editIndex'))
     if (!_.isNull(form)) {
       this.form = form
-    }
-    if (!_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
-      console.log(singles)
-      this.form.singles.push(singles)
-      console.log(this.form.singles)
-      localStorage.removeItem('singles')
-      // console.log(this.form.singles)
     }
     if (!_.isNull(imageArray)) {
       this.imageArray = imageArray
@@ -546,17 +593,33 @@ export default {
     if (!_.isNull(singleProperty)) {
       this.singlePlantProperties = singleProperty
     }
-    if (!_.isNull(position)) {
+    if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
+      this.load()
+    }
+    if (!_.isNull(position) && position !== null) {
       this.form.formattedAddress = position.formattedAddress
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
     }
-    if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
-      this.load()
+    if ((position === null) && this.showType) {
+      this.$q.loading.show()
+      setTimeout(() => {
+        this.getGeolocation()
+      }, 1000)
     }
-    console.log(this.imageArray)
+    if (localStorage.getItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
+      if (localStorage.getItem('editIndex') && !_.isNull(editIndex)) {
+        let index = editIndex - 1
+        this.form.singles[index] = singles
+        localStorage.removeItem('editIndex')
+      } else {
+        if (this.form.singles) {
+          this.form.singles.push(singles)
+        }
+      }
+      localStorage.removeItem('singles')
+    }
     this.$nextTick(() => {
-      console.log(index)
       this.topButtonsClicked(index)
     })
     this.getPlantCategory()
@@ -564,7 +627,7 @@ export default {
   beforeDestroy () {
     eventBus.$off('upload-success')
     eventBus.$off('delete-success')
-    removeLocalStory('top-index')
+    // removeLocalStory('top-index')
   }
 }
 </script>
@@ -638,10 +701,10 @@ export default {
   }
 
   .img-close {
-    margin-left: 80px;
-    margin-top: -190px;
+    margin-left: 70px;
+    margin-top: -195px;
+    font-size: 28px;
   }
-
   .camera-button {
     border-style: solid;
     border-width: 1px;

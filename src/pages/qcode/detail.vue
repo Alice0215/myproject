@@ -4,7 +4,7 @@
         <q-toolbar class='fix'>
              <a @click="back" class='back-a'><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
             <q-toolbar-title class='header-title'>
-              {{code.alias}}
+              {{topTitle}}
             </q-toolbar-title>
             <a class="top-nav-right" @click="$router.push(routeUrl)">{{qrRecord}}</a>
        </q-toolbar>
@@ -19,23 +19,48 @@
         </p>
       </div>
       <div class="qr-info">
-        <p>二维码编号：<span v-if="code.identifier">{{code.identifier}}</span></p>
-        <p>二维码类型：<span v-if="code.type">{{code.type.value}}</span></p>
-        <p>所属项目：<span v-if="code.project">{{code.project.projectName}}</span></p>
-        <p>苗木名称：<span v-if="code.alias">{{code.alias}}</span><span v-if="info.alias">{{info.alias}}</span></p>
+        <div v-if="type==='EQUIPMENT' || type==='OTHER'">
+          <p>名称：<span v-if="info.alias">{{info.alias}}</span></p>
+          <p>所属项目：<span v-if="info.project">{{info.project.projectName}}</span></p>
+          <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.location">{{info.location.formattedAddress}}</span></p>
+          <p class="address" v-if="info.description"> {{info.description}}</p>
+          <p class="address pic-field" v-if=" info.pictures">
+            <span v-for="item in info.pictures" v-bind:key="item.id">
+              <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
+            </span>
+          </p>
+        </div>
+        <div v-if="type==='SINGLE'|| type==='AREA'">
+        <p>二维码编号：<span v-if="info.code && info.code.identifier">{{info.code.identifier}}</span></p>
+        <p>二维码类型：<span v-if="info.code && info.code.type">{{info.code.type.value}}</span></p>
+        <p>所属项目：<span v-if="info.code && info.code.project">{{info.code.project.projectName}}</span></p>
+        </div>
+        <div v-if="type==='SINGLE'">
+        <p>植物名称：<span v-if="info.code && info.code.alias">{{info.code.alias}}</span></p>
         <p>苗木分类：<span v-if="info.category">{{info.category.name}}</span></p>
         <p class="param"><span>胸径：{{info.xiongJing}}cm</span><span>高度：{{info.gaoDu}}cm</span><span>冠幅：{{info.guanFu}}cm</span></p>
         <p>苗木商名称：<span v-if="info.dealer">{{info.dealer}}</span></p>
-        <p>苗木其它信息：</p>
-        <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="code.location">{{code.location.formattedAddress}}</span></p>
-        <p class="address"> {{code.description}}</p>
-        <p class="address pic-field" >
-          <span v-for="item in code.pictures" v-bind:key="item.id">
-            <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
-          </span>
+        <p>苗木其它信息：<span>{{info.other}}</span></p>
+        </div>
+        <div v-if="type==='AREA'">
+          <p>片区名称：<span v-if="info.code && info.code.alias">{{info.code.alias}}</span></p>
+          <p>片区面积：<span>{{info.acreage}}</span></p>
+          <p>植物:</p>
+          <p v-if="singles && singles.alias">
+          <q-chips-input v-model="singles.alias" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
         </p>
+        </div>
+        <div v-if="type==='SINGLE'|| type==='AREA'">
+          <p class="address"> <q-item-side left icon='place' class='inline newicon'></q-item-side><span  v-if="info.code && info.code.location">{{info.code.location.formattedAddress}}</span></p>
+          <p class="address" v-if="info.code && info.code.description"> {{info.code.description}}</p>
+          <p class="address pic-field" v-if="info.code && info.code.pictures">
+            <span v-for="item in info.code.pictures" v-bind:key="item.id">
+              <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
+            </span>
+          </p>
+         </div>
+          <q-btn class="full-width bg-color qr-btn show-qr" v-if="editable" @click='add()'>编辑基础信息</q-btn>
       </div>
-      <q-btn class="full-width bg-color qr-btn show-qr" v-if="editable" @click='add()'>编辑基础信息</q-btn>
     </div>
   </div>
 </template>
@@ -48,21 +73,16 @@ export default {
     return {
       projectId: '',
       qrCodeId: '',
-      code: {},
       routeUrl: '',
       type: '',
-      danzhu: true,
-      pianqu: false,
-      gongju: false,
-      qita: false,
       editable: false,
       topTitle: '',
       qrImgUrl: '',
-      info: '',
+      info: {},
       qrRecord: '',
       picUrl: '',
-      previewApi: ''
-
+      previewApi: '',
+      singles: {}
     }
   },
   created () {
@@ -79,8 +99,6 @@ export default {
       this.$router.push('/qcode/view')
     },
     back () {
-      localStorage.removeItem('qrCodeId')
-      localStorage.removeItem('typeKey')
       this.$router.goBack()
     },
     add () {
@@ -91,36 +109,40 @@ export default {
         })
         return
       }
-      let key = null
-      if (this.code.type) {
-        key = this.code.type.key
-      }
-      console.info(key)
       localStorage.setItem('qrCodeId', this.qrCodeId)
-      localStorage.setItem('typeKey', key)
-      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + key)
+      localStorage.setItem('typeKey', this.type)
+      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + this.type)
     },
     getInfo () {
       this.$q.loading.show()
       request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true).then(response => {
         this.$q.loading.hide()
-        if (response.data.resultCode === 'SUCCESS') {
+        if (response.data && response.data.resultCode === 'SUCCESS') {
           this.info = response.data.resultMsg
-          if (response.data.resultMsg.code) {
-            this.code = response.data.resultMsg.code
-          } else {
-            this.code = response.data.resultMsg
-          }
-          if (this.code.type.key === 'SINGLE' || this.code.type.key === 'AREA') {
+          if (this.type === 'SINGLE' || this.type === 'AREA') {
+            if (!this.info.code) {
+              this.info.code = this.info
+            }
+            this.qrImgUrl = server.THUMBNAIL_QR + this.info.code.batch.batchNo + '/' + this.qrCodeId + '.png'
             this.qrRecord = '养护记录'
             this.routeUrl = '/jobGroup/groupRecord?codeId=' + this.qrCodeId
-          } else if (this.code.type.key === 'EQUIPMENT') {
+
+            let singles = response.data.resultMsg.singles
+            this.singles.alias = []
+            for (let key in singles) {
+              this.singles.alias.push(singles[key]['alias'])
+            }
+          } else if (this.type === 'EQUIPMENT') {
+            this.topTitle = this.info.alias
             this.qrRecord = '领用记录'
             this.routeUrl = '/jobGroup/record?codeId=' + this.qrCodeId
+            this.qrImgUrl = server.THUMBNAIL_QR + this.info.batch.batchNo + '/' + this.qrCodeId + '.png'
           } else {
             this.qrRecord = ''
+            this.topTitle = this.info.alias
+            this.qrImgUrl = server.THUMBNAIL_QR + this.info.batch.batchNo + '/' + this.qrCodeId + '.png'
           }
-          this.qrImgUrl = server.THUMBNAIL_QR + this.code.batch.batchNo + '/' + this.qrCodeId + '.png'
+
           //  server.THUMBNAIL_API
           this.editable = response.data.resultMsg.editable
         } else {
@@ -145,7 +167,7 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #detail {
-  .top-field{
+  .top-field {
     margin-top: 20px;
   }
   .qr-img {
@@ -189,7 +211,6 @@ export default {
     padding: 10px 5px;
   }
   .pic-field img {
-    width: 32%;
     height: auto;
     margin-right: 1%;
   }

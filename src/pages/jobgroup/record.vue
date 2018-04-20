@@ -40,7 +40,6 @@ export default {
   },
   created () {
     this.codeId = this.$route.query.codeId
-    this.getlist()
   },
   methods: {
     async getlist (index, done) {

@@ -97,6 +97,7 @@ export default {
 .list {
     padding: 0px;
     border: none;
+    background: none;
   }
 @import "../../assets/css/common";
 #project-list {
