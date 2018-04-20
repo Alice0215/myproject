@@ -43,6 +43,13 @@ export default {
       let resp = await request(url, 'get', '', 'json', false, true)
       this.$q.loading.hide()
       let msg = resp.data.resultMsg
+      if (window.QRScanner) {
+        window.QRScanner.cancelScan(statu => {
+          console.log(statu)
+        })
+        window.QRScanner.hide()
+      }
+
       let qrCodeId = null
       if (msg.code) {
         qrCodeId = msg.code.id
