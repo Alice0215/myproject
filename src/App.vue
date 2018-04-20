@@ -25,7 +25,7 @@ document.addEventListener('deviceready', () => {
 export default {
   name: 'App',
   metaInfo: {
-    titleTemplate: '%s | E园林'
+    titleTemplate: '%s | e园林'
   },
   data () {
     return {

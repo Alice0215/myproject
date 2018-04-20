@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest android:hardwareAccelerated="true" android:versionCode="10000" android:versionName="1.0.0" package="com.eyuanlin.dev.app" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest android:hardwareAccelerated="true" android:versionCode="10000" android:versionName="1.0.0" package="com.eyuanlin.app" xmlns:android="http://schemas.android.com/apk/res/android">
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application android:allowBackup="true" android:hardwareAccelerated="true" android:icon="@mipmap/icon" android:label="@string/app_name" android:name=".EylApplication" android:supportsRtl="true">
@@ -13,7 +13,7 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
         </provider>
         <activity android:name="com.pgyersdk.activity.FeedbackActivity" />
-        <meta-data android:name="PGYER_APPID" android:value="63a0479f958654c2f07094ff78bf2ea7">
+        <meta-data android:name="PGYER_APPID" android:value="cd55ccdac22b415d53fe606d22e43b8a">
         </meta-data>
     </application>
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="26" />
