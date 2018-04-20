@@ -214,6 +214,7 @@ export default {
       this.initList()
     },
     chooseTab (index) {
+      localStorage.setItem('qlistIndex', index)
       _.forEach(this.tabClass, (v, k) => {
         if (k === index) {
           this.$set(this.tabClass, k, 'hover')
@@ -268,6 +269,11 @@ export default {
     this.getCount()
     this.getInfo()
     this.initList()
+    let index = localStorage.getItem('qlistIndex')
+    if (!_.isNull(index) && index === '1') {
+      this.chooseTab(1)
+      // localStorage.removeItem('qlistIndex')
+    }
   }
 }
 </script>
