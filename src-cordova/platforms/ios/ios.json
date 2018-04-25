@@ -25,7 +25,7 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
+              "xml": "<feature name=\"AMapPlugin\"><param name=\"ios-package\" value=\"CDVAMap4Yxt\" /></feature>",
               "count": 1
             }
           ]
@@ -36,6 +36,47 @@
           "NSCameraUsageDescription": [
             {
               "xml": "<string>The camera is used to scan QR codes.</string>",
+              "count": 1
+            }
+          ],
+          "AMapAppKey": [],
+          "NSLocationWhenInUseUsageDescription": [
+            {
+              "xml": "<string>App中签到等功能需要使用系统定位服务，请允许</string>",
+              "count": 1
+            }
+          ],
+          "NSLocationAlwaysUsageDescription": [
+            {
+              "xml": "<string>App中签到等功能需要使用系统定位服务，请允许</string>",
+              "count": 1
+            }
+          ],
+          "NSAppTransportSecurity": [
+            {
+              "xml": "<dict><key>NSAllowsArbitraryLoads</key><true /></dict>",
+              "count": 1
+            }
+          ],
+          "AMapApiKey": [
+            {
+              "xml": "<string>867b29fcd190bafc7d81af5e122bd616</string>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "-Info.plist": {
+        "parents": {
+          "NSPhotoLibraryUsageDescription": [
+            {
+              "xml": "<string>是否允许此App访问您的相册?</string>",
+              "count": 1
+            }
+          ],
+          "NSCameraUsageDescription": [
+            {
+              "xml": "<string>是否允许此App访问您的相机?</string>",
               "count": 1
             }
           ]
@@ -62,7 +103,8 @@
     "cordova-plugin-add-swift-support": {
       "PACKAGE_NAME": "com.eyuanlin.app"
     },
-    "cordova-plugin-geolocation": {
+    "cordova-plugin-amap": {
+      "API_KEY_FOR_IOS": "867b29fcd190bafc7d81af5e122bd616",
       "PACKAGE_NAME": "com.eyuanlin.dev.app"
     }
   },
@@ -117,35 +159,11 @@
       ]
     },
     {
-      "id": "cordova-plugin-geolocation.Coordinates",
-      "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
-      "pluginId": "cordova-plugin-geolocation",
+      "id": "cordova-plugin-amap.AMapPlugin",
+      "file": "plugins/cordova-plugin-amap/www/amap.js",
+      "pluginId": "cordova-plugin-amap",
       "clobbers": [
-        "Coordinates"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.PositionError",
-      "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "PositionError"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.Position",
-      "file": "plugins/cordova-plugin-geolocation/www/Position.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "Position"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.geolocation",
-      "file": "plugins/cordova-plugin-geolocation/www/geolocation.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "navigator.geolocation"
+        "window.AMapPlugin"
       ]
     }
   ],
@@ -156,6 +174,6 @@
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-plugin-add-swift-support": "1.7.2",
-    "cordova-plugin-geolocation": "4.0.1"
+    "cordova-plugin-amap": "2.0.0"
   }
 }

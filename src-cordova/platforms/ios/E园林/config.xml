@@ -29,8 +29,8 @@
         <param name="ios-package" value="CDVSplashScreen" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="Geolocation">
-        <param name="ios-package" value="CDVLocation" />
+    <feature name="AMapPlugin">
+        <param name="ios-package" value="CDVAMap4Yxt" />
     </feature>
     <name>e园林_Dev</name>
     <description>A Quasar Framework app</description>
