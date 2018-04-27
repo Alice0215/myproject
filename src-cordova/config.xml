@@ -47,9 +47,12 @@
     <plugin name="cordova-plugin-qrscanner" spec="^2.5.0" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-add-swift-support" spec="^1.7.2" />
-    <plugin name="cordova-plugin-amap" spec="^2.0.0">
-        <variable name="API_KEY_FOR_ANDROID" value="1b6ab30af85b3cbd899ff446747f286f" />
-        <variable name="API_KEY_FOR_IOS" value="867b29fcd190bafc7d81af5e122bd616" />
-    </plugin>
     <engine name="android" spec="6.3.0" />
+    <plugin name="cordova-plugin-gaode-location" spec="https://github.com/daihere1993/cordova-plugin-gaode-location">
+        <variable name="ANDROIDKEY" value="1b6ab30af85b3cbd899ff446747f286f" />
+        <variable name="IOSKEY" value="867b29fcd190bafc7d81af5e122bd616" />
+        <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="请选择'始终允许'以保证应用的正常运行" />
+        <variable name="LOCATION_WHEN_IN_USAGE_DESCRIPTION" value="请选择'始终允许'以保证应用的正常运行" />
+        <variable name="LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION" value="请选择'始终允许'以保证应用的正常运行" />
+    </plugin>
 </widget>

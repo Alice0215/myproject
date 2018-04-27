@@ -28,11 +28,6 @@
     <string>1.0.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
-    </dict>
     <key>NSCameraUsageDescription</key>
     <string>The camera is used to scan QR codes.</string>
     <key>NSMainNibFile</key>
@@ -54,11 +49,27 @@
       <string>UIInterfaceOrientationPortraitUpsideDown</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>App中签到等功能需要使用系统定位服务，请允许</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLName</key>
+        <string>GAODEKEY</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>gaode867b29fcd190bafc7d81af5e122bd616</string>
+        </array>
+      </dict>
+    </array>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>App中签到等功能需要使用系统定位服务，请允许</string>
-    <key>AMapApiKey</key>
-    <string>867b29fcd190bafc7d81af5e122bd616</string>
+    <string>请选择'始终允许'以保证应用的正常运行</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>请选择'始终允许'以保证应用的正常运行</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>请选择'始终允许'以保证应用的正常运行</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
   </dict>
 </plist>

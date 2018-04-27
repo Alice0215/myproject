@@ -25,7 +25,11 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"AMapPlugin\"><param name=\"android-package\" value=\"com.yxt.cordova.AMapPlugin\" /></feature>",
+              "xml": "<feature name=\"GaodeLocation\"><param name=\"android-package\" value=\"daihere.cordova.plugin.GaodeLocation\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<preference name=\"ANDROIDKEY\" value=\"1b6ab30af85b3cbd899ff446747f286f\" />",
               "count": 1
             }
           ]
@@ -45,41 +49,6 @@
             {
               "xml": "<uses-feature android:name=\"android.hardware.camera.front\" android:required=\"false\" />",
               "count": 1
-            }
-          ],
-          "application": [
-            {
-              "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"android.support.v4.content.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/provider_paths\" /></provider>",
-              "count": 1
-            }
-          ],
-          "/manifest/application": []
-        }
-      },
-      "app/src/main/AndroidManifest.xml": {
-        "parents": {
-          "/manifest/application": [
-            {
-              "xml": "<service android:name=\"com.amap.api.location.APSService\" />",
-              "count": 1
-            },
-            {
-              "xml": "<meta-data android:name=\"com.amap.api.v2.apikey\" android:value=\"1b6ab30af85b3cbd899ff446747f286f\" />",
-              "count": 1
-            },
-            {
-              "xml": "<activity android:label=\"客户地图\" android:name=\"com.yxt.cordova.MapActivity\" />",
-              "count": 1
-            },
-            {
-              "xml": "<activity android:label=\"我的轨迹\" android:name=\"com.yxt.cordova.TraceActivity\" />",
-              "count": 1
-            }
-          ],
-          "/manifest": [
-            {
-              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
-              "count": 2
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
@@ -102,30 +71,40 @@
               "count": 1
             },
             {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 1
+            },
+            {
               "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
               "count": 1
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
               "count": 1
-            },
+            }
+          ],
+          "application": [
             {
-              "xml": "<uses-permission android:name=\"android.permission.MANAGE_DOCUMENTS\" />",
+              "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"android.support.v4.content.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/provider_paths\" /></provider>",
+              "count": 1
+            }
+          ],
+          "/manifest/application": [
+            {
+              "xml": "<service android:name=\"com.amap.api.location.APSService\" />",
               "count": 1
             },
             {
-              "xml": "<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\" />",
-              "count": 1
-            },
-            {
-              "xml": "<uses-feature android:name=\"android.hardware.location\" />",
-              "count": 1
-            },
-            {
-              "xml": "<uses-feature android:name=\"android.hardware.location.gps\" />",
+              "xml": "<meta-data android:name=\"com.amap.api.v2.apikey\" android:value=\"1b6ab30af85b3cbd899ff446747f286f\" />",
               "count": 1
             }
           ]
+        }
+      },
+      "app/src/main/AndroidManifest.xml": {
+        "parents": {
+          "/manifest/application": [],
+          "/manifest": []
         }
       }
     }
@@ -149,8 +128,9 @@
     "cordova-plugin-cocoapod-support": {
       "PACKAGE_NAME": "com.eyuanlin.dev.app"
     },
-    "cordova-plugin-amap": {
-      "API_KEY_FOR_ANDROID": "1b6ab30af85b3cbd899ff446747f286f",
+    "cordova-plugin-gaode-location": {
+      "ANDROIDKEY": "1b6ab30af85b3cbd899ff446747f286f",
+      "IOSKEY": "867b29fcd190bafc7d81af5e122bd616",
       "PACKAGE_NAME": "com.eyuanlin.dev.app"
     }
   },
@@ -205,11 +185,11 @@
       ]
     },
     {
-      "id": "cordova-plugin-amap.AMapPlugin",
-      "file": "plugins/cordova-plugin-amap/www/amap.js",
-      "pluginId": "cordova-plugin-amap",
+      "id": "cordova-plugin-gaode-location.cordova-plugin-gaode-location",
+      "file": "plugins/cordova-plugin-gaode-location/www/cordova-plugin-gaode-location.js",
+      "pluginId": "cordova-plugin-gaode-location",
       "clobbers": [
-        "window.AMapPlugin"
+        "GaodeLocation"
       ]
     }
   ],
@@ -220,6 +200,6 @@
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-plugin-add-swift-support": "1.7.2",
     "cordova-plugin-cocoapod-support": "1.3.0",
-    "cordova-plugin-amap": "2.0.0"
+    "cordova-plugin-gaode-location": "1.0.0"
   }
 }

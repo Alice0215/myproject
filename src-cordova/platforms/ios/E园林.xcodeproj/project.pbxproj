@@ -24,27 +24,16 @@
 		98FA497793DF46ABA663C899 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = F55076FC481C4B849CF4E94D /* CDVViewController+SplashScreen.m */; };
 		A109E641A01141FA8E9BCC79 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF8D21880C14B6D861B0BA8 /* CoreLocation.framework */; };
 		DFDC585FCB204C0190E71400 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304744ABE4DD43C39601376F /* QRScanner.swift */; };
-		69068ADD166C4453BDFF75F2 /* CDVAMap4Yxt.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218E4CD57CD42119F4A102A /* CDVAMap4Yxt.m */; };
-		5F381E8A1661456A8CA73539 /* MAMutablePolylineRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 65AB36013F1B468CBAF7EC86 /* MAMutablePolylineRenderer.m */; };
-		7B446CA253F94E6AAD1B19D8 /* MAMutablePolyline.m in Sources */ = {isa = PBXBuildFile; fileRef = E55E9679075247849FA0CF8F /* MAMutablePolyline.m */; };
-		54214000A55A4C26AAF7A878 /* SBGMapHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB5D635DA6E48B89851C438 /* SBGMapHeaderView.m */; };
-		A8FF67D2E9C942EFBA12A200 /* AMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2A6BFF5F0CD3454D8F0A7B94 /* AMap.bundle */; };
-		993322469AAD42958F2DCBFC /* AMapLocationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271BB80025E440DE9F82530F /* AMapLocationKit.framework */; };
-		FF5DE941F09041B9B0D05D4F /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81E103E472C4C4CA34FDD97 /* AMapFoundationKit.framework */; };
-		B3A4CE4BBE604E62959D1356 /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4315B37580145308C280D26 /* MAMapKit.framework */; };
-		4CB9CC0D7F2941638E829C03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B97CC0AD87C482591C9FB3B /* UIKit.framework */; };
-		E71B49D5E81949DDB2467368 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A87DDDFF36B4F458FD8031F /* Foundation.framework */; };
-		FA2743B357EB4967A4C4B2F1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F99DCD8B2BA4E0EA4D75783 /* QuartzCore.framework */; };
-		2784DFFADF03412C9754554E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55D9682740374D8E9DDF1646 /* Security.framework */; };
-		1BFEC7A7115849BE82EB89DB /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B149D3CA989E46BA806AD1B8 /* CoreTelephony.framework */; };
-		BDB6B383B2B44B35836DC5B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3FA6052C2E24D068CFC47C3 /* SystemConfiguration.framework */; };
-		49DB8EBB9F6E48248CEF7633 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA199B39D46E4AE8BCFAD5CE /* OpenGLES.framework */; };
-		25AB994E2B95414E9D1898CA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F19571B71F48FEB34EC968 /* AdSupport.framework */; };
-		28253E7CA43444929868E4F5 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06BFBE1AB45465FBFD900AE /* JavaScriptCore.framework */; };
-		29E6BB1E795A419981FFC09C /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DC6E72AB24A428CBA17E2AF /* GLKit.framework */; };
-		13E42F80BE814DC9B5624E31 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 45DBCD7A5E9440F188E05F43 /* libstdc++.6.0.9.tbd */; };
-		FB110E7CF06E4680B385187E /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AE07A90CEB4D4CB6B83A2232 /* libc++.tbd */; };
-		C122DF2BE4FC41D88D8B37C5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 51F4DDC61AE84049BEF68DD8 /* libz.tbd */; };
+		8D29679335174E43B19D019C /* CDVGaodeLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0577CFC6F5649ADB9D5E174 /* CDVGaodeLocation.m */; };
+		D9FB083E0F7B4CA492DBA8A6 /* AMapLocationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75048FE3ECC64CC4BAD669E9 /* AMapLocationKit.framework */; };
+		AD6649F0C8A14299909260FD /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221D00B80D5D41B088C126F0 /* AMapFoundationKit.framework */; };
+		CAA77072F59C42A7AB365385 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A8EF3108E1145F689B98932 /* SystemConfiguration.framework */; };
+		1ED633B62AD6459EA0E639B8 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81EE6135D9134AD8B16A7213 /* CoreTelephony.framework */; };
+		1954B312CCFA400DB4345D27 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B061154F5746447F9A90411C /* libz.tbd */; };
+		6D8D03A9C397443CA2E82E18 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 583298AD57A34B78875B9BC5 /* libstdc++.6.0.9.tbd */; };
+		52FB16B72D5249C4A2506BFE /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CB44898B4F3E4CD68C531652 /* libc++.tbd */; };
+		46EFCDA136DF43C4A89FAC85 /* JavaScriptcore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55C1DE0F960E4EA8A6583C29 /* JavaScriptcore.framework */; };
+		EA79964E17F84613A951D16D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A27197F2289436F9208EE3C /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,31 +98,17 @@
 		ED33DF2A687741AEAF9F8254 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		F55076FC481C4B849CF4E94D /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "E园林/config.xml"; sourceTree = "<group>"; };
-		9218E4CD57CD42119F4A102A /* CDVAMap4Yxt.m */ = {isa = PBXFileReference; name = "CDVAMap4Yxt.m"; path = "cordova-plugin-amap/CDVAMap4Yxt.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		65AB36013F1B468CBAF7EC86 /* MAMutablePolylineRenderer.m */ = {isa = PBXFileReference; name = "MAMutablePolylineRenderer.m"; path = "cordova-plugin-amap/MAMutablePolylineRenderer.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		E55E9679075247849FA0CF8F /* MAMutablePolyline.m */ = {isa = PBXFileReference; name = "MAMutablePolyline.m"; path = "cordova-plugin-amap/MAMutablePolyline.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		7BB5D635DA6E48B89851C438 /* SBGMapHeaderView.m */ = {isa = PBXFileReference; name = "SBGMapHeaderView.m"; path = "cordova-plugin-amap/SBGMapHeaderView.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		9D72DB96BF4B48CB8A16D7AF /* CDVAMap4Yxt.h */ = {isa = PBXFileReference; name = "CDVAMap4Yxt.h"; path = "cordova-plugin-amap/CDVAMap4Yxt.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		3BBCE8C1E18548A6934A3A54 /* MAMutablePolylineRenderer.h */ = {isa = PBXFileReference; name = "MAMutablePolylineRenderer.h"; path = "cordova-plugin-amap/MAMutablePolylineRenderer.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		FF21EB3050784B1EAF7EF688 /* MAMutablePolyline.h */ = {isa = PBXFileReference; name = "MAMutablePolyline.h"; path = "cordova-plugin-amap/MAMutablePolyline.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		DE93CA509E21416DACC483D7 /* SBGMapHeaderView.h */ = {isa = PBXFileReference; name = "SBGMapHeaderView.h"; path = "cordova-plugin-amap/SBGMapHeaderView.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		2A6BFF5F0CD3454D8F0A7B94 /* AMap.bundle */ = {isa = PBXFileReference; name = "AMap.bundle"; path = "AMap.bundle"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.plug-in; explicitFileType = undefined; includeInIndex = 0; };
-		271BB80025E440DE9F82530F /* AMapLocationKit.framework */ = {isa = PBXFileReference; name = "AMapLocationKit.framework"; path = "E园林/Plugins/cordova-plugin-amap/AMapLocationKit.framework"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		D81E103E472C4C4CA34FDD97 /* AMapFoundationKit.framework */ = {isa = PBXFileReference; name = "AMapFoundationKit.framework"; path = "E园林/Plugins/cordova-plugin-amap/AMapFoundationKit.framework"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		C4315B37580145308C280D26 /* MAMapKit.framework */ = {isa = PBXFileReference; name = "MAMapKit.framework"; path = "E园林/Plugins/cordova-plugin-amap/MAMapKit.framework"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		5B97CC0AD87C482591C9FB3B /* UIKit.framework */ = {isa = PBXFileReference; name = "UIKit.framework"; path = "System/Library/Frameworks/UIKit.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		1A87DDDFF36B4F458FD8031F /* Foundation.framework */ = {isa = PBXFileReference; name = "Foundation.framework"; path = "System/Library/Frameworks/Foundation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		9F99DCD8B2BA4E0EA4D75783 /* QuartzCore.framework */ = {isa = PBXFileReference; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		55D9682740374D8E9DDF1646 /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		B149D3CA989E46BA806AD1B8 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		A3FA6052C2E24D068CFC47C3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		FA199B39D46E4AE8BCFAD5CE /* OpenGLES.framework */ = {isa = PBXFileReference; name = "OpenGLES.framework"; path = "System/Library/Frameworks/OpenGLES.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		31F19571B71F48FEB34EC968 /* AdSupport.framework */ = {isa = PBXFileReference; name = "AdSupport.framework"; path = "System/Library/Frameworks/AdSupport.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		D06BFBE1AB45465FBFD900AE /* JavaScriptCore.framework */ = {isa = PBXFileReference; name = "JavaScriptCore.framework"; path = "System/Library/Frameworks/JavaScriptCore.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		5DC6E72AB24A428CBA17E2AF /* GLKit.framework */ = {isa = PBXFileReference; name = "GLKit.framework"; path = "System/Library/Frameworks/GLKit.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		45DBCD7A5E9440F188E05F43 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
-		AE07A90CEB4D4CB6B83A2232 /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
-		51F4DDC61AE84049BEF68DD8 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		B0577CFC6F5649ADB9D5E174 /* CDVGaodeLocation.m */ = {isa = PBXFileReference; name = "CDVGaodeLocation.m"; path = "cordova-plugin-gaode-location/CDVGaodeLocation.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		095CC764C4B24D01904583F7 /* CDVGaodeLocation.h */ = {isa = PBXFileReference; name = "CDVGaodeLocation.h"; path = "cordova-plugin-gaode-location/CDVGaodeLocation.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		75048FE3ECC64CC4BAD669E9 /* AMapLocationKit.framework */ = {isa = PBXFileReference; name = "AMapLocationKit.framework"; path = "E园林/Plugins/cordova-plugin-gaode-location/AMapLocationKit.framework"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		221D00B80D5D41B088C126F0 /* AMapFoundationKit.framework */ = {isa = PBXFileReference; name = "AMapFoundationKit.framework"; path = "E园林/Plugins/cordova-plugin-gaode-location/AMapFoundationKit.framework"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		9A8EF3108E1145F689B98932 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		81EE6135D9134AD8B16A7213 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		B061154F5746447F9A90411C /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		583298AD57A34B78875B9BC5 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		CB44898B4F3E4CD68C531652 /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		55C1DE0F960E4EA8A6583C29 /* JavaScriptcore.framework */ = {isa = PBXFileReference; name = "JavaScriptcore.framework"; path = "System/Library/Frameworks/JavaScriptcore.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		1A27197F2289436F9208EE3C /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,22 +122,15 @@
 				0FDBC0561D364FBA93480385 /* AVFoundation.framework in Frameworks */,
 				52B34FC32080D68600282A65 /* PgySDK.framework in Frameworks */,
 				52B34FC22080D68600282A65 /* PgyUpdate.framework in Frameworks */,
-				993322469AAD42958F2DCBFC /* AMapLocationKit.framework in Frameworks */,
-				FF5DE941F09041B9B0D05D4F /* AMapFoundationKit.framework in Frameworks */,
-				B3A4CE4BBE604E62959D1356 /* MAMapKit.framework in Frameworks */,
-				4CB9CC0D7F2941638E829C03 /* UIKit.framework in Frameworks */,
-				E71B49D5E81949DDB2467368 /* Foundation.framework in Frameworks */,
-				FA2743B357EB4967A4C4B2F1 /* QuartzCore.framework in Frameworks */,
-				2784DFFADF03412C9754554E /* Security.framework in Frameworks */,
-				1BFEC7A7115849BE82EB89DB /* CoreTelephony.framework in Frameworks */,
-				BDB6B383B2B44B35836DC5B8 /* SystemConfiguration.framework in Frameworks */,
-				49DB8EBB9F6E48248CEF7633 /* OpenGLES.framework in Frameworks */,
-				25AB994E2B95414E9D1898CA /* AdSupport.framework in Frameworks */,
-				28253E7CA43444929868E4F5 /* JavaScriptCore.framework in Frameworks */,
-				29E6BB1E795A419981FFC09C /* GLKit.framework in Frameworks */,
-				13E42F80BE814DC9B5624E31 /* libstdc++.6.0.9.tbd in Frameworks */,
-				FB110E7CF06E4680B385187E /* libc++.tbd in Frameworks */,
-				C122DF2BE4FC41D88D8B37C5 /* libz.tbd in Frameworks */,
+				D9FB083E0F7B4CA492DBA8A6 /* AMapLocationKit.framework in Frameworks */,
+				AD6649F0C8A14299909260FD /* AMapFoundationKit.framework in Frameworks */,
+				CAA77072F59C42A7AB365385 /* SystemConfiguration.framework in Frameworks */,
+				1ED633B62AD6459EA0E639B8 /* CoreTelephony.framework in Frameworks */,
+				1954B312CCFA400DB4345D27 /* libz.tbd in Frameworks */,
+				6D8D03A9C397443CA2E82E18 /* libstdc++.6.0.9.tbd in Frameworks */,
+				52FB16B72D5249C4A2506BFE /* libc++.tbd in Frameworks */,
+				46EFCDA136DF43C4A89FAC85 /* JavaScriptcore.framework in Frameworks */,
+				EA79964E17F84613A951D16D /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +195,6 @@
 				3047A50E1AB8057F00498E2A /* config */,
 				8D1107310486CEB800E47090 /* E园林-Info.plist */,
 				6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */,
-				2A6BFF5F0CD3454D8F0A7B94 /* AMap.bundle */,
 			);
 			name = Resources;
 			path = "E园林/Resources";
@@ -239,22 +206,15 @@
 				001243EA766F4CD391EFC1DA /* ImageIO.framework */,
 				8AF8D21880C14B6D861B0BA8 /* CoreLocation.framework */,
 				D105150E9C124CF5A0D467B4 /* AVFoundation.framework */,
-				271BB80025E440DE9F82530F /* AMapLocationKit.framework */,
-				D81E103E472C4C4CA34FDD97 /* AMapFoundationKit.framework */,
-				C4315B37580145308C280D26 /* MAMapKit.framework */,
-				5B97CC0AD87C482591C9FB3B /* UIKit.framework */,
-				1A87DDDFF36B4F458FD8031F /* Foundation.framework */,
-				9F99DCD8B2BA4E0EA4D75783 /* QuartzCore.framework */,
-				55D9682740374D8E9DDF1646 /* Security.framework */,
-				B149D3CA989E46BA806AD1B8 /* CoreTelephony.framework */,
-				A3FA6052C2E24D068CFC47C3 /* SystemConfiguration.framework */,
-				FA199B39D46E4AE8BCFAD5CE /* OpenGLES.framework */,
-				31F19571B71F48FEB34EC968 /* AdSupport.framework */,
-				D06BFBE1AB45465FBFD900AE /* JavaScriptCore.framework */,
-				5DC6E72AB24A428CBA17E2AF /* GLKit.framework */,
-				45DBCD7A5E9440F188E05F43 /* libstdc++.6.0.9.tbd */,
-				AE07A90CEB4D4CB6B83A2232 /* libc++.tbd */,
-				51F4DDC61AE84049BEF68DD8 /* libz.tbd */,
+				75048FE3ECC64CC4BAD669E9 /* AMapLocationKit.framework */,
+				221D00B80D5D41B088C126F0 /* AMapFoundationKit.framework */,
+				9A8EF3108E1145F689B98932 /* SystemConfiguration.framework */,
+				81EE6135D9134AD8B16A7213 /* CoreTelephony.framework */,
+				B061154F5746447F9A90411C /* libz.tbd */,
+				583298AD57A34B78875B9BC5 /* libstdc++.6.0.9.tbd */,
+				CB44898B4F3E4CD68C531652 /* libc++.tbd */,
+				55C1DE0F960E4EA8A6583C29 /* JavaScriptcore.framework */,
+				1A27197F2289436F9208EE3C /* Security.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -293,14 +253,8 @@
 				F55076FC481C4B849CF4E94D /* CDVViewController+SplashScreen.m */,
 				D3622F1B8983446A9472528E /* CDVSplashScreen.h */,
 				59BD9137AD1347CF9FC09A81 /* CDVViewController+SplashScreen.h */,
-				9218E4CD57CD42119F4A102A /* CDVAMap4Yxt.m */,
-				65AB36013F1B468CBAF7EC86 /* MAMutablePolylineRenderer.m */,
-				E55E9679075247849FA0CF8F /* MAMutablePolyline.m */,
-				7BB5D635DA6E48B89851C438 /* SBGMapHeaderView.m */,
-				9D72DB96BF4B48CB8A16D7AF /* CDVAMap4Yxt.h */,
-				3BBCE8C1E18548A6934A3A54 /* MAMutablePolylineRenderer.h */,
-				FF21EB3050784B1EAF7EF688 /* MAMutablePolyline.h */,
-				DE93CA509E21416DACC483D7 /* SBGMapHeaderView.h */,
+				B0577CFC6F5649ADB9D5E174 /* CDVGaodeLocation.m */,
+				095CC764C4B24D01904583F7 /* CDVGaodeLocation.h */,
 			);
 			name = Plugins;
 			path = "E园林/Plugins";
@@ -398,7 +352,6 @@
 				52B34FC52080D74900282A65 /* Images.xcassets in Resources */,
 				302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */,
 				6AFF5BF91D6E424B00AB3073 /* CDVLaunchScreen.storyboard in Resources */,
-				A8FF67D2E9C942EFBA12A200 /* AMap.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,10 +389,7 @@
 				DFDC585FCB204C0190E71400 /* QRScanner.swift in Sources */,
 				7A09D8C38DF24A18979DB64E /* CDVSplashScreen.m in Sources */,
 				98FA497793DF46ABA663C899 /* CDVViewController+SplashScreen.m in Sources */,
-				69068ADD166C4453BDFF75F2 /* CDVAMap4Yxt.m in Sources */,
-				5F381E8A1661456A8CA73539 /* MAMutablePolylineRenderer.m in Sources */,
-				7B446CA253F94E6AAD1B19D8 /* MAMutablePolyline.m in Sources */,
-				54214000A55A4C26AAF7A878 /* SBGMapHeaderView.m in Sources */,
+				8D29679335174E43B19D019C /* CDVGaodeLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +425,16 @@
 					"\"E园林/Plugins/cordova-plugin-amap\"",
 					"\"E园林/Plugins/cordova-plugin-amap\"",
 					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-amap-location\"",
+					"\"E园林/Plugins/cordova-amap-location\"",
+					"\"E园林/Plugins/cordova-plugin-gaode-location\"",
+					"\"E园林/Plugins/cordova-plugin-gaode-location\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -517,6 +477,16 @@
 					"\"E园林/Plugins/cordova-plugin-amap\"",
 					"\"E园林/Plugins/cordova-plugin-amap\"",
 					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-plugin-amap\"",
+					"\"E园林/Plugins/cordova-amap-location\"",
+					"\"E园林/Plugins/cordova-amap-location\"",
+					"\"E园林/Plugins/cordova-plugin-gaode-location\"",
+					"\"E园林/Plugins/cordova-plugin-gaode-location\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "E园林/E园林-Prefix.pch";

@@ -49,11 +49,11 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-amap.AMapPlugin",
-    "file": "plugins/cordova-plugin-amap/www/amap.js",
-    "pluginId": "cordova-plugin-amap",
+    "id": "cordova-plugin-gaode-location.cordova-plugin-gaode-location",
+    "file": "plugins/cordova-plugin-gaode-location/www/cordova-plugin-gaode-location.js",
+    "pluginId": "cordova-plugin-gaode-location",
     "clobbers": [
-      "window.AMapPlugin"
+      "GaodeLocation"
     ]
   }
 ];
@@ -66,7 +66,7 @@ module.exports.metadata =
   "cordova-plugin-splashscreen": "5.0.2",
   "cordova-plugin-whitelist": "1.3.3",
   "cordova-plugin-add-swift-support": "1.7.2",
-  "cordova-plugin-amap": "2.0.0"
+  "cordova-plugin-gaode-location": "1.0.0"
 };
 // BOTTOM OF METADATA
 });

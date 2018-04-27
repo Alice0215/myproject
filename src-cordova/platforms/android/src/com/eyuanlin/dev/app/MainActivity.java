@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import org.apache.cordova.*;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.update.PgyUpdateManager;
@@ -54,6 +55,7 @@ public class MainActivity extends CordovaActivity implements ActivityCompat.OnRe
             Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -65,7 +67,7 @@ public class MainActivity extends CordovaActivity implements ActivityCompat.OnRe
         if (extras != null && extras.getBoolean("cdvStartInBackground", false)) {
             moveTaskToBack(true);
         }
-
+//        Log.i("===== sha1 ===== ", Util.sHA1(this));
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }

@@ -14,15 +14,15 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="AMapPlugin">
-        <param name="android-package" value="com.yxt.cordova.AMapPlugin" />
+    <feature name="GaodeLocation">
+        <param name="android-package" value="daihere.cordova.plugin.GaodeLocation" />
     </feature>
     <name>e园林_Dev</name>
     <description>A Quasar Framework app</description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
     Apache Cordova Team
   </author>
-    <content src="http://10.10.10.103:8081/index.html" />
+    <content src="http://10.10.10.100:8081/index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -30,10 +30,11 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-navigation href="http://10.10.10.103:8081/index.html" />
+    <allow-navigation href="http://10.10.10.100:8081/index.html" />
     <allow-intent href="market:*" />
     <icon src="res/icon/logoe.png" />
     <splash src="res/screen/bgE.png" />
     <preference name="loglevel" value="DEBUG" />
+    <preference name="ANDROIDKEY" value="1b6ab30af85b3cbd899ff446747f286f" />
     <preference name="DisallowOverscroll" value="true" />
 </widget>
