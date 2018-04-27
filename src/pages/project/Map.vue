@@ -119,16 +119,16 @@
           return false
         }
         // todo 正式版需要更换appName
-          let para = {
-            appName: 'com.eyuanlin.dev.app',
-            android: {
-              // set some parameters
-            },
-            ios: {
-              accuracy: 2,
-              // set some parameters
-            },
-          }
+        let para = {
+          appName: 'com.eyuanlin.dev.app',
+          android: {
+            // set some parameters
+          },
+          ios: {
+            accuracy: 2,
+            // set some parameters
+          },
+        }
         this.$q.loading.show()
         window.GaodeLocation.configLocation(para, function (successMsg) {
           console.log(successMsg)

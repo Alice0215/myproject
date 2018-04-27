@@ -69,6 +69,7 @@ export default {
       })
     })
     eventBus.$on('backButton-clicked', () => {
+      this.$q.loading.hide()
       if ($('#preview-cover').css('display') !== 'none') {
         $('#preview-cover').click()
       } else {
