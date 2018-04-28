@@ -77,16 +77,16 @@ export default {
       localStorage.setItem('choose-project', JSON.stringify(project))
       if (typeKey === plantType.SINGLE || typeKey === plantType.AREA) {
         if (msg.maintainable) {
-          this.$router.push('/project/maintenance?codeId=' + qrCodeId)
+          this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
         } else {
-          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else if (typeKey === plantType.EQUIPMENT || typeKey === plantType.OTHER) {
-        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
       } else if (msg.editable) {
-        this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
+        this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
       } else {
-        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
       }
     },
     cancelScan () {
@@ -114,7 +114,6 @@ export default {
               } else {
                 console.log(content)
                 this.handleScanResult(content)
-                this.cancelScan()
               }
             })
             window.QRScanner.show(sta => {
