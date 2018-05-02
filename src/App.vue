@@ -19,8 +19,9 @@ function backEvent () {
 }
 
 document.addEventListener('deviceready', () => {
-  document.addEventListener('backbutton', backEvent, false)
 }, false)
+
+document.addEventListener('backbutton', backEvent, false)
 
 export default {
   name: 'App',
@@ -69,6 +70,7 @@ export default {
       })
     })
     eventBus.$on('backButton-clicked', () => {
+      this.$q.loading.hide()
       if ($('#preview-cover').css('display') !== 'none') {
         $('#preview-cover').click()
       } else {
@@ -91,14 +93,9 @@ export default {
           }, 3000)
         } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
           this.$router.push('/')
-        } else if (_.indexOf(qr, this.$router.currentRoute.path) > -1) {
-          if (window.QRScanner) {
-            window.QRScanner.hide()
-          }
-          this.$router.push('/')
         } else {
           console.log('back')
-          this.$router.goBack()
+           this.$router.goBack()
         }
       }
     })

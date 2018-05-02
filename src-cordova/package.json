@@ -10,12 +10,13 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
+        "cordova-amap-location-sdk": "^1.0.4",
         "cordova-android": "6.3.0",
         "cordova-ios": "^4.5.4",
         "cordova-plugin-add-swift-support": "^1.7.2",
         "cordova-plugin-camera": "^4.0.2",
         "cordova-plugin-compat": "^1.2.0",
-        "cordova-plugin-geolocation": "^4.0.1",
+        "cordova-plugin-gaode-location": "git+https://github.com/daihere1993/cordova-plugin-gaode-location.git",
         "cordova-plugin-pgyer": "git+https://github.com/charleyw/cordova-plugin-pgyer.git",
         "cordova-plugin-qrscanner": "^2.5.0",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -28,7 +29,13 @@
             "cordova-plugin-qrscanner": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-add-swift-support": {},
-            "cordova-plugin-geolocation": {}
+            "cordova-plugin-gaode-location": {
+                "ANDROIDKEY": "1b6ab30af85b3cbd899ff446747f286f",
+                "IOSKEY": "867b29fcd190bafc7d81af5e122bd616",
+                "LOCATION_ALWAYS_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
+                "LOCATION_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
+                "LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行"
+            }
         },
         "platforms": [
             "android"
