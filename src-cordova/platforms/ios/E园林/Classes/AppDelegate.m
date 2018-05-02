@@ -37,6 +37,7 @@ static const NSString * kPgyKey = @"169f36448d935167d1ba03c436bb8767";
 {
     [[PgyManager sharedPgyManager] startManagerWithAppId: kPgyKey];
     [[PgyUpdateManager sharedPgyManager] startManagerWithAppId:kPgyKey];
+    [[PgyUpdateManager sharedPgyManager] checkUpdate];
     self.viewController = [[MainViewController alloc] init];
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
