@@ -248,6 +248,7 @@ export default {
       localStorage.setItem('qrcode-form', JSON.stringify(this.form))
       localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
       localStorage.setItem('qrcode-single-property', JSON.stringify(this.singlePlantProperties))
+      localStorage.setItem('qrcode-scategory', JSON.stringify(this.scategory))
     },
     setSinglePropertyToForm () {
       _.forEach(this.singlePlantProperties, (v, k) => {
@@ -337,6 +338,7 @@ export default {
       removeLocalStory('qrcode-form')
       removeLocalStory('qrcode-single-property')
       removeLocalStory('top-index')
+      removeLocalStory('qrcode-scategory')
       this.$router.goBack()
     },
     chooseProject () {
@@ -580,6 +582,7 @@ export default {
     let position = JSON.parse(localStorage.getItem('user_location'))
     let singles = JSON.parse(localStorage.getItem('singles'))
     let editIndex = JSON.parse(localStorage.getItem('editIndex'))
+    let scategory = JSON.parse(localStorage.getItem('qrcode-scategory'))
     if (!_.isNull(form)) {
       this.form = form
     }
@@ -590,6 +593,12 @@ export default {
       this.form.project = project
       this.projectId = project.id
       this.projectName = project.projectName
+    }
+    if (!_.isNull(scategory)) {
+      this.scategory = scategory
+      if (this.form.category) {
+        this.form.category.id = scategory
+      }
     }
     if (!_.isNull(singleProperty)) {
       this.singlePlantProperties = singleProperty

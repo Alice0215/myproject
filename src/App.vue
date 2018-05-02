@@ -42,6 +42,7 @@ export default {
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-single-property')
       removeLocalStory('choose-project')
+      removeLocalStory('scategory')
     },
     exitApp () {
       if (navigator.app) {
