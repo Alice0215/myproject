@@ -38,7 +38,7 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
     Apache Cordova Team
   </author>
-    <content src="http://10.10.10.100:8081/index.html" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
     <allow-intent href="*" />
@@ -48,7 +48,6 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-navigation href="http://10.10.10.100:8081/index.html" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <icon height="180" src="res/icon/ios/icon-60@3x.png" width="180" />
