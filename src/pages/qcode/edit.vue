@@ -116,8 +116,7 @@
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
-                <img class="full-height full-width" v-preview="previewApi + v.contentUrl" :src="v.previewUrl"
-                     preview-title-enable="false"/>
+                <img class="full-height full-width":src="v.previewUrl" @click="imagePreview(i)" />
                 <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
               </div>
               <div class="w-100 h-100 ml-10">
@@ -146,6 +145,11 @@ import { server, plantType } from '../../const'
 import { filter } from 'quasar'
 import _ from 'lodash'
 import eventBus from '../../eventBus'
+import { ImagePreview } from 'vant'
+import 'vant/lib/vant-css/base.css'
+import 'vant/lib/vant-css/image-preview.css'
+import 'vant/lib/vant-css/index.css';
+
 
 export default {
   data () {
@@ -189,6 +193,14 @@ export default {
     }
   },
   methods: {
+    imagePreview (index) {
+      console.log(index)
+      let previewArray = _.map(this.imageArray, (img) => {
+        return this.previewApi + img.contentUrl
+      })
+      console.log(previewArray)
+      ImagePreview(previewArray, index)
+    },
     getGeolocation () {
       this.$q.loading.show()
       // 定位获取经纬度
@@ -393,7 +405,9 @@ export default {
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
-          form.project = form.project
+          if (this.form.project) {
+            this.form.project = form.project
+          }
         }
         if (form.area && form.area.code) {
           form.areaId = form.area.code.id.toString()
