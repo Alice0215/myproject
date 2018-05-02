@@ -93,8 +93,6 @@ export default {
           }, 3000)
         } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
           this.$router.push('/')
-        } else if (_.indexOf(qr, this.$router.currentRoute.path) > -1) {
-           this.$router.push('/')
         } else {
           console.log('back')
            this.$router.goBack()
