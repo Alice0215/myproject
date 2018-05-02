@@ -125,9 +125,9 @@ async function deleteFiles (filePath, index = null) {
   let resp = await request('file/delete', 'DELETE', {
     'relativePath': filePath
   }, 'json', true)
+  let idx = null
   if (resp) {
-    let idx = null
-    if (_.isNull(index)) {
+    if (!_.isNull(index)) {
       idx = index
     }
     let msg = '删除成功'

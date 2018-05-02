@@ -43,7 +43,7 @@
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
-          <img :src="v.previewUrl" v-preview="previewApi+v.contentUrl" class="full-height full-width">
+          <img :src="v.previewUrl"  preview-title-enable="false" :key="i" v-preview="previewApi+v.contentUrl" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
