@@ -42,60 +42,60 @@
 </template>
 
 <script>
-  import { request } from '../../common'
+import { request } from '../../common'
 
-  export default {
-    data () {
-      return {
-        list: '',
-        loading: false,
-        pageNo: 1,
-        hasLoadAll: false,
-      }
+export default {
+  data () {
+    return {
+      list: '',
+      loading: false,
+      pageNo: 1,
+      hasLoadAll: false
+    }
+  },
+  mounted () {
+  },
+  methods: {
+    toDetail (projectId) {
+      return 'qcode/List?projectId' + projectId
     },
-    mounted () {
-    },
-    methods: {
-      toDetail (projectId) {
-        return 'qcode/List?projectId' + projectId
-      },
-      async load (index, done) {
-        let that = this
-        setTimeout(() => {
-          if (!this.hasLoadAll) {
-            this.loading = true
-            request(
-              'project/list?pageNo=' + that.pageNo + '&pageSize=20',
-              'get',
-              '',
-              'json',
-              true,
-            ).then(response => {
-              if (response.data.resultCode === 'SUCCESS') {
-                this.loading = false
-                let list = response.data.resultMsg
-                if (list.length === 0 || !list.length) {
-                  that.hasLoadAll = true
-                  return
-                }
-                if (list.length < 20) {
-                  that.hasLoadAll = true
-                } else {
-                  that.pageNo++
-                }
-                if (that.list.length > 0) {
-                  that.list = that.list.concat(list)
-                } else {
-                  that.list = list
-                }
-                done()
+    async load (index, done) {
+      let that = this
+      setTimeout(() => {
+        if (!this.hasLoadAll) {
+          this.loading = true
+          request(
+            'project/list?pageNo=' + that.pageNo + '&pageSize=20',
+            'get',
+            '',
+            'json',
+            true
+          ).then(response => {
+            if (response.data.resultCode === 'SUCCESS') {
+              this.loading = false
+              let list = response.data.resultMsg
+              if (list.length === 0 || !list.length) {
+                that.hasLoadAll = true
+                return
               }
-            })
-          }
-        }, 100)
-      },
-    },
+              if (list.length < 20) {
+                that.hasLoadAll = true
+              } else {
+                that.pageNo++
+              }
+              if (that.list.length > 0) {
+                that.list = that.list.concat(list)
+              } else {
+                that.list = list
+              }
+              done()
+            }
+          })
+        }
+      }, 100)
+    }
   }
+}
 </script>
 
 <style lang='scss'>
