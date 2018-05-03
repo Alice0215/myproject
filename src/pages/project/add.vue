@@ -16,7 +16,7 @@
          @blur="$v.formData.projectName.$touch"
         @keyup.enter="add"
         :error="$v.formData.projectName.$error"
-         error-label="请添加项目名称">
+         error-label="请添加项目名称,字数不可超过255字">
       <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
       </q-field>
       <q-field
@@ -27,7 +27,12 @@
       <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
                 class="login-input" disable  placeholder="输入地址/定位地址"/>
       </q-field>
+      <q-field  @blur="$v.formData.projectDesc.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.projectDesc.$error"
+         error-label="字数不可超过1000字">
       <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+      </q-field>
         <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
             <q-item-side icon="group" />
             <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
@@ -37,7 +42,7 @@
          @blur="$v.formData.TLSelect.$touch"
         @keyup.enter="add"
         :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人">
+         error-label="请项目设置负责人" />
           <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
               <q-item-side icon="group" />
               <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
@@ -50,7 +55,7 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required, maxLength } from 'vuelidate/lib/validators'
 import { request } from '../../common'
 import eventBus from '../../eventBus'
 export default {
@@ -74,9 +79,10 @@ export default {
   },
   validations: {
     formData: {
-      projectName: { required },
+      projectName: { required, maxLength: maxLength(255) },
       locationJson: { required },
-      TLSelect: { required }
+      TLSelect: { required },
+      projectDesc: {maxLength: maxLength(1000)}
     }
   },
   created () {
@@ -138,6 +144,15 @@ export default {
       if (this.$v.formData.$error) {
         return false
       }
+      if (this.formData.projectName.length >= 255) {
+        this.$q.notify('项目名称太长，已超过255字')
+        return false
+      }
+      if (this.formData.projectDesc.length > 999) {
+        this.$q.notify('项目简介太长，已超过1000字')
+        return false
+      }
+
       let projectJobs = []
       let locationJson = ''
       if (this.formData.locationJson !== '') {

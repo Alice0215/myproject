@@ -66,7 +66,8 @@ module.exports.metadata =
   "cordova-plugin-splashscreen": "5.0.2",
   "cordova-plugin-whitelist": "1.3.3",
   "cordova-plugin-add-swift-support": "1.7.2",
-  "cordova-plugin-gaode-location": "1.0.0"
+  "cordova-plugin-gaode-location": "1.0.0",
+  "cordova-plugin-crosswalk-webview": "2.4.0"
 };
 // BOTTOM OF METADATA
 });
