@@ -43,7 +43,7 @@
       <q-list-header>现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
-          <img :src="v.previewUrl" v-preview="previewApi+v.contentUrl" class="full-height full-width">
+          <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -61,6 +61,10 @@ import { required } from 'vuelidate/lib/validators'
 import { server } from '../../const'
 import _ from 'lodash'
 import eventBus from '../../eventBus'
+import { ImagePreview } from 'vant'
+import 'vant/lib/vant-css/base.css'
+import 'vant/lib/vant-css/image-preview.css'
+import 'vant/lib/vant-css/index.css';
 
 export default {
   data () {
@@ -86,6 +90,14 @@ export default {
     }
   },
   methods: {
+    imagePreview (index) {
+      console.log(index)
+      let previewArray = _.map(this.form.pictures, (img) => {
+        return this.previewApi + img.contentUrl
+      })
+      console.log(previewArray)
+      ImagePreview(previewArray, index)
+    },
     cancelUploadImage (index) {
       this.$q.loading.show()
       let img = this.form.pictures[index]

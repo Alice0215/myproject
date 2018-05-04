@@ -57,4 +57,11 @@
         <variable name="LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION" value="请选择'始终允许'以保证应用的正常运行" />
     </plugin>
     <engine name="android" spec="6.3.0" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="^2.4.0">
+        <variable name="XWALK_VERSION" value="23+" />
+        <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
+        <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
+        <variable name="XWALK_MODE" value="embedded" />
+        <variable name="XWALK_MULTIPLEAPK" value="true" />
+    </plugin>
 </widget>

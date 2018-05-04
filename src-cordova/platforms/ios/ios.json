@@ -111,6 +111,9 @@
       "LOCATION_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
       "LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
       "PACKAGE_NAME": "com.eyuanlin.dev.app"
+    },
+    "cordova-plugin-crosswalk-webview": {
+      "PACKAGE_NAME": "com.eyuanlin.dev.app"
     }
   },
   "dependent_plugins": {},
@@ -179,6 +182,7 @@
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-plugin-add-swift-support": "1.7.2",
-    "cordova-plugin-gaode-location": "1.0.0"
+    "cordova-plugin-gaode-location": "1.0.0",
+    "cordova-plugin-crosswalk-webview": "2.4.0"
   }
 }
