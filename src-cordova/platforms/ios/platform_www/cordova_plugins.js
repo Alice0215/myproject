@@ -33,6 +33,14 @@ module.exports = [
     ]
   },
   {
+    "id": "cordova-plugin-gaode-location.cordova-plugin-gaode-location",
+    "file": "plugins/cordova-plugin-gaode-location/www/cordova-plugin-gaode-location.js",
+    "pluginId": "cordova-plugin-gaode-location",
+    "clobbers": [
+      "GaodeLocation"
+    ]
+  },
+  {
     "id": "cordova-plugin-qrscanner.QRScanner",
     "file": "plugins/cordova-plugin-qrscanner/www/www.min.js",
     "pluginId": "cordova-plugin-qrscanner",
@@ -47,27 +55,20 @@ module.exports = [
     "clobbers": [
       "navigator.splashscreen"
     ]
-  },
-  {
-    "id": "cordova-plugin-gaode-location.cordova-plugin-gaode-location",
-    "file": "plugins/cordova-plugin-gaode-location/www/cordova-plugin-gaode-location.js",
-    "pluginId": "cordova-plugin-gaode-location",
-    "clobbers": [
-      "GaodeLocation"
-    ]
   }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
+  "cordova-plugin-add-swift-support": "1.7.2",
   "cordova-plugin-camera": "4.0.2",
   "cordova-plugin-compat": "1.2.0",
+  "cordova-plugin-crosswalk-webview": "2.4.0",
+  "cordova-plugin-gaode-location": "1.0.0",
+  "cordova-plugin-swift-support": "3.1.1",
   "cordova-plugin-qrscanner": "2.5.0",
   "cordova-plugin-splashscreen": "5.0.2",
-  "cordova-plugin-whitelist": "1.3.3",
-  "cordova-plugin-add-swift-support": "1.7.2",
-  "cordova-plugin-gaode-location": "1.0.0",
-  "cordova-plugin-crosswalk-webview": "2.4.0"
+  "cordova-plugin-whitelist": "1.3.3"
 };
 // BOTTOM OF METADATA
 });
