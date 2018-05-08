@@ -116,7 +116,7 @@
             <q-list-header>现场拍照</q-list-header>
             <div class="row">
               <div class="w-100 h-100 ml-10" v-for="v, i in imageArray" :key="i">
-                <img class="full-height full-width":src="v.previewUrl" @click="imagePreview(i)" />
+                <img class="full-height full-width" :src="v.previewUrl" v-preview="previewApi + v.contentUrl">
                 <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
               </div>
               <div class="w-100 h-100 ml-10">
@@ -145,11 +145,6 @@ import { server, plantType } from '../../const'
 import { filter } from 'quasar'
 import _ from 'lodash'
 import eventBus from '../../eventBus'
-import { ImagePreview } from 'vant'
-import 'vant/lib/vant-css/base.css'
-import 'vant/lib/vant-css/image-preview.css'
-import 'vant/lib/vant-css/index.css';
-
 
 export default {
   data () {
@@ -161,7 +156,7 @@ export default {
       areaId: '',
       showType: false,
       qrCodeId: '',
-      form: { singles: [] },
+      form: { singles: [], locationJson: '', formattedAddress: '' },
       projectId: '',
       amount: '',
       contactNumber: '',
@@ -193,14 +188,6 @@ export default {
     }
   },
   methods: {
-    imagePreview (index) {
-      console.log(index)
-      let previewArray = _.map(this.imageArray, (img) => {
-        return this.previewApi + img.contentUrl
-      })
-      console.log(previewArray)
-      ImagePreview(previewArray, index)
-    },
     getGeolocation () {
       this.$q.loading.show()
       // 定位获取经纬度
@@ -220,16 +207,15 @@ export default {
           showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
           showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
           panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: false // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          zoomToAccuracy: false, // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          useNative: true
         })
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
         AMap.event.addListener(geolocation, 'complete', (d) => {
-          console.log('定位成功')
           let location = { 'addressComponent': d.addressComponent, 'formattedAddress': d.formattedAddress, 'position': d.position }
           this.form.formattedAddress = location.formattedAddress
           this.form.locationJson = JSON.stringify(location)
-          console.log(this.form.formattedAddress)
           this.$q.loading.hide()
         }) // 返回定位信息
         AMap.event.addListener(geolocation, 'error', (error) => {
@@ -261,7 +247,6 @@ export default {
       localStorage.setItem('qrcode-form', JSON.stringify(this.form))
       localStorage.setItem('qrcode-image', JSON.stringify(this.imageArray))
       localStorage.setItem('qrcode-single-property', JSON.stringify(this.singlePlantProperties))
-      localStorage.setItem('qrcode-scategory', JSON.stringify(this.scategory))
     },
     setSinglePropertyToForm () {
       _.forEach(this.singlePlantProperties, (v, k) => {
@@ -351,7 +336,6 @@ export default {
       removeLocalStory('qrcode-form')
       removeLocalStory('qrcode-single-property')
       removeLocalStory('top-index')
-      removeLocalStory('qrcode-scategory')
       this.$router.goBack()
     },
     chooseProject () {
@@ -405,9 +389,7 @@ export default {
         if (form.project) {
           this.projectName = form.project.projectName
           this.projectId = form.project.id.toString()
-          if (this.form.project) {
-            this.form.project = form.project
-          }
+          form.project = form.project
         }
         if (form.area && form.area.code) {
           form.areaId = form.area.code.id.toString()
@@ -597,7 +579,6 @@ export default {
     let position = JSON.parse(localStorage.getItem('user_location'))
     let singles = JSON.parse(localStorage.getItem('singles'))
     let editIndex = JSON.parse(localStorage.getItem('editIndex'))
-    let scategory = JSON.parse(localStorage.getItem('qrcode-scategory'))
     if (!_.isNull(form)) {
       this.form = form
     }
@@ -609,22 +590,22 @@ export default {
       this.projectId = project.id
       this.projectName = project.projectName
     }
-    if (!_.isNull(scategory)) {
-      this.scategory = scategory
-      if (this.form.category) {
-        this.form.category.id = scategory
-      }
-    }
     if (!_.isNull(singleProperty)) {
       this.singlePlantProperties = singleProperty
     }
     if (_.isNull(form) && _.isNull(imageArray) && _.isNull(project)) {
       this.load()
     }
-    if (!_.isNull(position)) {
+    if (!_.isNull(position) && position !== null) {
       this.form.formattedAddress = position.formattedAddress
       localStorage.removeItem('user_location')
       this.form.locationJson = JSON.stringify(position)
+    }
+    if ((position === null) && this.showType) {
+      this.$q.loading.show()
+      setTimeout(() => {
+        this.getGeolocation()
+      }, 1000)
     }
     if (localStorage.getItem('singles') && !_.isNull(singles) && (this.typeKey === 'AREA' || index === 1)) {
       if (localStorage.getItem('editIndex') && !_.isNull(editIndex)) {
@@ -642,7 +623,6 @@ export default {
       this.topButtonsClicked(index)
     })
     this.getPlantCategory()
-    console.log(this.form)
   },
   beforeDestroy () {
     eventBus.$off('upload-success')

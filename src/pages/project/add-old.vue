@@ -1,20 +1,16 @@
 <template>
   <div>
-        <q-layout view="Hhh lpr Fff">
-      <q-layout-header>
-        <q-toolbar>
-           <a @click="back" class="back-a font-14">
-            <q-item-side left  icon="keyboard arrow left" class="back-left "/>
-            返回
-          </a>
-          <q-toolbar-title class="header-title">
+    <q-toolbar class="header">
+        <q-toolbar class="fix" >
+            <a  @click="$router.push('/')" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+              返回
+            </a>
+            <q-toolbar-title class="header-title">
             新建项目
-          </q-toolbar-title>
-         <a class="top-btn  font-14 float-right" @click="add()">完成</a>
-        </q-toolbar>
-      </q-layout-header>
-      <q-page-container>
-      <q-page>
+            </q-toolbar-title>
+           <q-item-side right class="no-info"/>
+       </q-toolbar>
+    </q-toolbar>
     <div class="full-width card" id="project-add">
       <q-field
          @blur="$v.formData.projectName.$touch"
@@ -33,6 +29,7 @@
       </q-field>
       <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
         <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
+            <q-item-side icon="group" />
             <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
@@ -42,21 +39,20 @@
         :error="$v.formData.TLSelect.$error"
          error-label="请项目设置负责人">
           <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
+              <q-item-side icon="group" />
               <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
               <q-item-side right  icon="keyboard_arrow_right" />
           </q-item>
          </q-field>
+          <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
     </div>
-    </q-page>
-    </q-page-container>
-  </q-layout>
   </div>
 </template>
 
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-// import eventBus from '../../eventBus'
+import eventBus from '../../eventBus'
 export default {
   data () {
     return {
@@ -165,7 +161,9 @@ export default {
       })
     },
     chooseUser (jobType) {
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('type', jobType)
       if (jobType === 'TM') {
         localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
       } else {
@@ -175,6 +173,7 @@ export default {
     },
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       this.$router.push('map')
     }
   }

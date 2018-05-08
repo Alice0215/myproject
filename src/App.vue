@@ -14,27 +14,26 @@ import _ from 'lodash'
 import { removeLocalStory } from './common'
 import $ from 'jquery'
 
-function backEvent () {
+function backEvent() {
   eventBus.$emit('backButton-clicked')
 }
 
 document.addEventListener('deviceready', () => {
+  document.addEventListener('backbutton', backEvent, false)
 }, false)
-
-document.addEventListener('backbutton', backEvent, false)
 
 export default {
   name: 'App',
   metaInfo: {
-    titleTemplate: '%s | E园林'
+    titleTemplate: '%s | e园林'
   },
-  data () {
+  data() {
     return {
       transitionName: ''
     }
   },
   methods: {
-    deleteLocalStory () {
+    deleteLocalStory() {
       removeLocalStory('qrCodeId')
       removeLocalStory('typeKey')
       removeLocalStory('top-index')
@@ -42,9 +41,8 @@ export default {
       removeLocalStory('qrcode-image')
       removeLocalStory('qrcode-single-property')
       removeLocalStory('choose-project')
-      removeLocalStory('scategory')
     },
-    exitApp () {
+    exitApp() {
       if (navigator.app) {
         navigator.app.exitApp()
       } else if (navigator.device) {
@@ -52,7 +50,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.deleteLocalStory()
     eventBus.$on('router-back', () => {
       let isBack = this.$router.isBack
@@ -65,17 +63,21 @@ export default {
     })
     eventBus.$on('request-error', params => {
       this.$q.loading.hide()
-      this.$q.dialog({
-        title: '提示',
-        message: params.msg
+      this.$q.notify({
+        message: params.msg,
+        timeout: 2000,
+        type: 'warning'
       })
+      if (params.msg === '用户未登录') {
+        delete window.user
+        localStorage.removeItem('user')
+        window.history.go(-1)
+      }
     })
     eventBus.$on('backButton-clicked', () => {
-      this.$q.loading.hide()
       if ($('#preview-cover').css('display') !== 'none') {
         $('#preview-cover').click()
       } else {
-        console.log(this.$router.currentRoute.path)
         let exitArray = ['/', '/login']
         let menuArray = ['/register', '/partyRegister', '/jobGroup/byUser']
         let qr = ['/qcode/scan']
@@ -94,9 +96,13 @@ export default {
           }, 3000)
         } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
           this.$router.push('/')
+        } else if (_.indexOf(qr, this.$router.currentRoute.path) > -1) {
+          if (window.QRScanner) {
+            window.QRScanner.hide()
+          }
+          this.$router.push('/')
         } else {
-          console.log('back')
-           this.$router.goBack()
+          this.$router.goBack()
         }
       }
     })

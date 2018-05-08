@@ -55,9 +55,7 @@
           <p class="address" v-if="info.code && info.code.description"> {{info.code.description}}</p>
           <p class="address pic-field" v-if="info.code && info.code.pictures">
             <span v-for="item in info.code.pictures" v-bind:key="item.id">
-              <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"
-                   :key="item.id"
-                   preview-title-enable="false" />
+              <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath"/>
             </span>
           </p>
          </div>
