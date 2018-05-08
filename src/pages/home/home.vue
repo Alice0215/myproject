@@ -5,6 +5,7 @@
       <q-page>
       <div id="home">
         <div class="top-log">
+          <q-item-side left  icon="fullscreen" class="color-white scan absolute"><span class="block font-12">扫一扫</span></q-item-side>
           <p class="log">
             <img src="statics/home/home-logo.png"/>
           </p>
@@ -24,10 +25,10 @@
             <div>苗木到场</div>
           </div>
           <div class="col-6 nav  border-bottom">
-            <img src="statics/home/2-1.png"/>
+            <img src="statics/home/2-2.png"/>
             <div>二维码编辑</div>
           </div>
-          <div class="col-6 nav border-right border-bottom">
+          <div class="col-6 nav border-right border-bottom" @click="$router.push('/project/list')">
             <img src="statics/home/3-1.png"/>
             <div>项目</div>
           </div>
@@ -56,16 +57,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       dataTime: ''
     }
   },
-  mounted() {
+  mounted () {
     this.getTime()
   },
   methods: {
-    getTime() {
+    getTime () {
       let myDate = new Date()
       let Week = ['日', '一', '二', '三', '四', '五', '六']
       this.dataTime = myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月' + myDate.getDate() + '日 周' + Week[myDate.getDay()]
@@ -80,10 +81,28 @@ export default {
   .q-layout-page-container {
     padding-top: 50px;
   }
+  .scan {
+    left: 16px;
+    .q-icon.material-icons {
+      font-size: 34px;
+    }
+  }
 
   .top-log {
     height: calc(42vh - 66px);
-    background-color: $primary;
+    background: -webkit-linear-gradient(
+      $primary,
+      $nextprimary
+    );
+    background: -o-linear-gradient(
+      $primary,
+      $nextprimary
+    );
+    background: -moz-linear-gradient(
+      $primary,
+      $nextprimary
+    );
+    background: linear-gradient($primary, $nextprimary); /* 标准的语法 */
     color: white;
     text-align: center;
     font-size: 20px;

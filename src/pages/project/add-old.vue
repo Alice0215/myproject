@@ -161,7 +161,9 @@ export default {
       })
     },
     chooseUser (jobType) {
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('type', jobType)
       if (jobType === 'TM') {
         localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
       } else {
@@ -171,6 +173,7 @@ export default {
     },
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       this.$router.push('map')
     }
   }
