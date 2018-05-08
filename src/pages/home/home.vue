@@ -5,18 +5,18 @@
       <q-page>
       <div id="home">
         <div class="top-log">
-          <q-item-side left  icon="fullscreen" class="color-white scan absolute"><span class="block font-12">扫一扫</span></q-item-side>
+          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="$router.push('/qcode/scan')"><span class="block font-12">扫一扫</span></q-item-side>
           <p class="log">
             <img src="statics/home/home-logo.png"/>
           </p>
           <p class="time">{{dataTime}}</p>
         </div>
         <div class="row card menu-field">
-          <div class="col-6 nav border-bottom border-right">
+          <div class="col-6 nav border-bottom border-right" @click="$router.push('/qcode/scan')">
             <img src="statics/home/1-1.png"/>
             <div>养护记录</div>
           </div>
-          <div class="col-6 nav  border-bottom">
+          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan')">
             <img src="statics/home/1-2.png"/>
             <div>现场巡查记录</div>
           </div>
@@ -24,7 +24,7 @@
             <img src="statics/home/2-1.png"/>
             <div>苗木到场</div>
           </div>
-          <div class="col-6 nav  border-bottom">
+          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan')">
             <img src="statics/home/2-2.png"/>
             <div>二维码编辑</div>
           </div>
@@ -48,7 +48,7 @@
       <q-tabs class="footer">
         <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" />
         <q-route-tab slot="title" icon="notifications none" to="/" replace label="消息" class="menu" />
-        <q-route-tab slot="title" icon="person" to="/me" replace label="我的" class="menu"/>
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
       </q-tabs>
     </q-layout-footer>
     </q-layout>
