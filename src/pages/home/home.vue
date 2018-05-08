@@ -6,34 +6,38 @@
       <div id="home">
         <div class="top-log">
           <p class="log">
-            <img src="statics/home/logo.png"/>
+            <img src="statics/home/home-logo.png"/>
           </p>
           <p class="time">{{dataTime}}</p>
         </div>
         <div class="row card menu-field">
-          <div class="col-6 nav border-bottom border-right" @click="$router.push('/workload')">
-            <img src="statics/home/edit.png"/>
-            <div>工单记录</div>
+          <div class="col-6 nav border-bottom border-right">
+            <img src="statics/home/1-1.png"/>
+            <div>养护记录</div>
           </div>
-          <div class="col-6 nav  border-bottom" @click="$router.push('/workOrder/add')">
-            <img src="statics/home/order.png"/>
-            <div>创建工单</div>
+          <div class="col-6 nav  border-bottom">
+            <img src="statics/home/1-2.png"/>
+            <div>现场巡查记录</div>
           </div>
-          <div class="col-6 nav border-bottom border-right" @click="$router.push('/project/list')">
-            <img src="statics/home/book.png"/>
-            <div>项目管理</div>
+          <div class="col-6 nav border-bottom border-right">
+            <img src="statics/home/2-1.png"/>
+            <div>苗木到场</div>
           </div>
-        <div class="col-6 nav  border-bottom" @click="$router.push('/workOrder/list')">
-            <img src="statics/home/project.png"/>
-            <div>工单管理</div>
+          <div class="col-6 nav  border-bottom">
+            <img src="statics/home/2-1.png"/>
+            <div>二维码编辑</div>
           </div>
           <div class="col-6 nav border-right">
-            <img src="statics/home/user.png"/>
-            <div>成员管理</div>
+            <img src="statics/home/3-1.png"/>
+            <div>项目</div>
           </div>
           <div class="col-6 nav">
-            <img src="statics/home/chart.png"/>
-            <div>工作量统计</div>
+            <img src="statics/home/3-2.png"/>
+            <div>成员</div>
+          </div>
+           <div class="col-6 nav">
+            <img src="statics/home/4-1.png"/>
+            <div>管理</div>
           </div>
         </div>
       </div>
@@ -78,8 +82,8 @@ export default {
   }
 
   .top-log {
-    height: calc(48vh - 66px);
-    background-color: #ffaa2b;
+    height: calc(40vh - 66px);
+    background-color: $primary;
     color: white;
     text-align: center;
     font-size: 20px;
@@ -90,8 +94,8 @@ export default {
   .log {
     text-align: center;
     img {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
     }
   }
   .nav {

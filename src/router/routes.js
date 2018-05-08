@@ -1,7 +1,8 @@
+import ProjectList from '../pages/project/list'
 export default [
   {
     path: '/',
-    component: () => import('pages/project/list')
+    component: () => import('pages/home/home')
   },
   {
     path: '/login',
@@ -17,6 +18,10 @@ export default [
   {
     path: '/partyRegister',
     component: () => import('pages/auth/partyRegister')
+  },
+  {
+    path: '/project/list',
+    component: ProjectList
   },
   {
     path: '/project/add',
