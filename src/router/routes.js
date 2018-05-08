@@ -1,8 +1,9 @@
 import ProjectList from '../pages/project/list'
+import Home from '../pages/home/home'
 export default [
   {
     path: '/',
-    component: () => import('pages/home/home')
+    component: Home
   },
   {
     path: '/login',
