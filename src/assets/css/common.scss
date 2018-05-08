@@ -100,8 +100,21 @@ input:not(.no-style):hover {
   position: fixed;
 }
 .header-title {
-  font-size: 17px;
-  color: #101010;
+  color: $nav-title;
+  text-align: center;
+}
+.fix-header{
+  background-color: #FEFCEC;
+  height: 36px;
+    line-height: 36px;
+    padding: 0px 26px;
+    color: $primary;
+    font-size: 14px;
+    width: 100%;
+    .delete-btn .q-item-icon{
+      color: $primary;
+      font-size: 18px;
+    }
 }
 .footer {
   background-color:  $bgcolor !important;
@@ -182,4 +195,11 @@ input:not(.no-style):hover {
   margin-left: 70px;
   margin-top: -195px;
   font-size: 28px;
+}
+.top-btn {
+  display: inline-block;
+  background: $primary;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 3px;
 }
