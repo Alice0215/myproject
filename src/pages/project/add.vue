@@ -52,7 +52,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-import eventBus from '../../eventBus'
+// import eventBus from '../../eventBus'
 export default {
   data () {
     return {
