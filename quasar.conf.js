@@ -83,13 +83,7 @@ module.exports = function (ctx) {
         'QLayoutFooter',
         'QAlert',
         'QChip',
-        'QBtnDropdown',
-        'QCard',
-        'QCardTitle',
-        'QCardMain',
-        'QCardMedia',
-        'QCardSeparator',
-        'QCardActions'
+        'QBtnDropdown'
       ],
       directives: [
         'Ripple'
