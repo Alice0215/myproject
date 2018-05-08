@@ -27,15 +27,15 @@
             <img src="statics/home/2-1.png"/>
             <div>二维码编辑</div>
           </div>
-          <div class="col-6 nav border-right">
+          <div class="col-6 nav border-right border-bottom">
             <img src="statics/home/3-1.png"/>
             <div>项目</div>
           </div>
-          <div class="col-6 nav">
+          <div class="col-6 nav border-bottom">
             <img src="statics/home/3-2.png"/>
             <div>成员</div>
           </div>
-           <div class="col-6 nav">
+           <div class="col-6 nav border-right">
             <img src="statics/home/4-1.png"/>
             <div>管理</div>
           </div>
@@ -56,16 +56,16 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       dataTime: ''
     }
   },
-  mounted () {
+  mounted() {
     this.getTime()
   },
   methods: {
-    getTime () {
+    getTime() {
       let myDate = new Date()
       let Week = ['日', '一', '二', '三', '四', '五', '六']
       this.dataTime = myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月' + myDate.getDate() + '日 周' + Week[myDate.getDay()]
@@ -82,14 +82,12 @@ export default {
   }
 
   .top-log {
-    height: calc(40vh - 66px);
+    height: calc(42vh - 66px);
     background-color: $primary;
     color: white;
     text-align: center;
     font-size: 20px;
-    padding-top: calc((41vh - 220px)/2);
-    // padding-bottom: 10px;
-    // padding-top: 30px;
+    padding-top: calc((40vh - 220px)/2);
   }
   .log {
     text-align: center;
@@ -99,7 +97,7 @@ export default {
     }
   }
   .nav {
-    height: calc(20vh - 22px);
+    height: calc(21vh - 22px);
     padding-top: calc((20vh - 100px)/2);
     // padding-bottom: 15px;
     img {
@@ -107,9 +105,10 @@ export default {
     }
   }
   .menu-field {
-    height: calc(60vh - 66px);
+    height: calc(84vh - 66px);
     margin-top: 15px;
     text-align: center;
+    margin-bottom: 66px;
   }
   .border-bottom {
     border-bottom: 1px solid #e8e8e8;
