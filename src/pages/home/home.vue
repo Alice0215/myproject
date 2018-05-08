@@ -87,7 +87,7 @@ export default {
     color: white;
     text-align: center;
     font-size: 20px;
-    padding-top: calc((48vh - 220px)/2);
+    padding-top: calc((41vh - 220px)/2);
     // padding-bottom: 10px;
     // padding-top: 30px;
   }
