@@ -23,8 +23,8 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     responseType,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Authorization': localStorage.getItem('token'),
-      'CURRENT_PARTY_ID': localStorage.getItem('partyId'),
+      'Authorization': store.getters['User/token'],
+      'CURRENT_PARTY_ID': store.getters['User/partyId'],
       'Access-Control-Allow-Origin': '*',
       'Content-type': 'application/json'
     },
@@ -34,7 +34,6 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     params: params
   }))
   if (err) {
-    console.log(err)
     if (batchRequest > 0) {
       batchRequest--
       if (err.message === 'Network Error') {
@@ -103,17 +102,17 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
   let mime, bstr, n, u8arr
   if (_.isNull(arr[0].match(/:(.*?);/))) {
     mime = 'image/jpeg'
-    bstr = atob(arr[0])
+    bstr = atob (arr[0])
   } else {
     mime = arr[0].match(/:(.*?);/)[1]
-    bstr = atob(arr[1])
+    bstr = atob (arr[1])
   }
   n = bstr.length
   u8arr = new Uint8Array(n)
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
-  return new File([u8arr], filename, {type: mime})
+  return new File ([u8arr], filename, { type: mime })
 }
 
 /**
@@ -144,7 +143,7 @@ async function deleteFiles (filePath, index = null) {
  */
 async function uploadFiles (fileData) {
   let fileBlob = dataURLtoFile(fileData)
-  let fD = new FormData()
+  let fD = new FormData ()
   fD.append('file', fileBlob)
   let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
   if (uploadReq) {
@@ -169,8 +168,6 @@ function removeLocalStory (name) {
     localStorage.removeItem(name)
   }
 }
-
-
 export {
   request,
   dataURLtoFile,

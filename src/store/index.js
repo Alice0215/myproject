@@ -2,19 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
+import modules from './modules'
+
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  module,
+export default new Vuex.Store({
+  modules,
   strict: process.env.NODE_ENV !== 'production',
   plugins: [
     createPersistedState({
       paths: [
         'User.current',
-        'Module.paths'
+        'Module.paths',
+        'Organization'
       ]
     })
   ]
 })
-
-export default store
