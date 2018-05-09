@@ -1,22 +1,26 @@
 <template>
   <div>
-    <q-toolbar class="header">
-        <q-toolbar class="fix" >
-            <a  @click="$router.push('/')" class="back-a"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>
-              返回
-            </a>
-            <q-toolbar-title class="header-title">
+        <q-layout view="Hhh lpr Fff">
+      <q-layout-header>
+        <q-toolbar>
+           <a @click="back" class="back-a font-14">
+            <q-item-side left  icon="keyboard arrow left" class="back-left "/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
             新建项目
-            </q-toolbar-title>
-           <q-item-side right class="no-info"/>
-       </q-toolbar>
-    </q-toolbar>
+          </q-toolbar-title>
+         <a class="top-btn  font-14 float-right" @click="add()">完成</a>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+      <q-page>
     <div class="full-width card" id="project-add">
       <q-field
          @blur="$v.formData.projectName.$touch"
         @keyup.enter="add"
         :error="$v.formData.projectName.$error"
-         error-label="请添加项目名称,字数不可超过255字">
+         error-label="请添加项目名称">
       <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
       </q-field>
       <q-field
@@ -27,14 +31,8 @@
       <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
                 class="login-input" disable  placeholder="输入地址/定位地址"/>
       </q-field>
-      <q-field  @blur="$v.formData.projectDesc.$touch"
-        @keyup.enter="add"
-        :error="$v.formData.projectDesc.$error"
-         error-label="字数不可超过1000字">
       <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-      </q-field>
         <q-item link class="full-width underline users" @click.native="chooseUser('TM')">
-            <q-item-side icon="group" />
             <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
             <q-item-side right icon="keyboard_arrow_right" />
         </q-item>
@@ -42,22 +40,23 @@
          @blur="$v.formData.TLSelect.$touch"
         @keyup.enter="add"
         :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人" />
+         error-label="请项目设置负责人">
           <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-              <q-item-side icon="group" />
               <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
               <q-item-side right  icon="keyboard_arrow_right" />
           </q-item>
          </q-field>
-          <q-btn class="full-width btn" @click="add()">创建项目</q-btn>
     </div>
+    </q-page>
+    </q-page-container>
+  </q-layout>
   </div>
 </template>
 
 <script>
-import { required, maxLength } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-import eventBus from '../../eventBus'
+// import eventBus from '../../eventBus'
 export default {
   data () {
     return {
@@ -79,10 +78,9 @@ export default {
   },
   validations: {
     formData: {
-      projectName: { required, maxLength: maxLength(255) },
+      projectName: { required },
       locationJson: { required },
-      TLSelect: { required },
-      projectDesc: {maxLength: maxLength(1000)}
+      TLSelect: { required }
     }
   },
   created () {
@@ -144,15 +142,6 @@ export default {
       if (this.$v.formData.$error) {
         return false
       }
-      if (this.formData.projectName.length >= 255) {
-        this.$q.notify('项目名称太长，已超过255字')
-        return false
-      }
-      if (this.formData.projectDesc.length > 999) {
-        this.$q.notify('项目简介太长，已超过1000字')
-        return false
-      }
-
       let projectJobs = []
       let locationJson = ''
       if (this.formData.locationJson !== '') {
@@ -176,9 +165,7 @@ export default {
       })
     },
     chooseUser (jobType) {
-      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      eventBus.$emit('type', jobType)
       if (jobType === 'TM') {
         localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
       } else {
@@ -188,7 +175,6 @@ export default {
     },
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      eventBus.$emit('oldInfo', JSON.stringify(this.formData))
       this.$router.push('map')
     }
   }
