@@ -37,7 +37,7 @@ export default {
       this.$router.push('/register')
     },
 
-    login () {
+    async login () {
       let deviceType = 1
       if (
         /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
@@ -50,47 +50,18 @@ export default {
         password: this.password,
         deviceType: deviceType
       }
-      if (this.password === '' || this.username === '') {
-        this.$q.dialog({
-          title: '提示',
-          message: '请输入您的账号和密码！'
-        })
-        return false
-      }
       let params = new FormData()
       for (var key in data) {
         params.append(key, data[key])
       }
-      request(
-        'user/login',
-        'post',
-        {
-          userToken: '',
-          password: this.password,
-          username: this.username
-        },
-        'json',
-        true
-      ).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          localStorage.setItem('user', JSON.stringify(response.data.resultMsg))
-          localStorage.setItem('token', response.data.resultMsg.userToken)
-          localStorage.setItem('partyId', response.data.resultMsg.partyId)
-          this.$router.push('/')
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
-          }
-        }
-      })
+      this.$q.loading.show()
+      const resp = await request('user/login', 'post', data, 'json', true)
+      this.$q.loading.hide()
+      if (resp) {
+        console.log(resp)
+        this.$store.commit('User/setCurrent', resp.data.resultMsg)
+        this.$router.push('/')
+      }
     }
   }
 }
@@ -98,7 +69,7 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
-#login{
+#login {
   .log {
     text-align: center;
     margin-top: 30px;
@@ -108,7 +79,5 @@ export default {
     display: inline-block !important;
     color: #1aad19 !important;
   }
-
 }
-
 </style>
