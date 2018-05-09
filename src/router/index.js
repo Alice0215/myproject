@@ -18,8 +18,8 @@ const Router = new VueRouter({
   // Leave as is and change from quasar.conf.js instead!
   mode: process.env.VUE_ROUTER_MODE,
   base: process.env.VUE_ROUTER_BASE,
-  scrollBehavior: () => ({y: 0}),
-  routes,
+  scrollBehavior: () => ({ y: 0 }),
+  routes
 })
 
 Router.goBack = function () {
@@ -31,19 +31,16 @@ Router.beforeEach((to, from, next) => {
   eventBus.$emit('router-back')
   const u = localStorage.getItem('user')
   if (u) {
-    if (to.fullPath === '/login' || to.fullPath === '/register' ||
-      to.fullPath === '/partyregister') {
+    if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/partyregister') {
       return Router.replace('/')
     }
     // Update module and sub
     return next()
   }
-  if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath ===
-    '/partyregister') {
+  if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/partyregister') {
     return next()
   }
   Router.replace('/login')
-  return next()
 })
 
 export default Router
