@@ -150,8 +150,7 @@ export default {
   },
   methods: {
     back () {
-      // this.$store.commit('WorkOrder/setInfo', null)
-      // this.$store.commit('WorkOrder/setJobs', null)
+      // this.$store.commit('Project/setInfo', null)
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
     },
     async add () {
@@ -159,16 +158,16 @@ export default {
       if (this.$v.formData.$error) {
         return false
       }
-      let projectJobs = []
+      let projectJobs = this.dealData()
       let locationJson = ''
       if (this.formData.locationJson !== '') {
         locationJson = JSON.stringify(this.formData.locationJson)
       }
-      projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
       let data = {
         'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
         'locationJson': locationJson,
+        'projectTypeId': this.formData.projectTypeId,
         'projectJobs': projectJobs
       }
       await request('project/create', 'post', data, 'json', true).then(response => {

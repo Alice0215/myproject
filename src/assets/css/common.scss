@@ -100,8 +100,8 @@ input:not(.no-style):hover {
   position: fixed;
 }
 .header-title {
-  font-size: 17px;
-  color: #101010;
+  color: $nav-title;
+  text-align: center;
 }
 .footer {
   background-color:  $bgcolor !important;
@@ -182,4 +182,11 @@ input:not(.no-style):hover {
   margin-left: 70px;
   margin-top: -195px;
   font-size: 28px;
+}
+.top-btn {
+  display: inline-block;
+  background: $primary;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 3px;
 }

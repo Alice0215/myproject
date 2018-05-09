@@ -55,8 +55,8 @@ const ProjectMixin = {
   validations: {
     formData: {
       projectName: { required },
-      locationJson: { required },
       managerUsers: { required },
+      locationJson: { required },
       memberUsers: { required },
       TLSelect: { required },
       projectTypeId: { required }
@@ -75,7 +75,7 @@ const ProjectMixin = {
       }
     },
     async getProjectType () {
-      const resp = await request('http://60.195.68.29:3535/gardener/cm/projectType/all', 'get', null, true, true, true)
+      const resp = await request('projectType/all', 'get')
       if (resp) {
         this.projectTypes = resp.data.resultMsg
         _.forEach(this.projectTypes, v => {
@@ -86,7 +86,6 @@ const ProjectMixin = {
             }
           }
         })
-        console.log(this.projectTypes)
       }
     },
     chooseProjectType () {
