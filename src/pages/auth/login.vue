@@ -21,23 +21,23 @@
 <script>
 import { request } from '../../common'
 export default {
-  data() {
+  data () {
     return {
       username: '',
       password: ''
     }
   },
   watch: {
-    username(v) {
+    username (v) {
       localStorage.setItem('username', v)
     }
   },
   methods: {
-    register() {
+    register () {
       this.$router.push('/register')
     },
 
-    async login() {
+    async login () {
       let deviceType = 1
       if (
         /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
