@@ -65,16 +65,49 @@ export default {
       localStorage.setItem('qrCodeId', qrCodeId)
       localStorage.setItem('typeKey', typeKey)
       localStorage.setItem('choose-project', JSON.stringify(project))
-      if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA) && this.type === 'jobGroup') {
-        if (msg.maintainable) {
-          this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
+      if (typeKey === null) {
+        if (msg.editable) {
+          this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
         } else {
           this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
-      } else if (typeKey !== null && msg.editable && this.type === 'qrcode') {
-        this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
+      } else if (this.type === 'jobGroup') {
+        if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
+          if (msg.maintainable) {
+            this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
+          } else {
+            this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          }
+        } else {
+          this.$q.notify({
+            message: '您无权限添加养护记录',
+            timeout: 3000,
+            type: 'info'
+          })
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
+      } else if (this.type === 'qrcode') {
+        if (msg.editable) {
+          this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+        } else {
+          this.$q.notify({
+            message: '您无权限编辑此二维码',
+            timeout: 3000,
+            type: 'info'
+          })
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
       } else {
-        this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        if (msg.editable) {
+          this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+        } else {
+          this.$q.notify({
+            message: '您无权限编辑此二维码',
+            timeout: 3000,
+            type: 'info'
+          })
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
       }
     },
     openScan () {
