@@ -31,6 +31,11 @@
       <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
                 class="login-input" disable  placeholder="输入地址/定位地址"/>
       </q-field>
+      <q-field
+         @blur="$v.formData.projectTypeId.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.projectTypeId.$error"
+         error-label="请选择项目类别">
        <q-item link class="full-width underline users" @click.native="chooseProjectType">
           <q-item-side> 项目类型</q-item-side>
           <q-item-main class="text-right" >
@@ -38,6 +43,7 @@
           </q-item-main>
           <q-item-side right icon="expand more" />
       </q-item>
+      </q-field>
         <q-field
               @blur="$v.formData.managerUsers.$touch"
               @keyup.enter="add"
@@ -55,11 +61,6 @@
                 <q-item-side right  icon="expand more" />
               </q-item>
             </q-field>
-            <q-field
-              @blur="$v.formData.memberUsers.$touch"
-              @keyup.enter="add"
-              :error="$v.formData.memberUsers.$error"
-              error-label="请添加项目成员">
               <q-item class="underline"  @click.native="chooseUser('TM')">
                 <q-item-side>  项目成员</q-item-side>
                 <q-item-main class="text-right">
@@ -71,7 +72,6 @@
                 </q-item-main>
                 <q-item-side right icon="expand more" />
               </q-item>
-            </q-field>
          <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
     </div>
     </q-page>
@@ -85,12 +85,10 @@
             选择项目类型
           </q-toolbar-title>
         </q-toolbar>
-        <q-search v-model="search" icon="search" type="text" class="m-10" clearable placeholder="搜索"/>
-        <hr>
         <q-list no-border>
           <q-item v-for="type in projectTypes" :key="type.id" v-if="type.show !== false"
                   @click.native="chooseType(type)"
-                  :class="{'text-main-color bg-white': type.checked}">
+                  :class="{'text-main-color bg-white': type.checked}" class="underline">
             <q-item-main :label="type.name" />
             <q-item-side right icon="done" class="text-main-color" v-if="type.checked" />
           </q-item>
@@ -105,7 +103,7 @@
           </q-toolbar-title>
           <q-item-side class="font-14" v-close-overlay  @click.native="completed" right>完成</q-item-side>
         </q-toolbar>
-        <q-search v-model="search" icon="search" type="text" class="m-10" clearable placeholder="搜索"/>
+        <q-search v-model="search" icon="search" type="text" class="m-10 underline" clearable placeholder="搜索"/>
         <q-list-header>{{ jobType === 'TL' ? '已选负责人' : '已选成员' }}</q-list-header>
         <div class="m-10">
           <q-chip v-for="(v, i) in formData.selectedUsers" :key="v.userId" @click="removeUser(v, i, null)" icon-right="clear">
@@ -141,12 +139,21 @@ export default {
   methods: {
     back () {
       this.$store.commit('Project/setCurrent', null)
+      this.$store.commit('Location/setCurrent', null)
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
     },
     async add () {
       this.$v.formData.$touch()
       if (this.$v.formData.$error) {
-        // return false
+        return false
+      }
+      if (this.formData.projectName.length >= 255) {
+        this.$q.notify('项目名称太长，已超过255字')
+        return false
+      }
+      if (this.formData.projectDesc.length > 999) {
+        this.$q.notify('项目简介太长，已超过1000字')
+        return false
       }
       let projectJobs = this.dealData()
       let locationJson = ''
@@ -168,6 +175,7 @@ export default {
             message: '项目添加成功！'
           })
           this.$store.commit('Project/setCurrent', null)
+          this.$store.commit('Location/setCurrent', null)
           this.$router.goBack()
         }
       })

@@ -49,10 +49,10 @@ export default {
     handleGeocoder (data) {
       let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
       geoInfo.position = this.position
-      geoInfo = JSON.stringify(geoInfo)
       if (data.info === 'OK') {
-        eventBus.$emit('user_location', geoInfo)
-        localStorage.setItem('user_location', geoInfo)
+        eventBus.$emit('user_location', JSON.stringify(geoInfo))
+        this.$store.commit('Location/setCurrent', geoInfo)
+        localStorage.setItem('user_location', JSON.stringify(geoInfo))
         if (this.$route.query.from === 'qrCode') {
           this.$router.goBack()
           return

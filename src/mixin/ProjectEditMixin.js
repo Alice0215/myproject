@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { required } from 'vuelidate/lib/validators'
 import { jobType } from '../const'
 
-const ProjectMixin = {
+const ProjectEditMixin = {
   data () {
     return {
       isEdited: false,
@@ -23,8 +23,8 @@ const ProjectMixin = {
         selectedUsers: [],
         managerUsers: [],
         memberUsers: [],
-        address: null,
-        locationJson: null,
+        address: '',
+        locationJson: '',
         geoInfo: null
       }
     }
@@ -198,4 +198,4 @@ const ProjectMixin = {
   }
 }
 
-export default ProjectMixin
+export default ProjectEditMixin
