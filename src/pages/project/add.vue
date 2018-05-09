@@ -33,7 +33,7 @@
       </q-field>
        <q-item link class="full-width underline users" @click.native="chooseProjectType">
           <q-item-side> 项目类型</q-item-side>
-          <q-item-main class="text-right" v-line-clamp:20="1">
+          <q-item-main class="text-right" >
             {{ selectProjectType ? selectProjectType.name : ''}}
           </q-item-main>
           <q-item-side right icon="expand more" />
@@ -45,7 +45,7 @@
               error-label="请添加项目负责人">
               <q-item class="underline" @click.native="chooseUser('TL')" >
                 <q-item-side>  项目负责人</q-item-side>
-                <q-item-main class="text-right" v-line-clamp:20="1">
+                <q-item-main class="text-right" >
                   <q-item-tile>
                     <span v-for="v in formData.managerUsers" :key="v.userId"
                           icon-right="clear">
@@ -62,7 +62,7 @@
               error-label="请添加项目成员">
               <q-item class="underline"  @click.native="chooseUser('TM')">
                 <q-item-side>  项目成员</q-item-side>
-                <q-item-main class="text-right" v-line-clamp:20="1">
+                <q-item-main class="text-right">
                   <q-item-tile>
                     <span v-for="v in formData.memberUsers" :key="v.userId">
                       {{ v.fullname }}
