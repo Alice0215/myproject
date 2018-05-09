@@ -5,18 +5,18 @@
       <q-page>
       <div id="home">
         <div class="top-log">
-          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="$router.push('/qcode/scan')"><span class="block font-12">扫一扫</span></q-item-side>
+          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="$router.push('/qcode/scan?type=null')"><span class="block font-12">扫一扫</span></q-item-side>
           <p class="log">
             <img src="statics/home/home-logo.png"/>
           </p>
           <p class="time">{{dataTime}}</p>
         </div>
         <div class="row card menu-field">
-          <div class="col-6 nav border-bottom border-right" @click="$router.push('/qcode/scan')">
+          <div class="col-6 nav border-bottom border-right" @click="$router.push('/qcode/scan?type=jobGroup')">
             <img src="statics/home/1-1.png"/>
             <div>养护记录</div>
           </div>
-          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan')">
+          <div class="col-6 nav  border-bottom">
             <img src="statics/home/1-2.png"/>
             <div>现场巡查记录</div>
           </div>
@@ -24,19 +24,19 @@
             <img src="statics/home/2-1.png"/>
             <div>苗木到场</div>
           </div>
-          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan')">
+          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan?type=qrcode')">
             <img src="statics/home/2-2.png"/>
             <div>二维码编辑</div>
           </div>
-          <div class="col-6 nav border-right border-bottom" @click="$router.push('/project/list')">
+          <div class="col-6 nav border-right" @click="$router.push('/project/list')">
             <img src="statics/home/3-1.png"/>
             <div>项目</div>
           </div>
-          <div class="col-6 nav border-bottom">
+          <!-- <div class="col-6 nav border-bottom">
             <img src="statics/home/3-2.png"/>
             <div>成员</div>
-          </div>
-           <div class="col-6 nav border-right">
+          </div> -->
+           <div class="col-6 nav border-right" v-if="admin">
             <img src="statics/home/4-1.png"/>
             <div>管理</div>
           </div>
@@ -59,10 +59,12 @@
 export default {
   data () {
     return {
-      dataTime: ''
+      dataTime: '',
+      admin: false
     }
   },
   mounted () {
+    this.admin = this.$store.getters['User/admin']
     this.getTime()
   },
   methods: {
@@ -90,18 +92,9 @@ export default {
 
   .top-log {
     height: calc(42vh - 66px);
-    background: -webkit-linear-gradient(
-      $primary,
-      $nextprimary
-    );
-    background: -o-linear-gradient(
-      $primary,
-      $nextprimary
-    );
-    background: -moz-linear-gradient(
-      $primary,
-      $nextprimary
-    );
+    background: -webkit-linear-gradient($primary, $nextprimary);
+    background: -o-linear-gradient($primary, $nextprimary);
+    background: -moz-linear-gradient($primary, $nextprimary);
     background: linear-gradient($primary, $nextprimary); /* 标准的语法 */
     color: white;
     text-align: center;
@@ -124,10 +117,9 @@ export default {
     }
   }
   .menu-field {
-    height: calc(84vh - 66px);
+    height: calc(64vh - 66px);
     margin-top: 15px;
     text-align: center;
-    margin-bottom: 66px;
   }
   .border-bottom {
     border-bottom: 1px solid #e8e8e8;
