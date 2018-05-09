@@ -7,7 +7,8 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'helper',
-      'imagePreview'
+      'imagePreview',
+      'vantUI'
     ],
     css: [
       'app.styl'

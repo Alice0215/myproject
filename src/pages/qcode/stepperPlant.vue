@@ -12,14 +12,42 @@
     </q-toolbar>
   </q-layout-header>
   <q-page-container>
-    <q-stepper ref="stepper" alternative-labels class="full-width">
-      <q-step default title="选择类型">
+    <q-stepper ref="stepper" alternative-labels class="full-width" v-model="currentStep" color="secondary">
+      <q-step default title="选择类型" icon="more_horiz" name="first">
+        <q-btn
+      flat
+      @click="$refs.stepper.previous()"
+      label="Back"
+    />
+    <q-btn
+      @click="$refs.stepper.next()"
+      label="Next"
+    />
       </q-step>
-      <q-step title="填写基本类型">
+      <q-step title="填写基本类型" icon="more_horiz" name="common">
+        <common-step></common-step>
       </q-step>
-      <q-step title="填写植物数据">
+      <q-step title="填写植物数据" icon="more_horiz" name="inpueData">
+        <q-btn
+      flat
+      @click="$refs.stepper.previous()"
+      label="Back"
+    />
+    <q-btn
+      @click="$refs.stepper.next()"
+      label="Next"
+    />
       </q-step>
-      <q-step title="完成">
+      <q-step title="完成" icon="more_horiz" name="done">
+        <q-btn
+      flat
+      @click="$refs.stepper.previous()"
+      label="Back"
+    />
+    <q-btn
+      @click="$refs.stepper.next()"
+      label="Next"
+    />
       </q-step>
     </q-stepper>
   </q-page-container>
@@ -27,11 +55,23 @@
 </template>
 
 <script>
+import commonStep from './commonStep1.vue'
+
 export default {
+  components: {
+    commonStep
+  },
+  data () {
+    return {
+      currentStep: 'commom'
+    }
+  },
   methods: {
     back () {
       this.$router.goBack()
     }
+  },
+  mounted () {
   }
 }
 </script>
