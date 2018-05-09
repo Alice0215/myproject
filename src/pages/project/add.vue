@@ -138,25 +138,15 @@ export default {
     return {
     }
   },
-  created () {
-    if (localStorage.getItem('user_location') !== '') {
-      this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
-      if (this.formData.geoInfo !== null) {
-        this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = this.formData.geoInfo
-      }
-      localStorage.removeItem('user_location')
-    }
-  },
   methods: {
     back () {
-      // this.$store.commit('Project/setInfo', null)
+      this.$store.commit('Project/setCurrent', null)
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
     },
     async add () {
       this.$v.formData.$touch()
       if (this.$v.formData.$error) {
-        return false
+        // return false
       }
       let projectJobs = this.dealData()
       let locationJson = ''
@@ -177,12 +167,14 @@ export default {
             type: 'positive',
             message: '项目添加成功！'
           })
+          this.$store.commit('Project/setCurrent', null)
           this.$router.goBack()
         }
       })
     },
     openMap () {
-      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      this.isEdited = true
+      this.$store.commit('Project/setCurrent', this.formData)
       this.$router.push('map')
     }
   }

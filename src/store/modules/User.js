@@ -1,4 +1,3 @@
-
 const state = {
   current: null
 }
@@ -17,6 +16,12 @@ const getters = {
   },
   userId (state) {
     return state.current ? state.current.userId : null
+  },
+  username (state) {
+    return state.current ? state.current.fullname : null
+  },
+  partyId (state) {
+    return state.current ? state.current.partyId : null
   }
 }
 

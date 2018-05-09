@@ -7,6 +7,7 @@ import { jobType } from '../const'
 const ProjectMixin = {
   data () {
     return {
+      isEdited: false,
       projectTypes: [],
       selectProjectType: null,
       jobType: null,
@@ -24,8 +25,7 @@ const ProjectMixin = {
         memberUsers: [],
         address: '',
         locationJson: '',
-        geoInfo: null,
-        isEdited: false
+        geoInfo: null
       }
     }
   },
@@ -92,6 +92,7 @@ const ProjectMixin = {
       this.selectProjectTypeOpen = true
     },
     chooseType (type) {
+      this.isEdited = true
       _.forEach(this.projectTypes, v => {
         v.checked = false
         if (type.id === v.id) {
@@ -104,6 +105,7 @@ const ProjectMixin = {
       this.$forceUpdate()
     },
     removeUser (u, index, arr) {
+      this.isEdited = true
       u.checked = false
       if (u.userId === this.$store.getters['User/userId'] && this.jobType === jobType.TL) {
         return
@@ -120,10 +122,7 @@ const ProjectMixin = {
       }
     },
     choose (user) {
-      if (user.userId === this.$store.getters['User/userId'] && this.jobType === jobType.TL) {
-        user.checked = true
-        return
-      }
+      this.isEdited = true
       if (!_.includes(_.map(this.formData.selectedUsers, v => v.userId), user.userId) && user.checked) {
         this.formData.selectedUsers.push(user)
       } else {
@@ -133,6 +132,7 @@ const ProjectMixin = {
       }
     },
     completed () {
+      this.isEdited = true
       if (this.jobType === jobType.TL) {
         this.formData.managerUsers = _.cloneDeep(this.formData.selectedUsers)
       } else {
@@ -181,6 +181,19 @@ const ProjectMixin = {
   async mounted () {
     this.getUsers()
     this.getProjectType()
+    let formData = this.$store.getters['Project/getCurrent']
+    console.log(formData)
+    if (!_.isUndefined(formData) && !_.isNull(formData)) {
+      this.formData = formData
+    }
+    if (!_.isUndefined(localStorage.getItem('user_location')) && !_.isNull(localStorage.getItem('user_location'))) {
+      this.formData.geoInfo = JSON.parse(localStorage.getItem('user_location'))
+      if (this.formData.geoInfo !== null) {
+        this.formData.address = this.formData.geoInfo.formattedAddress
+        this.formData.locationJson = this.formData.geoInfo
+      }
+      localStorage.removeItem('user_location')
+    }
     eventBus.$on('refresh-project-page', () => {
       this.load()
     })
