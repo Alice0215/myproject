@@ -187,6 +187,20 @@ const ProjectMixin = {
           this.formData.locationJson = location
         }
       }
+    } else {
+      let currentUser = this.$store.state.User.current
+      if (!_.isArray(this.formData.workOrderJobs)) {
+        this.formData.workOrderJobs = []
+      }
+      this.formData.workOrderJobs.push({ 'jobType': 'TL', 'userId': currentUser.userId })
+      if (!_.isArray(this.formData.managerUsers)) {
+        this.formData.managerUsers = []
+      }
+      if (!_.includes(_.map(this.formData.managerUsers, v => v.userId), currentUser.userId)) {
+        currentUser.checked = true
+        this.formData.managerUsers.push(this.$store.state.User.current)
+      }
+      this.formData.selectedUsers = _.cloneDeep(this.formData.managerUsers)
     }
 
     eventBus.$on('refresh-project-page', () => {

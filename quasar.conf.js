@@ -7,6 +7,7 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'helper',
+      'vueLineClamp',
       'imagePreview'
     ],
     css: [
