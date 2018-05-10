@@ -67,7 +67,7 @@ export default {
       localStorage.setItem('choose-project', JSON.stringify(project))
       if (typeKey === null) {
         if (msg.editable) {
-          this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=null')
+          this.$router.replace('/choose/qrtype?id=' + qrCodeId)
         } else {
           this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
@@ -76,6 +76,11 @@ export default {
           if (msg.maintainable) {
             this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
           } else {
+            this.$q.notify({
+              message: '您无权限添加养护记录',
+              timeout: 3000,
+              type: 'info'
+            })
             this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
           }
         } else {

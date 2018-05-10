@@ -105,6 +105,10 @@ export default [
     component: () => import('pages/choose/chooseProject.vue')
   },
   {
+    path: '/choose/qrtype',
+    component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
     path: '/qcode/scan',
     component: () => import('pages/qcode/scan.vue')
   },
