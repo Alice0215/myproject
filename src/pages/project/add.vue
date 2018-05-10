@@ -51,7 +51,7 @@
               error-label="请添加项目负责人">
               <q-item class="underline" @click.native="chooseUser('TL')" >
                 <q-item-side>  项目负责人</q-item-side>
-                <q-item-main class="text-right" >
+                <q-item-main class="text-right" v-line-clamp:20="1" >
                   <q-item-tile>
                     <span v-for="v in formData.managerUsers" :key="v.userId"
                           icon-right="clear">
@@ -63,7 +63,7 @@
             </q-field>
               <q-item class="underline"  @click.native="chooseUser('TM')">
                 <q-item-side>  项目成员</q-item-side>
-                <q-item-main class="text-right">
+                <q-item-main class="text-right" v-line-clamp:20="1">
                   <q-item-tile>
                     <span v-for="v in formData.memberUsers" :key="v.userId">
                       {{ v.fullname }}
