@@ -14,13 +14,13 @@
       />
     </van-cell-group>
     <q-list class="mt-6 bg-white no-border">
-      <q-list-header class="p-0 pl-8 font-16 color-black">现场拍照</q-list-header>
-      <div class="row">
+      <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
+      <div class="row pl-20">
         <div class="w-100 h-100" v-for="v, i in commonForm.pictures" :key="i">
           <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
-        <div class="w-100 h-100 ml-6 mt--8 camera-div">
+        <div class="w-100 h-100 mt--8 camera-div">
           <q-btn icon="camera alt" size="20px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
       </div>
@@ -34,6 +34,10 @@
         @confirm="onConfirm"
       />
     </van-popup>
+    <div class="bottom-button-div mt-40">
+      <q-btn color="white" text-color="black"  class="border-1 float-left ml-16" label="上一步" size="md" />
+      <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="下一步" size="md" @click="nextStep" />
+    </div>
   </q-layout>
 </template>
 
@@ -53,6 +57,9 @@ export default {
     }
   },
   methods: {
+    nextStep () {
+      this.$root.$emit('next-step')
+    },
     onConfirm (value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
@@ -101,6 +108,17 @@ export default {
   .q-btn-inner {
     .q-icon {
       color: gray;
+    }
+  }
+
+  .van-cell {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .bottom-button-div {
+    button {
+      width: 45%;
     }
   }
 }
