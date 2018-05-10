@@ -69,8 +69,7 @@
           class="col-7 ml-8 p-8 text-right"
           v-model="formData.projectDesc"
           rows="5"
-          :max-height="50"
-          placeholder="项目简介"/>
+          :max-height="50"/>
         </div>
       </div>
       </q-page>
@@ -226,7 +225,7 @@ export default {
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
     },
     edit () {
-      this.$store.commit('Project/setCurrent', this.formData)
+      this.$store.commit('Project/setEditData', this.formData)
       this.$router.push('/project/edit')
     }
   },

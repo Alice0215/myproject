@@ -33,7 +33,7 @@
          error-label="请获取当前位置">
          <div class="row col-12 box pt-10 font-14 underline">
           <span class="col-4 h-35 pt-10">项目地址<span class="required">*</span></span>
-          <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+          <q-input color="amber" v-model="formData.address" @click="openMap"
                 class="col-7 ml-8 p-8 text-right" disable  placeholder="输入地址/定位地址"/>
         </div>
       </q-field>
@@ -142,6 +142,7 @@
 <script>
 import { request } from '../../common'
 import ProjectEditMixin from '../../mixin/ProjectEditMixin'
+import _ from 'lodash'
 export default {
   mixins: [
     ProjectEditMixin
@@ -150,6 +151,27 @@ export default {
     return {}
   },
   methods: {
+    prepareData () {
+      let project = this.$store.getters['Project/getEditData']
+      console.log(project)
+      this.formData.projectName = project.projectName
+      this.formData.projectId = Number.parseInt(project.id)
+      this.formData.locationJson = project.location
+      this.formData.address = project.address
+      this.formData.selectProjectType = project.projectType
+      this.formData.managerUsers = _.map(project.TL, 'user')
+      _.forEach(this.formData.managerUsers, v => {
+        v.userId = Number.parseInt(v.id)
+        v.checked = true
+      })
+      this.formData.memberUsers = _.map(project.TM, 'user')
+      _.forEach(this.formData.memberUsers, v => {
+        v.userId = Number.parseInt(v.id)
+        v.checked = true
+      })
+      this.formData.projectDesc = project.projectDesc
+      this.formData.projectTypeId = Number.parseInt(project.projectType.id)
+    },
     back () {
       this.$store.commit('Project/setCurrent', null)
       this.$store.commit('Location/setCurrent', null)
@@ -173,12 +195,18 @@ export default {
         'projectTypeId': this.formData.projectTypeId,
         'projectId': this.formData.projectId,
         'projectName': this.formData.projectName,
-        'locationJson': '',
         'projectDesc': this.formData.projectDesc,
         'projectJobs': projectJobs
       }
-      if (this.formData.locationJson !== '') {
-        data.locationJson = this.formData.locationJson
+      let location = this.$store.getters['Location/getCurrent']
+      // if (this.formData.locationJson !== '') {
+      //   data.locationJson = JSON.stringify(this.formData.locationJson)
+      // }
+      console.log(!_.isNull(location))
+      if (!_.isUndefined(location) && !_.isNull(location)) {
+        this.formData.address = location.formattedAddress
+        this.formData.locationJson = location
+        data.locationJson = JSON.stringify(this.formData.locationJson)
       }
       let params = new URLSearchParams()
       for (var key in data) {

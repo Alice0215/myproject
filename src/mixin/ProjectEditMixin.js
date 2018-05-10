@@ -176,6 +176,7 @@ const ProjectEditMixin = {
   async mounted () {
     this.getUsers()
     this.getProjectType()
+    this.prepareData()
     let formData = this.$store.getters['Project/getCurrent']
     let location = this.$store.getters['Location/getCurrent']
     if (!_.isUndefined(formData) && !_.isNull(formData)) {
