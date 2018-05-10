@@ -84,11 +84,7 @@ export default {
             this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
           }
         } else {
-          this.$q.notify({
-            message: '您无权限添加养护记录',
-            timeout: 3000,
-            type: 'info'
-          })
+          // 设备类型或其他类型二维码，没有养护记录
           this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else if (this.type === 'qrcode') {
@@ -103,16 +99,8 @@ export default {
           this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else {
-        if (msg.editable) {
-          this.$router.replace('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
-        } else {
-          this.$q.notify({
-            message: '您无权限编辑此二维码',
-            timeout: 3000,
-            type: 'info'
-          })
-          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
-        }
+        // 扫一扫，显示详情
+        this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
       }
     },
     openScan () {
