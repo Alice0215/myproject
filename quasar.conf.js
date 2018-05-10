@@ -7,6 +7,7 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'helper',
+      'vueLineClamp',
       'imagePreview'
     ],
     css: [
@@ -89,9 +90,13 @@ module.exports = function (ctx) {
         'QCardMain',
         'QCardMedia',
         'QCardSeparator',
-        'QCardActions'
+        'QCardActions',
+        'QModal',
+        'QModalLayout',
+        'QCheckbox'
       ],
       directives: [
+        'CloseOverlay',
         'Ripple'
       ],
       // Quasar plugins
