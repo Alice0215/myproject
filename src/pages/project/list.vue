@@ -9,7 +9,7 @@
     </q-layout-header>
     <q-page-container>
       <q-list class="list" id="project-list">
-        <q-item class="list-list mt-40" @click.native="$router.push('project/add')">
+        <q-item class="list-list mt-40" @click.native="$router.push('/project/add')">
           <span class="add-btn">+</span>
           <q-item-main class="add-field">
             创建项目
