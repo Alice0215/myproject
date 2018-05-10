@@ -31,15 +31,7 @@
           <singleInfo></singleInfo>
         </q-step>
         <q-step title="完成" icon="more_horiz" name="done">
-          <q-btn
-            flat
-            @click="$refs.stepper.previous()"
-            label="Back"
-          />
-          <q-btn
-            @click="$refs.stepper.next()"
-            label="Next"
-          />
+          <successPage></successPage>
         </q-step>
       </q-stepper>
     </q-page-container>
@@ -49,11 +41,13 @@
 <script>
   import commonStep from './commonStep1.vue'
   import singleInfo from './singlePlant/singlePlantInfo'
+  import successPage from '../success'
 
   export default {
     components: {
       commonStep,
-      singleInfo
+      singleInfo,
+      successPage
     },
     data () {
       return {
