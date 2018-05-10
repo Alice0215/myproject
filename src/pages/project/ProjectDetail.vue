@@ -10,7 +10,9 @@
           <q-toolbar-title class="header-title">
           详情
           </q-toolbar-title>
-         <a class="top-btn float-right" @click="$router.push('/project/edit')">修改</a>
+          <q-item-side class="white-right" right v-if="!isEdit"/>
+          <!-- <q-item-side class="white-right text-main-color font-14"  right v-if="isEdit" @click.native="$router.push('/project/edit')">修改</q-item-side> -->
+         <a class="top-btn float-right" @click="edit" v-if="isEdit">修改</a>
         </q-toolbar>
       </q-layout-header>
       <q-page-container>
@@ -32,12 +34,11 @@
             </q-item-tile>
           </q-item-main>
         </q-item>
-       <q-item link class="full-width underline users" @click.native="chooseProjectType">
+       <q-item link class="full-width underline users">
           <q-item-side> 项目类型</q-item-side>
           <q-item-main class="text-right" >
             {{ formData.selectProjectType ? formData.selectProjectType.name : ''}}
           </q-item-main>
-          <q-item-side right icon="expand more" />
       </q-item>
       <q-item class="underline" @click.native="chooseUser('TL')" >
         <q-item-side>项目负责人</q-item-side>
@@ -132,6 +133,7 @@ export default {
       selectProjectTypeOpen: false,
       opened: false,
       isTL: false,
+      isEdit: false,
       formData: {}
     }
   },
@@ -150,7 +152,6 @@ export default {
           if (response.data.resultMsg.location) {
             this.formData.address = info.location.formattedAddress
           }
-          console.log(this.formData)
         }
       })
     },
@@ -180,12 +181,16 @@ export default {
       }
     },
     prepareData (resp) {
+      let currentUser = this.$store.state.User.current
       let projectJobList = resp.projectJobList
       let TL = []
       let TM = []
       _.forEach(projectJobList, v => {
         let type = v.jobType
         if (type.key === jobType.TL) {
+          if (parseInt(currentUser.userId) === parseInt(v.user.id)) {
+            this.isEdit = true
+          }
           TL.push(v)
         } else {
           TM.push(v)
@@ -218,9 +223,11 @@ export default {
       })
     },
     back () {
-      this.$store.commit('Project/setCurrent', null)
-      this.$store.commit('Location/setCurrent', null)
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
+    },
+    edit () {
+      this.$store.commit('Project/setCurrent', this.formData)
+      this.$router.push('/project/edit')
     }
   },
   async mounted () {

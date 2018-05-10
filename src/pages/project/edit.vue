@@ -18,18 +18,24 @@
       <div class="full-width card" id="edit">
       <q-field
          @blur="$v.formData.projectName.$touch"
-        @keyup.enter="edit"
+        @keyup.enter="add"
         :error="$v.formData.projectName.$error"
          error-label="请添加项目名称">
-      <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+        <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目名称<span class="required">*</span></span>
+          <q-input text-dark required v-model="formData.projectName" placeholder="请输入项目名称" class="col-7 ml-8 p-8 text-right"/>
+        </div>
       </q-field>
       <q-field
          @blur="$v.formData.locationJson.$touch"
-        @keyup.enter="edit"
+        @keyup.enter="add"
         :error="$v.formData.locationJson.$error"
          error-label="请获取当前位置">
-      <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
-                class="login-input" disable  placeholder="输入地址/定位地址"/>
+         <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目地址<span class="required">*</span></span>
+          <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+                class="col-7 ml-8 p-8 text-right" disable  placeholder="输入地址/定位地址"/>
+        </div>
       </q-field>
       <q-field
          @blur="$v.formData.projectTypeId.$touch"
@@ -72,7 +78,15 @@
         </q-item-main>
         <q-item-side right icon="expand more" />
       </q-item>
-      <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+      <div class="row col-12 box pt-20 font-14">
+        <span class="col-4 h-35">项目简介<span class="required">*</span></span>
+          <q-input
+        type="textarea"
+        class="col-7 ml-8 p-8 text-right"
+        v-model="formData.projectDesc"
+        rows="5"
+        :max-height="50"/>
+      </div>
       </div>
       </q-page>
       </q-page-container>
@@ -146,12 +160,21 @@ export default {
       if (this.$v.formData.$error) {
         return false
       }
-      let projectJobs = []
-      projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
+      if (this.formData.projectName.length >= 255) {
+        this.$q.notify('项目名称太长，已超过255字')
+        return false
+      }
+      if (this.formData.projectDesc.length > 999) {
+        this.$q.notify('项目简介太长，已超过1000字')
+        return false
+      }
+      let projectJobs = this.dealData()
       let data = {
+        'projectTypeId': this.formData.projectTypeId,
         'projectId': this.formData.projectId,
-        'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
+        'locationJson': '',
+        'projectDesc': this.formData.projectDesc,
         'projectJobs': projectJobs
       }
       if (this.formData.locationJson !== '') {
@@ -163,29 +186,17 @@ export default {
       }
       request('project/edit', 'put', data, 'json', true)
         .then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
+          if (response) {
             this.$q.dialog({
               title: '提示',
               message: '项目修改成功！'
             })
             this.$router.push('/qcode/list?projectId=' + this.formData.projectId)
-          } else {
-            if (response.data.resultCode === 'ERROR') {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg.hint
-              })
-            } else {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg
-              })
-            }
           }
         })
     },
     openMap () {
-      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      this.$store.commit('Project/setCurrent', this.formData)
       this.$router.push('map?projectId=' + this.formData.projectId)
     }
   }
