@@ -17,6 +17,9 @@ const getters = {
   userId (state) {
     return state.current ? state.current.userId : null
   },
+  admin (state) {
+    return state.current ? state.current.admin : null
+  },
   username (state) {
     return state.current ? state.current.fullname : null
   },
