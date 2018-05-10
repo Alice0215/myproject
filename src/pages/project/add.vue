@@ -33,7 +33,7 @@
          error-label="请获取当前位置">
          <div class="row col-12 box pt-10 font-14 underline">
           <span class="col-4 h-35 pt-10">项目地址<span class="required">*</span></span>
-          <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+          <q-input icon="place"  v-model="formData.address" @click="openMap"
                 class="col-7 ml-8 p-8 text-right" disable  placeholder="输入地址/定位地址"/>
         </div>
       </q-field>
@@ -79,7 +79,7 @@
               <q-item-side right icon="expand more" />
             </q-item>
             <div class="row col-12 box pt-20 font-14">
-              <span class="col-4 h-35">项目简介<span class="required">*</span></span>
+              <span class="col-4 h-35">项目简介</span>
                 <q-input
               type="textarea"
               class="col-7 ml-8 p-8 text-right"

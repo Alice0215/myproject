@@ -175,6 +175,7 @@ export default {
     back () {
       this.$store.commit('Project/setCurrent', null)
       this.$store.commit('Location/setCurrent', null)
+      this.$store.commit('Project/setEditData', null)
       this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
     },
     edit () {
@@ -219,6 +220,9 @@ export default {
               title: '提示',
               message: '项目修改成功！'
             })
+            this.$store.commit('Project/setCurrent', null)
+            this.$store.commit('Location/setCurrent', null)
+            this.$store.commit('Project/setEditData', null)
             this.$router.push('/qcode/list?projectId=' + this.formData.projectId)
           }
         })
