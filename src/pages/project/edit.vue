@@ -8,168 +8,139 @@
             返回
           </a>
           <q-toolbar-title class="header-title">
-           修改项目
+          {{this.formData.projectName}}
           </q-toolbar-title>
-         <a class="top-btn float-right" @click="add">完成</a>
+         <a class="top-btn float-right" @click="edit">保存</a>
         </q-toolbar>
       </q-layout-header>
       <q-page-container>
       <q-page>
       <div class="full-width card" id="edit">
-        <q-field
-          @blur="$v.formData.projectName.$touch"
-          @keyup.enter="edit"
-          :error="$v.formData.projectName.$error"
-          error-label="请添加项目名称" v-if="formData.isEdit">
-          <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-        </q-field>
-        <q-item link class="full-width underline users"  v-if="!formData.isEdit">
-          <q-item-main label="项目名称" />
-          <q-item-main :label="formData.projectName" />
+      <q-field
+         @blur="$v.formData.projectName.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.projectName.$error"
+         error-label="请添加项目名称">
+      <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+      </q-field>
+      <q-field
+         @blur="$v.formData.locationJson.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.locationJson.$error"
+         error-label="请获取当前位置">
+      <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
+                class="login-input" disable  placeholder="输入地址/定位地址"/>
+      </q-field>
+      <q-field
+         @blur="$v.formData.projectTypeId.$touch"
+        @keyup.enter="edit"
+        :error="$v.formData.projectTypeId.$error"
+         error-label="请选择项目类别">
+       <q-item link class="full-width underline users" @click.native="chooseProjectType">
+          <q-item-side> 项目类型</q-item-side>
+          <q-item-main class="text-right" >
+            {{ formData.selectProjectType ? formData.selectProjectType.name : ''}}
+          </q-item-main>
+          <q-item-side right icon="expand more" />
+      </q-item>
+      </q-field>
+      <q-field
+            @blur="$v.formData.managerUsers.$touch"
+            @keyup.enter="edit"
+            :error="$v.formData.managerUsers.$error"
+            error-label="请添加项目负责人">
+        <q-item class="underline" @click.native="chooseUser('TL')" >
+          <q-item-side>  项目负责人</q-item-side>
+          <q-item-main class="text-right" v-line-clamp:20="1" >
+            <q-item-tile>
+              <span v-for="v in formData.managerUsers" :key="v.userId"
+                    icon-right="clear">
+              {{ v.fullname }}</span>
+            </q-item-tile>
+          </q-item-main>
+          <q-item-side right  icon="expand more" />
         </q-item>
-        <q-field  v-if="formData.isEdit"
-          @blur="$v.formData.address.$touch"
-          @keyup.enter="edit"
-          :error="$v.formData.address.$error"
-          error-label="请获取当前位置">
-          <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
-                    class="login-input" disable  placeholder="输入地址/定位地址"/>
-        </q-field>
-        <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-            <q-item-main label="位置" />
-            <q-item-main :label="formData.address" />
-          </q-item>
-          <q-input  v-if="formData.isEdit" type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-          <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-            <q-item-main label="项目简介" />
-            <q-item-main :label="formData.projectDesc" />
-          </q-item>
-          <q-item v-if="formData.isEdit" link class="full-width underline users" @click.native="chooseUser('TM')">
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-              <q-item-side right icon="keyboard_arrow_right" />
-          </q-item>
-          <q-item v-if="!formData.isEdit" link class="full-width underline users">
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-          </q-item>
-          <q-field  v-if="formData.isEdit"
-          @blur="$v.formData.TLSelect.$touch"
-          @keyup.enter="edit"
-          :error="$v.formData.TLSelect.$error"
-          error-label="请项目设置负责人">
-            <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-                <q-item-side icon="group" />
-                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-                <q-item-side right  icon="keyboard_arrow_right" />
-            </q-item>
-        </q-field>
-        <q-field  v-if="!formData.isEdit"
-          @blur="$v.formData.TLSelect.$touch"
-          @keyup.enter="edit"
-          :error="$v.formData.TLSelect.$error"
-          error-label="请项目设置负责人">
-            <q-item link class="full-width underline users"  >
-                <q-item-side icon="group" />
-                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-            </q-item>
-        </q-field>
+      </q-field>
+      <q-item class="underline"  @click.native="chooseUser('TM')">
+        <q-item-side>  项目成员</q-item-side>
+        <q-item-main class="text-right" v-line-clamp:20="1">
+          <q-item-tile>
+            <span v-for="v in formData.memberUsers" :key="v.userId">
+              {{ v.fullname }}
+          </span>
+          </q-item-tile>
+        </q-item-main>
+        <q-item-side right icon="expand more" />
+      </q-item>
+      <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
       </div>
       </q-page>
       </q-page-container>
    </q-layout>
+    <q-modal v-model="selectProjectTypeOpen" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
+      <q-modal-layout id="choose-operator-detail">
+        <q-toolbar slot="header">
+          <q-item-side v-close-overlay class="font-14">取消</q-item-side>
+          <q-toolbar-title class="header-title">
+            选择项目类型
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-list no-border>
+          <q-item v-for="type in projectTypes" :key="type.id" v-if="type.show !== false"
+                  @click.native="chooseType(type)"
+                  :class="{'text-main-color bg-white': type.checked}" class="underline">
+            <q-item-main :label="type.name" />
+            <q-item-side right icon="done" class="text-main-color" v-if="type.checked" />
+          </q-item>
+        </q-list>
+      </q-modal-layout>
+    </q-modal>
+    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <q-item-side v-close-overlay class="font-14">关闭</q-item-side>
+          <q-toolbar-title class="header-title">
+          </q-toolbar-title>
+          <q-item-side class="font-14" v-close-overlay  @click.native="completed" right>完成</q-item-side>
+        </q-toolbar>
+        <q-search v-model="search" icon="search" type="text" class="m-10 underline" clearable placeholder="搜索"/>
+        <q-list-header>{{ jobType === 'TL' ? '已选负责人' : '已选成员' }}</q-list-header>
+        <div class="m-10">
+          <q-chip v-for="(v, i) in formData.selectedUsers" :key="v.userId" @click="removeUser(v, i, null)" icon-right="clear">
+            {{ v.fullname }}
+          </q-chip>
+        </div>
+        <q-list inset-separator no-border>
+          <q-list-header>{{ '人员列表(' + count + ')'}}</q-list-header>
+          <q-item v-for="user in users" :key="user.userId" v-if="user.show !== false">
+            <q-item-side icon="account circle" class="user"/>
+            <q-item-main :label="user.fullname" />
+            <q-item-side>
+              <q-checkbox v-model="user.checked" @input="choose(user)" />
+            </q-item-side>
+          </q-item>
+        </q-list>
+      </q-modal-layout>
+    </q-modal>
   </div>
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
+import ProjectEditMixin from '../../mixin/ProjectEditMixin'
 export default {
+  mixins: [
+    ProjectEditMixin
+  ],
   data () {
-    return {
-      formData: {
-        projectName: '',
-        projectDesc: '',
-        address: '',
-        locationJson: '',
-        TMlable: [],
-        TLlable: [],
-        TMSelect: [],
-        TLSelect: [],
-        TMobg: [],
-        TLobg: [],
-        geoInfo: null,
-        projectId: '',
-        isEdit: false
-      },
-      tempType: ''
-    }
-  },
-  validations: {
-    formData: {
-      projectName: { required },
-      address: { required },
-      TLSelect: { required }
-    }
-  },
-  created () {
-    this.formData.projectId = this.$route.query.id
-    let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
-    let userLocation = JSON.parse(localStorage.getItem('user_location'))
-    if (!_.isNull(oldInfo)) {
-      this.formData = oldInfo
-      localStorage.removeItem('oldInfo')
-    }
-    if (this.$route.query.user) {
-      if (this.$route.query.type === 'TM') {
-        this.formData.TMobg = []
-        this.formData.TMlable = []
-        this.formData.TMSelect = []
-      } else {
-        this.formData.TLobg = []
-        this.formData.TLlable = []
-        this.formData.TLSelect = []
-      }
-      for (var val of JSON.parse(this.$route.query.user)) {
-        let obg = {
-          'jobType': '',
-          'userId': ''
-        }
-        obg.userId = val.userId
-        if (this.$route.query.type === 'TM') {
-          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
-          obg.jobType = 'TM'
-          if (this.formData.TMobg.indexOf(obg) === -1) {
-            if (this.formData.TMobg.length < 3) {
-              this.formData.TMlable.push(val.fullname)
-            }
-            this.formData.TMSelect.push(userInfo)
-            this.formData.TMobg.push(obg)
-          }
-        } else {
-          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
-          obg.jobType = 'TL'
-          if (this.formData.TLobg.indexOf(obg) === -1) {
-            if (this.formData.TLobg.length < 3) {
-              this.formData.TLlable.push(val.fullname)
-            }
-            this.formData.TLSelect.push(userInfo)
-            this.formData.TLobg.push(obg)
-          }
-        }
-      }
-    } else if (!_.isNull(userLocation)) {
-      this.formData.geoInfo = userLocation
-      if (!_.isNull(this.formData.geoInfo)) {
-        this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = JSON.stringify(this.formData.geoInfo)
-      }
-      localStorage.removeItem('user_location')
-    } else if (_.isNull(oldInfo)) {
-      this.getInfo()
-    }
+    return {}
   },
   methods: {
+    back () {
+      this.$store.commit('Project/setCurrent', null)
+      this.$store.commit('Location/setCurrent', null)
+      this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
+    },
     edit () {
       this.$v.formData.$touch()
       if (this.$v.formData.$error) {
@@ -212,76 +183,6 @@ export default {
             }
           }
         })
-    },
-    getInfo () {
-      let that = this
-      request(
-        'project/detail?projectId=' + this.formData.projectId, 'get', '', 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          this.formData.projectName = response.data.resultMsg.projectName
-          this.formData.projectDesc = response.data.resultMsg.projectDesc
-          if (response.data.resultMsg.location) {
-            this.formData.address = response.data.resultMsg.location.formattedAddress
-          }
-          if (response.data.resultMsg.projectJobList.length > 0) {
-            let userId = JSON.parse(localStorage.getItem('user')).userId
-            for (var val of response.data.resultMsg.projectJobList) {
-              let obg = {
-                'jobType': '',
-                'userId': ''
-              }
-
-              obg.userId = val.user.id
-              if (val.jobType.key === 'TL') {
-                obg.jobType = 'TL'
-                if (this.formData.TLobg.indexOf(obg) === -1) {
-                  if (this.formData.TLlable.length < 3) {
-                    this.formData.TLlable.push(val.user.fullname)
-                  }
-                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
-                  this.formData.TLSelect.push(userInfo)
-                  if (parseInt(val.user.id) === parseInt(userId)) {
-                    that.formData.isEdit = true
-                  }
-                  this.formData.TLobg.push(obg)
-                }
-              }
-              if (val.jobType.key === 'TM') {
-                obg.jobType = 'TM'
-                if (this.formData.TMobg.indexOf(obg) === -1) {
-                  if (this.formData.TMlable.length < 3) {
-                    this.formData.TMlable.push(val.user.fullname)
-                  }
-                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
-                  this.formData.TMSelect.push(userInfo)
-                  this.formData.TMobg.push(obg)
-                }
-              }
-            }
-          }
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
-          }
-        }
-      })
-    },
-    chooseUser (jobType) {
-      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      if (jobType === 'TM') {
-        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
-      } else {
-        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TLSelect))
-      }
-      this.$router.push('allUser?type=' + jobType + '&projectId=' + this.formData.projectId)
     },
     openMap () {
       localStorage.setItem('oldInfo', JSON.stringify(this.formData))

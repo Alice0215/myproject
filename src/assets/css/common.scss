@@ -37,6 +37,9 @@ a {
   padding: 0px 15px;
   min-height: 160px;
 }
+.box {
+  padding: 0px 15px;
+}
 .back-a{
   line-height: 34px;
   .back-left{
@@ -144,6 +147,11 @@ input:not(.no-style):hover {
 }
 .bg-color{
   background-color:  $bgcolor;
+}
+.required {
+  padding-left: 3px;
+  font-size: 20px;
+  color: #F81D22;
 }
 .underline {
   border-bottom: 1px solid #cccccc;
