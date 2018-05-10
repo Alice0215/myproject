@@ -1,15 +1,20 @@
 <template>
-  <q-layout>
+  <q-layout view="Hhh lpr Fff">
     <q-layout-header>
-      <q-toolbar class="fix">
+      <q-toolbar>
+          <a @click="this.$router.goBack()" class="back-a font-14">
+          <q-item-side left  icon="keyboard arrow left" class="back-left "/>
+          返回
+        </a>
         <q-toolbar-title class="header-title">
-          项目
+          新建项目
         </q-toolbar-title>
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
+    <q-page>
       <q-list class="list" id="project-list">
-        <q-item class="list-list mt-40" @click.native="$router.push('/project/add')">
+        <q-item class="list-list" @click.native="$router.push('/project/add')">
           <span class="add-btn">+</span>
           <q-item-main class="add-field">
             创建项目
@@ -37,6 +42,7 @@
           <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
         </q-tabs>
       </q-list>
+    </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -99,18 +105,8 @@ export default {
 </script>
 
 <style lang='scss'>
-  .list {
-    padding: 0px;
-    border: none;
-    background: none;
-  }
-
   @import "../../assets/css/common";
   #project-list {
-
-    .scroll-field {
-      margin-bottom: 63px;
-    }
     .add-btn {
       width: 75px;
       height: 75px;
