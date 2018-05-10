@@ -1,7 +1,8 @@
+import ProjectList from '../pages/project/list'
 export default [
   {
     path: '/',
-    component: () => import('pages/project/list')
+    component: () => import('pages/home/home')
   },
   {
     path: '/login',
@@ -17,6 +18,10 @@ export default [
   {
     path: '/partyRegister',
     component: () => import('pages/auth/partyRegister')
+  },
+  {
+    path: '/project/list',
+    component: ProjectList
   },
   {
     path: '/project/add',
@@ -100,16 +105,16 @@ export default [
     component: () => import('pages/choose/chooseProject.vue')
   },
   {
+    path: '/choose/qrtype',
+    component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
     path: '/qcode/scan',
     component: () => import('pages/qcode/scan.vue')
   },
   {
     path: '/qcode/view',
     component: () => import('pages/qcode/viewQRCode.vue')
-  },
-  {
-    path: '/qrcode/chooseType',
-    component: () => import('pages/choose/chooseQRType.vue')
   },
   { // Always leave this as last one
     path: '*',
