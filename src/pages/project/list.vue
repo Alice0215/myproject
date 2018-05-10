@@ -17,7 +17,7 @@
         </q-item>
         <q-infinite-scroll :handler="load" class="scroll-field">
           <q-item multiline v-for="item in list"
-                  :key="item.id" class="list-list" @click.native="$router.push('qcode/list?projectId='+item.id)">
+                  :key="item.id" class="list-list" @click.native="$router.push('/qcode/list?projectId='+item.id)">
             <q-item-side class="add-btn"/>
             <q-item-main>
               <q-item-tile label class="title">{{item.projectName}}</q-item-tile>

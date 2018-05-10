@@ -1,77 +1,83 @@
 <template>
   <div>
-    <q-toolbar class="header">
-        <q-toolbar class="fix" >
-            <a class="back-a" @click="$router.push('/qcode/list?projectId='+formData.projectId)"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>返回</a>
-            <q-toolbar-title class="header-title">
-            项目设置
-            </q-toolbar-title>
-           <q-item-side right class="no-info"/>
-       </q-toolbar>
-    </q-toolbar>
-    <div class="full-width card" id="edit">
-      <q-field
-         @blur="$v.formData.projectName.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.projectName.$error"
-         error-label="请添加项目名称" v-if="formData.isEdit">
-        <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
-      </q-field>
-      <q-item link class="full-width underline users"  v-if="!formData.isEdit">
-        <q-item-main label="项目名称" />
-        <q-item-main :label="formData.projectName" />
-      </q-item>
-       <q-field  v-if="formData.isEdit"
-         @blur="$v.formData.address.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.address.$error"
-         error-label="请获取当前位置">
-        <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
-                  class="login-input" disable  placeholder="输入地址/定位地址"/>
-       </q-field>
-       <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-          <q-item-main label="位置" />
-          <q-item-main :label="formData.address" />
-        </q-item>
-        <q-input  v-if="formData.isEdit" type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-        <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-          <q-item-main label="项目简介" />
-          <q-item-main :label="formData.projectDesc" />
-        </q-item>
-        <q-item v-if="formData.isEdit" link class="full-width underline users" @click.native="chooseUser('TM')">
-            <q-item-side icon="group" />
-            <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-            <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item v-if="!formData.isEdit" link class="full-width underline users">
-            <q-item-side icon="group" />
-            <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+   <q-layout view="Hhh lpr Fff">
+      <q-layout-header>
+        <q-toolbar>
+          <a @click="back" class="back-a">
+            <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
+           修改项目
+          </q-toolbar-title>
+         <a class="top-btn float-right" @click="add">完成</a>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+      <q-page>
+      <div class="full-width card" id="edit">
+        <q-field
+          @blur="$v.formData.projectName.$touch"
+          @keyup.enter="edit"
+          :error="$v.formData.projectName.$error"
+          error-label="请添加项目名称" v-if="formData.isEdit">
+          <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+        </q-field>
+        <q-item link class="full-width underline users"  v-if="!formData.isEdit">
+          <q-item-main label="项目名称" />
+          <q-item-main :label="formData.projectName" />
         </q-item>
         <q-field  v-if="formData.isEdit"
-         @blur="$v.formData.TLSelect.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人">
-          <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-              <q-item-side right  icon="keyboard_arrow_right" />
+          @blur="$v.formData.address.$touch"
+          @keyup.enter="edit"
+          :error="$v.formData.address.$error"
+          error-label="请获取当前位置">
+          <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
+                    class="login-input" disable  placeholder="输入地址/定位地址"/>
+        </q-field>
+        <q-item  class="full-width underline users"  v-if="!formData.isEdit">
+            <q-item-main label="位置" />
+            <q-item-main :label="formData.address" />
           </q-item>
-       </q-field>
-       <q-field  v-if="!formData.isEdit"
-         @blur="$v.formData.TLSelect.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人">
-          <q-item link class="full-width underline users"  >
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+          <q-input  v-if="formData.isEdit" type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+          <q-item  class="full-width underline users"  v-if="!formData.isEdit">
+            <q-item-main label="项目简介" />
+            <q-item-main :label="formData.projectDesc" />
           </q-item>
-       </q-field>
-    </div>
-    <q-btn class="full-width btn"  v-if="formData.isEdit" @click="edit()">保存更改</q-btn>
-    <div id="map">
-    </div>
+          <q-item v-if="formData.isEdit" link class="full-width underline users" @click.native="chooseUser('TM')">
+              <q-item-side icon="group" />
+              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+              <q-item-side right icon="keyboard_arrow_right" />
+          </q-item>
+          <q-item v-if="!formData.isEdit" link class="full-width underline users">
+              <q-item-side icon="group" />
+              <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
+          </q-item>
+          <q-field  v-if="formData.isEdit"
+          @blur="$v.formData.TLSelect.$touch"
+          @keyup.enter="edit"
+          :error="$v.formData.TLSelect.$error"
+          error-label="请项目设置负责人">
+            <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
+                <q-item-side icon="group" />
+                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+                <q-item-side right  icon="keyboard_arrow_right" />
+            </q-item>
+        </q-field>
+        <q-field  v-if="!formData.isEdit"
+          @blur="$v.formData.TLSelect.$touch"
+          @keyup.enter="edit"
+          :error="$v.formData.TLSelect.$error"
+          error-label="请项目设置负责人">
+            <q-item link class="full-width underline users"  >
+                <q-item-side icon="group" />
+                <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+            </q-item>
+        </q-field>
+      </div>
+      </q-page>
+      </q-page-container>
+   </q-layout>
   </div>
 </template>
 
