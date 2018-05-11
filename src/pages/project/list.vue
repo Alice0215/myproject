@@ -42,7 +42,7 @@
             <span class="col-8 float-left leaders font-14" v-line-clamp:20="1">负责人：<span class="i-item" v-for="(v, index) in item.others.leaders" :key="index">
               <span v-if="index===0">{{v}}</span><span v-if="index!==0">、{{v}}</span></span></span>
             <div class="col-4">
-              <q-btn flat  class="card-btn float-right card-color font-14"  icon-right="keyboard arrow right"  @click="$router.push('/project/add')">查看详情</q-btn>
+              <q-btn flat  class="card-btn float-right card-color font-14"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+item.id)">查看详情</q-btn>
             </div>
           </q-card-actions>
         </q-card>
