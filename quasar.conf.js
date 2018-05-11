@@ -93,7 +93,8 @@ module.exports = function (ctx) {
         'QCardActions',
         'QModal',
         'QModalLayout',
-        'QCheckbox'
+        'QCheckbox',
+        'QProgress'
       ],
       directives: [
         'CloseOverlay',
