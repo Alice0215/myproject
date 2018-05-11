@@ -7,43 +7,49 @@
           返回
         </a>
         <q-toolbar-title class="header-title">
-          新建项目
+          项目2
         </q-toolbar-title>
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
-    <q-page>
-      <q-list class="list" id="project-list">
-        <q-item class="list-list" @click.native="$router.push('/project/add')">
-          <span class="add-btn">+</span>
-          <q-item-main class="add-field">
-            创建项目
-          </q-item-main>
-        </q-item>
-        <q-infinite-scroll :handler="load" class="scroll-field">
-          <q-item multiline v-for="item in list"
-                  :key="item.id" class="list-list" @click.native="$router.push('qcode/list?projectId='+item.id)">
-            <q-item-side class="add-btn"/>
-            <q-item-main>
-              <q-item-tile label class="title">{{item.projectName}}</q-item-tile>
-              <q-item-tile sublabel lines="2" class="content">
-                {{item.projectDesc}}
-              </q-item-tile>
-            </q-item-main>
-          </q-item>
-          <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
-            <q-spinner name="dots" slot="message" :size="40"></q-spinner>
-          </div>
-        </q-infinite-scroll>
-        <q-tabs class="footer">
-          <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu"/>
-          <q-route-tab slot="title" icon="view_array" to="/qcode/scan" append label="扫二维码" class="menu"/>
-          <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
-          <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
-        </q-tabs>
+      <q-list class="full-width card">
+          <q-card inline class="q-ma-sm full-width white_bg"  v-for="(item, index) in list" :key="index">
+            <q-card-title class="no-padding-bottom">
+              <span class="title font-18 bold">{{item.projectName}}</span>
+              <span class="title float-right font-14">养护项目</span>
+            </q-card-title>
+            <q-card-main>
+              <div class="project-item inline">
+                <div class="active font-18 bold">12</div>
+                <div>项目成员/人</div>
+              </div>
+
+              <!-- <div class="project-item">
+                <span class="active">120</span>
+                <span>二维码数量/天</span>
+              </div>
+               <div class="project-item">
+                <span class="active">120</span>
+                <span>今日记录/个</span>
+              </div>
+              <div class="project-item">
+                <span class="active">120</span>
+                <span>现场巡查/个</span>
+              </div> -->
+            </q-card-main>
+            <q-card-separator />
+            <q-card-actions class="col-12">
+              <span class="col-8 float-left">负责人：111111</span>
+              <div class="col-4">
+                <q-btn flat  class="card-btn float-right">查看详情</q-btn>
+              </div>
+            </q-card-actions>
+          </q-card>
       </q-list>
-    </q-page>
     </q-page-container>
+    <q-layout-footer class="footer" id="projectList">
+       <q-btn class="full-width btn m-0 font-16">新建项目</q-btn>
+    </q-layout-footer>
   </q-layout>
 </template>
 
@@ -60,6 +66,7 @@ export default {
     }
   },
   mounted () {
+    this.load()
   },
   methods: {
     toDetail (projectId) {
@@ -70,14 +77,8 @@ export default {
       setTimeout(() => {
         if (!this.hasLoadAll) {
           this.loading = true
-          request(
-            'project/list?pageNo=' + that.pageNo + '&pageSize=20',
-            'get',
-            '',
-            'json',
-            true
-          ).then(response => {
-            if (response.data.resultCode === 'SUCCESS') {
+          request('project/list/v2?pageNo=' + that.pageNo + '&pageSize=20', 'get', '', 'json', true).then(response => {
+            if (response) {
               this.loading = false
               let list = response.data.resultMsg
               if (list.length === 0 || !list.length) {
@@ -105,30 +106,30 @@ export default {
 </script>
 
 <style lang='scss'>
-  @import "../../assets/css/common";
-  #project-list {
-    .add-btn {
-      width: 75px;
-      height: 75px;
-      background-color: #dcdcdc;
-      border-radius: 5px;
-      color: white;
-      font-size: 60px;
-      line-height: 68px;
-      text-align: center;
-    }
-    .add-field {
-      padding-left: 10px;
-    }
-    .title {
-      font-size: 16px;
-      color: black;
-      padding-top: 10px;
-    }
-    .content {
-      font-size: 14px;
-      color: #666666 !important;
-      margin-top: 5px;
-    }
+@import "../../assets/css/common";
+#project-list {
+  .add-btn {
+    width: 75px;
+    height: 75px;
+    background-color: #dcdcdc;
+    border-radius: 5px;
+    color: white;
+    font-size: 60px;
+    line-height: 68px;
+    text-align: center;
   }
+  .add-field {
+    padding-left: 10px;
+  }
+  .title {
+    font-size: 16px;
+    color: black;
+    padding-top: 10px;
+  }
+  .content {
+    font-size: 14px;
+    color: #666666 !important;
+    margin-top: 5px;
+  }
+}
 </style>
