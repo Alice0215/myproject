@@ -1,4 +1,5 @@
 import ProjectList from '../pages/project/list'
+import ProjectInfo from '../pages/project/ProjectInfo'
 export default [
   {
     path: '/',
@@ -32,6 +33,10 @@ export default [
     path: '/project/edit',
     component: () => import('pages/project/edit'),
     name: 'projectEdit'
+  },
+  {
+    path: '/ProjectInfo',
+    component: ProjectInfo
   },
   {
     path: '/project/allUser',
