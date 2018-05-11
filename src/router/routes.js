@@ -1,4 +1,6 @@
 import ProjectList from '../pages/project/list'
+import Records from '../pages/project/Records'
+
 export default [
   {
     path: '/',
@@ -99,6 +101,10 @@ export default [
   {
     path: '/project/jobs',
     component: () => import('pages/project/jobs.vue')
+  },
+  {
+    path: '/project/maintenance-records',
+    component: Records
   },
   {
     path: '/choose/project',
