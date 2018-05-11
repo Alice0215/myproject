@@ -2,7 +2,7 @@
     <q-layout view="Hhh lpr Fff" id="records">
       <q-layout-header>
         <q-toolbar class='header bg-white'>
-          <q-item-side @click="$router.push('/')" left icon="keyboard arrow left" class="back-left">
+          <q-item-side @click.native="$router.goBack()" left icon="keyboard arrow left" class="back-left">
             <label>返回</label>
           </q-item-side>
           <q-toolbar-title class='header-title text-center'>
@@ -10,14 +10,16 @@
           </q-toolbar-title>
           <q-item-side class="white-right" right/>
         </q-toolbar>
-        <q-tabs inverted color="secondary" text-color="black" align="justify">
+        <q-tabs inverted align="justify" no-pane-border>
           <q-tab default name="maintenance-records" slot="title" label="养护记录" />
           <q-tab name="patrol-records" slot="title" label="巡查记录" />
           <q-tab name="equipment-records" slot="title" label="设备领用记录" />
           <q-tab name="seedlings-records" slot="title" label="苗木到场" />
 
           <q-tab-pane name="maintenance-records">
-            <maintenance-records></maintenance-records>
+            <q-scroll-area class="scroll-height">
+              <maintenance-records></maintenance-records>
+            </q-scroll-area>
           </q-tab-pane>
           <q-tab-pane name="patrol-records"></q-tab-pane>
           <q-tab-pane name="equipment-records"></q-tab-pane>
@@ -74,6 +76,9 @@ export default {
         padding: 12px 0 0 0;
       }
     }
+  }
+  .scroll-height {
+    height: calc(100vh - 106px);
   }
 }
 </style>
