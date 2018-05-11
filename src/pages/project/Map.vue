@@ -53,6 +53,9 @@
         if (data.info === 'OK') {
           eventBus.$emit('user_location', geoInfo)
           localStorage.setItem('user_location', geoInfo)
+          let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
+          qrcodeForm.locationJson = geoInfo
+          this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
           if (this.$route.query.from === 'qrCode') {
             this.$router.goBack()
             return

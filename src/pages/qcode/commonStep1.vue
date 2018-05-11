@@ -50,6 +50,7 @@
   import { uploadFiles, deleteFiles, request } from '../../common'
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
+  import eventBus from '../../eventBus'
 
   export default {
     mixins: [
@@ -64,7 +65,7 @@
         positionName: '定位地址',
         pageNum: 1,
         pickerLoading: false,
-        hasLoadAll: false,
+        hasLoadAll: false
       }
     },
     methods: {
@@ -115,10 +116,11 @@
         }
       },
       chooseMap () {
+        this.$router.push('/project/map?from=qrCode')
       },
       imagePreview (index) {
         console.log(index)
-        let previewArray = _.map(this.form.pictures, (img) => {
+        let previewArray = _.map(this.qrCodeForm.pictures, (img) => {
           return this.previewApi + img.contentUrl
         })
         console.log(previewArray)
@@ -126,7 +128,7 @@
       },
       cancelUploadImage (index) {
         this.$q.loading.show()
-        let img = this.form.pictures[index]
+        let img = this.qrCodeForm.pictures[index]
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
@@ -142,8 +144,35 @@
       },
     },
     mounted () {
+      eventBus.$on('upload-success', resp => {
+        this.$q.loading.hide()
+        let imgs = this.qrCodeForm.pictures
+        imgs.push(resp)
+        // todo vuex，需要修改
+        this.qrCodeForm.pictures = imgs
+      })
+      eventBus.$on('delete-success', (params) => {
+        this.$q.loading.hide()
+        let index = parseInt(params.idx)
+        let imgs = this.qrCodeForm.pictures
+        imgs.splice(index, 1)
+        // todo vuex，需要修改
+        this.qrCodeForm.pictures = imgs
+        this.$q.dialog({
+          title: '提示',
+          message: params.msg
+        })
+      })
+      if (this.qrCodeForm && this.qrCodeForm.locationJson) {
+        let location = JSON.parse(this.qrCodeForm.locationJson)
+        this.positionName = location.formattedAddress
+      }
       this.getProjectList()
     },
+    beforeDestroy () {
+      eventBus.$off('upload-success')
+      eventBus.$off('delete-success')
+    }
   }
 </script>
 
