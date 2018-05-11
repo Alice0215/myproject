@@ -94,7 +94,8 @@ module.exports = function (ctx) {
         'QModal',
         'QModalLayout',
         'QCheckbox',
-        'QProgress'
+        'QProgress',
+        'QDatetimePicker'
       ],
       directives: [
         'CloseOverlay',

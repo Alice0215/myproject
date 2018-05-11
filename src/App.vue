@@ -4,6 +4,7 @@
       <router-view class="child-view"></router-view>
     <!--</transition>-->
     <lg-preview id="preview-cover"></lg-preview>
+    <datePicker></datePicker>
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 import eventBus from './eventBus'
 import _ from 'lodash'
 import { removeLocalStory } from './common'
+import datePicker from './pages/Common/CustomDatePicker'
 import $ from 'jquery'
 
 function backEvent () {
@@ -24,6 +26,9 @@ document.addEventListener('deviceready', () => {
 
 export default {
   name: 'App',
+  components: {
+    datePicker
+  },
   metaInfo: {
     titleTemplate: '%s | e园林'
   },
