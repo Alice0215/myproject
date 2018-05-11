@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="single-plant-info">
+  <div id="single-plant-info">
     <van-cell-group :border="false">
       <van-cell title="所属片区" is-link value="选择或输入片区内容" required class="font-16" @click="chooseArea"/>
       <van-cell title="苗木分类" is-link value="选择苗木分类" required class="font-16" @click="chooseNursery"/>
@@ -60,10 +60,12 @@
     </van-cell-group>
 
     <div class="bottom-button-div mt-40">
-      <q-btn color="white" text-color="black"  class="border-1 float-left ml-16" label="上一步" size="md" />
+      <q-btn color="white" text-color="black"  class="border-1 float-left ml-16" label="上一步" size="md" @click="preStep" />
       <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="完成" size="md" @click="nextStep" />
     </div>
-  </q-layout>
+    <div class="h-50">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -79,6 +81,9 @@
     methods: {
       nextStep () {
         this.$root.$emit('next-step')
+      },
+      preStep () {
+        this.$root.$emit('pre-step')
       },
       chooseArea () {
 

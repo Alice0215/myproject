@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="step-common-info">
+  <div id="step-common-info">
     <van-cell-group :border="false">
       <van-field  class="font-16" v-model="commonForm.projectName" label="植物名称" placeholder="请输入植物名称" required />
       <van-cell title="所属项目" is-link value="默认项目名称" required class="font-16" @click="showPop = true" />
@@ -38,7 +38,7 @@
       <q-btn color="white" text-color="black"  class="border-1 float-left ml-16" label="上一步" size="md" />
       <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="下一步" size="md" @click="nextStep" />
     </div>
-  </q-layout>
+  </div>
 </template>
 
 <script>

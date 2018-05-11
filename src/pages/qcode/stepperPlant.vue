@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="stepper-plant">
+  <q-layout id="stepper-plant" class="full-height" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
         <q-item-side @click="back" left icon="keyboard arrow left" class="back-left">
@@ -12,20 +12,12 @@
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
-      <q-stepper ref="stepper" alternative-labels class="full-width" v-model="currentStep" color="secondary">
-        <q-step default title="选择类型" icon="more_horiz" name="first">
-          <q-btn
-            flat
-            @click="$refs.stepper.previous()"
-            label="Back"
-          />
-          <q-btn
-            @click="$refs.stepper.next()"
-            label="Next"
-          />
+      <q-stepper ref="stepper" alternative-labels no-header-navigation class="full-width no-shadow" v-model="currentStep"
+                 color="primary">
+        <q-step title="选择类型" icon="more_horiz" name="first">
         </q-step>
-        <q-step title="填写基本类型" icon="more_horiz" name="common">
-          <common-step></common-step>
+        <q-step default title="填写基本类型" icon="more_horiz" name="common">
+            <common-step></common-step>
         </q-step>
         <q-step title="填写植物数据" icon="more_horiz" name="inpueData">
           <singleInfo></singleInfo>
@@ -47,11 +39,11 @@
     components: {
       commonStep,
       singleInfo,
-      successPage
+      successPage,
     },
     data () {
       return {
-        currentStep: 'commom',
+        currentStep: 'common',
       }
     },
     methods: {
@@ -63,10 +55,14 @@
       this.$root.$on('next-step', () => {
         this.$refs.stepper.next()
       })
+      this.$root.$on('pre-step', () => {
+        this.$refs.stepper.previous()
+      })
     },
-    beforeDestroy () {
-//      this.$root.$off('next-step')
-    }
+    destroyed () {
+      this.$root.$off('next-step')
+      this.$root.$off('pre-step')
+    },
   }
 </script>
 
@@ -83,5 +79,10 @@
       padding-left: 4px !important;
       padding-right: 4px !important;
     }
+
+    .q-stepper-title {
+      color: #666666;
+    }
+
   }
 </style>
