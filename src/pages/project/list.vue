@@ -7,7 +7,7 @@
           返回
         </a>
         <q-toolbar-title class="header-title">
-          项目2
+          项目.{{count}}
         </q-toolbar-title>
          <q-item-side class="white-right" right/>
       </q-toolbar>
@@ -20,21 +20,21 @@
             <span class="project-title font-18 bold wp-80">{{item.projectName}}</span>
             <span class="float-right font-14 text-right wp-15 card-color">{{item.projectType.name}}</span>
           </q-card-title>
-          <q-card-main class="underline">
+          <q-card-main class="underline pb-10">
             <div class="project-item text-center">
-              <div class="active font-18 bold" v-line-clamp:20="1">{{item.others.memberSize}}</div>
+              <div class="active font-18 bold pb-5" v-line-clamp:20="1">{{item.others.memberSize}}</div>
               <div v-line-clamp:20="1" class="font-12">项目成员/人</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold" v-line-clamp:20="1"><span v-if="item.others.codeCount">{{item.others.codeCount}}</span><span v-if="!item.others.codeCount">0</span></div>
-              <div class="font-12" v-line-clamp:20="1">二维码数量/天</div>
+              <div class="active font-18 bold pb-5" v-line-clamp:20="1"><span v-if="item.others.codeCount">{{item.others.codeCount}}</span><span v-if="!item.others.codeCount">0</span></div>
+              <div class="font-12" v-line-clamp:20="1">二维码数量/个</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold" v-line-clamp:20="1"><span v-if="item.others.groupCount">{{item.others.groupCount}}</span><span v-if="!item.others.groupCount">0</span></div>
+              <div class="active font-18 bold pb-5" v-line-clamp:20="1"><span v-if="item.others.groupCount">{{item.others.groupCount}}</span><span v-if="!item.others.groupCount">0</span></div>
               <div class="font-12" v-line-clamp:20="1">今日记录/个</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold" v-line-clamp:20="1">{{item.others.problems}}</div>
+              <div class="active font-18 bold pb-5" v-line-clamp:20="1">{{item.others.problems}}</div>
               <div class="font-12" v-line-clamp:20="1">现场巡查/个</div>
             </div>
           </q-card-main>
@@ -64,6 +64,7 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      count: 0,
       list: '',
       loading: false,
       pageNo: 1,
@@ -71,11 +72,15 @@ export default {
     }
   },
   mounted () {
-    // this.load()
+    this.getProjectCount()
   },
   methods: {
-    toDetail (projectId) {
-      return 'qcode/List?projectId' + projectId
+    getProjectCount () {
+      request('project/count', 'get', '', 'json', true).then(response => {
+        if (response) {
+          this.count = response.data.resultMsg
+        }
+      })
     },
     async load (index, done) {
       let that = this
@@ -130,7 +135,6 @@ export default {
   .q-card-container {
     margin: 10px;
     padding: 0px;
-    padding-bottom: 10px;
   }
   .leaders {
     line-height: 35px;
