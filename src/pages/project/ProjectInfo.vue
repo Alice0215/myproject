@@ -91,70 +91,53 @@
           </q-card-main>
         </q-card>
         <div class="wp-100 pl-16 underline select-time">
-          2018年4月
+         {{nowTime}}
           <q-item-side class="float-right" icon="date_range" @click.native="chooseDateTime()"/>
         </div>
         <div class="underline">
-        <div>
-        <q-item class="pv-0">
-          <q-item-main >
-            苗木栽培-栽植修剪
-            <span class="font-12 card-color">6条记录</span>
-          </q-item-main>
-        </q-item>
-        <q-item class="pt-0">
-          <q-item-main >
-            <q-progress :percentage="per" height="8px" class="progress-index" />
-          </q-item-main>
-          <q-item-side class="font-15 inherit" >
-            <div class="mr-10 width-10" right >20%</div>
-          </q-item-side>
-        </q-item>
-        </div>
-        <div>
-        <q-item class="pv-0">
-          <q-item-main >
-            苗木栽培-栽植修剪
-            <span class="font-12 card-color">6条记录</span>
-          </q-item-main>
-        </q-item>
-        <q-item>
-          <q-item-main >
-            <q-progress :percentage="per" height="8px" class="progress-index" />
-          </q-item-main>
-          <q-item-side class="font-15 inherit" >
-            <div class="mr-10 width-10" right >20%</div>
-          </q-item-side>
-        </q-item>
-        </div>
+          <div v-for="(v, index) in actionCountMap" :key="index">
+            <q-item class="pv-0">
+              <q-item-main >
+                {{v.name}}
+                <span class="font-12 card-color">{{v.actionCount}}条记录</span>
+              </q-item-main>
+            </q-item>
+            <q-item class="pt-0">
+              <q-item-main >
+                <q-progress :percentage="v.actionCount/actionAllCount*100" height="8px" class="progress-index" />
+              </q-item-main>
+              <q-item-side class="font-15 inherit" >
+                <div class="mr-10 width-10" right >{{v.actionCount}}/{{actionAllCount}}*100 %</div>
+              </q-item-side>
+            </q-item>
+          </div>
         </div>
         <q-card inline class="q-ma-sm full-width">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <q-item-side float-left  icon="assignment" class="active float-left"/><span class="project-title font-16 float-left">现场巡查记录</span>
-            <!-- <span class="project-title font-16">现场巡查记录</span> -->
             <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+item.id)">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="underline wp-100">
             <div class="project-item text-center wp-48 pb-25">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">1</div>
+              <div class="font-18  pb-5" v-line-clamp:20="1">0</div>
               <div v-line-clamp:20="1" class="font-14">本月发现问题</div>
             </div>
             <div class="project-item text-center wp-48  pb-25">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">
-                1
+              <div class="font-18 pb-5" v-line-clamp:20="1">
+                0
               </div>
               <div class="font-14" v-line-clamp:20="1">本月巡查记录</div>
             </div>
             </div>
             <div class="project-item text-left wp-48 border-right pl-10 pv-20">
               <div v-line-clamp:20="1" class="font-14">苗木到场记录</div>
-              <div class="font-14 pt-10 pb-5" v-line-clamp:20="1"><span class="pr-8">1</span>本月记录</div>
+              <div class="font-14 pt-10 pb-5" v-line-clamp:20="1"><span class="pr-8 font-18">0</span>本月记录</div>
             </div>
             <div class="project-item text-left wp-48 pl-10 pv-20">
               <div class="font-14" v-line-clamp:20="1">设备领用记录</div>
               <div class="font-14 pb-5 pt-10" v-line-clamp:20="1">
-                <span class="pr-8">1</span>本月记录
+                <span class="pr-8 font-18">0</span>本月记录
               </div>
             </div>
           </q-card-main>
@@ -178,18 +161,29 @@ export default {
       info: {},
       qrcodeInfo: { SingleCount: 0, EquipmentCount: 0, OtherCount: 0, AreaCount: 0 },
       projectId: '',
+      nowData: '',
+      nowTime: '',
       groupCountMap: { weekGroupCount: 0, monthGroupCount: 0, todayGroupCount: 0 },
       formattedAddress: '',
-      actionCountMap: []
+      actionCountMap: [],
+      actionAllCount: 0
     }
   },
-  created () {
+  mounted () {
     this.projectId = this.$route.query.projectId
+    if (this.nowTime === '') {
+      this.nowTime = date.formatDate(Date.parse(new Date()), 'YYYY年M月')
+    }
     this.getInfo()
+    eventBus.$on('close-date-picker', arg => {
+      this.nowTime = date.formatDate(Date.parse(arg), 'YYYY年M月')
+      let selectData = date.formatDate(Date.parse(arg), 'YYYY-MM') + '-01'
+      this.actionCount(selectData)
+    })
   },
   methods: {
     chooseDateTime () {
-      eventBus.$emit('open-date-picker', date.formatDate(Date.parse(new Date()), 'M月D日'))
+      eventBus.$emit('open-date-picker', date.formatDate(Date.parse(new Date()), 'YYYY年M月'))
     },
     getInfo () {
       this.$q.loading.show()
@@ -207,6 +201,9 @@ export default {
           }
           if (this.info.actionCountMap) {
             this.actionCountMap = this.info.actionCountMap
+            _.forEach(this.info.actionCountMap, v => {
+              this.actionAllCount = this.actionAllCount + v.actionCount
+            })
           }
 
           _.forEach(this.info.others.codeCountMap, v => {
@@ -232,9 +229,8 @@ export default {
         }
       })
     },
-    actionCount () {
+    actionCount (select) {
       this.$q.loading.show()
-      let select = '2018-05-01'
       request('jobGroup/actionCount?projectId=' + this.projectId + '&from=' + select, 'get', null, 'json', true).then(response => {
         if (response) {
           this.$q.loading.hide()

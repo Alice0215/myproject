@@ -3,20 +3,20 @@
     <q-modal-layout>
       <q-toolbar slot="header">
         <q-item-side v-close-overlay class="font-14 text-main-color">取消</q-item-side>
-        <q-item-side class="font-14 text-main-color" @click.native="toToday">今天</q-item-side>
+        <q-item-side class="font-14 text-main-color" @click.native="toToday">本月</q-item-side>
         <q-toolbar-title class="header-title">
           选择日期
         </q-toolbar-title>
         <q-item-side v-close-overlay class="font-14 text-main-color" @click.native="chooseDate">完成</q-item-side>
       </q-toolbar>
-      <q-datetime-picker class="datetime-custom" v-model="dateTime" type="date" />
+      <q-datetime-picker class="datetime-custom" v-model="dateTime" type="date" format="YYYY-MM" default-view="month"/>
     </q-modal-layout>
   </q-modal>
 </template>
 
 <script>
 import eventBus from '../../eventBus'
-
+import { date } from 'quasar'
 export default {
   data () {
     return {
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     toToday () {
-      this.dateTime = new Date()
+      this.dateTime = date.formatDate(Date.parse(new Date()), 'YYYY年M月')
     },
     chooseDate () {
       eventBus.$emit('close-date-picker', this.dateTime)
@@ -37,7 +37,6 @@ export default {
   },
   mounted () {
     eventBus.$on('open-date-picker', arg => {
-      console.log(arg)
       this.dateTime = arg
       this.selectYear = true
     })
