@@ -49,6 +49,7 @@ module.exports = function (ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
+      i18n: 'zh-hans',
       components: [
         'QLayout',
         'QLayoutHeader',
