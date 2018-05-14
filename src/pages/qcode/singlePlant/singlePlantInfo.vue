@@ -44,18 +44,18 @@
           </div>
           <div class="row spec-right-div">
             <label class="spec-input-left w-50">几年生</label>
-            <q-input class="spec-input" v-model="sForm.jiNian"/>
+            <q-input class="spec-input" v-model="sForm.year"/>
             <span class="spec-input-unit">年</span>
           </div>
           <div class="row spec-left-div col-12">
             <label class="spec-input-left w-64">其他规格</label>
-            <q-input class="spec-input other-spec" v-model="sForm.otherSpec"/>
+            <q-input class="spec-input other-spec" v-model="sForm.otherFeature"/>
           </div>
         </div>
       </div>
       <van-field class="font-16" v-model="sForm.source" label="苗源地" placeholder="请输入苗源地信息"/>
-      <van-field class="font-16" v-model="sForm.source" label="苗木商" placeholder="请输入苗木商信息"/>
-      <van-field class="font-16 van-hairline--bottom" v-model="sForm.source"
+      <van-field class="font-16" v-model="sForm.dealer" label="苗木商" placeholder="请输入苗木商信息"/>
+      <van-field class="font-16 van-hairline--bottom" v-model="sForm.other"
                  label="苗木其他" placeholder="请输入苗木其他信息"/>
     </van-cell-group>
 
