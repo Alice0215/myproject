@@ -139,10 +139,13 @@ input:not(.no-style):hover {
 .bg-primary{
   background:  $bgcolor !important;
 }
+.bg-white{
+  background: white !important;
+}
 .active{
   color: $primary !important;
 }
-.q-tabs-position-top .q-tabs-bar{
+.footer.q-tabs-position-top .q-tabs-bar{
   color:$bgcolor !important;
 }
 .bg-color{
