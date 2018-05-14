@@ -46,6 +46,9 @@
               </q-item-main>
             </q-item>
           </q-list>
+          <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
+            <q-spinner name="dots" slot="message" :size="40"></q-spinner>
+          </div>
         </q-infinite-scroll>
       </q-page>
     </q-page-container>
@@ -88,9 +91,10 @@ export default {
           } else {
             that.joblist = list
           }
-          if (this.joblist.length > 0 && this.pageNo === 1) {
+          if (this.joblist.length > 0) {
             eventBus.$emit('has-maintenance-records')
           }
+          this.$forceUpdate()
           done()
         }
       })
