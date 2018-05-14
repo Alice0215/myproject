@@ -6,7 +6,7 @@
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
         <label class="w-64">苗木面积</label>
         <q-input placeholder="输入片值苗木面积" class="no-margin" v-model="sForm.area" type="number"></q-input>
-        <q-select v-model='sForm.areaUnit' @input="" :options='sForm.areaOptions'
+        <q-select v-model='uomId' @input="uomInput" :options='uomOptions'
                   class="no-margin border-left" placeholder='选择单位'/>
       </div>
       <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
@@ -75,6 +75,16 @@
         placeholder="请输入区域"
       />
     </van-dialog>
+    <van-dialog
+      v-model="otherUomShow"
+      show-cancel-button
+      :before-close="otherUomClose">
+      <van-field
+        v-model="otherUom"
+        label="自定义单位"
+        placeholder="请输入单位"
+      />
+    </van-dialog>
     <van-popup v-model="showPlantCategory" position="bottom">
       <van-picker
         show-toolbar
@@ -105,14 +115,36 @@
         createShow: false,
         branchActions: [],
         newBranch: null,
-        sForm: {'areaOptions': [{'label': '平方米', 'value': '平方米'}]},
+        sForm: {},
         plantCategoryArray: [],
         showPlantCategory: false,
         position: '选择或输入片区内容',
-        category: '选择苗木分类'
+        category: '选择苗木分类',
+        uomOptions: [],
+        otherUomShow: false,
+        otherUom: null,
+        uomId: null
       }
     },
     methods: {
+      uomInput (val) {
+        if (val === 'other') {
+          this.otherUomShow = true
+        } else {
+          this.sForm.uomId = val
+        }
+      },
+      async getWorkUomList () {
+        let resp = await request('uom/all', 'get', null, true)
+        if (resp) {
+          _.forEach(resp.data.resultMsg, v => {
+            v.label = v.name
+            v.value = v.id
+          })
+          this.uomOptions = resp.data.resultMsg
+          this.uomOptions.push({label: '其他', value: 'other'})
+        }
+      },
       onPickerCancel () {
         this.showPlantCategory = false
       },
@@ -129,6 +161,20 @@
             v.text = v.name
             v.category = v.id.toString()
           })
+        }
+      },
+      otherUomClose (action, done) {
+        done()
+        if (action === 'confirm') {
+          console.log('confirm')
+          this.sForm.uomName = this.otherUom
+          this.uomId = this.otherUom
+          this.uomOptions.splice(this.uomOptions.length - 1, 0,
+            {label: this.otherUom.toString(), value: this.otherUom.toString()})
+          this.otherUomShow = false
+        } else {
+          console.log('cancel')
+          this.otherUomShow = false
         }
       },
       createClose (action, done) {
@@ -187,6 +233,7 @@
     mounted () {
       this.getAreaBranch()
       this.getPlantCategory()
+      this.getWorkUomList()
     },
   }
 </script>
