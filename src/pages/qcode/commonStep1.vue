@@ -51,6 +51,7 @@
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
+  import { server } from '../../const'
 
   export default {
     mixins: [
@@ -121,7 +122,7 @@
       imagePreview (index) {
         console.log(index)
         let previewArray = _.map(this.qrCodeForm.pictures, (img) => {
-          return this.previewApi + img.contentUrl
+          return server.PREVIEW_API + img.contentUrl
         })
         console.log(previewArray)
         ImagePreview(previewArray, index)
@@ -146,18 +147,13 @@
     mounted () {
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
-        let imgs = this.qrCodeForm.pictures
-        imgs.push(resp)
-        // todo vuex，需要修改
-        this.qrCodeForm.pictures = imgs
+        this.$store.commit('plantInfo/addQRCodeFormImage', resp)
+        console.log(this.qrCodeForm)
       })
       eventBus.$on('delete-success', (params) => {
         this.$q.loading.hide()
         let index = parseInt(params.idx)
-        let imgs = this.qrCodeForm.pictures
-        imgs.splice(index, 1)
-        // todo vuex，需要修改
-        this.qrCodeForm.pictures = imgs
+        this.$store.commit('plantInfo/removeQRCodeFormImage', index)
         this.$q.dialog({
           title: '提示',
           message: params.msg
