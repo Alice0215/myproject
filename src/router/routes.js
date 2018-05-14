@@ -1,10 +1,12 @@
+import Home from '../pages/home/home'
 import ProjectList from '../pages/project/list'
 import Records from '../pages/project/Records'
+import ProjectDetail from '../pages/project/ProjectDetail'
 
 export default [
   {
     path: '/',
-    component: () => import('pages/home/home')
+    component: Home
   },
   {
     path: '/login',
@@ -29,6 +31,10 @@ export default [
     path: '/project/add',
     component: () => import('pages/project/add'),
     name: 'projectAdd'
+  },
+  {
+    path: '/projectDetail',
+    component: ProjectDetail
   },
   {
     path: '/project/edit',

@@ -1,6 +1,7 @@
 const state = {
   projectid: null,
-  current: null
+  current: null,
+  editData: null
 }
 
 const mutations = {
@@ -9,6 +10,9 @@ const mutations = {
   },
   setProject (state, o) {
     state.projectid = o
+  },
+  setEditData (state, o) {
+    state.editData = o
   }
 }
 
@@ -16,6 +20,11 @@ const getters = {
   getCurrent (state) {
     if (state.current) {
       return state.current
+    }
+  },
+  getEditData (state) {
+    if (state.editData) {
+      return state.editData
     }
   },
   getProjectId (state) {
