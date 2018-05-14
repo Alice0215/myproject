@@ -15,7 +15,7 @@
     <q-page-container id="project-list" class="bg-primary">
     <q-infinite-scroll :handler="load" class="scroll-field">
       <q-list class="full-width card">
-        <q-card inline class="q-ma-sm full-width bg-white"  v-for="(item, index) in list" :key="index">
+        <q-card inline class="q-ma-sm full-width bg-white"  v-for="(item, index) in list" :key="index" @click.native="$router.push('/ProjectInfo?projectId='+item.id)">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <span class="project-title font-18 bold wp-80">{{item.projectName}}</span>
             <span class="float-right font-14 text-right wp-15 card-color">{{item.projectType.name}}</span>

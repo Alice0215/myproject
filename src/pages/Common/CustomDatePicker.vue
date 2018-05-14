@@ -16,7 +16,7 @@
 
 <script>
 import eventBus from '../../eventBus'
-import { date } from 'quasar'
+// import { date } from 'quasar'
 export default {
   data () {
     return {
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     toToday () {
-      this.dateTime = date.formatDate(Date.parse(new Date()), 'YYYY年M月')
+      this.dateTime = new Date()
     },
     chooseDate () {
       eventBus.$emit('close-date-picker', this.dateTime)

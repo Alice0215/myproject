@@ -13,25 +13,24 @@
       </q-toolbar>
       <div class="background-view">
         <div class="mh-3 float-left">
-          <div class="font-12 lh-1-8 pv-2 address"> <q-item-side float-left  icon="room" class="float-left color-white mw-unset pr-5"/>
-          <span>{{formattedAddress}}</span></div>
-          <div class="row q-body-1 mt-3 pv-2">
-            <div class="col font-12">简介： {{info.projectDesc}}</div>
-          </div>
-           <div class="row q-body-1 mt-3 pv-2">
-            <div class="col font-12">负责人：
+          <div class="font-12 lh-1-8 address"> <q-item-side float-left  icon="room" class="float-left color-white mw-unset pr-5"/>
+          <span v-line-clamp:20="1">{{formattedAddress}}</span></div>
+          <div class="mt-3">
+            <div class="col font-12 wp-70 pv-2 mt-3 float-left"  v-line-clamp:30="1">简介：{{info.projectDesc}}</div>
+            <div class="col font-12 wp-70 pv-2 mt-3 float-left" v-line-clamp:30="1">负责人：
               <span class="i-item pr-5" v-for="(v, index) in info.projectJobList" :key="index" v-if="v.jobType.key==='TL'">{{v.user.username}}</span>
             </div>
+            <a class="top-btn font-12 float-right bg-white active ph-5 pv-3" @click="$router.push('/project/edit?')">查看全部</a>
           </div>
         </div>
-         <a class="top-btn font-12 float-right bg-white active ph-5 pv-3">查看全部</a>
+
       </div>
     </q-layout-header>
     <q-page-container>
       <div class="wp-100 ph-15 pt-15">
          <q-btn class="wp-100 font-16 no-color-btn" @click="$router.push('/project/add')">申请制作二维码</q-btn>
       </div>
-      <q-list>
+      <q-list v-if="info.others && info.others.codeCountMap.length>0">
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <span class="project-title font-16 pb-0"> <i class="iconfont active pr-10">&#xe701;</i>项目二维码</span>
@@ -65,7 +64,7 @@
           </q-card-main>
         </q-card>
       </q-list>
-      <q-list class="bg-white">
+      <q-list class="bg-white" v-if="info.others &&info.others.codeCountMap.length>0">
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <q-item-side float-left  icon="assignment" class="active float-left"/><span class="project-title font-16 float-left">养护记录</span>
@@ -98,7 +97,7 @@
           <div v-for="(v, index) in actionCountMap" :key="index">
             <q-item class="pv-0">
               <q-item-main >
-                {{v.name}}
+                {{v.action.name}}
                 <span class="font-12 card-color">{{v.actionCount}}条记录</span>
               </q-item-main>
             </q-item>
@@ -107,7 +106,7 @@
                 <q-progress :percentage="v.actionCount/actionAllCount*100" height="8px" class="progress-index" />
               </q-item-main>
               <q-item-side class="font-15 inherit" >
-                <div class="mr-10 width-10" right >{{v.actionCount}}/{{actionAllCount}}*100 %</div>
+                <div class="mr-10 width-10" right >{{Math.round((v.actionCount/actionAllCount)*1000)/10}} %</div>
               </q-item-side>
             </q-item>
           </div>
@@ -164,7 +163,7 @@ export default {
       nowData: '',
       nowTime: '',
       groupCountMap: { weekGroupCount: 0, monthGroupCount: 0, todayGroupCount: 0 },
-      formattedAddress: '',
+      formattedAddress: '无',
       actionCountMap: [],
       actionAllCount: 0
     }
@@ -176,14 +175,20 @@ export default {
     }
     this.getInfo()
     eventBus.$on('close-date-picker', arg => {
-      this.nowTime = date.formatDate(Date.parse(arg), 'YYYY年M月')
-      let selectData = date.formatDate(Date.parse(arg), 'YYYY-MM') + '-01'
+      console.log(arg)
+      let selectData = ''
+      if (!_.isUndefined(arg) && !_.isNull(arg)) {
+        this.nowTime = date.formatDate(Date.parse(arg), 'YYYY年M月')
+        selectData = date.formatDate(Date.parse(arg), 'YYYY-MM') + '-01'
+      } else {
+        selectData = date.formatDate(Date.parse(new Date()), 'YYYY-MM') + '-01'
+      }
       this.actionCount(selectData)
     })
   },
   methods: {
     chooseDateTime () {
-      eventBus.$emit('open-date-picker', date.formatDate(Date.parse(new Date()), 'YYYY年M月'))
+      eventBus.$emit('open-date-picker', new Date())
     },
     getInfo () {
       this.$q.loading.show()
@@ -193,15 +198,17 @@ export default {
           this.info = response.data.resultMsg
           let qrAllCount = 0
           let qrCount = 0
-          this.formattedAddress = this.info.location.formattedAddress
-          if (this.info.groupCountMap) {
-            this.groupCountMap.weekGroupCount = this.info.groupCountMap.weekGroupCount
-            this.groupCountMap.monthGroupCount = this.info.groupCountMap.monthGroupCount
-            this.groupCountMap.todayGroupCount = this.info.groupCountMap.todayGroupCount
+          if (!_.isUndefined(this.info.location) && !_.isNull(this.info.location)) {
+            this.formattedAddress = this.info.location.formattedAddress
           }
-          if (this.info.actionCountMap) {
-            this.actionCountMap = this.info.actionCountMap
-            _.forEach(this.info.actionCountMap, v => {
+          if (this.info.others.groupCountMap) {
+            this.groupCountMap.weekGroupCount = this.info.others.groupCountMap.weekGroupCount
+            this.groupCountMap.monthGroupCount = this.info.others.groupCountMap.monthGroupCount
+            this.groupCountMap.todayGroupCount = this.info.others.groupCountMap.todayGroupCount
+          }
+          if (this.info.others.actionCountMap) {
+            this.actionCountMap = this.info.others.actionCountMap
+            _.forEach(this.actionCountMap, v => {
               this.actionAllCount = this.actionAllCount + v.actionCount
             })
           }
@@ -210,18 +217,18 @@ export default {
             qrAllCount = qrAllCount + v.codeCount
             if (v.type !== null) {
               qrCount = qrCount + v.codeCount
-            }
-            if (v.type === plantType.SINGLE) {
-              this.qrcodeInfo.SingleCount = v.codeCount
-            }
-            if (v.type === plantType.EQUIPMENT) {
-              this.qrcodeInfo.EquipmentCount = v.codeCount
-            }
-            if (v.type === plantType.OTHER) {
-              this.qrcodeInfo.OtherCount = v.codeCount
-            }
-            if (v.type === plantType.AREA) {
-              this.qrcodeInfo.AreaCount = v.codeCount
+              if (v.type.key === plantType.SINGLE) {
+                this.qrcodeInfo.SingleCount = v.codeCount
+              }
+              if (v.type.key === plantType.EQUIPMENT) {
+                this.qrcodeInfo.EquipmentCount = v.codeCount
+              }
+              if (v.type.key === plantType.OTHER) {
+                this.qrcodeInfo.OtherCount = v.codeCount
+              }
+              if (v.type.key === plantType.AREA) {
+                this.qrcodeInfo.AreaCount = v.codeCount
+              }
             }
           })
           this.qrcodeInfo.qrCount = qrCount
@@ -235,6 +242,9 @@ export default {
         if (response) {
           this.$q.loading.hide()
           this.actionCountMap = response.data.resultMsg
+          _.forEach(this.actionCountMap, v => {
+            this.actionAllCount = this.actionAllCount + v.actionCount
+          })
         }
       })
     }
