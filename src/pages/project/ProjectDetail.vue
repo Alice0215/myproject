@@ -8,7 +8,7 @@
             返回
           </a>
           <q-toolbar-title class="header-title">
-          详情
+            项目详情
           </q-toolbar-title>
           <q-item-side class="white-right" right v-if="!isEdit"/>
           <!-- <q-item-side class="white-right text-main-color font-14"  right v-if="isEdit" @click.native="$router.push('/project/edit')">修改</q-item-side> -->
@@ -18,7 +18,7 @@
       <q-page-container>
       <q-page>
       <div class="full-width card pt-20" id="projectDetail">
-        <q-item class="underline"  @click.native="chooseUser('TM')">
+        <q-item class="underline">
           <q-item-side> 项目名称</q-item-side>
           <q-item-main class="text-right" v-line-clamp:20="1">
             <q-item-tile>
@@ -26,7 +26,7 @@
             </q-item-tile>
           </q-item-main>
         </q-item>
-        <q-item class="underline"  @click.native="chooseUser('TM')">
+        <q-item class="underline">
           <q-item-side> 位置</q-item-side>
           <q-item-main class="text-right" v-line-clamp:20="1">
             <q-item-tile>
@@ -75,23 +75,6 @@
       </q-page>
       </q-page-container>
    </q-layout>
-    <q-modal v-model="selectProjectTypeOpen" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
-      <q-modal-layout id="choose-operator-detail">
-        <q-toolbar slot="header">
-          <q-item-side v-close-overlay class="font-14">取消</q-item-side>
-          <q-toolbar-title class="header-title">
-            选择项目类型
-          </q-toolbar-title>
-        </q-toolbar>
-        <q-list no-border>
-          <q-item v-for="type in projectTypes" :key="type.id" v-if="type.show !== false"
-                                   :class="{'text-main-color bg-white': type.checked}" class="underline">
-            <q-item-main :label="type.name" />
-            <q-item-side right icon="done" class="text-main-color" v-if="type.checked" />
-          </q-item>
-        </q-list>
-      </q-modal-layout>
-    </q-modal>
     <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
       <q-modal-layout>
         <q-toolbar slot="header">
@@ -129,7 +112,6 @@ export default {
       projectTypes: [],
       jobType: null,
       users: [],
-      selectProjectTypeOpen: false,
       opened: false,
       isTL: false,
       isEdit: false,
@@ -165,20 +147,6 @@ export default {
         })
       }
     },
-    async getProjectType () {
-      const resp = await request('projectType/all', 'get')
-      if (resp) {
-        this.projectTypes = resp.data.resultMsg
-        _.forEach(this.projectTypes, v => {
-          v.checked = false
-          if (this.formData.selectProjectType) {
-            if (this.formData.selectProjectType.id === v.id) {
-              v.checked = true
-            }
-          }
-        })
-      }
-    },
     prepareData (resp) {
       let currentUser = this.$store.state.User.current
       let projectJobList = resp.projectJobList
@@ -199,9 +167,6 @@ export default {
       resp.TM = TM
       return resp
     },
-    chooseProjectType () {
-      this.selectProjectTypeOpen = true
-    },
     chooseUser (type) {
       this.opened = true
       this.jobType = type
@@ -221,9 +186,6 @@ export default {
         })
       })
     },
-    back () {
-      this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
-    },
     edit () {
       this.$store.commit('Project/setEditData', this.formData)
       this.$router.push('/project/edit')
@@ -231,7 +193,6 @@ export default {
   },
   async mounted () {
     this.getUsers()
-    this.getProjectType()
     let projectId = this.$route.query.id
     this.getProjectDetail(projectId)
   }

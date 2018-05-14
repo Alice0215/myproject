@@ -43,7 +43,7 @@
         :error="$v.formData.projectTypeId.$error"
          error-label="请选择项目类别">
        <q-item link class="full-width underline users" @click.native="chooseProjectType">
-          <q-item-side> 项目类型</q-item-side>
+          <q-item-side> 项目类型<span class="required">*</span></q-item-side>
           <q-item-main class="text-right" >
             {{ formData.selectProjectType ? formData.selectProjectType.name : ''}}
           </q-item-main>
@@ -56,7 +56,7 @@
             :error="$v.formData.managerUsers.$error"
             error-label="请添加项目负责人">
         <q-item class="underline" @click.native="chooseUser('TL')" >
-          <q-item-side>  项目负责人</q-item-side>
+          <q-item-side>  项目负责人<span class="required">*</span></q-item-side>
           <q-item-main class="text-right" v-line-clamp:20="1" >
             <q-item-tile>
               <span v-for="v in formData.managerUsers" :key="v.userId"
@@ -79,7 +79,7 @@
         <q-item-side right icon="expand more" />
       </q-item>
       <div class="row col-12 box pt-20 font-14">
-        <span class="col-4 h-35">项目简介<span class="required">*</span></span>
+        <span class="col-4 h-35">项目简介</span>
           <q-input
         type="textarea"
         class="col-7 ml-8 p-8 text-right"
@@ -209,15 +209,13 @@ export default {
         this.formData.locationJson = location
         data.locationJson = JSON.stringify(this.formData.locationJson)
       }
-      let params = new URLSearchParams()
-      for (var key in data) {
-        params.append(key, data[key])
-      }
+      
       request('project/edit', 'put', data, 'json', true)
         .then(response => {
           if (response) {
-            this.$q.dialog({
-              title: '提示',
+            this.$q.notify({
+            timeout: 2000,
+            type: 'positive',
               message: '项目修改成功！'
             })
             this.$store.commit('Project/setCurrent', null)
