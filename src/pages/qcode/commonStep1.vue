@@ -21,7 +21,7 @@
                class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
-        <div class="w-100 h-100 mt--8 camera-div">
+        <div class="w-100 h-100 camera-div">
           <q-btn icon="camera alt" size="20px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
       </div>
@@ -197,5 +197,12 @@
         width: 45%;
       }
     }
+
+    .img-close {
+      margin-left: 70px;
+      margin-top: -195px;
+      font-size: 28px;
+    }
+
   }
 </style>
