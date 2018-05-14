@@ -209,19 +209,19 @@ export default {
         this.formData.locationJson = location
         data.locationJson = JSON.stringify(this.formData.locationJson)
       }
-      
+
       request('project/edit', 'put', data, 'json', true)
         .then(response => {
           if (response) {
             this.$q.notify({
-            timeout: 2000,
-            type: 'positive',
+              timeout: 2000,
+              type: 'positive',
               message: '项目修改成功！'
             })
             this.$store.commit('Project/setCurrent', null)
             this.$store.commit('Location/setCurrent', null)
             this.$store.commit('Project/setEditData', null)
-            this.$router.push('/qcode/list?projectId=' + this.formData.projectId)
+            this.$router.goBack()
           }
         })
     },

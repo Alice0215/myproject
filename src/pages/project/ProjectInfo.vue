@@ -18,9 +18,9 @@
           <div class="mt-3">
             <div class="col font-12 wp-70 pv-2 mt-3 float-left"  v-line-clamp:30="1">简介：{{info.projectDesc}}</div>
             <div class="col font-12 wp-70 pv-2 mt-3 float-left" v-line-clamp:30="1">负责人：
-              <span class="i-item pr-5" v-for="(v, index) in info.projectJobList" :key="index" v-if="v.jobType.key==='TL'">{{v.user.username}}</span>
+              <span class="i-item pr-5" v-for="(v, index) in info.projectJobList" :key="index" v-if="v.jobType.key==='TL'">{{v.user.fullname}}</span>
             </div>
-            <a class="top-btn font-12 float-right bg-white active ph-5 pv-3" @click="$router.push('/project/edit?')">查看全部</a>
+            <a class="top-btn font-12 float-right bg-white active ph-5 pv-3" @click="$router.push('/projectDetail?id='+projectId)">查看全部</a>
           </div>
         </div>
 
@@ -28,7 +28,7 @@
     </q-layout-header>
     <q-page-container>
       <div class="wp-100 ph-15 pt-15">
-         <q-btn class="wp-100 font-16 no-color-btn" @click="$router.push('/project/add')">申请制作二维码</q-btn>
+         <q-btn class="wp-100 font-16 no-color-btn" @click="$router.push('/qcode/add?projectId='+projectId)">申请制作二维码</q-btn>
       </div>
       <q-list v-if="info.others && info.others.codeCountMap.length>0">
         <q-card inline class="q-ma-sm full-width bg-white">
@@ -91,7 +91,7 @@
         </q-card>
         <div class="wp-100 pl-16 underline select-time">
          {{nowTime}}
-          <q-item-side class="float-right" icon="date_range" @click.native="chooseDateTime()"/>
+          <q-item-side class="float-right" icon="date_range" @click.native="openDate()"/>
         </div>
         <div class="underline">
           <div v-for="(v, index) in actionCountMap" :key="index">
@@ -143,6 +143,18 @@
         </q-card>
       </q-list>
     </q-page-container>
+     <q-modal v-model="isOpen" :content-css="{minWidth: '100vw', minHeight: '253px'}" position="bottom">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <q-item-side v-close-overlay class="font-14 text-main-color">取消</q-item-side>
+          <q-toolbar-title class="header-title">
+            选择日期
+          </q-toolbar-title>
+          <q-item-side v-close-overlay class="font-14 text-main-color" @click.native="chooseDate">完成</q-item-side>
+        </q-toolbar>
+        <q-datetime-picker class="month-datetime" v-model="selectData" type="date" />
+      </q-modal-layout>
+  </q-modal>
   </q-layout>
 </template>
 
@@ -156,7 +168,8 @@ import { plantType } from '../../const'
 export default {
   data () {
     return {
-      per: 20,
+      isOpen: false,
+      selectData: '',
       info: {},
       qrcodeInfo: { SingleCount: 0, EquipmentCount: 0, OtherCount: 0, AreaCount: 0 },
       projectId: '',
@@ -174,21 +187,20 @@ export default {
       this.nowTime = date.formatDate(Date.parse(new Date()), 'YYYY年M月')
     }
     this.getInfo()
-    eventBus.$on('close-date-picker', arg => {
-      console.log(arg)
-      let selectData = ''
-      if (!_.isUndefined(arg) && !_.isNull(arg)) {
-        this.nowTime = date.formatDate(Date.parse(arg), 'YYYY年M月')
-        selectData = date.formatDate(Date.parse(arg), 'YYYY-MM') + '-01'
-      } else {
-        selectData = date.formatDate(Date.parse(new Date()), 'YYYY-MM') + '-01'
-      }
-      this.actionCount(selectData)
-    })
   },
   methods: {
-    chooseDateTime () {
-      eventBus.$emit('open-date-picker', new Date())
+    openDate () {
+      this.isOpen = true
+    },
+    chooseDate () {
+      if (this.isOpen) {
+        let selectData = ''
+        if (!_.isUndefined(this.selectData) && !_.isNull(this.selectData)) {
+          this.nowTime = date.formatDate(Date.parse(this.selectData), 'YYYY年M月')
+          selectData = date.formatDate(Date.parse(this.selectData), 'YYYY-MM') + '-01'
+        }
+        this.actionCount(selectData)
+      }
     },
     getInfo () {
       this.$q.loading.show()
