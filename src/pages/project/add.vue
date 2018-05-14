@@ -1,6 +1,6 @@
 <template>
   <div>
-        <q-layout view="Hhh lpr Fff">
+  <q-layout view="Hhh lpr Fff">
       <q-layout-header>
         <q-toolbar>
            <a @click="back" class="back-a font-14">
@@ -21,15 +21,21 @@
         @keyup.enter="add"
         :error="$v.formData.projectName.$error"
          error-label="请添加项目名称">
-      <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+        <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目名称<span class="required">*</span></span>
+          <q-input text-dark required v-model="formData.projectName" placeholder="请输入项目名称" class="col-7 ml-8 p-8 text-right"/>
+        </div>
       </q-field>
       <q-field
          @blur="$v.formData.locationJson.$touch"
         @keyup.enter="add"
         :error="$v.formData.locationJson.$error"
          error-label="请获取当前位置">
-      <q-search icon="place" color="amber" v-model="formData.address" @click="openMap"
-                class="login-input" disable  placeholder="输入地址/定位地址"/>
+         <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目地址<span class="required">*</span></span>
+          <q-input icon="place"  v-model="formData.address" @click="openMap"
+                class="col-7 ml-8 p-8 text-right" disable  placeholder="输入地址/定位地址"/>
+        </div>
       </q-field>
       <q-field
          @blur="$v.formData.projectTypeId.$touch"
@@ -37,7 +43,7 @@
         :error="$v.formData.projectTypeId.$error"
          error-label="请选择项目类别">
        <q-item link class="full-width underline users" @click.native="chooseProjectType">
-          <q-item-side> 项目类型</q-item-side>
+          <q-item-side> 项目类型<span class="required">*</span></q-item-side>
           <q-item-main class="text-right" >
             {{ selectProjectType ? selectProjectType.name : ''}}
           </q-item-main>
@@ -50,7 +56,7 @@
               :error="$v.formData.managerUsers.$error"
               error-label="请添加项目负责人">
               <q-item class="underline" @click.native="chooseUser('TL')" >
-                <q-item-side>  项目负责人</q-item-side>
+                <q-item-side>  项目负责人<span class="required">*</span></q-item-side>
                 <q-item-main class="text-right" v-line-clamp:20="1" >
                   <q-item-tile>
                     <span v-for="v in formData.managerUsers" :key="v.userId"
@@ -61,18 +67,26 @@
                 <q-item-side right  icon="expand more" />
               </q-item>
             </q-field>
-              <q-item class="underline"  @click.native="chooseUser('TM')">
-                <q-item-side>  项目成员</q-item-side>
-                <q-item-main class="text-right" v-line-clamp:20="1">
-                  <q-item-tile>
-                    <span v-for="v in formData.memberUsers" :key="v.userId">
-                      {{ v.fullname }}
-                  </span>
-                  </q-item-tile>
-                </q-item-main>
-                <q-item-side right icon="expand more" />
-              </q-item>
-         <q-input type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
+            <q-item class="underline"  @click.native="chooseUser('TM')">
+              <q-item-side>项目成员</q-item-side>
+              <q-item-main class="text-right" v-line-clamp:20="1">
+                <q-item-tile>
+                  <span v-for="v in formData.memberUsers" :key="v.userId">
+                    {{ v.fullname }}
+                </span>
+                </q-item-tile>
+              </q-item-main>
+              <q-item-side right icon="expand more" />
+            </q-item>
+            <div class="row col-12 box pt-20 font-14">
+              <span class="col-4 h-35">项目简介</span>
+                <q-input
+              type="textarea"
+              class="col-7 ml-8 p-8 text-right"
+              v-model="formData.projectDesc"
+              rows="5"
+              :max-height="50"/>
+            </div>
     </div>
     </q-page>
     </q-page-container>
