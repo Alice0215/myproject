@@ -17,7 +17,7 @@
           <q-tab name="seedlings-records" slot="title" label="苗木到场" />
 
           <q-tab-pane name="maintenance-records">
-            <q-scroll-area class="scroll-height">
+            <q-scroll-area :class="{'scroll-height': hasMaintenanceRecords}">
               <maintenance-records></maintenance-records>
             </q-scroll-area>
           </q-tab-pane>
@@ -31,12 +31,12 @@
 
 <script>
 import  MaintenanceRecords from './MaintenanceRecords'
+import eventBus from '../../eventBus'
 
 export default {
   data () {
     return {
-      projectId: '1',
-      tabClass: ['hover', '']
+     hasMaintenanceRecords: false
     }
   },
   components: {
@@ -45,6 +45,9 @@ export default {
   methods: {
   },
   mounted () {
+    eventBus.$on('has-maintenance-records', () => {
+      this.hasMaintenanceRecords = true
+    })
   }
 }
 </script>

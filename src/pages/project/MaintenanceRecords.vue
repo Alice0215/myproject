@@ -3,7 +3,7 @@
     <q-page-container>
       <q-page id="maintenance_records">
         <q-infinite-scroll :handler="getJobGroup">
-          <q-list separator>
+          <q-list separator v-if="joblist.length > 0">
             <q-item v-for="item in joblist"
                     :key="item.id"
                     @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
@@ -11,7 +11,7 @@
                 <q-item-tile>
                   <div class="row">
                     <div class="title col-8">{{ item.code.alias }}</div>
-                    <div class="type-title col-4 text-right">单株植物</div>
+                    <div class="type-title col-4 text-right">{{ item.code.type ? item.code.type.value  : '' }}</div>
                   </div>
                 </q-item-tile>
                 <q-item-tile class="content">
@@ -54,6 +54,7 @@
 
 <script>
 import { request } from '../../common'
+import eventBus from '../../eventBus'
 
 export default {
   data () {
@@ -61,7 +62,7 @@ export default {
       joblist: [],
       pageNo: 1,
       hasLoadAll: false,
-      projectId: '1'
+      projectId: this.$route.query.projectId
     }
   },
   methods: {
@@ -86,6 +87,9 @@ export default {
             that.joblist = that.joblist.concat(list)
           } else {
             that.joblist = list
+          }
+          if (this.joblist.length > 0 && this.pageNo === 1) {
+            eventBus.$emit('has-maintenance-records')
           }
           done()
         }
