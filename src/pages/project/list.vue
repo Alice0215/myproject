@@ -7,7 +7,7 @@
           返回
         </a>
         <q-toolbar-title class="header-title">
-          项目.{{count}}
+          {{count}}个项目
         </q-toolbar-title>
          <q-item-side class="white-right" right/>
       </q-toolbar>
@@ -66,7 +66,6 @@ export default {
     return {
       count: 0,
       list: '',
-      loading: false,
       pageNo: 1,
       hasLoadAll: false
     }
@@ -85,11 +84,9 @@ export default {
     async load (index, done) {
       let that = this
       setTimeout(() => {
-        if (!this.hasLoadAll) {
-          this.loading = true
+        if (!that.hasLoadAll) {
           request('project/list/v2?pageNo=' + that.pageNo + '&pageSize=20', 'get', '', 'json', true).then(response => {
             if (response) {
-              this.loading = false
               let list = response.data.resultMsg
               if (list.length === 0 || !list.length) {
                 that.hasLoadAll = true
