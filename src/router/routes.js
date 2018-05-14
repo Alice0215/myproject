@@ -1,5 +1,6 @@
 import Home from '../pages/home/home'
 import ProjectList from '../pages/project/list'
+import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
 
 export default [
@@ -106,6 +107,10 @@ export default [
   {
     path: '/project/jobs',
     component: () => import('pages/project/jobs.vue')
+  },
+  {
+    path: '/project/maintenance-records',
+    component: Records
   },
   {
     path: '/choose/project',
