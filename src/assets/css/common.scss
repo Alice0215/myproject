@@ -37,6 +37,9 @@ a {
   padding: 0px 15px;
   min-height: 160px;
 }
+.box {
+  padding: 0px 15px;
+}
 .back-a{
   line-height: 34px;
   .back-left{
@@ -148,6 +151,11 @@ input:not(.no-style):hover {
 .bg-color{
   background-color:  $bgcolor;
 }
+.required {
+  padding-left: 3px;
+  font-size: 20px;
+  color: #F81D22;
+}
 .underline {
   border-bottom: 1px solid #cccccc;
 }
@@ -205,4 +213,11 @@ input:not(.no-style):hover {
   color: white;
   padding: 5px 12px;
   border-radius: 3px;
+}
+.q-item-side.white-right {
+  width: 58px !important;
+}
+.back-a {
+  line-height: 34px;
+  font-size: 14px;
 }

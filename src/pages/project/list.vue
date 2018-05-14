@@ -128,7 +128,7 @@ export default {
     overflow: hidden;
   }
   .project-item {
-    width: 24%;
+    width: 23%;
     display: inline-block;
     overflow: hidden;
   }

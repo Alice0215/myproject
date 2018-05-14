@@ -18,7 +18,7 @@
               <q-item-tile sublabel lines='1' icon="place" class="mb-8 newicon" v-if="location">
                   <label class="color-black font-12 location">{{location}}</label>
               </q-item-tile>
-              <a class="inline" href='javascript:' @click="$router.push('/project/edit?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
+              <a class="inline" href='javascript:' @click="$router.push('/projectDetail?id='+projectId)"><q-item-side right icon='border color' class='inline newicon'></q-item-side></a>
             </q-toolbar-title>
         </q-toolbar>
         <div class='nav-title'>

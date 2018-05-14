@@ -1,284 +1,232 @@
 <template>
   <div>
-    <q-toolbar class="header">
-        <q-toolbar class="fix" >
-            <a class="back-a" @click="$router.push('/qcode/list?projectId='+formData.projectId)"> <q-item-side left  icon="keyboard arrow left" class="back-left"/>返回</a>
-            <q-toolbar-title class="header-title">
-            项目设置
-            </q-toolbar-title>
-           <q-item-side right class="no-info"/>
-       </q-toolbar>
-    </q-toolbar>
-    <div class="full-width card" id="edit">
+   <q-layout view="Hhh lpr Fff">
+      <q-layout-header>
+        <q-toolbar>
+          <a @click="back" class="back-a">
+            <q-item-side left  icon="keyboard arrow left" class="back-left"/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
+          {{this.formData.projectName}}
+          </q-toolbar-title>
+         <a class="top-btn float-right" @click="edit">保存</a>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+      <q-page>
+      <div class="full-width card" id="edit">
       <q-field
          @blur="$v.formData.projectName.$touch"
-        @keyup.enter="edit"
+        @keyup.enter="add"
         :error="$v.formData.projectName.$error"
-         error-label="请添加项目名称" v-if="formData.isEdit">
-        <q-input text-dark required v-model="formData.projectName" placeholder="项目名称" class="login-input"/>
+         error-label="请添加项目名称">
+        <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目名称<span class="required">*</span></span>
+          <q-input text-dark required v-model="formData.projectName" placeholder="请输入项目名称" class="col-7 ml-8 p-8 text-right"/>
+        </div>
       </q-field>
-      <q-item link class="full-width underline users"  v-if="!formData.isEdit">
-        <q-item-main label="项目名称" />
-        <q-item-main :label="formData.projectName" />
-      </q-item>
-       <q-field  v-if="formData.isEdit"
-         @blur="$v.formData.address.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.address.$error"
+      <q-field
+         @blur="$v.formData.locationJson.$touch"
+        @keyup.enter="add"
+        :error="$v.formData.locationJson.$error"
          error-label="请获取当前位置">
-        <q-input icon="place" color="amber" v-model="formData.address" @click="openMap"
-                  class="login-input" disable  placeholder="输入地址/定位地址"/>
-       </q-field>
-       <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-          <q-item-main label="位置" />
-          <q-item-main :label="formData.address" />
-        </q-item>
-        <q-input  v-if="formData.isEdit" type="textarea" v-model="formData.projectDesc" class="login-input" placeholder="项目简介"/>
-        <q-item  class="full-width underline users"  v-if="!formData.isEdit">
-          <q-item-main label="项目简介" />
-          <q-item-main :label="formData.projectDesc" />
-        </q-item>
-        <q-item v-if="formData.isEdit" link class="full-width underline users" @click.native="chooseUser('TM')">
-            <q-item-side icon="group" />
-            <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-            <q-item-side right icon="keyboard_arrow_right" />
-        </q-item>
-        <q-item v-if="!formData.isEdit" link class="full-width underline users">
-            <q-item-side icon="group" />
-            <q-item-main :label="`设置参与者`" /><span class="user" v-for="TMitem in formData.TMlable" v-bind:key="TMitem.id" >{{TMitem}}</span>
-        </q-item>
-        <q-field  v-if="formData.isEdit"
-         @blur="$v.formData.TLSelect.$touch"
+         <div class="row col-12 box pt-10 font-14 underline">
+          <span class="col-4 h-35 pt-10">项目地址<span class="required">*</span></span>
+          <q-input color="amber" v-model="formData.address" @click="openMap"
+                class="col-7 ml-8 p-8 text-right" disable  placeholder="输入地址/定位地址"/>
+        </div>
+      </q-field>
+      <q-field
+         @blur="$v.formData.projectTypeId.$touch"
         @keyup.enter="edit"
-        :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人">
-          <q-item link class="full-width underline users"  @click.native="chooseUser('TL')" >
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
-              <q-item-side right  icon="keyboard_arrow_right" />
+        :error="$v.formData.projectTypeId.$error"
+         error-label="请选择项目类别">
+       <q-item link class="full-width underline users" @click.native="chooseProjectType">
+          <q-item-side> 项目类型<span class="required">*</span></q-item-side>
+          <q-item-main class="text-right" >
+            {{ formData.selectProjectType ? formData.selectProjectType.name : ''}}
+          </q-item-main>
+          <q-item-side right icon="expand more" />
+      </q-item>
+      </q-field>
+      <q-field
+            @blur="$v.formData.managerUsers.$touch"
+            @keyup.enter="edit"
+            :error="$v.formData.managerUsers.$error"
+            error-label="请添加项目负责人">
+        <q-item class="underline" @click.native="chooseUser('TL')" >
+          <q-item-side>  项目负责人<span class="required">*</span></q-item-side>
+          <q-item-main class="text-right" v-line-clamp:20="1" >
+            <q-item-tile>
+              <span v-for="v in formData.managerUsers" :key="v.userId"
+                    icon-right="clear">
+              {{ v.fullname }}</span>
+            </q-item-tile>
+          </q-item-main>
+          <q-item-side right  icon="expand more" />
+        </q-item>
+      </q-field>
+      <q-item class="underline"  @click.native="chooseUser('TM')">
+        <q-item-side>  项目成员</q-item-side>
+        <q-item-main class="text-right" v-line-clamp:20="1">
+          <q-item-tile>
+            <span v-for="v in formData.memberUsers" :key="v.userId">
+              {{ v.fullname }}
+          </span>
+          </q-item-tile>
+        </q-item-main>
+        <q-item-side right icon="expand more" />
+      </q-item>
+      <div class="row col-12 box pt-20 font-14">
+        <span class="col-4 h-35">项目简介</span>
+          <q-input
+        type="textarea"
+        class="col-7 ml-8 p-8 text-right"
+        v-model="formData.projectDesc"
+        rows="5"
+        :max-height="50"/>
+      </div>
+      </div>
+      </q-page>
+      </q-page-container>
+   </q-layout>
+    <q-modal v-model="selectProjectTypeOpen" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
+      <q-modal-layout id="choose-operator-detail">
+        <q-toolbar slot="header">
+          <q-item-side v-close-overlay class="font-14">取消</q-item-side>
+          <q-toolbar-title class="header-title">
+            选择项目类型
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-list no-border>
+          <q-item v-for="type in projectTypes" :key="type.id" v-if="type.show !== false"
+                  @click.native="chooseType(type)"
+                  :class="{'text-main-color bg-white': type.checked}" class="underline">
+            <q-item-main :label="type.name" />
+            <q-item-side right icon="done" class="text-main-color" v-if="type.checked" />
           </q-item>
-       </q-field>
-       <q-field  v-if="!formData.isEdit"
-         @blur="$v.formData.TLSelect.$touch"
-        @keyup.enter="edit"
-        :error="$v.formData.TLSelect.$error"
-         error-label="请项目设置负责人">
-          <q-item link class="full-width underline users"  >
-              <q-item-side icon="group" />
-              <q-item-main :label="`设置负责人`" /><span class="user"  v-for="TLitem in formData.TLlable" v-bind:key="TLitem.id">{{TLitem}}</span>
+        </q-list>
+      </q-modal-layout>
+    </q-modal>
+    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" position="bottom">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <q-item-side v-close-overlay class="font-14">关闭</q-item-side>
+          <q-toolbar-title class="header-title">
+          </q-toolbar-title>
+          <q-item-side class="font-14" v-close-overlay  @click.native="completed" right>完成</q-item-side>
+        </q-toolbar>
+        <q-search v-model="search" icon="search" type="text" class="m-10 underline" clearable placeholder="搜索"/>
+        <q-list-header>{{ jobType === 'TL' ? '已选负责人' : '已选成员' }}</q-list-header>
+        <div class="m-10">
+          <q-chip v-for="(v, i) in formData.selectedUsers" :key="v.userId" @click="removeUser(v, i, null)" icon-right="clear">
+            {{ v.fullname }}
+          </q-chip>
+        </div>
+        <q-list inset-separator no-border>
+          <q-list-header>{{ '人员列表(' + count + ')'}}</q-list-header>
+          <q-item v-for="user in users" :key="user.userId" v-if="user.show !== false">
+            <q-item-side icon="account circle" class="user"/>
+            <q-item-main :label="user.fullname" />
+            <q-item-side>
+              <q-checkbox v-model="user.checked" @input="choose(user)" />
+            </q-item-side>
           </q-item>
-       </q-field>
-    </div>
-    <q-btn class="full-width btn"  v-if="formData.isEdit" @click="edit()">保存更改</q-btn>
-    <div id="map">
-    </div>
+        </q-list>
+      </q-modal-layout>
+    </q-modal>
   </div>
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
 import { request } from '../../common'
+import ProjectEditMixin from '../../mixin/ProjectEditMixin'
+import _ from 'lodash'
 export default {
+  mixins: [
+    ProjectEditMixin
+  ],
   data () {
-    return {
-      formData: {
-        projectName: '',
-        projectDesc: '',
-        address: '',
-        locationJson: '',
-        TMlable: [],
-        TLlable: [],
-        TMSelect: [],
-        TLSelect: [],
-        TMobg: [],
-        TLobg: [],
-        geoInfo: null,
-        projectId: '',
-        isEdit: false
-      },
-      tempType: ''
-    }
-  },
-  validations: {
-    formData: {
-      projectName: { required },
-      address: { required },
-      TLSelect: { required }
-    }
-  },
-  created () {
-    this.formData.projectId = this.$route.query.id
-    let oldInfo = JSON.parse(localStorage.getItem('oldInfo'))
-    let userLocation = JSON.parse(localStorage.getItem('user_location'))
-    if (!_.isNull(oldInfo)) {
-      this.formData = oldInfo
-      localStorage.removeItem('oldInfo')
-    }
-    if (this.$route.query.user) {
-      if (this.$route.query.type === 'TM') {
-        this.formData.TMobg = []
-        this.formData.TMlable = []
-        this.formData.TMSelect = []
-      } else {
-        this.formData.TLobg = []
-        this.formData.TLlable = []
-        this.formData.TLSelect = []
-      }
-      for (var val of JSON.parse(this.$route.query.user)) {
-        let obg = {
-          'jobType': '',
-          'userId': ''
-        }
-        obg.userId = val.userId
-        if (this.$route.query.type === 'TM') {
-          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
-          obg.jobType = 'TM'
-          if (this.formData.TMobg.indexOf(obg) === -1) {
-            if (this.formData.TMobg.length < 3) {
-              this.formData.TMlable.push(val.fullname)
-            }
-            this.formData.TMSelect.push(userInfo)
-            this.formData.TMobg.push(obg)
-          }
-        } else {
-          let userInfo = { 'fullname': val.fullname, 'userId': val.userId }
-          obg.jobType = 'TL'
-          if (this.formData.TLobg.indexOf(obg) === -1) {
-            if (this.formData.TLobg.length < 3) {
-              this.formData.TLlable.push(val.fullname)
-            }
-            this.formData.TLSelect.push(userInfo)
-            this.formData.TLobg.push(obg)
-          }
-        }
-      }
-    } else if (!_.isNull(userLocation)) {
-      this.formData.geoInfo = userLocation
-      if (!_.isNull(this.formData.geoInfo)) {
-        this.formData.address = this.formData.geoInfo.formattedAddress
-        this.formData.locationJson = JSON.stringify(this.formData.geoInfo)
-      }
-      localStorage.removeItem('user_location')
-    } else if (_.isNull(oldInfo)) {
-      this.getInfo()
-    }
+    return {}
   },
   methods: {
+    prepareData () {
+      let project = this.$store.getters['Project/getEditData']
+      console.log(project)
+      this.formData.projectName = project.projectName
+      this.formData.projectId = Number.parseInt(project.id)
+      this.formData.locationJson = project.location
+      this.formData.address = project.address
+      this.formData.selectProjectType = project.projectType
+      this.formData.managerUsers = _.map(project.TL, 'user')
+      _.forEach(this.formData.managerUsers, v => {
+        v.userId = Number.parseInt(v.id)
+        v.checked = true
+      })
+      this.formData.memberUsers = _.map(project.TM, 'user')
+      _.forEach(this.formData.memberUsers, v => {
+        v.userId = Number.parseInt(v.id)
+        v.checked = true
+      })
+      this.formData.projectDesc = project.projectDesc
+      this.formData.projectTypeId = Number.parseInt(project.projectType.id)
+    },
+    back () {
+      this.$store.commit('Project/setCurrent', null)
+      this.$store.commit('Location/setCurrent', null)
+      this.$store.commit('Project/setEditData', null)
+      this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
+    },
     edit () {
       this.$v.formData.$touch()
       if (this.$v.formData.$error) {
         return false
       }
-      let projectJobs = []
-      projectJobs = this.formData.TMobg.concat(this.formData.TLobg)
+      if (this.formData.projectName.length >= 255) {
+        this.$q.notify('项目名称太长，已超过255字')
+        return false
+      }
+      if (this.formData.projectDesc.length > 999) {
+        this.$q.notify('项目简介太长，已超过1000字')
+        return false
+      }
+      let projectJobs = this.dealData()
       let data = {
+        'projectTypeId': this.formData.projectTypeId,
         'projectId': this.formData.projectId,
-        'projectDesc': this.formData.projectDesc,
         'projectName': this.formData.projectName,
+        'projectDesc': this.formData.projectDesc,
         'projectJobs': projectJobs
       }
-      if (this.formData.locationJson !== '') {
-        data.locationJson = this.formData.locationJson
+      let location = this.$store.getters['Location/getCurrent']
+      // if (this.formData.locationJson !== '') {
+      //   data.locationJson = JSON.stringify(this.formData.locationJson)
+      // }
+      console.log(!_.isNull(location))
+      if (!_.isUndefined(location) && !_.isNull(location)) {
+        this.formData.address = location.formattedAddress
+        this.formData.locationJson = location
+        data.locationJson = JSON.stringify(this.formData.locationJson)
       }
-      let params = new URLSearchParams()
-      for (var key in data) {
-        params.append(key, data[key])
-      }
+      
       request('project/edit', 'put', data, 'json', true)
         .then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
-            this.$q.dialog({
-              title: '提示',
+          if (response) {
+            this.$q.notify({
+            timeout: 2000,
+            type: 'positive',
               message: '项目修改成功！'
             })
+            this.$store.commit('Project/setCurrent', null)
+            this.$store.commit('Location/setCurrent', null)
+            this.$store.commit('Project/setEditData', null)
             this.$router.push('/qcode/list?projectId=' + this.formData.projectId)
-          } else {
-            if (response.data.resultCode === 'ERROR') {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg.hint
-              })
-            } else {
-              this.$q.dialog({
-                title: '提示',
-                message: response.data.resultMsg
-              })
-            }
           }
         })
     },
-    getInfo () {
-      let that = this
-      request(
-        'project/detail?projectId=' + this.formData.projectId, 'get', '', 'json', true).then(response => {
-        if (response.data.resultCode === 'SUCCESS') {
-          this.formData.projectName = response.data.resultMsg.projectName
-          this.formData.projectDesc = response.data.resultMsg.projectDesc
-          if (response.data.resultMsg.location) {
-            this.formData.address = response.data.resultMsg.location.formattedAddress
-          }
-          if (response.data.resultMsg.projectJobList.length > 0) {
-            let userId = JSON.parse(localStorage.getItem('user')).userId
-            for (var val of response.data.resultMsg.projectJobList) {
-              let obg = {
-                'jobType': '',
-                'userId': ''
-              }
-
-              obg.userId = val.user.id
-              if (val.jobType.key === 'TL') {
-                obg.jobType = 'TL'
-                if (this.formData.TLobg.indexOf(obg) === -1) {
-                  if (this.formData.TLlable.length < 3) {
-                    this.formData.TLlable.push(val.user.fullname)
-                  }
-                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
-                  this.formData.TLSelect.push(userInfo)
-                  if (parseInt(val.user.id) === parseInt(userId)) {
-                    that.formData.isEdit = true
-                  }
-                  this.formData.TLobg.push(obg)
-                }
-              }
-              if (val.jobType.key === 'TM') {
-                obg.jobType = 'TM'
-                if (this.formData.TMobg.indexOf(obg) === -1) {
-                  if (this.formData.TMlable.length < 3) {
-                    this.formData.TMlable.push(val.user.fullname)
-                  }
-                  let userInfo = { 'fullname': val.user.fullname, 'userId': val.user.id }
-                  this.formData.TMSelect.push(userInfo)
-                  this.formData.TMobg.push(obg)
-                }
-              }
-            }
-          }
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
-          }
-        }
-      })
-    },
-    chooseUser (jobType) {
-      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
-      if (jobType === 'TM') {
-        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TMSelect))
-      } else {
-        localStorage.setItem('selectedUser', JSON.stringify(this.formData.TLSelect))
-      }
-      this.$router.push('allUser?type=' + jobType + '&projectId=' + this.formData.projectId)
-    },
     openMap () {
-      localStorage.setItem('oldInfo', JSON.stringify(this.formData))
+      this.$store.commit('Project/setCurrent', this.formData)
       this.$router.push('map?projectId=' + this.formData.projectId)
     }
   }
