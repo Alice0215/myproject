@@ -14,42 +14,42 @@
         <div class="row mt-6 spec-row-div">
           <div class="row spec-left-div ">
             <label class="spec-input-left">胸径</label>
-            <q-input class="spec-input" v-model="sForm.xiongJing" type="number"/>
+            <q-input class="spec-input" align="center" v-model="sForm.xiongJing" type="number"/>
             <span class="spec-input-unit">厘米</span>
           </div>
           <div class="row spec-right-div">
             <label class="spec-input-left">高度</label>
-            <q-input class="spec-input" v-model="sForm.gaoDu" type="number"/>
+            <q-input class="spec-input" align="center" v-model="sForm.gaoDu" type="number"/>
             <span class="spec-input-unit">米</span>
           </div>
           <div class="row spec-left-div ">
             <label class="spec-input-left">地径</label>
-            <q-input class="spec-input" v-model="sForm.diJing" type="number"/>
+            <q-input class="spec-input" align="center" v-model="sForm.diJing" type="number"/>
             <span class="spec-input-unit">厘米</span>
           </div>
           <div class="row spec-right-div">
             <label class="spec-input-left">冠幅</label>
-            <q-input class="spec-input" v-model="sForm.guanFu" type="number"/>
+            <q-input class="spec-input" align="center" v-model="sForm.guanFu" type="number"/>
             <span class="spec-input-unit">米</span>
           </div>
           <div class="row spec-left-div col-12">
             <label class="spec-input-left">蓬径</label>
-            <q-input class="spec-input" v-model="sForm.xiongJing" type="number"/>
+            <q-input class="spec-input" align="center" v-model="sForm.pengJing" type="number"/>
             <span class="spec-input-unit">米</span>
           </div>
           <div class="row spec-left-div ">
             <label class="spec-input-left w-64">分支数量</label>
-            <q-input class="spec-input w-40" v-model="sForm.branch" type="number"/>
+            <q-input class="spec-input w-40" align="center" v-model="sForm.branch" type="number"/>
             <span class="spec-input-unit">个</span>
           </div>
           <div class="row spec-right-div">
             <label class="spec-input-left w-50">几年生</label>
-            <q-input class="spec-input" v-model="sForm.year"/>
+            <q-input class="spec-input" align="center" v-model="sForm.year"/>
             <span class="spec-input-unit">年</span>
           </div>
           <div class="row spec-left-div col-12">
             <label class="spec-input-left w-64">其他规格</label>
-            <q-input class="spec-input other-spec" v-model="sForm.otherFeature"/>
+            <q-input class="spec-input other-spec" align="center" v-model="sForm.otherFeature"/>
           </div>
         </div>
       </div>
@@ -121,9 +121,10 @@
         position: '选择或输入片区内容',
         category: '选择苗木分类',
         uomOptions: [],
+        oldUomNames: [],
         otherUomShow: false,
         otherUom: null,
-        uomId: null
+        uomId: null,
       }
     },
     methods: {
@@ -142,6 +143,12 @@
             v.value = v.id
           })
           this.uomOptions = resp.data.resultMsg
+          this.oldUomNames = _.map(this.uomOptions, 'label')
+          if (!_.isUndefined(this.uomId) && !_.includes(this.oldUomNames, this.uomId)) {
+            this.uomOptions.push({label: this.sForm.uomName, value: this.sForm.uomName})
+            this.oldUomNames.push(this.sForm.uomName)
+            this.uomId = this.sForm.uomName
+          }
           this.uomOptions.push({label: '其他', value: 'other'})
         }
       },
@@ -161,28 +168,51 @@
             v.text = v.name
             v.category = v.id.toString()
           })
+          let cat = _.find(this.plantCategoryArray, (v) => {
+            return v.category === this.sForm.category
+          })
+          if (cat) {
+            this.category = cat.text
+          }
         }
       },
       otherUomClose (action, done) {
         done()
         if (action === 'confirm') {
-          console.log('confirm')
-          this.sForm.uomName = this.otherUom
-          this.uomId = this.otherUom
-          this.uomOptions.splice(this.uomOptions.length - 1, 0,
-            {label: this.otherUom.toString(), value: this.otherUom.toString()})
+          if (!_.includes(this.oldUomNames, this.otherUom)) {
+            this.sForm.uomName = this.otherUom
+            this.sForm.uomId = null
+            this.uomId = this.otherUom
+            this.uomOptions.splice(this.uomOptions.length - 1, 0,
+              {label: this.otherUom.toString(), value: this.otherUom.toString()})
+            this.oldUomNames = _.map(this.uomOptions, 'label')
+          } else {
+            this.$q.notify('单位已存在')
+            let uom = _.find(this.uomOptions, this.otherUom)
+            if (uom) {
+              this.sForm.uomId = uom.value
+            }
+            this.uomId = this.otherUom
+          }
+          this.otherUom = null
           this.otherUomShow = false
         } else {
           console.log('cancel')
+          this.otherUom = null
+          this.uomId = undefined
           this.otherUomShow = false
         }
       },
       createClose (action, done) {
         done()
         if (action === 'confirm') {
-          console.log('confirm')
-          this.sForm.position = this.newBranch
-          this.position = this.newBranch
+          if (!_.includes(this.branchActions, this.otherUom)) {
+            this.sForm.position = this.newBranch
+            this.position = this.newBranch
+            this.sForm.areaId = undefined
+          } else {
+            this.$q.notify('单位已存在')
+          }
           this.createShow = false
         } else {
           console.log('cancel')
@@ -207,10 +237,17 @@
           _.forEach(branches, v => {
             let branch = {}
             branch.name = v.alias + '-' + v.identifier
-            branch.id = v.id
+            branch.id = v.id.toString()
             branch.callback = this.branchItemClicked
             this.branchActions.push(branch)
           })
+          let bid = !_.isUndefined(this.sForm.areaId) ? this.sForm.areaId.toString() : null
+          let branch = _.find(this.branchActions, (v) => {
+           return v.id === bid
+          })
+          if (branch) {
+            this.position = branch.name
+          }
           this.branchActions.push({
             name: '新建',
             callback: this.createNewBranchItem,
@@ -221,6 +258,7 @@
         this.branchShow = true
       },
       nextStep () {
+        this.setForm()
         this.$root.$emit('next-step')
       },
       preStep () {
@@ -229,11 +267,30 @@
       chooseNursery () {
         this.showPlantCategory = true
       },
+      setForm () {
+        this.singleForm = this.sForm
+        this.$store.commit('plantInfo/setQRCodeFormToSingle', this.singleForm)
+      },
+      getForm () {
+        this.sForm = Object.assign({}, this.singleForm)
+        if (!_.isNull(this.sForm.uomName)) {
+          this.uomId = this.sForm.uomName
+        } else {
+          this.uomId = this.sForm.uomId
+        }
+        if (!_.isUndefined(this.sForm.position)) {
+          this.position = this.sForm.position
+        }
+      },
     },
     mounted () {
+      this.getForm()
       this.getAreaBranch()
       this.getPlantCategory()
       this.getWorkUomList()
+    },
+    beforeDestroy () {
+      this.setForm()
     },
   }
 </script>

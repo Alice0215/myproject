@@ -1,11 +1,11 @@
 <template>
   <div id="step-common-info">
     <van-cell-group :border="false">
-      <van-field class="font-16" v-model="qrCodeForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
+      <van-field class="font-16" v-model="commonForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
       <van-cell title="所属项目" is-link :value="projectName" required class="font-16" @click="showPop = true"/>
       <van-cell title="地址" is-link :value="positionName" required class="font-16" @click="chooseMap"/>
       <van-field class="van-hairline--bottom"
-                 v-model="qrCodeForm.remark"
+                 v-model="commonForm.description"
                  label="备注"
                  type="textarea"
                  placeholder="请输入备注"
@@ -16,7 +16,7 @@
     <q-list class="mt-6 bg-white no-border">
       <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
       <div class="row pl-20">
-        <div class="w-100 h-100" v-for="v, i in qrCodeForm.pictures" :key="i">
+        <div class="w-100 h-100" v-for="v, i in commonForm.pictures" :key="i">
           <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
                class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
@@ -66,7 +66,8 @@
         positionName: '定位地址',
         pageNum: 1,
         pickerLoading: false,
-        hasLoadAll: false
+        hasLoadAll: false,
+        commonForm: {},
       }
     },
     methods: {
@@ -96,15 +97,21 @@
           this.projectList = _.map(this.projectAllList, (v) => {
             return {text: v.projectName, 'id': v.id}
           })
-          console.log(this.projectList)
+          let project = _.find(this.projectList, (v) => {
+            return v.id === this.commonForm.projectId
+          })
+          if (project) {
+            this.projectName = project.text
+          }
         }
       },
       nextStep () {
+        this.setForm()
         this.$root.$emit('next-step')
       },
       onConfirm (value, index) {
         this.projectName = value.text
-        this.qrCodeForm.projectId = value.id
+        this.commonForm.projectId = value.id
         this.showPop = false
       },
       onCancel () {
@@ -121,7 +128,7 @@
       },
       imagePreview (index) {
         console.log(index)
-        let previewArray = _.map(this.qrCodeForm.pictures, (img) => {
+        let previewArray = _.map(this.commonForm.pictures, (img) => {
           return server.PREVIEW_API + img.contentUrl
         })
         console.log(previewArray)
@@ -129,7 +136,7 @@
       },
       cancelUploadImage (index) {
         this.$q.loading.show()
-        let img = this.qrCodeForm.pictures[index]
+        let img = this.commonForm.pictures[index]
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
@@ -143,32 +150,39 @@
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
       },
+      setForm () {
+        this.qrCodeForm = this.commonForm
+      },
+      getForm () {
+        this.commonForm = Object.assign({}, this.qrCodeForm)
+      }
     },
     mounted () {
+      this.getForm()
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
-        this.$store.commit('plantInfo/addQRCodeFormImage', resp)
-        console.log(this.qrCodeForm)
+        this.commonForm.pictures.push(resp)
       })
       eventBus.$on('delete-success', (params) => {
         this.$q.loading.hide()
         let index = parseInt(params.idx)
-        this.$store.commit('plantInfo/removeQRCodeFormImage', index)
+        this.commonForm.pictures.splice(index, 1)
         this.$q.dialog({
           title: '提示',
-          message: params.msg
+          message: params.msg,
         })
       })
-      if (this.qrCodeForm && this.qrCodeForm.locationJson) {
-        let location = JSON.parse(this.qrCodeForm.locationJson)
+      if (this.commonForm && this.commonForm.locationJson) {
+        let location = JSON.parse(this.commonForm.locationJson)
         this.positionName = location.formattedAddress
       }
       this.getProjectList()
     },
     beforeDestroy () {
+      this.setForm()
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
-    }
+    },
   }
 </script>
 
