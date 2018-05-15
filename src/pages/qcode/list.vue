@@ -26,7 +26,7 @@
         </q-item-main>
       </q-item>
       <q-infinite-scroll :handler="load">
-        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id">
+        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id" @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
           <q-item-main v-line-clamp:20="1" class="wp-30">
            {{item.alias}}
           </q-item-main>
@@ -63,31 +63,34 @@ export default {
     async  load (index, done) {
       setTimeout(() => {
         if (!this.hasLoadAll) {
-          request(
-            'qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
-            if (response) {
-              let that = this
-              let list = response.data.resultMsg
-              if (list.length === 0 || !list.length) {
-                this.hasLoadAll = true
-                return
-              }
-              if (list.length < 20) {
-                that.hasLoadAll = true
-              } else {
-                this.hasLoadAll = false
-                that.pageNo++
-              }
-              if (that.list.length > 0) {
-                that.list = that.list.concat(list)
-              } else {
-                that.list = list
-              }
-              done()
-            }
-          })
+          this.getInfo()
+          done()
         }
       }, 2000)
+    },
+    getInfo () {
+      request(
+        'qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
+        if (response) {
+          let that = this
+          let list = response.data.resultMsg
+          if (list.length === 0 || !list.length) {
+            this.hasLoadAll = true
+            return
+          }
+          if (list.length < 20) {
+            that.hasLoadAll = true
+          } else {
+            this.hasLoadAll = false
+            that.pageNo++
+          }
+          if (that.list.length > 0) {
+            that.list = that.list.concat(list)
+          } else {
+            that.list = list
+          }
+        }
+      })
     },
     chooseType (type) {
       this.type = type
@@ -97,7 +100,7 @@ export default {
       this.hasLoadAll = false
       this.pageNo = 1
       this.list = ''
-      this.load()
+      this.getInfo()
       this.getCount()
     },
     getCount () {
