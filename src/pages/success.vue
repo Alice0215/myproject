@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="success-page">
+  <div id="success-page">
     <q-page-container>
       <q-page class="mt-12 text-center card">
         <q-icon name="check_circle" class="green-color mt-25" size="100px"/>
@@ -7,7 +7,7 @@
         <div class="hint-text font-14 color-gray">3秒后自动跳转至详情页</div>
       </q-page>
     </q-page-container>
-  </q-layout>
+  </div>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <q-layout id="stepper-plant" class="full-height" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
-        <q-item-side @click="back" left icon="keyboard arrow left" class="back-left">
+        <q-item-side @click.native="back" left icon="keyboard arrow left" class="back-left">
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
@@ -47,8 +47,20 @@
       }
     },
     methods: {
+      backConfirmClose (action, done) {
+        done()
+        if (action === 'confirm') {
+          this.$router.goBack()
+        }
+      },
       back () {
-        this.$router.goBack()
+        this.$dialog.confirm({
+          title: '取消输入',
+          message: '点击确定将不会保存所填写信息，您确定取消填写吗？',
+          showCancelButton: true,
+          cancelButtonText: '返回',
+          beforeClose: this.backConfirmClose
+        })
       },
     },
     mounted () {

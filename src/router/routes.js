@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    component: () => import('pages/qcode/stepperPlant.vue')
+    component: () => import('pages/project/list')
   },
   {
     path: '/login',
