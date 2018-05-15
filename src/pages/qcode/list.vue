@@ -25,28 +25,77 @@
           已录入二维码 120/160
         </q-item-main>
       </q-item>
-      <q-item link class="full-width bg-white qr-item mt-15 pb-10">
-        <q-item-main v-line-clamp:20="1" class="wp-30">
-          国槐国槐国槐国槐
-        </q-item-main>
-        <div class="wp-25 ib left pr-25 " v-line-clamp:20="1">A片区</div>
-        <i class="iconfont active pr-8">&#xe909;</i>
-        详情<q-item-side right icon="keyboard arrow right" class="auto-width" />
-      </q-item>
+      <q-infinite-scroll :handler="load">
+        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id">
+          <q-item-main v-line-clamp:20="1" class="wp-30">
+           {{item.alias}}
+          </q-item-main>
+          <div class="wp-25 ib left pr-25 " v-line-clamp:20="1" v-if="item.type">{{item.type.value}}</div>
+          <i class="iconfont active pr-8">&#xe909;</i>
+          详情<q-item-side right icon="keyboard arrow right" class="auto-width" />
+        </q-item>
+        <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
+          <q-spinner name="dots" slot="message" :size="40"></q-spinner>
+        </div>
+      </q-infinite-scroll>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-// import { request } from '../../common'
+import { request } from '../../common'
 export default {
   data () {
     return {
+      list: '',
+      total: 0,
+      pageNo: 1,
+      projectId: '',
+      hasLoadAll: true
     }
   },
   methods: {
+    async  load (index, done) {
+      setTimeout(() => {
+        if (!this.hasLoadAll) {
+          request(
+            'qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
+            if (response) {
+              let that = this
+              let list = response.data.resultMsg
+              if (list.length === 0 || !list.length) {
+                this.hasLoadAll = true
+                return
+              }
+              if (list.length < 20) {
+                that.hasLoadAll = true
+              } else {
+                this.hasLoadAll = false
+                that.pageNo++
+              }
+              if (that.list.length > 0) {
+                that.list = that.list.concat(list)
+              } else {
+                that.list = list
+              }
+              done()
+            }
+          })
+        }
+      }, 2000)
+    },
+    getCount () {
+      this.$q.loading.show()
+      request('qrcode/count?projectId=' + this.projectId + '&type=' + this.type, 'get', null, 'json', true).then(response => {
+        this.$q.loading.hide()
+        if (response) {
+          this.total = response.data.resultMsg.total
+        }
+      })
+    }
   },
   created () {
+    this.projectId = this.$route.query.projectId
   }
 }
 </script>
@@ -67,7 +116,7 @@ export default {
     border-bottom: 2px solid;
     color: #239f5b;
   }
-  .q-tab{
+  .q-tab {
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
