@@ -30,10 +30,10 @@
           <q-item-main v-line-clamp:20="1" class="wp-30">
            {{item.alias}}
           </q-item-main>
-          <div class="wp-25 ib left pr-25 " v-line-clamp:20="1" v-if="item.type">{{item.type.value}}</div>
+          <div class="wp-30 ib left pr-25 " v-line-clamp:20="1" v-if="item.type">{{item.type.value}}</div>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='SINGLE'">&#xe64c;</i>
-          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='AREA'">&#xe62f;</i>
-          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='EQUIPMENT'">&#xe909;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='AREA'">&#xe909;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='EQUIPMENT'">&#xe62f;</i>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='OTHER'">&#xe64b;</i>
           详情<q-item-side right icon="keyboard arrow right" class="auto-width" />
         </q-item>
