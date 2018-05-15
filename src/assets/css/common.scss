@@ -41,6 +41,7 @@ a {
   padding: 0px 15px;
 }
 .back-a{
+  font-size: 14px;
   line-height: 34px;
   .back-left{
     min-width: auto !important;
@@ -195,6 +196,14 @@ input:not(.no-style):hover {
   background-color: white;
   min-height: auto;
 }
+.no-color-btn{
+  border: 1px solid #bbbbbb;
+  box-shadow: none;
+  background-color: white;
+  min-height: auto;
+  padding: 10px;
+  color: black;
+}
 .q-item{
   padding-top: 15px;
 }
@@ -213,6 +222,9 @@ input:not(.no-style):hover {
   color: white;
   padding: 5px 12px;
   border-radius: 3px;
+}
+.q-list {
+  border: none;
 }
 .q-item-side.white-right {
   width: 58px !important;
