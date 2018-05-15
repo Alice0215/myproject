@@ -197,6 +197,7 @@ export default {
 @import "../../assets/css/_variable.scss";
 #admin {
   .q-table-container {
+    margin: 10px;
     box-shadow: none;
   }
   .q-table {

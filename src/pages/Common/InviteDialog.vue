@@ -82,7 +82,6 @@
         this.user = {}
         this.visible = true
         this.show = false
-        this.$forceUpdate()
       })
     }
   }
