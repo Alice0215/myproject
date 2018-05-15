@@ -1,5 +1,6 @@
 import Home from '../pages/home/home'
 import ProjectList from '../pages/project/list'
+import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
 
@@ -40,6 +41,10 @@ export default [
     path: '/project/edit',
     component: () => import('pages/project/edit'),
     name: 'projectEdit'
+  },
+  {
+    path: '/ProjectInfo',
+    component: ProjectInfo
   },
   {
     path: '/project/allUser',
