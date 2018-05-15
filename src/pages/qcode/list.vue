@@ -12,17 +12,17 @@
          <q-item-side class="white-right" right/>
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border>
-        <q-tab default name="maintenance-records" slot="title" label="全部"  class="mt-5 pb-0"/>
-        <q-tab slot="title" label="单株植物" class="mt-5 pb-0"/>
-        <q-tab slot="title" label="片区植物" class="mt-5 pb-0"/>
-        <q-tab slot="title" label="设备" class="mt-5 pb-0"/>
-        <q-tab slot="title" label="其它" class="mt-5 pb-0" />
+        <q-tab default name="maintenance-records" slot="title" label="全部"  class="mt-5 pb-0" @click.native="chooseType('')"/>
+        <q-tab slot="title" label="单株植物" class="mt-5 pb-0"  @click="chooseType('SINGLE')"/>
+        <q-tab slot="title" label="片区植物" class="mt-5 pb-0"  @click.native="chooseType('AREA')"/>
+        <q-tab slot="title" label="设备" class="mt-5 pb-0"  @click.native="chooseType('EQUIPMENT')"/>
+        <q-tab slot="title" label="其它" class="mt-5 pb-0"  @click.native="chooseType('OTHER')"/>
       </q-tabs>
     </q-layout-header>
     <q-page-container >
       <q-item link class="full-width">
         <q-item-main>
-          已录入二维码 120/160
+          已录入二维码 {{count.active}}/{{count.total}}
         </q-item-main>
       </q-item>
       <q-infinite-scroll :handler="load">
@@ -31,7 +31,10 @@
            {{item.alias}}
           </q-item-main>
           <div class="wp-25 ib left pr-25 " v-line-clamp:20="1" v-if="item.type">{{item.type.value}}</div>
-          <i class="iconfont active pr-8">&#xe909;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='SINGLE'">&#xe64c;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='AREA'">&#xe62f;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='EQUIPMENT'">&#xe909;</i>
+          <i class="iconfont active pr-8" v-if="item.type && item.type.key==='OTHER'">&#xe64b;</i>
           详情<q-item-side right icon="keyboard arrow right" class="auto-width" />
         </q-item>
         <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
@@ -44,14 +47,16 @@
 
 <script>
 import { request } from '../../common'
+import _ from 'lodash'
 export default {
   data () {
     return {
       list: '',
-      total: 0,
+      count: { 'active': 0, 'total': 0 },
       pageNo: 1,
       projectId: '',
-      hasLoadAll: true
+      type: '',
+      hasLoadAll: false
     }
   },
   methods: {
@@ -84,18 +89,40 @@ export default {
         }
       }, 2000)
     },
+    chooseType (type) {
+      this.type = type
+      this.initData()
+    },
+    initData () {
+      this.hasLoadAll = false
+      this.pageNo = 1
+      this.list = ''
+      this.load()
+      this.getCount()
+    },
     getCount () {
       this.$q.loading.show()
       request('qrcode/count?projectId=' + this.projectId + '&type=' + this.type, 'get', null, 'json', true).then(response => {
         this.$q.loading.hide()
         if (response) {
-          this.total = response.data.resultMsg.total
+          let count = response.data.resultMsg
+          if (!_.isNull(count.active)) {
+            this.count.active = count.active
+          } else {
+            this.count.active = 0
+          }
+          if (!_.isNull(count.total)) {
+            this.count.total = count.total
+          } else {
+            this.count.total = 0
+          }
         }
       })
     }
   },
   created () {
     this.projectId = this.$route.query.projectId
+    this.getCount()
   }
 }
 </script>
