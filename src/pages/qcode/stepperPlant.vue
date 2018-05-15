@@ -20,7 +20,8 @@
             <common-step></common-step>
         </q-step>
         <q-step title="填写植物数据" icon="more_horiz" name="inpueData">
-          <singleInfo></singleInfo>
+          <singleInfo v-if="false"></singleInfo>
+          <areaInfo></areaInfo>
         </q-step>
         <q-step title="完成" icon="more_horiz" name="done">
           <successPage></successPage>
@@ -34,12 +35,14 @@
   import commonStep from './commonStep1.vue'
   import singleInfo from './singlePlant/singlePlantInfo'
   import successPage from '../success'
+  import areaInfo from './areaPlant/areaPlantInfo'
 
   export default {
     components: {
       commonStep,
       singleInfo,
       successPage,
+      areaInfo
     },
     data () {
       return {

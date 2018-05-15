@@ -13,7 +13,7 @@
                  autosize
       />
     </van-cell-group>
-    <q-list class="mt-6 bg-white no-border">
+    <q-list class="mt-1 bg-white no-border">
       <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
       <div class="row pl-20">
         <div class="w-100 h-100" v-for="v, i in commonForm.pictures" :key="i">
@@ -155,7 +155,7 @@
       },
       getForm () {
         this.commonForm = Object.assign({}, this.qrCodeForm)
-      }
+      },
     },
     mounted () {
       this.getForm()

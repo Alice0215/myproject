@@ -115,6 +115,10 @@ export default [
     path: '/qrcode/stepper',
     component: () => import('pages/qcode/stepperPlant.vue')
   },
+  {
+    path: '/qrcode/createPlant',
+    component: () => import('pages/qcode/areaPlant/createPlant.vue')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')
