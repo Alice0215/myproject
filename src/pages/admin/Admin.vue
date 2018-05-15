@@ -51,14 +51,19 @@
         </q-table>
       </q-page>
     </q-page-container>
+    <InviteDialog></InviteDialog>
   </q-layout>
 </template>
 
 <script>
 import { requestAdmin } from '../../common'
 import eventBus from '../../eventBus'
+import InviteDialog from '../Common/InviteDialog'
 
 export default {
+  components: {
+    InviteDialog
+  },
   data () {
     return {
       loading: false,
@@ -180,6 +185,9 @@ export default {
     }
   },
   mounted () {
+    eventBus.$on('refresh-user-tab', () => {
+      this.load()
+    })
     this.load()
   }
 }
