@@ -4,6 +4,8 @@ import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
 
+import areaDetail from '../pages/qcode/areaDetail'
+
 export default [
   {
     path: '/',
@@ -70,6 +72,10 @@ export default [
     path: '/qcode/detail',
     component: () => import('pages/qcode/detail'),
     name: 'qcodeDetail'
+  },
+  {
+    path: '/areaDetail',
+    component: areaDetail
   },
   {
     path: '/qcode/addPlant',
