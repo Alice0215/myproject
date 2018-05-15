@@ -2,7 +2,7 @@
   <q-layout view="Hhh lpr Fff" class="bg-primary" id="qr-list">
     <q-layout-header>
       <q-toolbar>
-          <a @click="this.$router.goBack()" class="back-a font-14">
+          <a @click="$router.goBack()" class="back-a font-14">
           <q-item-side left  icon="keyboard arrow left" class="back-left "/>
           返回
         </a>
