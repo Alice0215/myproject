@@ -7,9 +7,10 @@
         <q-toolbar-title class="header-title">
           选择日期
         </q-toolbar-title>
+        <q-item-side v-close-overlay class="font-14 text-main-color"></q-item-side>
         <q-item-side v-close-overlay class="font-14 text-main-color" @click.native="chooseDate">完成</q-item-side>
       </q-toolbar>
-      <q-datetime-picker class="datetime-custom" v-model="dateTime" type="date" format="YYYY-MM" default-view="month"/>
+      <q-datetime-picker :class="pickerClass" v-model="dateTime" type="date" format="YYYY-MM" default-view="month"/>
     </q-modal-layout>
   </q-modal>
 </template>
@@ -22,6 +23,7 @@ export default {
     return {
       selectYear: false,
       dateTime: null,
+      pickerClass: "datetime-custom",
       items: []
     }
   },
@@ -37,7 +39,8 @@ export default {
   },
   mounted () {
     eventBus.$on('open-date-picker', arg => {
-      this.dateTime = arg
+      this.dateTime = arg.dateTime
+      this.pickerClass = arg.pickerClass
       this.selectYear = true
     })
   }

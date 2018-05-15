@@ -91,9 +91,9 @@
         </q-card>
         <div class="wp-100 pl-16 underline select-time">
          {{nowTime}}
-          <q-item-side class="float-right" icon="date_range" @click.native="openDate()"/>
+          <q-item-side class="float-right" icon="date_range" @click.native="openDate"/>
         </div>
-        <div class="underline">
+        <div class="underline"  v-if="actionCountMap.length > 0">
           <div v-for="(v, index) in actionCountMap" :key="index">
             <q-item class="pv-0">
               <q-item-main >
@@ -110,6 +110,9 @@
               </q-item-side>
             </q-item>
           </div>
+        </div>
+        <div class="underline text-center" v-else>
+          <span class="font-16">{{nowTime}}没有养护记录</span>
         </div>
         <q-card inline class="q-ma-sm full-width">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
@@ -129,11 +132,11 @@
               <div class="font-14" v-line-clamp:20="1">本月巡查记录</div>
             </div>
             </div>
-            <div class="project-item text-left wp-48 border-right pl-10 pv-20">
+            <div class="project-item text-center wp-48 border-right pl-10 pv-20">
               <div v-line-clamp:20="1" class="font-14">苗木到场记录</div>
               <div class="font-14 pt-10 pb-5" v-line-clamp:20="1"><span class="pr-8 font-18">0</span>本月记录</div>
             </div>
-            <div class="project-item text-left wp-48 pl-10 pv-20">
+            <div class="project-item text-center wp-48 pl-10 pv-20">
               <div class="font-14" v-line-clamp:20="1">设备领用记录</div>
               <div class="font-14 pb-5 pt-10" v-line-clamp:20="1">
                 <span class="pr-8 font-18">0</span>本月记录
@@ -142,19 +145,7 @@
           </q-card-main>
         </q-card>
       </q-list>
-    </q-page-container>
-     <q-modal v-model="isOpen" :content-css="{minWidth: '100vw', minHeight: '253px'}" position="bottom">
-      <q-modal-layout>
-        <q-toolbar slot="header">
-          <q-item-side v-close-overlay class="font-14 text-main-color">取消</q-item-side>
-          <q-toolbar-title class="header-title">
-            选择日期
-          </q-toolbar-title>
-          <q-item-side v-close-overlay class="font-14 text-main-color" @click.native="chooseDate">完成</q-item-side>
-        </q-toolbar>
-        <q-datetime-picker class="month-datetime" v-model="selectData" type="date" />
-      </q-modal-layout>
-  </q-modal>
+    </q-page-container>    
   </q-layout>
 </template>
 
@@ -168,39 +159,33 @@ import { plantType } from '../../const'
 export default {
   data () {
     return {
-      isOpen: false,
-      selectData: '',
+      selectData: Date.now(),
       info: {},
       qrcodeInfo: { SingleCount: 0, EquipmentCount: 0, OtherCount: 0, AreaCount: 0 },
       projectId: '',
-      nowData: '',
-      nowTime: '',
       groupCountMap: { weekGroupCount: 0, monthGroupCount: 0, todayGroupCount: 0 },
       formattedAddress: '无',
       actionCountMap: [],
       actionAllCount: 0
     }
   },
+  computed: {
+    nowTime : function () {
+      return date.formatDate(this.selectData, 'YYYY年M月')
+    }
+  },
   mounted () {
     this.projectId = this.$route.query.projectId
-    if (this.nowTime === '') {
-      this.nowTime = date.formatDate(Date.parse(new Date()), 'YYYY年M月')
-    }
     this.getInfo()
+
+    eventBus.$on('close-date-picker', arg => {
+      this.selectData = arg
+      this.actionCount()
+    })
   },
   methods: {
     openDate () {
-      this.isOpen = true
-    },
-    chooseDate () {
-      if (this.isOpen) {
-        let selectData = ''
-        if (!_.isUndefined(this.selectData) && !_.isNull(this.selectData)) {
-          this.nowTime = date.formatDate(Date.parse(this.selectData), 'YYYY年M月')
-          selectData = date.formatDate(Date.parse(this.selectData), 'YYYY-MM') + '-01'
-        }
-        this.actionCount(selectData)
-      }
+      eventBus.$emit('open-date-picker', {dateTime: this.selectData, pickerClass: "month-datetime"})
     },
     getInfo () {
       this.$q.loading.show()
@@ -231,14 +216,11 @@ export default {
               qrCount = qrCount + v.codeCount
               if (v.type.key === plantType.SINGLE) {
                 this.qrcodeInfo.SingleCount = v.codeCount
-              }
-              if (v.type.key === plantType.EQUIPMENT) {
+              } else if (v.type.key === plantType.DEVICE) {
                 this.qrcodeInfo.EquipmentCount = v.codeCount
-              }
-              if (v.type.key === plantType.OTHER) {
+              } else if (v.type.key === plantType.OTHER) {
                 this.qrcodeInfo.OtherCount = v.codeCount
-              }
-              if (v.type.key === plantType.AREA) {
+              } else if (v.type.key === plantType.AREA) {
                 this.qrcodeInfo.AreaCount = v.codeCount
               }
             }
@@ -248,12 +230,14 @@ export default {
         }
       })
     },
-    actionCount (select) {
+    actionCount () {
+      let from = date.formatDate(this.selectData, 'YYYY-MM') + '-01'
       this.$q.loading.show()
-      request('jobGroup/actionCount?projectId=' + this.projectId + '&from=' + select, 'get', null, 'json', true).then(response => {
+      request('jobGroup/actionCount?projectId=' + this.projectId + '&from=' + from, 'get', null, 'json', true).then(response => {
         if (response) {
           this.$q.loading.hide()
           this.actionCountMap = response.data.resultMsg
+          this.actionAllCount = 0
           _.forEach(this.actionCountMap, v => {
             this.actionAllCount = this.actionAllCount + v.actionCount
           })
