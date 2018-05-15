@@ -20,7 +20,7 @@
             <p><span class="wp-30 ib title-font-color">数量：</span><span v-if="info.amount" v-line-clamp:20="1" class="wp-70 ib float-right">{{info.amount}}</span></p>
             <p><span class="wp-30 ib title-font-color">位置：</span><span v-if="info.location" v-line-clamp:20="1" class="wp-70 ib float-right">{{info.location.formattedAddress}}</span></p>
             <p><span class="wp-30 ib title-font-color">苗木分类：</span><span v-if="info.category">{{info.category.name}}</span></p>
-            <p class="param"><span class="wp-30 ib title-font-color">苗木规格：</span><span class="ib pr-5">胸径：{{info.xiongJing}}cm</span><span  class="ib pr-5">高度：{{info.gaoDu}}cm</span><span  class="ib pr-5">冠幅：{{info.guanFu}}cm</span></p>
+            <p class="param"><span class="wp-25 ib title-font-color">苗木规格：</span><span class="ib pr-5">胸径：{{info.xiongJing}}cm</span><span  class="ib pr-5">高度：{{info.gaoDu}}cm</span><span  class="ib pr-5">冠幅：{{info.guanFu}}cm</span></p>
             <p><span class="wp-30 ib title-font-color">苗木商名称：</span><span v-if="info.dealer" class="ib wp-70 float-right"  v-line-clamp:20="1">{{info.dealer}}</span></p>
             <p><span class="wp-30 ib title-font-color">苗木其它信息：</span><span class="ib wp-70 float-right"  v-line-clamp:20="1">{{info.other}}</span></p>
             <p v-if="info.description"><span class="block title-font-color">备注：</span>{{info.description}}</p>
@@ -56,7 +56,6 @@ export default {
     let info = this.$store.getters['Qrcode/getCurrent']
     if (!_.isUndefined(info) && !_.isNull(info)) {
       this.info = this.$store.getters['Qrcode/getCurrent']
-      console.log(this.info)
     } else {
       this.$q.notify({
         timeout: 2000,

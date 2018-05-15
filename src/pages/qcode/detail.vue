@@ -60,7 +60,7 @@
             <div class="qr-info box bg-primary">
               <p class="pt-10">片区植物:</p>
               <div v-for="item in info.singles" :key="item.id" class="full-width">
-                <q-item link class="bg-white" @click.native="toAreaDetail(info.singles)">
+                <q-item link class="bg-white" @click.native="toAreaDetail(item)">
                   <q-item-main>
                     <div class="wp-50 float-left" v-line-clamp:20="1">{{item.alias}}</div><div class="wp-32 float-left" v-line-clamp:20="1">数量：{{item.amount}}</div>
                   </q-item-main>
@@ -167,7 +167,7 @@ export default {
       this.$router.push('/qcode/view')
     },
     toAreaDetail (info) {
-      this.$store.commit('Qrcode/setCurrent', info[0])
+      this.$store.commit('Qrcode/setCurrent', info)
       this.$router.push('/areaDetail')
     },
     edit () {
