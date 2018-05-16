@@ -17,6 +17,8 @@
           hide-bottom
           :data="items"
           :columns="columns"
+          :pagination.sync="serverPagination"
+          @request="load"
           row-key="name">
           <div slot="top" slot-scope="props" class="row flex-center fit">
             <div class="row full-width">
@@ -67,7 +69,11 @@ export default {
   data () {
     return {
       loading: false,
+      all: [],
       input: '',
+      serverPagination: {
+        rowsNumber: 20
+      },
       columns: [
         {
           name: 'fullname',
@@ -89,7 +95,6 @@ export default {
           align: 'left'
         }
       ],
-      all: [],
     }
   },
   computed: {
@@ -108,6 +113,7 @@ export default {
         this.$q.loading.hide()
         this.all = resp.data.resultMsg
         this.items = this.all
+        this.serverPagination.rowsNumber = this.items.length
       }
     },
     createStateFilter (queryString) {
