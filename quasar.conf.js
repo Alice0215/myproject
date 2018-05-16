@@ -8,7 +8,7 @@ module.exports = function (ctx) {
       'vuelidate',
       'helper',
       'imagePreview',
-      'vantUI'
+      'vantUI',
       'vueLineClamp'
     ],
     css: [
@@ -103,7 +103,7 @@ module.exports = function (ctx) {
         'QCardActions',
         'QStepper',
         'QStep',
-        'QStepperNavigation'
+        'QStepperNavigation',
         'QModal',
         'QModalLayout',
         'QCheckbox',
