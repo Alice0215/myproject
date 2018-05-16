@@ -29,3 +29,11 @@ export const setQRCodeFormToSingle = (state, v) => {
 export const setQRCodeFormToArea = (state, v) => {
   state.areaForm.qrCodeForm = v
 }
+
+export const setProjectId = (state, v) => {
+  state.projectId = v
+}
+
+export const setNewPlantFormToArea = (state, v) => {
+  state.areaForm.singles = v
+}
