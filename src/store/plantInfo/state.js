@@ -1,8 +1,7 @@
 export default {
   qrCodeForm: {pictures: []},
   singleForm:  {},
-  areaForm: {},
-  newPlantForm: {},
+  areaForm: {singles: []},
   // todo 暂时写死
   projectId: 1
   //

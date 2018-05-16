@@ -93,10 +93,12 @@ module.exports = function (ctx) {
         'QCardActions',
         'QStepper',
         'QStep',
-        'QStepperNavigation'
+        'QStepperNavigation',
+        'QModal'
       ],
       directives: [
-        'Ripple'
+        'Ripple',
+        'CloseOverlay'
       ],
       // Quasar plugins
       plugins: [

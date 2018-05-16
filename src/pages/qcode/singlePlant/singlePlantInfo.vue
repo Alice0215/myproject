@@ -269,7 +269,7 @@
       },
       setForm () {
         this.singleForm = this.sForm
-        this.$store.commit('plantInfo/setQRCodeFormToSingle', this.singleForm)
+        this.$store.commit('plantInfo/setQRCodeFormToSingle', this.qrCodeForm)
       },
       getForm () {
         this.sForm = Object.assign({}, this.singleForm)

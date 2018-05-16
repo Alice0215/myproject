@@ -11,10 +11,10 @@
       <div class="bg-color font-16 pl-15 pr-15 pt-16 pb-20">
         <label class="h-44">片区植物</label>
         <label class="h-44 float-right primary-color" @click="createPlant">新增植物</label>
-        <div class="mt-6">
+        <div class="mt-6" v-for="v, i in aForm.singles" :key="i">
           <div class="row bg-white plant-list justify-between full-width">
-            <label class="ml-10">植物名称</label>
-            <label class="text-color">数量6</label>
+            <label class="ml-10">{{v.alias}}</label>
+            <label class="text-color">数量{{ v.amount }}</label>
             <div class="mr-18">
               <i class="iconfont holder-color font-18">&#xe61e;</i>
               <i class="iconfont ml-10 primary-color font-18">&#xe69b;</i>
@@ -28,23 +28,39 @@
       <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="完成" size="md"
              @click="nextStep"/>
     </div>
+    <q-modal v-model="createPageShow">
+      <create-plant></create-plant>
+    </q-modal>
   </div>
 </template>
 
 <script>
   import addPlantMixin from '../../../mixin/addPlantMixin'
+  import createPlant from './createPlant'
+
   export default {
     mixins: [
-      addPlantMixin
+      addPlantMixin,
     ],
+    components: {
+      createPlant,
+    },
     data () {
       return {
-        aForm: {}
+        aForm: {singles: []},
+        createPageShow: false,
       }
     },
     methods: {
+      setForm () {
+        this.areaForm = this.aForm
+        this.$store.commit('plantInfo/setQRCodeFormToArea', this.qrCodeForm)
+      },
+      getForm () {
+        this.aForm = Object.assign({}, this.areaForm)
+      },
       createPlant () {
-        this.$router.push('/qrcode/createPlant')
+        this.createPageShow = true
       },
       nextStep () {
 //        this.setForm()
@@ -52,8 +68,24 @@
       },
       preStep () {
         this.$root.$emit('pre-step')
-      }
-    }
+      },
+    },
+    mounted () {
+      this.$root.$on('add-plant-close', () => {
+        this.createPageShow = false
+      })
+      this.$root.$on('add-plant-done', (newPlantForm) => {
+        this.createPageShow = false
+        this.aForm.singles.push(newPlantForm)
+      })
+      this.getForm()
+      console.log(this.aForm)
+    },
+    beforeDestroy () {
+      this.$root.$off('add-plant-close')
+      this.$root.$off('add-plant-done')
+      this.setForm()
+    },
   }
 </script>
 

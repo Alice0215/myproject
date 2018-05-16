@@ -9,7 +9,7 @@
           新增植物
         </q-toolbar-title>
         <q-item-side class="no-info" right>
-          <q-btn label="完成" @click="save" color="primary" size="xs"></q-btn>
+          <q-btn label="完成" @click="save" size="xs"></q-btn>
         </q-item-side>
       </q-toolbar>
     </q-layout-header>
@@ -138,7 +138,8 @@
     },
     methods: {
       back() {
-        this.$router.goBack()
+        this.sForm = {}
+        this.$root.$emit('add-plant-close')
       },
       imagePreview (index) {
         console.log(index)
@@ -167,6 +168,8 @@
       save () {
         console.log(this.sForm)
         this.setForm()
+        this.$root.$emit('add-plant-done', this.sForm)
+        this.sForm = {}
       },
       uomInput (val) {
         if (val === 'other') {
@@ -438,6 +441,13 @@
 
       .q-icon {
         color: gray;
+      }
+    }
+
+    .no-info {
+      .q-btn {
+        background-color: $primary !important;
+        color: white !important;
       }
     }
   }
