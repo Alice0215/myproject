@@ -9,6 +9,7 @@ module.exports = function (ctx) {
       'helper',
       'imagePreview',
       'vantUI'
+      'vueLineClamp'
     ],
     css: [
       'app.styl'
@@ -49,6 +50,7 @@ module.exports = function (ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
+      i18n: 'zh-hans',
       components: [
         'QLayout',
         'QLayoutHeader',
@@ -74,6 +76,9 @@ module.exports = function (ctx) {
         'QInfiniteScroll',
         'QSpinner',
         'QTabs',
+        'QTab',
+        'QTabPane',
+        'QRouteTab',
         'QScrollArea',
         'QChipsInput',
         'QRouteTab',
@@ -94,8 +99,15 @@ module.exports = function (ctx) {
         'QStepper',
         'QStep',
         'QStepperNavigation'
+        'QModal',
+        'QModalLayout',
+        'QCheckbox',
+        'QProgress',
+        'QDatetimePicker',
+        'QDatetime'
       ],
       directives: [
+        'CloseOverlay',
         'Ripple'
       ],
       // Quasar plugins

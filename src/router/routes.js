@@ -1,7 +1,13 @@
+import Home from '../pages/home/home'
+import ProjectList from '../pages/project/list'
+import ProjectInfo from '../pages/project/ProjectInfo'
+import Records from '../pages/project/Records'
+import ProjectDetail from '../pages/project/ProjectDetail'
+
 export default [
   {
     path: '/',
-    component: () => import('pages/project/list')
+    component: Home
   },
   {
     path: '/login',
@@ -19,14 +25,26 @@ export default [
     component: () => import('pages/auth/partyRegister')
   },
   {
+    path: '/project/list',
+    component: ProjectList
+  },
+  {
     path: '/project/add',
     component: () => import('pages/project/add'),
     name: 'projectAdd'
   },
   {
+    path: '/projectDetail',
+    component: ProjectDetail
+  },
+  {
     path: '/project/edit',
     component: () => import('pages/project/edit'),
     name: 'projectEdit'
+  },
+  {
+    path: '/ProjectInfo',
+    component: ProjectInfo
   },
   {
     path: '/project/allUser',
@@ -96,8 +114,16 @@ export default [
     component: () => import('pages/project/jobs.vue')
   },
   {
+    path: '/project/maintenance-records',
+    component: Records
+  },
+  {
     path: '/choose/project',
     component: () => import('pages/choose/chooseProject.vue')
+  },
+  {
+    path: '/choose/qrtype',
+    component: () => import('pages/choose/chooseQRType.vue')
   },
   {
     path: '/qcode/scan',

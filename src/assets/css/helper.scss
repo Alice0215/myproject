@@ -61,6 +61,10 @@
   display: inline;
 }
 
+.inline-flex {
+  display: inline-flex;
+}
+
 .ib {
   display: inline-block;
 }
@@ -162,7 +166,7 @@
 }
 
 // Font size
-$font-sizes: 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 40, 50, 60, 70;
+$font-sizes: 12, 14, 15, 16, 18, 20, 22, 24, 26, 28, 30, 32, 40, 50, 60, 70;
 
 @each $font-size in $font-sizes {
   .font-#{$font-size} {

@@ -15,8 +15,12 @@ const plantType = {
   DEVICE: 'EQUIPMENT',
   OTHER: 'OTHER'
 }
-
+const jobType = {
+  TL: 'TL',
+  TM: 'TM'
+}
 export {
   server,
+  jobType,
   plantType
 }
