@@ -34,7 +34,7 @@
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <span class="project-title font-16 pb-0"> <i class="iconfont active pr-10">&#xe701;</i>项目二维码</span>
-            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+info.id)">更多</q-btn>
+            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+projectId)">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="text-center mb-20">
@@ -68,7 +68,7 @@
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <q-item-side float-left  icon="assignment" class="active float-left"/><span class="project-title font-16 float-left">养护记录</span>
-            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/project/maintenance-records?projectId='+info.id)">更多</q-btn>
+            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/project/maintenance-records?projectId='+projectId)">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="project-item text-center wp-32">

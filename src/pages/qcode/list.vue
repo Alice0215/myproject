@@ -13,24 +13,28 @@
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border>
         <q-tab default name="maintenance-records" slot="title" label="全部"  class="mt-5 pb-0" @click.native="chooseType('')"/>
-        <q-tab slot="title" label="单株植物" class="mt-5 pb-0"  @click="chooseType('SINGLE')"/>
+        <q-tab slot="title" label="单株植物" class="mt-5 pb-0"  @click.native="chooseType('SINGLE')"/>
         <q-tab slot="title" label="片区植物" class="mt-5 pb-0"  @click.native="chooseType('AREA')"/>
         <q-tab slot="title" label="设备" class="mt-5 pb-0"  @click.native="chooseType('EQUIPMENT')"/>
         <q-tab slot="title" label="其它" class="mt-5 pb-0"  @click.native="chooseType('OTHER')"/>
       </q-tabs>
     </q-layout-header>
-    <q-page-container >
+    <q-page-container>
       <q-item link class="full-width">
-        <q-item-main>
+        <q-item-main v-if="type===''">
           已录入二维码 {{count.active}}/{{count.total}}
         </q-item-main>
+        <q-item-main v-else>
+          共{{count.total}}个
+        </q-item-main>
       </q-item>
-      <q-infinite-scroll :handler="load">
-        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id" @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
+      <q-infinite-scroll :handler="load" ref="scroll">
+        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id" 
+          @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
           <q-item-main v-line-clamp:20="1" class="wp-30">
-           {{item.alias}}
+           {{item.identifier + " " + item.alias}} {{(item.type && item.type.key==='SINGLE')?item.position:''}}
           </q-item-main>
-          <div class="wp-30 ib left pr-25 " v-line-clamp:20="1" v-if="item.type">{{item.type.value}}</div>
+          
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='SINGLE'">&#xe64c;</i>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='AREA'">&#xe909;</i>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='EQUIPMENT'">&#xe62f;</i>
@@ -46,88 +50,108 @@
 </template>
 
 <script>
-import { request } from '../../common'
-import _ from 'lodash'
+import { request } from "../../common";
+import _ from "lodash";
 export default {
-  data () {
+  data() {
     return {
-      list: '',
-      count: { 'active': 0, 'total': 0 },
+      list: [],
+      count: { active: 0, total: 0 },
       pageNo: 1,
-      projectId: '',
-      type: '',
+      projectId: 0,
+      type: "",
       hasLoadAll: false
-    }
+    };
   },
   methods: {
-    async  load (index, done) {
+    load(index, done) {
+      console.log("refresher");
+      let that = this;
+
       setTimeout(() => {
-        if (!this.hasLoadAll) {
-          this.getInfo()
+        that.getList(done);        
+      }, 2500);
+    },
+
+    async getList(done) {
+      let that = this;
+      if (that.hasLoadAll) {
           done()
+          return
+      }        
+      
+      let response = await request(
+        "qrcode/list/?projectId=" +
+          that.projectId +
+          "&type=" +
+          that.type +
+          "&pageNo=" +
+          that.pageNo +
+          "&pageSize=20",
+        "get",
+        "",
+        "json",
+        true
+      );
+
+      if (response) {
+        let list = response.data.resultMsg;
+        console.log(list.length);
+        if (list.length === 0 || !list.length) {
+          that.hasLoadAll = true;
+          return;
         }
-      }, 2000)
+        if (list.length < 20) {
+          that.hasLoadAll = true;
+        } else {
+          that.pageNo++;
+        }
+        if (that.list.length > 0) {
+          that.list = that.list.concat(list);
+        } else {
+          that.list = list;
+        }
+      }
+      done();
     },
-    getInfo () {
+
+    chooseType(type) {
+      this.type = type;
+      this.hasLoadAll = false;
+      this.pageNo = 1;
+      this.count = { active: 0, total: 0 };
+      this.list = [];
+      // this.getInfo()
+      this.getCount();
+      this.$refs.scroll.reset();
+      // this.$refs.scroll.resume();
+      this.$refs.scroll.loadMore();
+    },
+
+    getCount() {
       request(
-        'qrcode/list?projectId=' + this.projectId + '&type=' + this.type + '&pageNo=' + this.pageNo + '&pageSize=20', 'get', null, null, true).then(response => {
+        "qrcode/count?projectId=" + this.projectId + "&type=" + this.type,
+        "get",
+        null,
+        "json",
+        true
+      ).then(response => {
         if (response) {
-          let that = this
-          let list = response.data.resultMsg
-          if (list.length === 0 || !list.length) {
-            this.hasLoadAll = true
-            return
-          }
-          if (list.length < 20) {
-            that.hasLoadAll = true
+          let count = response.data.resultMsg;
+          if (this.type === "") {
+            this.count = count;
           } else {
-            this.hasLoadAll = false
-            that.pageNo++
-          }
-          if (that.list.length > 0) {
-            that.list = that.list.concat(list)
-          } else {
-            that.list = list
+            this.count.total = count.total;
           }
         }
-      })
-    },
-    chooseType (type) {
-      this.type = type
-      this.initData()
-    },
-    initData () {
-      this.hasLoadAll = false
-      this.pageNo = 1
-      this.list = ''
-      this.getInfo()
-      this.getCount()
-    },
-    getCount () {
-      this.$q.loading.show()
-      request('qrcode/count?projectId=' + this.projectId + '&type=' + this.type, 'get', null, 'json', true).then(response => {
-        this.$q.loading.hide()
-        if (response) {
-          let count = response.data.resultMsg
-          if (!_.isNull(count.active)) {
-            this.count.active = count.active
-          } else {
-            this.count.active = 0
-          }
-          if (!_.isNull(count.total)) {
-            this.count.total = count.total
-          } else {
-            this.count.total = 0
-          }
-        }
-      })
+      });
     }
   },
-  created () {
-    this.projectId = this.$route.query.projectId
-    this.getCount()
+  mounted() {
+    this.projectId = this.$route.query.projectId;
+    this.getCount();
   }
-}
+};
 </script>
 
 <style lang='scss'>
