@@ -2,8 +2,8 @@
   <q-layout view="lHh Lpr lFf" id="admin">
     <q-layout-header>
       <q-toolbar class='header bg-white'>
-        <q-item-side @click.native="$router.goBack()" left icon="keyboard arrow left" class="back-left font-14">
-          返回
+        <q-item-side @click.native="$router.goBack()" left icon="keyboard arrow left" class="back-left">
+          <label>返回</label>
         </q-item-side>
         <q-toolbar-title class='header-title text-center'>
           成员管理
