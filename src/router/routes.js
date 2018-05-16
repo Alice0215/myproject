@@ -4,6 +4,7 @@ import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
 import Admin from '../pages/admin/Admin'
+import MaintenanceDetail from '../pages/jobgroup/detail'
 
 export default [
   {
@@ -103,7 +104,7 @@ export default [
   },
   {
     path: '/jobGroup/detail',
-    component: () => import('pages/jobGroup/detail'),
+    component: MaintenanceDetail,
     name: 'jobDetail'
   },
   {

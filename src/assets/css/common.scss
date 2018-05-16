@@ -245,3 +245,17 @@ input:not(.no-style):hover {
   line-height: 34px;
   font-size: 14px;
 }
+
+.text-main-color {
+  color: $primary;
+}
+
+hr {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: none;
+  margin: 0;
+
+  &.light {
+    border-top-color: $line-light;
+  }
+}
