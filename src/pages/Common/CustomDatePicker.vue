@@ -1,3 +1,11 @@
+<!-- 
+  通过open-date-picker事件调用，例如：eventBus.$emit('open-date-picker', {dateTime: this.selectData, pickerClass: "month-datetime"})
+  参数：
+    dateTime : Date, 默认时间
+    pickerClass : String, q-datetime-picker的class
+  
+  通过close-date-picker事件调用，返回值是选择的日期，Date类型
+-->
 <template>
   <q-modal v-model="selectYear" :content-css="{minWidth: '100vw', minHeight: '253px'}" position="bottom">
     <q-modal-layout>

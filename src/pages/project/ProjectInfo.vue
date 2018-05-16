@@ -34,7 +34,7 @@
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <span class="project-title font-16 pb-0"> <i class="iconfont active pr-10">&#xe701;</i>项目二维码</span>
-            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+item.id)">更多</q-btn>
+            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+projectId)">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="text-center mb-20">
@@ -68,7 +68,7 @@
         <q-card inline class="q-ma-sm full-width bg-white">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <q-item-side float-left  icon="assignment" class="active float-left"/><span class="project-title font-16 float-left">养护记录</span>
-            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+item.id)">更多</q-btn>
+            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/project/maintenance-records?projectId='+projectId)">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="project-item text-center wp-32">
@@ -117,7 +117,7 @@
         <q-card inline class="q-ma-sm full-width">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
             <q-item-side float-left  icon="assignment" class="active float-left"/><span class="project-title font-16 float-left">现场巡查记录</span>
-            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right"  @click="$router.push('/qcode/list?projectId='+item.id)">更多</q-btn>
+            <q-btn flat  class="card-btn float-right card-color font-14 pr-0"  icon-right="keyboard arrow right">更多</q-btn>
           </q-card-title>
           <q-card-main class="pb-10">
             <div class="underline wp-100">
@@ -145,7 +145,7 @@
           </q-card-main>
         </q-card>
       </q-list>
-    </q-page-container>    
+    </q-page-container>
   </q-layout>
 </template>
 
@@ -162,7 +162,7 @@ export default {
       selectData: Date.now(),
       info: {},
       qrcodeInfo: { SingleCount: 0, EquipmentCount: 0, OtherCount: 0, AreaCount: 0 },
-      projectId: '',
+      projectId: 0,
       groupCountMap: { weekGroupCount: 0, monthGroupCount: 0, todayGroupCount: 0 },
       formattedAddress: '无',
       actionCountMap: [],
@@ -170,7 +170,7 @@ export default {
     }
   },
   computed: {
-    nowTime : function () {
+    nowTime: function () {
       return date.formatDate(this.selectData, 'YYYY年M月')
     }
   },
@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     openDate () {
-      eventBus.$emit('open-date-picker', {dateTime: this.selectData, pickerClass: "month-datetime"})
+      eventBus.$emit('open-date-picker', {dateTime: this.selectData, pickerClass: 'month-datetime'})
     },
     getInfo () {
       this.$q.loading.show()
