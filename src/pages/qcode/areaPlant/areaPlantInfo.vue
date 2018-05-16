@@ -10,7 +10,7 @@
       </div>
       <div class="bg-color font-16 pl-15 pr-15 pt-16 pb-20">
         <label class="h-44">片区植物</label>
-        <label class="h-44 float-right primary-color">新增植物</label>
+        <label class="h-44 float-right primary-color" @click="createPlant">新增植物</label>
         <div class="mt-6">
           <div class="row bg-white plant-list justify-between full-width">
             <label class="ml-10">植物名称</label>
@@ -43,6 +43,9 @@
       }
     },
     methods: {
+      createPlant () {
+        this.$router.push('/qrcode/createPlant')
+      },
       nextStep () {
 //        this.setForm()
         this.$root.$emit('next-step')

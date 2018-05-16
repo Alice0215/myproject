@@ -1,6 +1,14 @@
 
 const addPlantMixin = {
   computed: {
+    projectId: {
+      get () {
+        return this.$store.state.plantInfo.projectId
+      },
+      set (val) {
+        return this.$store.commit('plantInfo/setProjectId', val)
+      }
+    },
     qrCodeForm: {
       get () {
         return this.$store.state.plantInfo.qrCodeForm
@@ -28,8 +36,6 @@ const addPlantMixin = {
   },
   data () {
     return {
-      // todo 暂时写死
-      projectId: '1'
     }
   }
 }

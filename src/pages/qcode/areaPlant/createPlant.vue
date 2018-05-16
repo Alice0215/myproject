@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="create-plant">
+  <q-layout id="create-plant" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
         <q-item-side @click.native="back" left icon="keyboard arrow left" class="back-left">
@@ -9,74 +9,75 @@
           新增植物
         </q-toolbar-title>
         <q-item-side class="no-info" right>
-          <q-btn label="完成" color="primary" size="xs"></q-btn>
+          <q-btn label="完成" @click="save" color="primary" size="xs"></q-btn>
         </q-item-side>
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
       <van-cell-group :border="false">
-        <van-field class="font-16" v-model="temp" label="植物名称" placeholder="请输入植物名称" required/>
+        <van-field class="font-16" v-model="sForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
         <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
-          <label class="w-64">苗木面积</label>
-          <q-input placeholder="输入片值苗木面积" hide-underline  class="no-margin" v-model="temp" type="number"></q-input>
-          <q-select hide-underline  v-model="temp" @input="" :options='[]'
+          <label class="w-64">数量</label>
+          <q-input placeholder="输入片值物数量" hide-underline class="no-margin" v-model="sForm.amount"
+                   type="number"></q-input>
+          <q-select hide-underline v-model="uomId" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>
         </div>
         <van-cell title="苗木分类" is-link :value="category" required class="font-16" @click="chooseNursery"/>
-        <van-field class="font-16" v-model="temp" label="相对位置" placeholder="请输入植物在片区内的位置" />
+        <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入植物在片区内的位置"/>
         <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
           <label class="h-44">苗木规则</label>
           <div class="row mt-6 spec-row-div">
             <div class="row spec-left-div ">
               <label class="spec-input-left">胸径</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.xiongJing" type="number"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.xiongJing" type="number"/>
               <span class="spec-input-unit">厘米</span>
             </div>
             <div class="row spec-right-div">
               <label class="spec-input-left">高度</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.gaoDu" type="number"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.gaoDu" type="number"/>
               <span class="spec-input-unit">米</span>
             </div>
             <div class="row spec-left-div ">
               <label class="spec-input-left">地径</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.diJing" type="number"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.diJing" type="number"/>
               <span class="spec-input-unit">厘米</span>
             </div>
             <div class="row spec-right-div">
               <label class="spec-input-left">冠幅</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.guanFu" type="number"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.guanFu" type="number"/>
               <span class="spec-input-unit">米</span>
             </div>
             <div class="row spec-left-div col-12">
               <label class="spec-input-left">蓬径</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.pengJing" type="number"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.pengJing" type="number"/>
               <span class="spec-input-unit">米</span>
             </div>
             <div class="row spec-left-div ">
               <label class="spec-input-left w-64">分支数量</label>
-              <q-input class="spec-input w-40" hide-underline align="center" v-model="plantForm.branch" type="number"/>
+              <q-input class="spec-input w-40" hide-underline align="center" v-model="sForm.branch" type="number"/>
               <span class="spec-input-unit">个</span>
             </div>
             <div class="row spec-right-div">
               <label class="spec-input-left w-50">几年生</label>
-              <q-input class="spec-input" hide-underline align="center" v-model="plantForm.year"/>
+              <q-input class="spec-input" hide-underline align="center" v-model="sForm.year"/>
               <span class="spec-input-unit">年</span>
             </div>
             <div class="row spec-left-div col-12">
               <label class="spec-input-left w-64">其他规格</label>
-              <q-input class="spec-input other-spec" hide-underline align="center" v-model="plantForm.otherFeature"/>
+              <q-input class="spec-input other-spec" hide-underline align="center" v-model="sForm.otherFeature"/>
             </div>
           </div>
         </div>
       </van-cell-group>
-      <van-field class="font-16" v-model="plantForm.source" label="苗源地" placeholder="请输入苗源地信息"/>
-      <van-field class="font-16" v-model="plantForm.dealer" label="苗木商" placeholder="请输入苗木商信息"/>
-      <van-field class="font-16 van-hairline--bottom" v-model="plantForm.other"
+      <van-field class="font-16" v-model="sForm.source" label="苗源地" placeholder="请输入苗源地信息"/>
+      <van-field class="font-16" v-model="sForm.dealer" label="苗木商" placeholder="请输入苗木商信息"/>
+      <van-field class="font-16 van-hairline--bottom" v-model="sForm.other"
                  label="苗木其他" placeholder="请输入苗木其他信息"/>
       <q-list class="mt-1 bg-white no-border">
         <q-list-header class="p-0 pl-15 mt-15 font-16 color-black">现场拍照</q-list-header>
         <div class="row pl-20">
-          <div class="w-100 h-100" v-for="v, i in plantForm.pictures" :key="i">
+          <div class="w-100 h-100" v-for="v, i in sForm.pictures" :key="i">
             <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
                  class="full-height full-width">
             <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
@@ -86,6 +87,26 @@
           </div>
         </div>
       </q-list>
+      <van-actionsheet v-model="branchShow" :actions="branchActions" cancel-text="取消"/>
+      <van-dialog
+        v-model="otherUomShow"
+        show-cancel-button
+        :before-close="otherUomClose">
+        <van-field
+          v-model="otherUom"
+          label="自定义单位"
+          placeholder="请输入单位"
+        />
+      </van-dialog>
+      <van-popup v-model="showPlantCategory" position="bottom">
+        <van-picker
+          show-toolbar
+          title="苗木分类"
+          :columns="plantCategoryArray"
+          @cancel="onPickerCancel"
+          @confirm="onPickerConfirm"
+        />
+      </van-popup>
     </q-page-container>
   </q-layout>
 </template>
@@ -96,15 +117,29 @@
   import _ from 'lodash'
   import eventBus from '../../../eventBus'
   import { server } from '../../../const'
+
   export default {
     data () {
       return {
-        temp: null,
-        plantForm: {},
-        category: '选择苗木分类'
+        sForm: {},
+        category: '选择苗木分类',
+        uomId: null,
+        uomOptions: [],
+        plantCategoryArray: [],
+        showPlantCategory: false,
+        branchShow: false,
+        createShow: false,
+        branchActions: [],
+        newBranch: null,
+        otherUomShow: false,
+        otherUom: null,
+        projectId: this.$store.state.plantInfo.projectId
       }
     },
     methods: {
+      back() {
+        this.$router.goBack()
+      },
       imagePreview (index) {
         console.log(index)
         let previewArray = _.map(this.commonForm.pictures, (img) => {
@@ -130,23 +165,169 @@
         }
       },
       save () {
-
+        console.log(this.sForm)
+        this.setForm()
+      },
+      uomInput (val) {
+        if (val === 'other') {
+          this.otherUomShow = true
+        } else {
+          this.sForm.uomId = val
+        }
+      },
+      async getWorkUomList () {
+        let resp = await request('uom/all', 'get', null, true)
+        if (resp) {
+          _.forEach(resp.data.resultMsg, v => {
+            v.label = v.name
+            v.value = v.id
+          })
+          this.uomOptions = resp.data.resultMsg
+          this.oldUomNames = _.map(this.uomOptions, 'label')
+          if (!_.isUndefined(this.uomId) && !_.isUndefined(this.sForm.uomName) && !_.includes(this.oldUomNames, this.uomId)) {
+            this.uomOptions.push({label: this.sForm.uomName, value: this.sForm.uomName})
+            this.oldUomNames.push(this.sForm.uomName)
+            this.uomId = this.sForm.uomName
+          }
+          this.uomOptions.push({label: '其他', value: 'other'})
+        }
+      },
+      onPickerCancel () {
+        this.showPlantCategory = false
+      },
+      onPickerConfirm (value, index) {
+        this.sForm.category = value.category
+        this.category = value.text
+        this.showPlantCategory = false
+      },
+      async getPlantCategory () {
+        let resp = await request('data/plantCategory')
+        if (resp) {
+          this.plantCategoryArray = resp.data.resultMsg
+          _.forEach(this.plantCategoryArray, (v, key) => {
+            v.text = v.name
+            v.category = v.id.toString()
+          })
+          let cat = _.find(this.plantCategoryArray, (v) => {
+            return v.category === this.sForm.category
+          })
+          if (cat) {
+            this.category = cat.text
+          }
+        }
+      },
+      otherUomClose (action, done) {
+        done()
+        if (action === 'confirm') {
+          if (!_.includes(this.oldUomNames, this.otherUom)) {
+            this.sForm.uomName = this.otherUom
+            this.sForm.uomId = null
+            this.uomId = this.otherUom
+            this.uomOptions.splice(this.uomOptions.length - 1, 0,
+              {label: this.otherUom.toString(), value: this.otherUom.toString()})
+            this.oldUomNames = _.map(this.uomOptions, 'label')
+          } else {
+            this.$q.notify('单位已存在')
+            let uom = _.find(this.uomOptions, this.otherUom)
+            if (uom) {
+              this.sForm.uomId = uom.value
+            }
+            this.uomId = this.otherUom
+          }
+          this.otherUom = null
+          this.otherUomShow = false
+        } else {
+          console.log('cancel')
+          this.otherUom = null
+          this.uomId = undefined
+          this.otherUomShow = false
+        }
+      },
+      createClose (action, done) {
+        done()
+        if (action === 'confirm') {
+          if (!_.includes(this.branchActions, this.otherUom)) {
+            this.sForm.position = this.newBranch
+            this.position = this.newBranch
+            this.sForm.areaId = undefined
+          } else {
+            this.$q.notify('单位已存在')
+          }
+          this.createShow = false
+        } else {
+          console.log('cancel')
+          this.createShow = false
+        }
+      },
+      branchItemClicked (item) {
+        console.log(item)
+        this.sForm.areaId = item.id
+        this.position = item.name
+        this.branchShow = false
+      },
+      createNewBranchItem () {
+        this.branchShow = false
+        this.createShow = true
+      },
+      async getAreaBranch () {
+        this.areaBranches = []
+        let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
+        if (resp) {
+          let branches = resp.data.resultMsg
+          _.forEach(branches, v => {
+            let branch = {}
+            branch.name = v.alias + '-' + v.identifier
+            branch.id = v.id.toString()
+            branch.callback = this.branchItemClicked
+            this.branchActions.push(branch)
+          })
+          let bid = !_.isUndefined(this.sForm.areaId) ? this.sForm.areaId.toString() : null
+          let branch = _.find(this.branchActions, (v) => {
+            return v.id === bid
+          })
+          if (branch) {
+            this.position = branch.name
+          }
+          this.branchActions.push({
+            name: '新建',
+            callback: this.createNewBranchItem,
+          })
+        }
+      },
+      chooseArea () {
+        this.branchShow = true
+      },
+      nextStep () {
+        this.setForm()
+        this.$root.$emit('next-step')
+      },
+      preStep () {
+        this.$root.$emit('pre-step')
+      },
+      chooseNursery () {
+        this.showPlantCategory = true
+      },
+      setForm () {
+        this.$store.commit('plantInfo/setNewPlantFormToArea', this.sForm)
       }
     },
     mounted () {
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
-        this.plantForm.pictures.push(resp)
+        this.sForm.pictures.push(resp)
       })
       eventBus.$on('delete-success', (params) => {
         this.$q.loading.hide()
         let index = parseInt(params.idx)
-        this.plantForm.pictures.splice(index, 1)
+        this.sForm.pictures.splice(index, 1)
         this.$q.dialog({
           title: '提示',
           message: params.msg,
         })
       })
+      this.getAreaBranch()
+      this.getPlantCategory()
+      this.getWorkUomList()
     },
     beforeDestroy () {
       eventBus.$off('upload-success')
