@@ -7,8 +7,9 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'helper',
-      'vueLineClamp',
-      'imagePreview'
+      'imagePreview',
+      'vantUI'
+      'vueLineClamp'
     ],
     css: [
       'app.styl'
@@ -95,6 +96,9 @@ module.exports = function (ctx) {
         'QCardMedia',
         'QCardSeparator',
         'QCardActions',
+        'QStepper',
+        'QStep',
+        'QStepperNavigation'
         'QModal',
         'QModalLayout',
         'QCheckbox',

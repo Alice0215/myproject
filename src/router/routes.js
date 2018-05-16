@@ -133,6 +133,14 @@ export default [
     path: '/qcode/view',
     component: () => import('pages/qcode/viewQRCode.vue')
   },
+  {
+    path: '/qrcode/chooseType',
+    component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
+    path: '/qrcode/stepper',
+    component: () => import('pages/qcode/stepperPlant.vue')
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')
