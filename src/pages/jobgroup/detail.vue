@@ -37,7 +37,7 @@
           </q-item>
           <q-item>
             <div class="title">地点</div>
-            <div class="ml-20 content">{{ info.user.username }}</div>
+            <div class="ml-20 content">{{ info.code.location }}</div>
           </q-item>
           <hr>
         </q-list>
@@ -60,8 +60,8 @@
           <q-item class="ib">
             <div class="mb-10">现场图片</div>
             <span v-for="(item, i) in info.pictures" v-bind:key="item.id" :class="{'ml-10': i !== 0}">
-                <img :src="picUrl+item.filePath" v-preview="previewApi+item.filePath" />
-              </span>
+              <img :src="item.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)">
+            </span>
           </q-item>
           <hr>
         </q-list>
@@ -73,6 +73,8 @@
 <script>
 import { request } from '../../common'
 import { server, plantType} from '../../const'
+import _ from 'lodash'
+import { ImagePreview } from 'vant'
 
 export default {
   data () {
@@ -88,10 +90,15 @@ export default {
   created () {
     this.previewApi = server.PREVIEW_API
     this.jobGroupId = this.$route.query.jobGroupId
-    this.picUrl = server.THUMBNAIL_API
     this.getInfo()
   },
   methods: {
+    imagePreview (index) {
+      let previewArray = _.map(this.info.pictures, (img) => {
+        return this.previewApi + img.contentUrl
+      })
+      ImagePreview(previewArray, index)
+    },
     getInfo () {
       this.$q.loading.show()
       request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true).then(response => {
@@ -111,6 +118,17 @@ export default {
             case plantType.OTHER:
               this.info.type = 4
               break
+          }
+          if (this.info.pictures.length > 0) {
+            let imageArray = []
+            _.forEach(this.info.pictures, v => {
+              let previewUrl = server.THUMBNAIL_API + v.filePath
+              imageArray.push({
+                'previewUrl': previewUrl,
+                'contentUrl': v.filePath
+              })
+            })
+            this.info.pictures = imageArray
           }
           for (let key in this.info.jobs) {
             this.tags.push(this.info.jobs[key]['action']['name'])
@@ -166,7 +184,7 @@ export default {
     }
   }
   img {
-    width: calc(100% / 4);
+    width: 80px;
     height: 80px;
   }
   .plant-name {
