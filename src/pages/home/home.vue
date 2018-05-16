@@ -5,14 +5,14 @@
       <q-page>
       <div id="home">
         <div class="top-log">
-          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="$router.push('/qcode/scan?type=null')"><span class="block font-12">扫一扫</span></q-item-side>
+          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="openScan"><span class="block font-12">扫一扫</span></q-item-side>
           <p class="log">
             <img src="statics/home/home-logo.png"/>
           </p>
           <p class="time">{{dataTime}}</p>
         </div>
         <div class="row card menu-field">
-          <div class="col-6 nav border-bottom border-right" @click="$router.push('/qcode/scan?type=jobGroup')">
+          <div class="col-6 nav border-bottom border-right" @click="iconClicked('jobGroup')">
             <img src="statics/home/1-1.png"/>
             <div>养护记录</div>
           </div>
@@ -24,7 +24,7 @@
             <img src="statics/home/2-1.png"/>
             <div>苗木到场</div>
           </div>
-          <div class="col-6 nav  border-bottom" @click="$router.push('/qcode/scan?type=qrcode')">
+          <div class="col-6 nav  border-bottom" @click="iconClicked('qrcode')">
             <img src="statics/home/2-2.png"/>
             <div>二维码编辑</div>
           </div>
@@ -56,11 +56,16 @@
 </template>
 
 <script>
-export default {
+  import { request} from '../../common'
+  import _ from 'lodash'
+  import { server, plantType} from '../../const'
+
+  export default {
   data () {
     return {
       dataTime: '',
-      admin: false
+      admin: false,
+      type: null
     }
   },
   mounted () {
@@ -68,10 +73,113 @@ export default {
     this.getTime()
   },
   methods: {
+    iconClicked (type) {
+      this.type = type
+      this.openScan()
+    },
     getTime () {
       let myDate = new Date()
       let Week = ['日', '一', '二', '三', '四', '五', '六']
       this.dataTime = myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月' + myDate.getDate() + '日 周' + Week[myDate.getDay()]
+    },
+    async handleScanResult (url) {
+      this.$q.loading.show()
+      let resp = await request(url, 'get', '', 'json', false, true)
+      this.$q.loading.hide()
+      let msg = resp.data.resultMsg
+      let qrCodeId = null
+      if (msg.code) {
+        qrCodeId = msg.code.id
+      } else {
+        qrCodeId = msg.id
+      }
+      let project = null
+      if (msg.project) {
+        project = msg.project
+      }
+      let typeKey = null
+      if (msg.type) {
+        typeKey = msg.type.key
+      }
+      let imageArray = []
+      if (msg.pictures) {
+        _.forEach(msg.pictures, v => {
+          let previewUrl = server.THUMBNAIL_API + v.filePath
+          imageArray.push({
+            'previewUrl': previewUrl,
+            'contentUrl': v.filePath
+          })
+        })
+        localStorage.setItem('qrcode-image', JSON.stringify(imageArray))
+      }
+      localStorage.setItem('qrCodeId', qrCodeId)
+      localStorage.setItem('typeKey', typeKey)
+      localStorage.setItem('choose-project', JSON.stringify(project))
+      if (typeKey === null) {
+        if (msg.editable) {
+          this.$router.replace('/choose/qrtype?id=' + qrCodeId)
+        } else {
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
+      } else if (this.type === 'jobGroup') {
+        if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
+          if (msg.maintainable) {
+            this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
+          } else {
+            this.$q.notify({
+              message: '您无权限添加养护记录',
+              timeout: 3000,
+              type: 'info'
+            })
+            this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          }
+        } else {
+          // 设备类型或其他类型二维码，没有养护记录
+          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
+      } else if (this.type === 'qrcode') {
+        if (msg.editable) {
+          this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
+        } else {
+          this.$q.notify({
+            message: '您无权限编辑此二维码',
+            timeout: 3000,
+            type: 'info'
+          })
+          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+        }
+      } else {
+        // 扫一扫，显示详情
+        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+      }
+    },
+    openScan () {
+      if (cordova.plugins.barcodeScanner) {
+        cordova.plugins.barcodeScanner.scan(
+          (result) => {
+            if (result.cancelled) {
+              return false
+            }
+            this.handleScanResult(result.text)
+          },
+          (error) => {
+            alert('Scanning failed: ' + error)
+          },
+          {
+            preferFrontCamera: false, // iOS and Android
+            showFlipCameraButton: false, // iOS and Android
+            showTorchButton: false, // iOS and Android
+            torchOn: false, // Android, launch with the torch switched on (if available)
+            saveHistory: false, // Android, save scan history (default false)
+            prompt: '在扫描区域内放置一个二维码', // Android
+            resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+            formats: 'QR_CODE', // default: all but PDF_417 and RSS_EXPANDED
+            orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
+            disableAnimations: true, // iOS
+            disableSuccessBeep: false // iOS and Android
+          }
+        )
+      }
     }
   }
 }
