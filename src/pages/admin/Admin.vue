@@ -175,7 +175,12 @@ export default {
           type: 'positive',
           message: '禁用成功！'
         })
-        this.load()
+        if (Number.parseInt(user.id) === this.$store.getters['User/userId']) {
+          this.$store.commit('User/setAdmin', false)
+          this.$router.goBack()
+        } else {
+          this.load()
+        }
       }
     },
     async setAdmin (user) {
@@ -208,8 +213,11 @@ export default {
   }
   .q-table {
     color: $text-highlight;
+    thead th {
+      font-size: 15px;
+    }
     tbody td {
-      font-size: 14px;
+      font-size: 16px;
     }
   }
   td {
@@ -220,7 +228,7 @@ export default {
   a {
     color: $primary;
     i {
-      font-size: 18px;
+      font-size: 25px;
     }
   }
   .q-search {
