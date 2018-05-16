@@ -36,7 +36,7 @@
             <img src="statics/home/3-2.png"/>
             <div>成员</div>
           </div> -->
-           <div class="col-6 nav border-right" v-if="admin">
+           <div class="col-6 nav" v-if="admin" @click="$router.push('/admin')">
             <img src="statics/home/4-1.png"/>
             <div>管理</div>
           </div>

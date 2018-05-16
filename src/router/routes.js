@@ -3,6 +3,7 @@ import ProjectList from '../pages/project/list'
 import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
+import Admin from '../pages/admin/Admin'
 
 export default [
   {
@@ -116,6 +117,10 @@ export default [
   {
     path: '/project/maintenance-records',
     component: Records
+  },
+  {
+    path: '/admin',
+    component: Admin
   },
   {
     path: '/choose/project',

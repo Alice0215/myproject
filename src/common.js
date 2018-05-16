@@ -7,8 +7,11 @@ import eventBus from './eventBus'
 
 let batchRequest = Number.MAX_SAFE_INTEGER
 
-async function request (url, method = 'get', data = {}, responseType = 'json', project = false, absoluteUrl = false) {
-  const endpoint = project ? server.PROJECT_API : server.API
+async function request (url, method = 'get', data = {}, responseType = 'json', project = false, absoluteUrl = false, admin = false) {
+  let endpoint = project ? server.PROJECT_API : server.API
+  if (admin) {
+    endpoint = server.ADMIN_API
+  }
   if (!absoluteUrl) {
     url = endpoint + url
   }
@@ -91,6 +94,10 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   return resp
 }
 
+async function requestAdmin (url, method = 'get', data = {}, project, absoluteUrl) {
+  return request(url, method, data, 'json', false, false, true)
+}
+
 /**
  * Base64 转 blob
  * @param dataurl
@@ -170,6 +177,7 @@ function removeLocalStory (name) {
 }
 export {
   request,
+  requestAdmin,
   dataURLtoFile,
   deleteFiles,
   uploadFiles,
