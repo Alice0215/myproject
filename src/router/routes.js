@@ -6,6 +6,8 @@ import ProjectDetail from '../pages/project/ProjectDetail'
 
 import areaDetail from '../pages/qcode/areaDetail'
 
+import chooseDate from '../pages/choose/chooseDate'
+
 export default [
   {
     path: '/',
@@ -130,6 +132,10 @@ export default [
   {
     path: '/choose/qrtype',
     component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
+    path: '/chooseDate',
+    component: chooseDate
   },
   {
     path: '/qcode/scan',

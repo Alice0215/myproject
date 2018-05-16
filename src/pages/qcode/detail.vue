@@ -1,4 +1,5 @@
 <template>
+<div>
  <q-layout view="Hhh lpr Fff" class="bg-primary" id="qr-detail">
     <q-layout-header>
       <q-toolbar>
@@ -14,18 +15,37 @@
         </q-toolbar-title>
          <q-item-side class="white-right" right><i class="iconfont">&#xe701;</i></q-item-side>
       </q-toolbar>
-      <q-tabs inverted align="justify" no-pane-border>
-        <q-tab default name="maintenance-records" slot="title" v-if="info.code" :label="info.code.type.value"  class="mt-5 pb-0" @click.native="choose('qr')"/>
-        <q-tab default name="maintenance-records" slot="title" v-if="!info.code" label="二维码信息"  class="mt-5 pb-0" @click.native="choose('qr')"/>
-        <q-tab slot="title" label="养护记录" class="mt-5 pb-0" @click.native="choose('maintenance')"/>
-        <q-tab slot="title" label="巡查记录" class="mt-5 pb-0" @click.native="choose('')"/>
+      <q-tabs inverted align="justify" no-pane-border class="underline" v-model="tabsModel">
+        <q-tab  slot="title" v-if="info.code" :label="info.code.type.value" name="qr" class="mt-5 pb-0" @click.native="choose('qr')"/>
+        <q-tab  slot="title" v-if="!info.code" label="二维码信息"   name="qr" class="mt-5 pb-0" @click.native="choose('qr')"/>
+        <q-tab slot="title" label="养护记录" class="mt-5 pb-0" name="maintenance" @click.native="choose('maintenance')"/>
+        <q-tab slot="title" label="巡查记录" class="mt-5 pb-0" disable  name="other"/>
       </q-tabs>
+      <div class="bg-white top-search" v-if="tab==='maintenance'">
+        <q-btn-dropdown label="筛选" v-model="dropdown">
+          <div class="box font-14">
+          <p class="pt-20">日期</p>
+          <p class="block"><q-input v-model="startData" class="time-btn float-left ph-10 title-font-color" @click="chooseData(true)"/><span class="text-center float-left ph-20">——</span><q-input v-model="endData" class="time-btn ph-10" @click="chooseData(false)"/></p>
+          <p>工作内容</p>
+          <div class="p-10">
+          <q-chip color="light" text-color="tertiary"  v-for="item in jobs"
+                    :key="item.id" @click.native="chooseActionId(item.id)" :class="{'active-btn':actionIds.indexOf(item.id) !== -1}">
+           {{item.name}}
+          </q-chip>
+         </div>
+         <div class="btn-field">
+           <span class="wp-48 ib border-top text-center pv-10" @click="cancel">取消</span>
+           <span class="wp-50 ib border-top text-center pv-10 active-btn" @click="doSearch"> 确定</span>
+         </div>
+          </div>
+        </q-btn-dropdown>
+      </div>
     </q-layout-header>
     <q-page-container>
       <div v-if="tab==='qr'"  class="bg-white mt-10">
         <div class="qr-info pv-15 bg-white box">
           <div v-if="type==='EQUIPMENT' || type==='OTHER'">
-            <p><span class="wp-30 ib title-font-color">名称：</span><span v-if="info.alias"  v-line-clamp:20="1" class="ib wp-70 float-right">{{info.alias}}</span></p>
+            <p><span class="wp-30 ib title-font-color">名称：</span><q-item-side  class="ib wp-20 float-right active" right v-if="editable" @click.native="edit">修改</q-item-side><span v-if="info.alias"  v-line-clamp:20="1" class="ib wp-50 float-right">{{info.alias}}</span></p>
             <p><span class="wp-30 ib title-font-color">所属项目：</span><span v-if="info.project" v-line-clamp:20="1" class="wp-70 ib float-right">{{info.project.projectName}}</span></p>
             <p><span class="wp-30 ib title-font-color">地址：</span><span v-if="info.location" v-line-clamp:20="1" class="wp-70 ib float-right">{{info.location.formattedAddress}}</span></p>
             <p v-if="info.description"><span class="block title-font-color title-font-color">备注：</span>{{info.description}}</p>
@@ -39,7 +59,7 @@
         </div>
         <div v-if="type==='SINGLE'|| type==='AREA'">
           <div class="qr-info bg-white box">
-            <p><span class="wp-30 ib title-font-color">二维码编号：</span><span v-if="info.code && info.code.identifier">{{info.code.identifier}}</span></p>
+            <p><span class="wp-30 ib title-font-color">二维码编号：</span><q-item-side  class="ib wp-20 float-right active" right v-if="editable">修改</q-item-side><span v-if="info.code && info.code.identifier" v-line-clamp:20="1" class="ib wp-50 float-right">{{info.code.identifier}}</span></p>
             <p><span class="wp-30 ib title-font-color">二维码类型：</span><span v-if="info.code && info.code.type" >{{info.code.type.value}}</span></p>
             <p><span class="wp-30 ib title-font-color">所属项目：</span><span v-if="info.code && info.code.project" v-line-clamp:20="1" class="ib wp-70 float-right">{{info.code.project.projectName}}</span></p>
             <p><span class="wp-30 ib title-font-color">地址：</span><span v-if="info.code && info.code.location" v-line-clamp:20="1" class="wp-70 ib float-right">{{info.code.location.formattedAddress}}</span></p>
@@ -84,16 +104,16 @@
       </div>
       <q-page id="maintenance" v-if="tab==='maintenance'">
         <div  class="bg-white mt-10">
-        <q-infinite-scroll :handler="getMaintenanceInfoad">
+        <q-infinite-scroll :handler="getMaintenanceInfo">
           <q-list separator v-if="joblist.length > 0">
-            <q-item v-for="item in joblist"
-                    :key="item.id"
+            <q-item v-for="(item, index) in joblist"
+                    :key="index"
                     @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
               <q-item-main>
                 <q-item-tile class="content">
                   <div class="pv-4 row">
                     <div class="work-content-title">工作内容：</div>
-                    <div class="work-content" v-line-clamp:20="1">
+                    <div class="work-content bold" v-line-clamp:20="1">
                     <span v-for="v in item.jobs" v-if="item.jobs" :key="v.id">
                       <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
                     </span>
@@ -101,13 +121,13 @@
                   </div>
                 </q-item-tile>
                 <q-item-tile class="content">
-                  <div class="pv-4">
-                    <div class="ib">记录人：</div>
-                    <div class="ib">{{ item.user.fullname }}</div>
+                  <div class="pv-4 font-14">
+                    <div class="ib font-14">记录人：</div>
+                    <div class="ib font-14">{{ item.user.fullname }}</div>
                   </div>
                 </q-item-tile>
                 <q-item-tile>
-                  <div class="pv-4 row font-15">
+                  <div class="pv-4 row font-14">
                     <div class="col-8">
                       <div class="inline-flex">
                         <div>时间：</div>
@@ -115,7 +135,7 @@
                       </div>
                     </div>
                     <div class="col-4 text-right btn-light">
-                      <div>查看详情<q-icon name="keyboard arrow right" size="20px"/></div>
+                      <div class="font-14">查看详情<q-icon name="keyboard arrow right" size="20px"/></div>
                     </div>
                   </div>
                 </q-item-tile>
@@ -130,120 +150,35 @@
       </q-page>
     </q-page-container>
   </q-layout>
+  </div>
 </template>
 
 <script>
-import { request } from '../../common'
-import { server } from '../../const'
-import eventBus from '../../eventBus'
+import QrDetailMixin from '../../mixin/QrDetailMixin'
 export default {
+  mixins: [
+    QrDetailMixin
+  ],
   data () {
     return {
-      projectId: '',
-      qrCodeId: '',
-      type: '',
-      editable: false,
-      qrImgUrl: '',
-      info: {},
-      picUrl: '',
-      previewApi: '',
-      pageNo: 1,
-      hasLoadAll: false,
-      tab: 'qr',
-      joblist: []
     }
-  },
-  created () {
-    this.qrCodeId = this.$route.query.id
-    this.type = this.$route.query.type
-    this.projectId = this.$route.query.projectId
-    this.picUrl = server.THUMBNAIL_API
-    this.previewApi = server.PREVIEW_API
-    this.getQrInfo()
   },
   methods: {
-    goToView () {
-      localStorage.setItem('qrcode-preview', this.qrImgUrl)
-      this.$router.push('/qcode/view')
-    },
-    toAreaDetail (info) {
-      this.$store.commit('Qrcode/setCurrent', info)
-      this.$router.push('/areaDetail')
-    },
-    edit () {
-      if (!this.editable) {
-        this.$q.dialog({
-          title: '提示',
-          message: '您没有编辑权限'
-        })
-        return
-      }
-      localStorage.setItem('qrCodeId', this.qrCodeId)
-      localStorage.setItem('typeKey', this.type)
-      this.$router.push('/qcode/edit?id=' + this.qrCodeId + '&typeKey=' + this.type)
-    },
-    choose (type) {
-      this.tab = type
-    },
-    initData () {
-      this.joblist = []
-      this.pageNo = 1
-      this.hasLoadAll = false
-    },
-    async getMaintenanceInfoad (index, done) {
-      let that = this
-      setTimeout(() => {
-        if (!that.hasLoadAll) {
-          request('jobGroup/list/byProject?projectId=' + that.projectId + '&pageNo=' + that.pageNo + '&pageSize=20', 'get', '', 'json', true).then(response => {
-            if (response) {
-              let list = response.data.resultMsg
-              if (list.length === 0 || !list.length) {
-                that.hasLoadAll = true
-                return
-              }
-              if (list.length < 20) {
-                that.hasLoadAll = true
-              } else {
-                that.pageNo++
-              }
-              if (that.joblist.length > 0) {
-                that.joblist = that.joblist.concat(list)
-              } else {
-                that.joblist = list
-              }
-              if (this.joblist.length > 0) {
-                eventBus.$emit('has-maintenance-records')
-              }
-              done()
-            }
-          })
-        }
-      }, 100)
-    },
-    getQrInfo () {
-      this.$q.loading.show()
-      request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true).then(response => {
-        this.$q.loading.hide()
-        if (response) {
-          this.info = response.data.resultMsg
-          if (this.type === 'SINGLE' || this.type === 'AREA') {
-            if (!this.info.code) {
-              this.info.code = this.info
-            }
-            this.qrImgUrl = server.THUMBNAIL_QR + this.info.code.batch.batchNo + '/' + this.qrCodeId + '.png'
-          } else {
-            this.qrImgUrl = server.THUMBNAIL_QR + this.info.batch.batchNo + '/' + this.qrCodeId + '.png'
-          }
-          this.editable = response.data.resultMsg.editable
-        }
-      })
-    }
   }
 }
 </script>
 
 <style lang='scss'>
 @import "../../assets/css/common";
+.q-popover {
+  width: 100% !important;
+}
+.time-btn {
+  width: 120px;
+  border: 1px solid #e8e8e8;
+  color: #666;
+  padding-top: 3px;
+}
 #qr-detail {
   .auto-width {
     min-width: auto !important;
@@ -275,33 +210,33 @@ export default {
     margin-right: 1%;
   }
   #maintenance {
-  .q-item-main {
-    .content {
-      .work-content-title {
-        width: 75px;
-      }
-      .work-content {
-        width: calc(100% - 90px);
-      }
-      div {
-        display: flex;
+    .q-item-main {
+      .content {
+        .work-content-title {
+          width: 75px;
+        }
+        .work-content {
+          width: calc(100% - 90px);
+        }
         div {
-          font-size: 15px;
+          display: flex;
+          div {
+            font-size: 15px;
+          }
         }
       }
     }
+    .title {
+      font-size: 18px !important;
+      color: $text-highlight;
+    }
+    .type-title {
+      color: $type-title;
+    }
+    .btn-light {
+      color: $light-text;
+      font-size: 15px;
+    }
   }
-  .title {
-    font-size: 18px !important;
-    color: $text-highlight;
-  }
-  .type-title {
-    color: $type-title;
-  }
-  .btn-light {
-    color: $light-text;
-    font-size: 15px;
-  }
-}
 }
 </style>
