@@ -80,6 +80,7 @@
       eventBus.$on('open-invite-dialog', () => {
         this.form = {}
         this.user = {}
+        this.$v.$reset()
         this.visible = true
         this.show = false
       })
