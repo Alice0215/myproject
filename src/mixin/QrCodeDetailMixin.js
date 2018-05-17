@@ -1,4 +1,9 @@
 const QrCodeDetailMixin = {
+  data () {
+    return {
+      hasMaintenanceRecords: false
+    }
+  },
   computed: {
     qrCode: {
       get () {

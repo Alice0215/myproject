@@ -1,4 +1,4 @@
-<template>
+<template id="qr_detail">
   <QrCodeSingle v-if="type === 1"></QrCodeSingle>
   <QrCodeArea v-else-if="type === 2"></QrCodeArea>
   <QrCodeDevice v-else-if="type === 3"></QrCodeDevice>
@@ -45,7 +45,7 @@ export default {
   color: #666;
   padding-top: 3px;
 }
-#qr-detail {
+#qr_detail {
   .auto-width {
     min-width: auto !important;
   }

@@ -38,7 +38,7 @@ a {
 }
 
 .required {
-  
+
   padding-left: 2px;
   font-size: 20px;
   color: #F81D22;
@@ -269,5 +269,28 @@ hr {
 
   &.light {
     border-top-color: $line-light;
+  }
+}
+
+.tab-class {
+  .q-tab-label {
+    padding-bottom: 8px;
+    color: $text;
+    opacity: 1;
+  }
+  .active {
+    .q-tab-label {
+      border-bottom: 2px solid;
+      color: $primary;
+    }
+  }
+  background: $bgcolor;
+  .q-tabs-head {
+    background: white;
+  }
+  .q-tabs-panes {
+    .q-tab-pane {
+      padding: 12px 0 0 0;
+    }
   }
 }
