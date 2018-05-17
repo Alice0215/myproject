@@ -33,14 +33,14 @@
             <span class="active" @click="addWork">添加工作内容</span>
           </q-item>
           <div class="parent"  v-for="item in lists" :key="item.id">
-            <q-item  v-ripple.mat class="full-width underline user-item" @click.native="getChildList(item.id)">
-              <q-item-side left icon="expand more" v-if="item.children" class="auto-width"/>
+            <q-item  v-ripple.mat class="full-width underline user-item">
+              <q-item-side left icon="expand more" v-if="item.children" class="auto-width"  @click.native="getChildList(item.id,item.children,item.name)"/>
               <q-item-main :label="item.name" />
-              <q-item-side right icon="radio button unchecked"   v-if="fids.indexOf(item.id) === -1"/>
-              <q-item-side right icon="check circle" class="active"  v-if="fids.indexOf(item.id) !== -1"/>
+              <q-item-side right icon="radio button unchecked"   v-if="fids.indexOf(item.id) === -1" @click.native="choose(item.id,'',item.name,item.children)"/>
+              <q-item-side right icon="check circle" class="active"  v-if="fids.indexOf(item.id) !== -1" @click.native="choose(item.id,'',item.name,item.children)"/>
             </q-item>
             <div class="child bg-primary" v-if="parentId===item.id" v-for="vo in children" :key="vo.id">
-              <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(item.id,vo.id,vo.name,item.name+'-'+vo.name)">
+              <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(item.id,vo.id,item.name+'-'+vo.name,item.children)">
                 <q-item-main :label="vo.name" />
                 <q-item-side right icon="radio button unchecked"   v-if="selected.indexOf(item.id+'-'+vo.id) === -1"/>
                 <q-item-side right icon="check circle" class="active"  v-if="selected.indexOf(item.id+'-'+vo.id) !== -1"/>
@@ -79,6 +79,7 @@ export default {
       selected: [],
       fids: [],
       content: '',
+      chooseId: '',
       isEdited: false
     }
   },
@@ -110,16 +111,35 @@ export default {
         let resp = await request('data/jobAction/parent?parentId=' + parentId, 'get')
         if (resp) {
           this.children = resp.data.resultMsg
-          console.log(this.children)
           this.isOpen = true
+          this.parentId = parentId
         }
       } else {
-        this.isOpen = false
         this.children = []
+        this.isOpen = false
       }
-      this.parentId = parentId
     },
-    choose (fid, id, name) {
+    async choose (fid, id, name, isChildren) {
+      if (id === '' && isChildren) {
+        if (!this.isOpen || (this.isOpen && this.chooseId !== fid)) {
+          let resp = await request('data/jobAction/parent?parentId=' + fid, 'get')
+          if (resp) {
+            this.children = resp.data.resultMsg
+            this.chooseId = fid
+            _.forEach(resp.data.resultMsg, v => {
+              this.handleChoose(fid, v.id, name + '-' + v.name)
+            })
+          }
+        } else {
+          _.forEach(this.children, v => {
+            this.handleChoose(fid, v.id, name + '-' + v.name)
+          })
+        }
+      } else {
+        this.handleChoose(fid, id, name)
+      }
+    },
+    handleChoose (fid, id, name) {
       this.isEdited = true
       let select = fid + '-' + id
       if (this.selected.indexOf(select) !== -1) {
