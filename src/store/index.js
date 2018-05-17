@@ -2,16 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import plantInfo from './plantInfo'
-
-import modules from './modules'
+import User from './modules/User'
+import Location from './modules/Location'
+import Organization from './modules/Organization'
+import Project from './modules/Project'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  module,
   modules: {
-      modules,
-    plantInfo
+    plantInfo,
+    User,
+    Location,
+    Organization,
+    Project
   },
   strict: process.env.NODE_ENV !== 'production',
   plugins: [
@@ -24,3 +28,5 @@ const store = new Vuex.Store({
     })
   ]
 })
+
+export default store
