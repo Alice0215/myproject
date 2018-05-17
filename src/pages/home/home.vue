@@ -112,30 +112,33 @@
         })
         localStorage.setItem('qrcode-image', JSON.stringify(imageArray))
       }
+      msg.qrCodeId = qrCodeId
+      msg.typeKey = typeKey
+      this.$store.commit('qrCodeInfo/setQrCodeInfo', msg)
       localStorage.setItem('qrCodeId', qrCodeId)
       localStorage.setItem('typeKey', typeKey)
       localStorage.setItem('choose-project', JSON.stringify(project))
       if (typeKey === null) {
         if (msg.editable) {
-          this.$router.replace('/choose/qrtype?id=' + qrCodeId)
+          this.$router.push('/qrcode/chooseType')
         } else {
-          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else if (this.type === 'jobGroup') {
         if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
           if (msg.maintainable) {
-            this.$router.replace('/project/maintenance?codeId=' + qrCodeId)
+            this.$router.push('/project/maintenance?codeId=' + qrCodeId)
           } else {
             this.$q.notify({
               message: '您无权限添加养护记录',
               timeout: 3000,
               type: 'info'
             })
-            this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+            this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
           }
         } else {
           // 设备类型或其他类型二维码，没有养护记录
-          this.$router.replace('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
         }
       } else if (this.type === 'qrcode') {
         if (msg.editable) {

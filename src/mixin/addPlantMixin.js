@@ -3,7 +3,7 @@ const addPlantMixin = {
   computed: {
     projectId: {
       get () {
-        return this.$store.state.plantInfo.projectId
+        return this.$store.state.qrCodeInfo.qrCodeMsg.project.id
       },
       set (val) {
         return this.$store.commit('plantInfo/setProjectId', val)
@@ -31,6 +31,14 @@ const addPlantMixin = {
       },
       set (val) {
         return this.$store.commit('plantInfo/updateAreaForm', val)
+      }
+    },
+    type: {
+      get () {
+        return this.$store.state.plantInfo.type
+      },
+      set (val) {
+        return this.$store.commit('plantInfo/setChooseType', val)
       }
     }
   },

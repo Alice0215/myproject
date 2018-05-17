@@ -12,12 +12,13 @@
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
-      <q-stepper ref="stepper" alternative-labels no-header-navigation class="full-width no-shadow" v-model="currentStep"
+      <q-stepper ref="stepper" alternative-labels no-header-navigation class="full-width no-shadow"
+                 v-model="currentStep"
                  color="primary">
         <q-step title="选择类型" icon="more_horiz" name="first">
         </q-step>
         <q-step default title="填写基本类型" icon="more_horiz" name="common">
-            <common-step></common-step>
+          <common-step></common-step>
         </q-step>
         <q-step title="填写植物数据" icon="more_horiz" name="inpueData">
           <singleInfo></singleInfo>
@@ -36,6 +37,9 @@
   import successPage from '../success'
 
   export default {
+    mixins: [
+      addPlantMixin,
+    ],
     components: {
       commonStep,
       singleInfo,
@@ -44,6 +48,8 @@
     data () {
       return {
         currentStep: 'common',
+        singleShow: false,
+        areaShow: false,
       }
     },
     methods: {
@@ -59,11 +65,13 @@
           message: '点击确定将不会保存所填写信息，您确定取消填写吗？',
           showCancelButton: true,
           cancelButtonText: '返回',
-          beforeClose: this.backConfirmClose
+          beforeClose: this.backConfirmClose,
         })
       },
     },
     mounted () {
+      this.singleShow = this.type === plantType.SINGLE
+      this.areaShow = this.type === plantType.AREA
       this.$root.$on('next-step', () => {
         this.$refs.stepper.next()
       })

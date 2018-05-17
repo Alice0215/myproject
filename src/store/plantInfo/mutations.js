@@ -37,3 +37,7 @@ export const setProjectId = (state, v) => {
 export const setNewPlantFormToArea = (state, v) => {
   state.areaForm.singles = v
 }
+
+export const setChooseType = (state, v) => {
+  state.type = v
+}

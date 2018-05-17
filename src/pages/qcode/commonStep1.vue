@@ -16,12 +16,12 @@
     <q-list class="mt-6 bg-white no-border">
       <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
       <div class="row pl-20">
-        <div class="w-100 h-100" v-for="v, i in commonForm.pictures" :key="i">
+        <div class="w-100 h-100 ml-8 mt-8" v-for="v, i in commonForm.pictures" :key="i">
           <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
                class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
-        <div class="w-100 h-100 camera-div">
+        <div class="w-100 h-100 ml-8 mt-8 camera-div">
           <q-btn icon="camera alt" size="20px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
       </div>

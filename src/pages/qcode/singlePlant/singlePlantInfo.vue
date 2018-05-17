@@ -257,9 +257,14 @@
       chooseArea () {
         this.branchShow = true
       },
-      nextStep () {
+      async nextStep () {
         this.setForm()
-        this.$root.$emit('next-step')
+        this.$q.loading.show()
+        let resp = await request('qrcode/single/save', 'put', this.singleForm, 'json', true)
+        this.$q.loading.hide()
+        if (resp) {
+          this.$root.$emit('next-step')
+        }
       },
       preStep () {
         this.$root.$emit('pre-step')
@@ -269,7 +274,12 @@
       },
       setForm () {
         this.singleForm = this.sForm
-        this.$store.commit('plantInfo/setQRCodeFormToSingle', this.qrCodeForm)
+        let qFrom = Object.assign({}, this.qrCodeForm)
+        if (qFrom.pictures.length > 0) {
+          let pics = _.map(qFrom.pictures, 'contentUrl')
+          qFrom.pictures = pics
+        }
+        this.$store.commit('plantInfo/setQRCodeFormToSingle', qFrom)
       },
       getForm () {
         this.sForm = Object.assign({}, this.singleForm)
