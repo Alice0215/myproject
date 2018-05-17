@@ -89,6 +89,10 @@
 
 // Border
 
+.border-left {
+  border-left: 1px solid #e8e8e8;
+}
+
 .border-1 {
   border-style: solid;
   border-width: 1px;
@@ -231,7 +235,7 @@ $sizes: 0, 5, 10, 15, 20, 25, 30, 32, 40, 44, 50, 60, 64, 70, 80, 90, 100, 120, 
 
 // Margin && padding
 
-$numbers: -30, -20, -15, -12, -11, -10, -8, -5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 16, 17, 20, 25, 30, 40, 50, 70, 80, 100;
+$numbers: -30, -20, -15, -12, -11, -10, -8, -5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 16, 17, 18, 20, 25, 30, 40, 50, 70, 80, 100;
 
 @each $number in $numbers {
 
@@ -305,9 +309,24 @@ $numbers: -30, -20, -15, -12, -11, -10, -8, -5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 1
   }
 }
 
+.bg-color {
+  background-color: $bgcolor
+}
+
+.primary-color {
+  color: $primary;
+}
+
+.holder-color {
+  color: $holder-color;
+}
+
+.text-color {
+  color: $text;
+}
+
 // Colors
 $colors: $primary, red, silver, blue, green, white, orange, gray, darkgray, dimgray, black;
-
 @each $name in $colors {
   .color-#{$name} {
     color: $name !important;
