@@ -10,6 +10,8 @@ import areaDetail from '../pages/qcode/areaDetail'
 
 import chooseDate from '../pages/choose/chooseDate'
 
+import QrCodeDetail from '../pages/QrCode/QrCodeDetail'
+
 export default [
   {
     path: '/',
@@ -74,7 +76,7 @@ export default [
   },
   {
     path: '/qcode/detail',
-    component: () => import('pages/qcode/detail'),
+    component: QrCodeDetail,
     name: 'qcodeDetail'
   },
   {

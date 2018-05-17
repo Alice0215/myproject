@@ -6,11 +6,15 @@ import User from './modules/User'
 import Location from './modules/Location'
 import Organization from './modules/Organization'
 import Project from './modules/Project'
+import Qrcode from './modules/Qrcode'
+import QrCodeDetail from './modules/QrcodeDetail'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
+    QrCodeDetail,
+    Qrcode,
     plantInfo,
     User,
     Location,
