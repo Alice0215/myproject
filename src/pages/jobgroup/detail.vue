@@ -10,7 +10,7 @@
           养护记录详情
         </q-toolbar-title>
         <q-item-side class="white-right font-16 text-main-color text-center"
-                     @click.native="$router.push('/project/maintenance?codeId=&jobGroupId=' + jobGroupId)">
+                     @click.native="$router.push('/project/maintenance?codeId=&jobGroupId=' + jobGroupId)" v-if="info.editable">
           修改
         </q-item-side>
       </q-toolbar>
@@ -29,7 +29,7 @@
         <q-list separator>
           <q-item>
             <div class="title">记录人</div>
-            <div class="ml-20 content">{{ info.user.username }}</div>
+            <div class="ml-20 content">{{ info.user.fullname }}</div>
           </q-item>
           <q-item>
             <div class="title">时间</div>
@@ -37,15 +37,15 @@
           </q-item>
           <q-item>
             <div class="title">地点</div>
-            <div class="ml-20 content">{{ info.code.location }}</div>
+            <div class="ml-20 content">{{ info.code.location? info.code.location.formattedAddress : "" }}</div>
           </q-item>
           <hr>
         </q-list>
         <q-list>
           <q-item class="ib">
             <div class="mb-10">工作内容</div>
-            <q-chip v-for="(v, i) in info.jobs" :key="v.userId">
-              {{ v.action.name }}
+            <q-chip v-for="(v, i) in tags" :key="i">
+              {{ v }}
             </q-chip>
           </q-item>
         </q-list>
@@ -82,9 +82,7 @@ export default {
       jobGroupId: '',
       previewApi: '',
       info: '',
-      picUrl: '',
       tags: []
-
     }
   },
   created () {
@@ -99,11 +97,18 @@ export default {
       })
       ImagePreview(previewArray, index)
     },
+    getActionName (action) {  
+      let s = action.name 
+      if(_.has(action, 'parent')){
+        s = this.getActionName(action.parent) + " - " + s
+      }
+      return s
+    },
     getInfo () {
       this.$q.loading.show()
       request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true).then(response => {
         this.$q.loading.hide()
-        if (response.data.resultCode === 'SUCCESS') {
+        if (response) {
           this.info = response.data.resultMsg
           switch (this.info.code.type.key) {
             case plantType.SINGLE:
@@ -130,21 +135,15 @@ export default {
             })
             this.info.pictures = imageArray
           }
-          for (let key in this.info.jobs) {
-            this.tags.push(this.info.jobs[key]['action']['name'])
-          }
-          this.tags.push()
-        } else {
-          if (response.data.resultCode === 'ERROR') {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg.hint
-            })
-          } else {
-            this.$q.dialog({
-              title: '提示',
-              message: response.data.resultMsg
-            })
+          for(let i = 0; i<this.info.jobs.length; i++){
+            let job = this.info.jobs[i]
+            let one = ""          
+            if(!_.isEmpty(job.other)){
+              one = job.other
+            } else {
+              one = this.getActionName(job.action)
+            }
+            this.tags.push(one)
           }
         }
       })
