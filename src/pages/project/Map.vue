@@ -24,44 +24,47 @@ export default {
     }
   },
   methods: {
-    /**
-     * 获取逆地理信息
-     * @param location
-     */
-    getAdressByGeocoder (location) {
-      if (_.isUndefined(location)) {
-        return
-      }
-      let geocoder = new AMap.Geocoder({
-        radius: 1000,
-        extensions: 'all'
-      })
-      geocoder.getAddress(location, (status, result) => {
-        if (status === 'complete' && result.info === 'OK') {
-          this.handleGeocoder(result)
-        }
-      })
-    },
-    /**
-     * 处理逆向地理编码
-     * @param data
-     */
-    handleGeocoder (data) {
-      let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
-      geoInfo.position = this.position
-      if (data.info === 'OK') {
-        eventBus.$emit('user_location', JSON.stringify(geoInfo))
-        this.$store.commit('Location/setCurrent', geoInfo)
-        localStorage.setItem('user_location', JSON.stringify(geoInfo))
-        if (this.$route.query.from === 'qrCode') {
-          this.$router.goBack()
+       /**
+       * 获取逆地理信息
+       * @param location
+       */
+      getAdressByGeocoder (location) {
+        if (_.isUndefined(location)) {
           return
         }
-        if (this.$route.query.projectId) {
-          this.$router.goBack()
-        } else {
-          this.$router.goBack()
-        }
+        let geocoder = new AMap.Geocoder({
+          radius: 1000,
+          extensions: 'all',
+        })
+        geocoder.getAddress(location, (status, result) => {
+          if (status === 'complete' && result.info === 'OK') {
+            this.handleGeocoder(result)
+          }
+        })
+      },
+      /**
+       * 处理逆向地理编码
+       * @param data
+       */
+      handleGeocoder (data) {
+        let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
+        geoInfo.position = this.position
+        geoInfo = JSON.stringify(geoInfo)
+        if (data.info === 'OK') {
+          eventBus.$emit('user_location', geoInfo)
+          localStorage.setItem('user_location', geoInfo)
+          let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
+          qrcodeForm.locationJson = geoInfo
+          this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
+          if (this.$route.query.from === 'qrCode') {
+            this.$router.goBack()
+            return
+          }
+          if (this.$route.query.projectId) {
+            this.$router.goBack()
+          } else {
+            this.$router.goBack()
+          }
       }
     },
     async getGeolocation () {

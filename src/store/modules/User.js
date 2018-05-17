@@ -7,6 +7,10 @@ const mutations = {
     state.current = o
     window.user = o
     localStorage.setItem('user', JSON.stringify(o))
+  },
+  setAdmin (state, admin) {
+    state.current.admin = admin
+    localStorage.setItem('user', JSON.stringify(state.current))
   }
 }
 

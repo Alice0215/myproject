@@ -3,6 +3,8 @@ import ProjectList from '../pages/project/list'
 import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
+import Admin from '../pages/admin/Admin'
+import MaintenanceDetail from '../pages/jobgroup/detail'
 
 import areaDetail from '../pages/qcode/areaDetail'
 
@@ -110,7 +112,7 @@ export default [
   },
   {
     path: '/jobGroup/detail',
-    component: () => import('pages/jobGroup/detail'),
+    component: MaintenanceDetail,
     name: 'jobDetail'
   },
   {
@@ -124,6 +126,10 @@ export default [
   {
     path: '/project/maintenance-records',
     component: Records
+  },
+  {
+    path: '/admin',
+    component: Admin
   },
   {
     path: '/choose/project',
@@ -144,6 +150,14 @@ export default [
   {
     path: '/qcode/view',
     component: () => import('pages/qcode/viewQRCode.vue')
+  },
+  {
+    path: '/qrcode/chooseType',
+    component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
+    path: '/qrcode/stepper',
+    component: () => import('pages/qcode/stepperPlant.vue')
   },
   { // Always leave this as last one
     path: '*',

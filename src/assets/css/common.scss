@@ -32,6 +32,18 @@ a {
     }
   }
 }
+
+.box {
+  padding: 0 26px;
+}
+
+.required {
+  
+  padding-left: 2px;
+  font-size: 20px;
+  color: #F81D22;
+}
+
 .card {
   margin-bottom: 0px;
   padding: 0px 15px;
@@ -244,4 +256,18 @@ input:not(.no-style):hover {
 }
 .border-top {
   border-top: 1px solid #e8e8e8;
+}
+
+.text-main-color {
+  color: $primary;
+}
+
+hr {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: none;
+  margin: 0;
+
+  &.light {
+    border-top-color: $line-light;
+  }
 }
