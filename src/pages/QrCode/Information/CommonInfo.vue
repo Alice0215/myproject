@@ -54,6 +54,7 @@ export default {
 <style lang='scss'>
   @import "../../../assets/css/_variable.scss";
   #common_info {
+    background: $bgcolor;
     .q-list {
       background: white;
     }
