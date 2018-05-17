@@ -16,9 +16,9 @@
       <q-page id="maintenace-page">
     <q-list>
        <q-field
-         @blur="$v.form.tags.$touch"
+         @blur="$v.jobs.$touch"
         @keyup.enter="operate"
-        :error="$v.form.tags.$error"
+        :error="$v.jobs.$error"
          error-label="请先选择工作内容">
           <q-item class="mt-6" @click.native="chooseJob">
             <q-item-side label class="font-14">工作内容选择</q-item-side>
@@ -27,9 +27,13 @@
           </q-item>
        </q-field>
       <q-item-separator class="mt-0 mb-0"/>
-      <q-item v-if="form.tags.length>0">
-        <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
-      </q-item>
+        <div class="bg-primary jobs-tags">
+          <div class="m-5">
+            <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
+            {{item.name}}
+            </q-chip>
+          </div>
+        </div>
     </q-list>
     <q-list class="mt-6 bg-white pb-8 row col-12 box pt-10 font-14 underline" >
       <q-list-header class="font-14 col-2 h-35 pt-10">备注</q-list-header>
@@ -54,8 +58,11 @@
 </template>
 
 <script>
-
+import MaintenanceMixin from '../../mixin/MaintenanceMixin'
 export default {
+  mixins: [
+    MaintenanceMixin
+  ],
   data () {
     return {
     }

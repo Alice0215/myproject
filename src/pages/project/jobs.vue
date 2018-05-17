@@ -19,10 +19,7 @@
           <div class="full-width">
           <q-item class="bg-primary jobs-tags">
             <div class="m-5">
-              <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index" v-if="!item.noDelete"  @click="remove(index)">
-              {{item.name}}
-             </q-chip>
-              <q-chip color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  v-if="item.noDelete">
+              <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
               {{item.name}}
              </q-chip>
             </div>
@@ -171,7 +168,6 @@ export default {
       _.forEach(this.jobs, u => {
         let select = u.jobActionId + '-' + u.plantCategoryId
         this.selected.push(select)
-        this.ids.push(String(u.plantCategoryId))
         this.fids.push(String(u.jobActionId))
       })
     }
