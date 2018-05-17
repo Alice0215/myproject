@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf" id="admin">
     <q-layout-header>
-      <q-toolbar class='header bg-white'>
+      <q-toolbar class='nav-header bg-white'>
         <q-item-side @click.native="$router.goBack()" left icon="keyboard arrow left" class="back-left">
           <label>返回</label>
         </q-item-side>
@@ -175,12 +175,7 @@ export default {
           type: 'positive',
           message: '禁用成功！'
         })
-        if (Number.parseInt(user.id) === this.$store.getters['User/userId']) {
-          this.$store.commit('User/setAdmin', false)
-          this.$router.goBack()
-        } else {
-          this.load()
-        }
+        this.load()
       }
     },
     async setAdmin (user) {
@@ -191,7 +186,12 @@ export default {
           type: 'positive',
           message: '重置成功！'
         })
-        this.load()
+        if (Number.parseInt(user.id) === this.$store.getters['User/userId'] && !user.admin) {
+          this.$store.commit('User/setAdmin', user.admin)
+          this.$router.goBack()
+        } else {
+          this.load()
+        }
       }
     }
   },
