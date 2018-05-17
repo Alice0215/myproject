@@ -23,7 +23,15 @@ const QrCodeDetailMixin = {
   },
   methods: {
     imagePreview (index) {
-      let previewArray = _.map(this.qrCode.pictures, (img) => {
+      let pictures = []
+      if (_.has(this.qrCode, 'pictures')) {
+        pictures = this.qrCode.pictures
+      } else if (_.has(this.qrCode, 'code')) {
+        if (_.has(this.qrCode.code, 'pictures'))  {
+          pictures = this.qrCode.code.pictures
+        }
+      }
+      let previewArray = _.map(pictures, (img) => {
         return this.previewApi + img.contentUrl
       })
       ImagePreview(previewArray, index)
