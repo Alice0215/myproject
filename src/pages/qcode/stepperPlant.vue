@@ -15,16 +15,16 @@
       <q-stepper ref="stepper" alternative-labels no-header-navigation class="full-width no-shadow"
                  v-model="currentStep"
                  color="primary">
-        <q-step title="选择类型" icon="more_horiz" name="first">
+        <q-step title="选择类型" icon="more_horiz" name="first" :order="1">
         </q-step>
-        <q-step default title="填写基本类型" icon="more_horiz" name="common">
+        <q-step default title="填写基本类型" icon="more_horiz" name="common" :order="2">
           <common-step></common-step>
         </q-step>
-        <q-step title="填写植物数据" icon="more_horiz" name="inpueData">
+        <q-step v-if="singleShow||areaShow" title="填写植物数据" icon="more_horiz" name="inpueData" :order="3">
           <singleInfo v-if="singleShow"></singleInfo>
           <areaInfo v-if="areaShow"></areaInfo>
         </q-step>
-        <q-step title="完成" icon="more_horiz" name="done">
+        <q-step title="完成" icon="more_horiz" name="done" :order="4">
           <successPage></successPage>
         </q-step>
       </q-stepper>
