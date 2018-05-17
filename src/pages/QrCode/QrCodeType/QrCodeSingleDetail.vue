@@ -4,10 +4,10 @@
 </template>
 
 <script>
-  import QrCodeDetail from '../../../mixin/QrCodeDetailMixin'
+  import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
   export default {
     mixins: [
-      QrCodeDetail
+      QrCodeDetailMixin
     ],
     data () {
       return {

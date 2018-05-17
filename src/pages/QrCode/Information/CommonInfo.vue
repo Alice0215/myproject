@@ -35,11 +35,9 @@
 
 <script>
 import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
-import QrCodeMixin from '../../../mixin/QrCodeMixin'
 
 export default {
   mixins: [
-    QrCodeMixin,
     QrCodeDetailMixin
   ],
   data () {

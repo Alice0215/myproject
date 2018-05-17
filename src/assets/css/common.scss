@@ -273,6 +273,9 @@ hr {
 }
 
 .tab-class {
+  .q-tab {
+    padding-bottom: 2px !important;
+  }
   .q-tab-label {
     padding-bottom: 8px;
     color: $text;
