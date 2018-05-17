@@ -15,6 +15,7 @@ const QrCodeDetailMixin = {
     async load () {
       this.$q.loading.show()
       const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
+      this.$q.loading.hide()
       if (resp) {
         this.data = resp.data.resultMsg
         if (this.data.type) {
@@ -51,12 +52,6 @@ const QrCodeDetailMixin = {
   async mounted () {
     this.qrCodeId = this.$route.query.id
     this.load()
-    eventBus.$on('refresh-project-page', () => {
-      this.load()
-    })
-  },
-  beforeDestroy () {
-    eventBus.$off('refresh-project-page')
   }
 }
 
