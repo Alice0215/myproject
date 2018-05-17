@@ -38,7 +38,7 @@
       />
     </van-popup>
     <div class="bottom-button-div mt-40">
-      <q-btn color="white" text-color="black" class="border-1 float-left ml-16" label="上一步" size="md"/>
+      <q-btn color="white" text-color="black" class="border-1 float-left ml-16" label="上一步" size="md" @click="preStep"/>
       <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="下一步" size="md"
              @click="nextStep"/>
     </div>
@@ -104,6 +104,9 @@
             this.projectName = project.text
           }
         }
+      },
+      preStep () {
+        this.$root.$emit('last-pre')
       },
       nextStep () {
         this.setForm()

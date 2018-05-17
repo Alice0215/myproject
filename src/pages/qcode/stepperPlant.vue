@@ -83,10 +83,14 @@
       this.$root.$on('pre-step', () => {
         this.$refs.stepper.previous()
       })
+      this.$root.$on('last-pre', () => {
+        this.back()
+      })
     },
     destroyed () {
       this.$root.$off('next-step')
       this.$root.$off('pre-step')
+      this.$root.$off('last-pre')
     },
   }
 </script>
