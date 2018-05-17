@@ -52,80 +52,36 @@
 <script>
 import { request } from "../../common";
 import _ from "lodash";
+import InfiniteScroll from '../../mixin/InfiniteScroll'
+
 export default {
   data() {
     return {
-      list: [],
-      count: { active: 0, total: 0 },
-      pageNo: 1,
+      count: { active: 0, total: 0 },     
       projectId: 0,
-      type: "",
-      hasLoadAll: false
+      type: ""
     };
   },
+  mixins: [
+    InfiniteScroll
+  ],
+  mounted () {
+    this.projectId = this.$route.query.projectId;
+    this.getCount();
+    this.apiUrl = 'qrcode/list?projectId=' + this.projectId    
+    this.scroll = this.$refs.scroll
+  },
   methods: {
-    load(index, done) {
-      console.log("refresher");
-      let that = this;
-
-      setTimeout(() => {
-        that.getList(done);        
-      }, 2500);
-    },
-
-    async getList(done) {
-      let that = this;
-      if (that.hasLoadAll) {
-          done()
-          return
-      }        
-      
-      let response = await request(
-        "qrcode/list/?projectId=" +
-          that.projectId +
-          "&type=" +
-          that.type +
-          "&pageNo=" +
-          that.pageNo +
-          "&pageSize=20",
-        "get",
-        "",
-        "json",
-        true
-      );
-
-      if (response) {
-        let list = response.data.resultMsg;
-        console.log(list.length);
-        if (list.length === 0 || !list.length) {
-          that.hasLoadAll = true;
-          return;
-        }
-        if (list.length < 20) {
-          that.hasLoadAll = true;
-        } else {
-          that.pageNo++;
-        }
-        if (that.list.length > 0) {
-          that.list = that.list.concat(list);
-        } else {
-          that.list = list;
-        }
-      }
-      done();
-    },
-
     chooseType(type) {
       this.type = type;
+      this.apiUrl = 'qrcode/list?projectId=' + this.projectId + "&type=" + type   
+      this.scroll.reset();
       this.hasLoadAll = false;
       this.pageNo = 1;
       this.count = { active: 0, total: 0 };
       this.list = [];
-      // this.getInfo()
-      this.getCount();
-      this.$refs.scroll.reset();
-      // this.$refs.scroll.resume();
-      this.$refs.scroll.loadMore();
+      this.getCount();      
+      this.scroll.resume();
     },
 
     getCount() {
@@ -146,10 +102,6 @@ export default {
         }
       });
     }
-  },
-  mounted() {
-    this.projectId = this.$route.query.projectId;
-    this.getCount();
   }
 };
 </script>

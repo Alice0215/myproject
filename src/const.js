@@ -20,8 +20,14 @@ const jobType = {
   TL: 'TL',
   TM: 'TM'
 }
+
+const global = {
+  pageSize: 20
+}
+
 export {
   server,
   jobType,
-  plantType
+  plantType,
+  global
 }
