@@ -51,7 +51,7 @@
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
-  import { server } from '../../const'
+  import { plantType, server } from '../../const'
 
   export default {
     mixins: [
@@ -108,9 +108,24 @@
       preStep () {
         this.$root.$emit('last-pre')
       },
-      nextStep () {
+      async nextStep () {
         this.setForm()
-        this.$root.$emit('next-step')
+        let url = null
+        if (this.type === plantType.DEVICE) {
+          url = 'qrcode/equipment/save'
+        } else if (this.type === plantType.OTHER) {
+          url = '/qrcode/other/save'
+        }
+        if (_.isNull(url)) {
+          this.$root.$emit('next-step')
+        } else {
+          this.$q.loading.show()
+          let resp = await request(url, 'put', this.commonForm, 'json', true)
+          this.$q.loading.hide()
+          if (resp) {
+            this.$root.$emit('next-step')
+          }
+        }
       },
       onConfirm (value, index) {
         this.projectName = value.text
@@ -155,6 +170,14 @@
       },
       setForm () {
         this.qrCodeForm = this.commonForm
+        if (this.type === plantType.SINGLE || this.type === plantType.AREA) {
+          let qFrom = Object.assign({}, this.qrCodeForm)
+          if (qFrom.pictures.length > 0) {
+            let pics = _.map(qFrom.pictures, 'contentUrl')
+            qFrom.pictures = pics
+          }
+          this.commonForm = qFrom
+        }
       },
       getForm () {
         this.commonForm = Object.assign({}, this.qrCodeForm)
