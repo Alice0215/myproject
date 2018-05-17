@@ -17,11 +17,7 @@
         <q-tab-pane name="equipment-info" class="tab-pane-class">
           <common-info></common-info>
         </q-tab-pane>
-        <q-tab-pane name="maintenance-records">
-          <q-scroll-area :class="{'scroll-height': hasMaintenanceRecords}">
-            <maintenance-records></maintenance-records>
-          </q-scroll-area>
-        </q-tab-pane>
+        <q-tab-pane name="maintenance-records"></q-tab-pane>
         <q-tab-pane name="patrol-records"></q-tab-pane>
       </q-tabs>
     </q-layout-header>
@@ -31,12 +27,10 @@
 <script>
 import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 import CommonInfo from '../Information/CommonInfo'
-import MaintenanceRecords from '../../project/MaintenanceRecords'
 
 export default {
   components: {
-    CommonInfo,
-    MaintenanceRecords
+    CommonInfo
   },
   mixins: [
     QrCodeDetailMixin
