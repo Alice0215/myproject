@@ -41,3 +41,11 @@ export const setNewPlantFormToArea = (state, v) => {
 export const setChooseType = (state, v) => {
   state.type = v
 }
+
+export const clearInfo = (state) => {
+  state.qrCodeForm = {pictures: []}
+  state.singleForm = {}
+  state.areaForm = {singles: []}
+  state.projectId = null
+  state.type = null
+}

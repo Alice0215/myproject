@@ -75,6 +75,8 @@
         let resp = await request('qrcode/area/save', 'put', this.areaForm, 'json', true)
         this.$q.loading.hide()
         if (resp) {
+          this.clearInfo()
+          this.aForm = {singles: {}}
           this.$root.$emit('next-step')
         }
       },

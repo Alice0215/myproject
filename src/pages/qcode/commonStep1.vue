@@ -69,7 +69,7 @@
         hasLoadAll: false,
         commonForm: {},
         nameLabel: '',
-        nameHolder: ''
+        nameHolder: '',
       }
     },
     methods: {
@@ -125,6 +125,7 @@
           let resp = await request(url, 'put', this.commonForm, 'json', true)
           this.$q.loading.hide()
           if (resp) {
+            this.clearInfo()
             this.$root.$emit('next-step')
           }
         }
@@ -208,6 +209,9 @@
     },
     mounted () {
       this.getForm()
+      this.$root.$on('clear-info', () => {
+        this.commonForm = {pictures: []}
+      })
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
         this.commonForm.pictures.push(resp)
@@ -231,6 +235,7 @@
       this.setForm()
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
+      eventBus.$off('clear-info')
     },
   }
 </script>

@@ -61,6 +61,8 @@
       backConfirmClose (action, done) {
         done()
         if (action === 'confirm') {
+          this.$root.$emit('clear-info')
+          this.$store.commit('plantInfo/clearInfo')
           this.$router.goBack()
         }
       },

@@ -42,6 +42,12 @@ const addPlantMixin = {
       }
     }
   },
+  methods: {
+    clearInfo () {
+      this.$root.$emit('clear-info')
+      this.$store.commit('plantInfo/clearInfo')
+    }
+  },
   data () {
     return {
     }
