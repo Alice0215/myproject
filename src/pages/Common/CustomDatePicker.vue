@@ -3,7 +3,7 @@
   参数：
     dateTime : Date, 默认时间
     pickerClass : String, q-datetime-picker的class
-  
+    currentMonth : 是否显示本月
   通过close-date-picker事件调用，返回值是选择的日期，Date类型
 -->
 <template>
@@ -11,7 +11,7 @@
     <q-modal-layout>
       <q-toolbar slot="header">
         <q-item-side v-close-overlay class="font-14 text-main-color">取消</q-item-side>
-        <q-item-side class="font-14 text-main-color" @click.native="toToday">本月</q-item-side>
+        <q-item-side class="font-14 text-main-color" @click.native="toToday" v-if="currentMonth">本月</q-item-side>
         <q-toolbar-title class="header-title">
           选择日期
         </q-toolbar-title>
@@ -30,6 +30,7 @@ export default {
   data () {
     return {
       selectYear: false,
+      currentMonth: true,
       dateTime: null,
       pickerClass: "datetime-custom",
       items: []
@@ -48,6 +49,7 @@ export default {
   mounted () {
     eventBus.$on('open-date-picker', arg => {
       this.dateTime = arg.dateTime
+      this.currentMonth = arg.currentMonth
       this.pickerClass = arg.pickerClass
       this.selectYear = true
     })

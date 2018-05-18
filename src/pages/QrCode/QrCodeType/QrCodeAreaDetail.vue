@@ -27,11 +27,8 @@
           </q-scroll-area>
         </q-tab-pane>
         <q-tab-pane name="maintenance-records">
-          <q-scroll-area class="scroll-height">
-            <QrCodeMaintenance
-              :codeId="qrCode.id">
-            </QrCodeMaintenance>
-          </q-scroll-area>
+          <QrCodeMaintenance :codeId="qrCode.id">
+          </QrCodeMaintenance>
         </q-tab-pane>
         <q-tab-pane name="patrol-records"></q-tab-pane>
       </q-tabs>
