@@ -1,7 +1,7 @@
 <template>
   <div id="single-plant-info">
     <van-cell-group :border="false">
-      <van-cell title="所属片区" is-link :value="position" required class="font-16" @click="chooseArea"/>
+      <van-cell title="所属片区" is-link :value="position" class="font-16" @click="chooseArea"/>
       <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入相对位置" />
       <van-cell title="苗木分类" is-link :value="category" required class="font-16" @click="chooseNursery"/>
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
@@ -258,7 +258,20 @@
       chooseArea () {
         this.branchShow = true
       },
+      verifyForm () {
+        if (_.isNull(this.sForm.category) || _.isUndefined(this.sForm.category)) {
+          this.$q.notify({
+            message: '分类不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        return true
+      },
       async nextStep () {
+        if (!this.verifyForm()) {
+          return false
+        }
         this.setForm()
         this.$q.loading.show()
         let resp = await request('qrcode/single/save', 'put', this.singleForm, 'json', true)

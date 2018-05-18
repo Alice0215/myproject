@@ -110,7 +110,35 @@
       preStep () {
         this.$root.$emit('last-pre')
       },
+      verifyForm () {
+        if (_.isNull(this.commonForm.alias) || _.isUndefined(this.commonForm.alias)) {
+          this.$q.notify({
+            message: '名称不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        if (_.isNull(this.commonForm.projectId) || _.isUndefined(this.commonForm.projectId)) {
+          this.$q.notify({
+            message: '所属项目不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        if (_.isNull(this.commonForm.locationJson) || _.isUndefined(this.commonForm.locationJson)) {
+          this.$q.notify({
+            message: '地址不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        return true
+      },
       async nextStep () {
+        console.log(this.commonForm)
+        if (!this.verifyForm()) {
+          return false
+        }
         this.setForm()
         let url = null
         if (this.type === plantType.DEVICE) {

@@ -165,8 +165,27 @@
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
       },
+      verifyForm () {
+        if (_.isNull(this.sForm.alias) || _.isUndefined(this.sForm.alias)) {
+          this.$q.notify({
+            message: '名称不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        if (_.isNull(this.sForm.category) || _.isUndefined(this.sForm.category)) {
+          this.$q.notify({
+            message: '分类不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        return true
+      },
       save () {
-        console.log(this.sForm)
+        if (!this.verifyForm()) {
+          return false
+        }
         this.setForm()
         this.$root.$emit('add-plant-done', this.sForm)
         this.sForm = {pictures: []}
