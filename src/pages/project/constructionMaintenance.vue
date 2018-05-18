@@ -30,7 +30,7 @@
         <div class="bg-primary jobs-tags">
           <div class="m-5">
             <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
-            {{item.name}}
+            {{item.fname}}<span v-if="item.description!==''">-{{item.description}}</span>
             </q-chip>
           </div>
         </div>

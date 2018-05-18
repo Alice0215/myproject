@@ -20,7 +20,7 @@
           <q-item class="bg-primary jobs-tags">
             <div class="m-5">
               <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
-              {{item.name}}
+               {{item.fname}}<span v-if="item.description!==''">-{{item.description}}</span>
              </q-chip>
             </div>
           </q-item>
@@ -33,11 +33,11 @@
             <q-item  v-ripple.mat class="full-width underline user-item">
               <q-item-side left icon="expand more" v-if="item.children" class="auto-width"  @click.native="getChildList(item.id,item.children,item.name)"/>
               <q-item-main :label="item.name" />
-              <q-item-side right icon="radio button unchecked"   v-if="fids.indexOf(item.id) === -1" @click.native="choose(item.id,'',item.name,item.children)"/>
-              <q-item-side right icon="check circle" class="active"  v-if="fids.indexOf(item.id) !== -1" @click.native="choose(item.id,'',item.name,item.children)"/>
+              <q-item-side right icon="radio button unchecked"   v-if="fids.indexOf(item.id) === -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
+              <q-item-side right icon="check circle" class="active"  v-if="fids.indexOf(item.id) !== -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
             </q-item>
             <div class="child bg-primary" v-if="parentId===item.id" v-for="vo in children" :key="vo.id">
-              <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(item.id,vo.id,item.name+'-'+vo.name,item.children)">
+              <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(item.name,item.id,vo.id,vo.name,item.children)">
                 <q-item-main :label="vo.name" />
                 <q-item-side right icon="radio button unchecked"   v-if="selected.indexOf(item.id+'-'+vo.id) === -1"/>
                 <q-item-side right icon="check circle" class="active"  v-if="selected.indexOf(item.id+'-'+vo.id) !== -1"/>
@@ -48,7 +48,7 @@
         </div>
 
         <q-modal v-model="open" minimized :content-css="{padding: '20px'}" ref="modalRef" id="addjobs">
-          <div class="job-title">添加工作内容</div>
+          <div class="job-title font-14">添加工作内容</div>
           <div class="job-ins-title">工作内容描述请少于7个字</div>
           <q-input class="job-input" placeholder="输入内容" type="text" v-model="content"></q-input>
           <q-btn class="job-cancel-btn" v-close-overlay  label="取消" />
@@ -96,7 +96,7 @@ export default {
         this.$q.notify({ message: '工作内容不能为空', timeout: 2000, type: 'warning' })
         return false
       }
-      let job = { 'jobActionId': '', 'plantCategoryId': '', 'name': this.content }
+      let job = { 'actionId': '', 'description': '', 'fid': '', 'fname': this.content }
       this.jobs = [...this.jobs, job]
     },
     async getList () {
@@ -116,7 +116,7 @@ export default {
         this.isOpen = false
       }
     },
-    async choose (fid, id, name, isChildren) {
+    async choose (fname, fid, id, name, isChildren) {
       if (id === '' && isChildren) {
         if (!this.isOpen || (this.isOpen && this.chooseId !== fid)) {
           let resp = await request('data/jobAction/parent?parentId=' + fid, 'get')
@@ -124,35 +124,32 @@ export default {
             this.children = resp.data.resultMsg
             this.chooseId = fid
             _.forEach(resp.data.resultMsg, v => {
-              this.handleChoose(fid, v.id, name + '-' + v.name)
+              this.handleChoose(fid, v.id, v.name, name)
             })
           }
         } else {
           _.forEach(this.children, v => {
-            this.handleChoose(fid, v.id, name + '-' + v.name)
+            this.handleChoose(fid, v.id, v.name, name)
           })
         }
       } else {
-        this.handleChoose(fid, id, name)
+        this.handleChoose(fid, id, name, fname)
       }
     },
-    handleChoose (fid, id, name) {
+    handleChoose (fid, id, name, fname) {
       this.isEdited = true
       let select = fid + '-' + id
       if (this.selected.indexOf(select) !== -1) {
         let index = this.selected.findIndex(v => v === fid + '-' + id)
-        if (this.jobs[index] && this.jobs[index]['noDelete']) {
-          return true
-        } else {
-          this.jobs.splice(index, 1)
-          this.selected.splice(index, 1)
-          this.fids.splice(index, 1)
-        }
+        this.jobs.splice(index, 1)
+        this.selected.splice(index, 1)
+        this.fids.splice(index, 1)
       } else {
-        let job = { 'jobActionId': fid, 'plantCategoryId': id, 'name': name }
+        let job = { 'actionId': id, 'description': name, 'fid': fid, 'fname': fname }
         this.selected.push(select)
         this.fids.push(fid)
         this.jobs = [...this.jobs, job]
+        console.log(this.jobs)
       }
     },
     save () {
@@ -166,9 +163,9 @@ export default {
     if (!_.isUndefined(jobs) && !_.isNull(jobs)) {
       this.jobs = jobs
       _.forEach(this.jobs, u => {
-        let select = u.jobActionId + '-' + u.plantCategoryId
+        let select = u.fid + '-' + u.actionId
         this.selected.push(select)
-        this.fids.push(String(u.jobActionId))
+        this.fids.push(String(u.fid))
       })
     }
   }
@@ -204,5 +201,28 @@ export default {
   .child {
     padding-left: 26px;
   }
+  .job-title {
+  color: #000000;
+  font-size: 16px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+.job-ins-title {
+  color: #888888;
+  font-size: 14px;
+}
+.job-input {
+  border: 1px solid #888888;
+  padding: 8px !important;
+  margin-bottom: 10px;
+}
+.job-cancel-btn,
+.job-ok-btn {
+  width: 45%;
+  float: left;
+}
+.job-ok-btn {
+  color: #fa8c16;
+}
 }
 </style>

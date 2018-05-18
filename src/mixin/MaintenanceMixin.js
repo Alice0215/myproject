@@ -16,6 +16,7 @@ const MaintenanceMixin = {
         pictures: [],
         QrInfo: {},
         codeId: '',
+        jobs: [],
         imageArray: []
       },
       jobs: [],
@@ -72,6 +73,7 @@ const MaintenanceMixin = {
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         let info = resp.data.resultMsg
+        console.log(info)
         this.form.QrInfo = info.code
         this.form.codeId = info.code.id
         this.form.description = info.description
@@ -87,13 +89,17 @@ const MaintenanceMixin = {
             })
           })
           this.form.pictures = imageArray
-          // let jobs = []
-          let action = []
-          _.forEach(action, v => {
-            // jobs = [...jobs, { 'actionId': v.id, 'optionId': id, 'description': v.name ,'jobId':jobId}]
-          })
-          this.jobs = info.jobs
         }
+        let jobs = []
+        _.forEach(info.jobs, v => {
+          if (v.action) {
+            jobs = [...jobs, { 'actionId': v.action.id, 'description': v.action.name, 'jobId': v.id, 'fid': v.action.parent.id, 'fname': v.action.parent.name }]
+          } else {
+            jobs = [...jobs, { 'actionId': '', 'description': '', 'jobId': v.id, 'fid': '', 'fname': v.other }]
+          }
+        })
+        this.jobs = jobs
+        console.log(this.jobs)
       }
     },
     operate () {
@@ -107,15 +113,31 @@ const MaintenanceMixin = {
         this.save()
       }
     },
+    initJobs () {
+      let jobs = []
+      _.forEach(this.jobs, v => {
+        if (_.isNull(v.actionId)) {
+          jobs.push({ 'other': v.description })
+        } else {
+          if (v.jobId) {
+            jobs.push({ 'actionId': v.actionId, 'description': v.description, 'jobId': v.jobId })
+          } else {
+            jobs.push({ 'actionId': v.actionId, 'description': v.description })
+          }
+        }
+      })
+    },
     save () {
+      // 添加
       let imgArray = []
       if (this.form.pictures.length > 0) {
         imgArray = _.map(this.form.pictures, 'contentUrl')
       }
+      this.initJobs()
       let data = {
         'codeId': this.form.codeId,
         'description': this.form.description,
-        'jobs': this.jobs,
+        'jobs': this.form.jobs,
         'pictures': imgArray
       }
       request('jobGroup/create', 'post', data, 'json', true).then(resp => {
@@ -132,6 +154,8 @@ const MaintenanceMixin = {
       })
     },
     edit () {
+      // 修改
+      this.initJobs()
       let imgArray = []
       if (this.form.pictures.length > 0) {
         imgArray = _.map(this.form.pictures, 'contentUrl')
@@ -139,24 +163,25 @@ const MaintenanceMixin = {
       let data = {
         'jobGroupId': this.jobGroupId,
         'description': this.form.description,
-        'jobs': this.jobs,
+        'jobs': this.form.jobs,
         'pictures': imgArray
       }
       request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
         if (resp) {
+          this.$store.commit('Maintenance/setCurrent', null)
+          this.$store.commit('Maintenance/setJobGroup', null)
           this.$q.notify({
             timeout: 2000,
             type: 'positive',
             message: '养护记录修改成功！'
           })
-          this.$store.commit('Maintenance/setCurrent', null)
-          this.$store.commit('Maintenance/setJobGroup', null)
           this.$router.goBack()
         }
       })
     },
     chooseJob () {
       this.$store.commit('Maintenance/setCurrent', this.form)
+      this.$store.commit('Maintenance/setJobGroup', this.jobs)
       this.$router.push('jobs')
     }
   },
