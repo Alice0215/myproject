@@ -3,20 +3,21 @@
     <q-page-container>
       <q-page id="maintenance">
         <div  class="bg-white mt-10">
-          <q-infinite-scroll :handler="getMaintenanceInfo">
-            <q-list separator v-if="joblist.length > 0">
-              <q-item v-for="(item, index) in joblist"
-                      :key="index"
+          <q-infinite-scroll :handler="load" ref="scroll">
+            <q-list separator v-if="list.length > 0">
+              <q-item v-for="item in list"
+                      :key="item.id"
                       @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
                 <q-item-main>
                   <q-item-tile class="content">
                     <div class="pv-4 row">
                       <div class="work-content-title">工作内容：</div>
                       <div class="work-content bold" v-line-clamp:20="1">
-                    <span v-for="v in item.jobs" v-if="item.jobs" :key="v.id">
-                      <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
-                    </span>
+                        <span v-for="v in item.jobs" v-if="item.jobs" :key="v.id">
+                          <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
+                        </span>
                       </div>
+
                     </div>
                   </q-item-tile>
                   <q-item-tile class="content">
@@ -52,19 +53,21 @@
 </template>
 
 <script>
-import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
-import QrCodeMixin from '../../../mixin/QrCodeMixin'
+import { request } from '../../../common'
+import eventBus from '../../../eventBus'
+import InfiniteScroll from '../../../mixin/InfiniteScroll'
 
 export default {
-  mixins: [
-    QrCodeMixin,
-    QrCodeDetailMixin
+  
+  props: [
+    "codeId"
   ],
-  data () {
-    return {
-    }
-  },
-  methods: {
+  mixins: [
+    InfiniteScroll
+  ],
+  mounted () {
+    this.apiUrl = 'jobGroup/list/byCode?codeId=' + this.codeId
+    this.scroll = this.$refs.scroll
   }
 }
 </script>
