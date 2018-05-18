@@ -14,6 +14,12 @@
               {{ qrCode.alias }}
             </div>
           </q-item>
+          <q-item v-if="detail.position">
+            <div class="title">相对位置：</div>
+            <div class="ml-20 content" v-line-clamp:20="1">
+              {{ detail.position }}
+            </div>
+          </q-item>
           <q-item>
             <div class="title">所属项目：</div>
             <div class="ml-20 content" v-line-clamp:20="1">
@@ -26,17 +32,19 @@
               {{ qrCode.location? qrCode.location.formattedAddress : ""  }}
             </div>
           </q-item>
-          <q-item>
+          <q-item v-if="detail.area && detail.area.code">
             <div class="title">所属片区：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{ qrCode.alias }}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">
+              {{ detail.area.code.alias }}
+            </div>
           </q-item>
           <q-item>
             <div class="title">苗木分类：</div>
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.category.name }}</div>
           </q-item>
-          <q-item>
+          <q-item v-if="detail.amount">
             <div class="title">苗木面积：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{ qrCode.alias }}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount + detail.uomName}}</div>
           </q-item>
           <q-item>
             <div class="title">苗木规格：</div>
@@ -58,15 +66,19 @@
             <div class="title">苗木其他信息：</div>
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.other }}</div>
           </q-item>
-          <q-item class="ib">
-            <div class="mb-10">备注：</div>
-            <div class="content">{{ qrCode.description }}</div>
+          <q-item>
+            <div class="ib">
+              <div class="mb-10">备注：</div>
+              <div class="content">{{ qrCode.description }}</div>
+            </div>
           </q-item>
-          <q-item class="ib">
-            <div class="mb-10">现场图片：</div>
-            <span v-for="(item, i) in thumbnails" v-bind:key="i" :class="{'ml-10': i !== 0}">
+          <q-item>
+            <div class="ib">
+              <div class="mb-10">现场图片：</div>
+              <span v-for="(item, i) in thumbnails" v-bind:key="i" :class="{'ml-10': i !== 0}">
               <img :src="item" preview-title-enable="false" :key="i" @click="preview(i)">
             </span>
+            </div>
           </q-item>
         </q-list>
       </q-page>
