@@ -121,7 +121,7 @@
   export default {
     data () {
       return {
-        sForm: {},
+        sForm: {pictures:[]},
         category: '选择苗木分类',
         uomId: null,
         uomOptions: [],
@@ -138,7 +138,7 @@
     },
     methods: {
       back() {
-        this.sForm = {}
+        this.sForm = {pictures: []}
         this.$root.$emit('add-plant-close')
       },
       imagePreview (index) {
@@ -151,7 +151,7 @@
       },
       cancelUploadImage (index) {
         this.$q.loading.show()
-        let img = this.commonForm.pictures[index]
+        let img = this.sForm.pictures[index]
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
@@ -169,7 +169,7 @@
         console.log(this.sForm)
         this.setForm()
         this.$root.$emit('add-plant-done', this.sForm)
-        this.sForm = {}
+        this.sForm = {pictures: []}
       },
       uomInput (val) {
         if (val === 'other') {
