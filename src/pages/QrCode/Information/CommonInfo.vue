@@ -24,7 +24,7 @@
           </q-item>
           <q-item>
             <span v-for="(item, i) in thumbnails" v-bind:key="i" :class="{'ml-10': i !== 0}">
-              <img :src="item" preview-title-enable="false" :key="i" @click="ImagePreview(previews, i)">
+              <img :src="item" preview-title-enable="false" :key="i" @click="preview(i)">
             </span>
           </q-item>
         </q-list>
@@ -42,7 +42,13 @@ export default {
     "qrCode",
     "previews",
     "thumbnails"
-  ]    
+  ],
+  methods: {
+    preview (i) {
+      ImagePreview(this.previews, i)
+    }
+  }    
+
 }
 </script>
 
