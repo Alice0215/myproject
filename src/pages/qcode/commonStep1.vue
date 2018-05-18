@@ -189,18 +189,22 @@
           case plantType.SINGLE:
             this.nameLabel = '植物名称'
             this.nameHolder = '请输入植物名称'
+            this.navTitle = '单株植物'
             break
           case plantType.AREA:
             this.nameLabel = '片区名称'
             this.nameHolder = '请输入片区名称'
+            this.navTitle = '片区植物'
             break
           case plantType.DEVICE:
             this.nameLabel = '设备名称'
             this.nameHolder = '请输入设备名称'
+            this.navTitle = '设备'
             break
           case plantType.OTHER:
             this.nameLabel = '名称'
             this.nameHolder = '请输入名称'
+            this.navTitle = '其他'
             break
           default:
             break

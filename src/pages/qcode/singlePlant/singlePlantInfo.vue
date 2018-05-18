@@ -296,6 +296,7 @@
       },
     },
     mounted () {
+      this.navTitle = '植物名称'
       this.getForm()
       this.getAreaBranch()
       this.getPlantCategory()

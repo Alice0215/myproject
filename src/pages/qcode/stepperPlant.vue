@@ -6,7 +6,7 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
-          二维码
+          {{ navTitle }}
         </q-toolbar-title>
         <q-item-side class="no-info" right/>
       </q-toolbar>

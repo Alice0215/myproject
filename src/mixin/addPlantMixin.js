@@ -40,6 +40,14 @@ const addPlantMixin = {
       set (val) {
         return this.$store.commit('plantInfo/setChooseType', val)
       }
+    },
+    navTitle: {
+      get () {
+        return this.$store.state.plantInfo.navTitle
+      },
+      set (val) {
+        return this.$store.commit('plantInfo/setNavTitle', val)
+      }
     }
   },
   methods: {

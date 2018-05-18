@@ -3,6 +3,7 @@ export default {
   singleForm:  {},
   areaForm: {singles: []},
   projectId: null,
-  type: null
+  type: null,
+  navTitle: null
   //
 }

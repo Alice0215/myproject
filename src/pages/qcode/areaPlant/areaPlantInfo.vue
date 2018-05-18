@@ -85,6 +85,7 @@
       },
     },
     mounted () {
+      this.navTitle = '片区名称'
       this.$root.$on('add-plant-close', () => {
         this.createPageShow = false
       })

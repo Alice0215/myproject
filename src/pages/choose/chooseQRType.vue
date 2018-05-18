@@ -6,7 +6,7 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
-          二维码
+          {{ title }}
         </q-toolbar-title>
         <q-item-side class="no-info" right/>
       </q-toolbar>
@@ -50,7 +50,9 @@
       addPlantMixin,
     ],
     data () {
-      return {}
+      return {
+        title: this.$store.state.qrCodeInfo.qrCodeMsg.identifier
+      }
     },
     methods: {
       back () {
