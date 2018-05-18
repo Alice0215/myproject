@@ -3,7 +3,7 @@
     <q-layout view="Hhh lpr Fff">
       <q-layout-header>
         <q-toolbar>
-          <a @click="$router.goBack(isEdited,'取消选择', '点击确定将不会被保留所选择的信息，您确定要取消操作操作吗？')" class="back-a">
+          <a @click="$router.goBack(isEdited,'取消选择', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')" class="back-a">
             <q-item-side left  icon="keyboard arrow left" class="back-left"/>
             返回
           </a>

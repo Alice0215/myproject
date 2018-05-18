@@ -38,7 +38,7 @@ const MaintenanceMixin = {
     back () {
       this.$store.commit('Maintenance/setCurrent', null)
       this.$store.commit('Maintenance/setJobGroup', null)
-      this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
+      this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')
     },
     imagePreview (index) {
       let previewArray = _.map(this.form.pictures, (img) => {
@@ -116,16 +116,28 @@ const MaintenanceMixin = {
     initJobs () {
       let jobs = []
       _.forEach(this.jobs, v => {
-        if (_.isNull(v.actionId)) {
-          jobs.push({ 'other': v.description })
+        if (_.isNull(v.fid) || v.fid === '') {
+          // 自定义类型
+          jobs.push({ 'other': v.fname })
         } else {
-          if (v.jobId) {
-            jobs.push({ 'actionId': v.actionId, 'description': v.description, 'jobId': v.jobId })
+          if (_.isNull(v.actionId) || v.actionId === '') {
+            // 无子类的
+            if (v.jobId) {
+              jobs.push({ 'actionId': v.fid, 'description': v.fname, 'jobId': v.jobId })
+            } else {
+              jobs.push({ 'actionId': v.fid, 'description': v.fname })
+            }
           } else {
-            jobs.push({ 'actionId': v.actionId, 'description': v.description })
+            if (v.jobId) {
+              // 编辑的
+              jobs.push({ 'actionId': v.actionId, 'description': v.description, 'jobId': v.jobId })
+            } else {
+              jobs.push({ 'actionId': v.actionId, 'description': v.description })
+            }
           }
         }
       })
+      this.form.jobs = jobs
     },
     save () {
       // 添加
