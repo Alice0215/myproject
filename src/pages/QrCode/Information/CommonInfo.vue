@@ -5,26 +5,26 @@
         <q-list>
           <q-item>
             <div class="title">二维码编号：</div>
-            <div class="ml-20 content">{{ qrCode.identifier }}</div>
-            <q-item-side  class="active btn-right" right v-if="qrCode.editable"  @click.native="edit">修改</q-item-side>
+            <div class="ml-20 content">{{ code.identifier }}</div>
+            <q-item-side  class="active btn-right" right v-if="code.editable"  @click.native="edit">修改</q-item-side>
           </q-item>
           <q-item>
             <div class="title">所属项目：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{qrCode.project.projectName}}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">{{code.project.projectName}}</div>
           </q-item>
           <q-item>
             <div class="title">地址：</div>
-            <div class="ml-20 content" >{{ qrCode.location? qrCode.location.formattedAddress : ""  }}</div>
+            <div class="ml-20 content" >{{ code.location? code.location.formattedAddress : ""  }}</div>
           </q-item>
         </q-list>
         <q-list class="mt-10">
           <q-item class="ib">
             <div class="mb-10">备注：</div>
-            <div class="content">{{ qrCode.description }}</div>
+            <div class="content">{{ code.description }}</div>
           </q-item>
           <q-item>
-            <span v-for="(item, i) in qrCode.pictures" v-bind:key="item.id" :class="{'ml-10': i !== 0}">
-              <img :src="item.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)">
+            <span v-for="(item, i) in thumbnails" v-bind:key="i" :class="{'ml-10': i !== 0}">
+              <img :src="item" preview-title-enable="false" :key="i" @click="ImagePreview(previews, i)">
             </span>
           </q-item>
         </q-list>
@@ -34,17 +34,28 @@
 </template>
 
 <script>
-import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
+import { ImagePreview } from 'vant'
 
 export default {
-  mixins: [
-    QrCodeDetailMixin
-  ],
   data () {
     return {
+      code: {},
+      previews: {},
+      thumbnails: {}
     }
   },
   methods: {
+  },
+  mounted () {
+    eventBus.$on('set-qrCodeDetail-code', (code) => {
+      this.code = code
+    })
+    eventBus.$on('set-qrCodeDetail-previews', (previews) => {
+      this.previews = previews
+    })
+    eventBus.$on('set-qrCodeDetail-thumbnails', (thumbnails) => {
+      this.thumbnails = thumbnails
+    })
   }
 }
 </script>

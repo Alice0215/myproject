@@ -12,16 +12,12 @@
 </template>
 
 <script>
-import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 import CommonInfo from '../Information/CommonInfo'
 
 export default {
   components: {
     CommonInfo
   },
-  mixins: [
-    QrCodeDetailMixin
-  ],
   data () {
     return {
     }

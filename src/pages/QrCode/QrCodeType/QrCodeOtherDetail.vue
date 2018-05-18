@@ -6,14 +6,15 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class='header-title text-center'>
-          {{ qrCode.alias }}
+          {{ code.alias }}
         </q-toolbar-title>
         <q-item-side class="white-right" right/>
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border class="tab-class">
-        <q-tab default name="equipment-info" slot="title" label="其他信息" />
+        <q-tab default name="other-info" slot="title" label="其他信息" />
         <q-tab name="patrol-records" slot="title" label="巡查记录" />
-        <q-tab-pane name="equipment-info" class="tab-pane-class">
+
+        <q-tab-pane name="other-info" class="tab-pane-class">
           <common-info></common-info>
         </q-tab-pane>
         <q-tab-pane name="patrol-records"></q-tab-pane>
@@ -23,21 +24,23 @@
 </template>
 
 <script>
-import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 import CommonInfo from '../Information/CommonInfo'
 
 export default {
   components: {
     CommonInfo
   },
-  mixins: [
-    QrCodeDetailMixin
-  ],
   data () {
     return {
+      code: {}
     }
   },
   methods: {
+  },
+  mounted () {
+    eventBus.$on('set-qrCodeDetail-code', (code) => {
+      this.code = code
+    })
   }
 }
 </script>

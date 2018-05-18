@@ -1,5 +1,4 @@
 import eventBus from '../eventBus'
-import { date } from 'quasar'
 import { request } from '../common'
 import { server, plantType } from '../const'
 import _ from 'lodash'
@@ -8,8 +7,11 @@ import _ from 'lodash'
 const QrCodeMixin = {
   data () {
     return {
-      type: null,
-      data: {}
+      qrCodeId: 0,
+      code: {},
+      detail: {},
+      thumbnails: [],  
+      previews: []
     }
   },
   methods: {
@@ -18,55 +20,33 @@ const QrCodeMixin = {
       const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
       this.$q.loading.hide()
       if (resp) {
-        this.data = resp.data.resultMsg
-        if (this.data.type) {
-          switch (this.data.type.key) {
-            case plantType.SINGLE:
-              this.type = 1
-              break
-            case plantType.AREA:
-              this.type = 2
-              break
-            case plantType.DEVICE:
-              this.type = 3
-              break
-            case plantType.OTHER:
-              this.type = 4
-              break
-          }
+        let type = resp.data.resultMsg.type
+        if(type && (type.key === plantType.SINGLE || type.key === plantType.AREA)) {
+          this.code = resp.data.resultMsg.code
+          this.detail = resp.data.resultMsg
+          this.hasMaintenanceRecords = true
         } else {
-          this.type = 5
+          this.code = resp.data.resultMsg
         }
-        if (_.has(this.data, 'pictures')) {
-          this.dealPictures(this.data)
-        } else {
-          this.dealPictures(this.data.code)
-        }
+        
+        this.dealPictures()
 
-        this.$store.commit('QrCodeDetail/setCurrent', this.data)
-        // if (this.type === 'SINGLE' || this.type === 'AREA') {
-        //   if (!this.data.code) {
-        //     this.data.code = this.data
-        //   }
-        //   this.qrImgUrl = server.THUMBNAIL_QR + this.info.code.batch.batchNo + '/' + this.qrCodeId + '.png'
-        // } else {
-        //   this.qrImgUrl = server.THUMBNAIL_QR + this.info.batch.batchNo + '/' + this.qrCodeId + '.png'
-        // }
-        // this.editable = this.data.editable
+        eventBus.$emit('set-qrCodeDetail-code', this.code)
+        eventBus.$emit('set-qrCodeDetail-detail', this.detail)
+        eventBus.$emit('set-qrCodeDetail-previews', this.previews)
+        eventBus.$emit('set-qrCodeDetail-thumbnails', this.thumbnails)
+        
       }
     },
-    dealPictures (data) {
-      if (data.pictures.length > 0) {
-        let imageArray = []
-        _.forEach(data.pictures, v => {
-          let previewUrl = server.THUMBNAIL_API + v.filePath
-          imageArray.push({
-            'previewUrl': previewUrl,
-            'contentUrl': v.filePath
-          })
-        })
-        data.pictures = imageArray
+    dealPictures () {
+      if (!_.has(this.code, 'pictures') || this.code.pictures.length === 0) {
+        return
       }
+
+      _.forEach(this.code.pictures, v=>{
+        this.thumbnails.push(server.THUMBNAIL_API + v.filePath)
+        this.previews.push(server.PREVIEW_API + v.filePath)
+      })      
     }
   },
   async mounted () {

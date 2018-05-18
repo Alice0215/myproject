@@ -2,12 +2,8 @@
 </template>
 
 <script>
-import QrDetailMixin from '../../../mixin/QrDetailMixin'
 export default {
 
-  mixins: [
-    QrDetailMixin
-  ],
   data () {
     return {
     }

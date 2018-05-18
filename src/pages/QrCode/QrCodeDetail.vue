@@ -1,9 +1,9 @@
 <template id="qr_detail">
-  <QrCodeSingle v-if="type === 1"></QrCodeSingle>
-  <QrCodeArea v-else-if="type === 2"></QrCodeArea>
-  <QrCodeDevice v-else-if="type === 3"></QrCodeDevice>
-  <QrCodeOther v-else-if="type === 4"></QrCodeOther>
-  <QrCodeEmpty v-else-if="type === 5"></QrCodeEmpty>
+  <QrCodeSingle v-if="code.type === plantType.SINGLE"></QrCodeSingle>
+  <QrCodeArea v-else-if="code.type === plantType.AREA"></QrCodeArea>
+  <QrCodeDevice v-else-if="code.type === plantType.DEVICE"></QrCodeDevice>
+  <QrCodeOther v-else-if="code.type === plantType.OTHER"></QrCodeOther>
+  <QrCodeEmpty v-else></QrCodeEmpty>
 </template>
 
 <script>
@@ -12,7 +12,7 @@ import QrCodeArea from './QrCodeType/QrCodeAreaDetail'
 import QrCodeDevice from './QrCodeType/QrCodeDeviceDetail'
 import QrCodeOther from './QrCodeType/QrCodeOtherDetail'
 import QrCodeEmpty from './QrCodeType/QrCodeEmptyDetail'
-import QrDetailMixin from '../../mixin/QrCodeMixin'
+import QrCodeMixin from '../../mixin/QrCodeMixin'
 
 export default {
   components: {
@@ -23,7 +23,7 @@ export default {
     QrCodeEmpty
   },
   mixins: [
-    QrDetailMixin
+    QrCodeMixin
   ],
   data () {
     return {
