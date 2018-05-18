@@ -61,6 +61,5 @@
   }
 </script>
 
-<style lang='scss'>
-  @import "../../../assets/css/common";
+<style>
 </style>
