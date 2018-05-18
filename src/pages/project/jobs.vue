@@ -3,7 +3,7 @@
     <q-layout view="Hhh lpr Fff">
       <q-layout-header>
         <q-toolbar>
-          <a @click="$router.goBack(isEdited,'确认放弃选择的工作内容吗？', '离开当前页面您选择的工作内容将不会保存')" class="back-a">
+          <a @click="$router.goBack(isEdited,'取消选择', '点击确定将不会被保留所选择的信息，您确定要取消操作操作吗？')" class="back-a">
             <q-item-side left  icon="keyboard arrow left" class="back-left"/>
             返回
           </a>
@@ -17,13 +17,13 @@
       <q-page>
         <div class="full-width" id="job-action">
           <div class="full-width">
-          <q-item class="bg-primary jobs-tags">
+          <div class="bg-primary jobs-tags pt-5">
             <div class="m-5">
               <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
                {{item.fname}}<span v-if="item.description!==''">-{{item.description}}</span>
              </q-chip>
             </div>
-          </q-item>
+          </div>
           <q-item  v-ripple.mat class="full-width underline user-item">
             <q-item-main label="可选择的工作内容" />
             <q-item-side class="active" right icon="add" @click.native="addWork" />
@@ -46,15 +46,15 @@
           </div>
         </div>
         </div>
-
-        <q-modal v-model="open" minimized :content-css="{padding: '20px'}" ref="modalRef" id="addjobs">
-          <div class="job-title font-14">添加工作内容</div>
-          <div class="job-ins-title">工作内容描述请少于7个字</div>
-          <q-input class="job-input" placeholder="输入内容" type="text" v-model="content"></q-input>
-          <q-btn class="job-cancel-btn" v-close-overlay  label="取消" />
-          <q-btn class="job-ok-btn" v-close-overlay label="确定" @click="doAdd" />
+         <q-modal v-model="open" minimized :content-css="{padding: '20px'}" ref="modalRef" id="addjobs">
+          <div class="job-title">添加工作内容</div>
+          <div class="job-ins-title text-center">工作内容描述请少于7个字</div>
+          <q-input class="job-input mt-10" placeholder="输入内容" type="text" v-model="content"></q-input>
+          <div class="modal-buttons row">
+          <q-btn class="job-btn" v-close-overlay  label="取消" />
+          <q-btn class="job-btn active" v-close-overlay label="确定" @click="doAdd" />
+          </div>
         </q-modal>
-
     </q-page>
     </q-page-container>
     </q-layout>
@@ -63,6 +63,7 @@
 
 <script>
 import { request } from '../../common'
+import { Dialog } from 'quasar'
 import _ from 'lodash'
 export default {
   data () {
@@ -124,12 +125,12 @@ export default {
             this.children = resp.data.resultMsg
             this.chooseId = fid
             _.forEach(resp.data.resultMsg, v => {
-              this.handleChoose(fid, v.id, v.name, name)
+              this.handleChoose(fid, v.id, v.name, fname)
             })
           }
         } else {
           _.forEach(this.children, v => {
-            this.handleChoose(fid, v.id, v.name, name)
+            this.handleChoose(fid, v.id, v.name, fname)
           })
         }
       } else {
@@ -149,7 +150,6 @@ export default {
         this.selected.push(select)
         this.fids.push(fid)
         this.jobs = [...this.jobs, job]
-        console.log(this.jobs)
       }
     },
     save () {
@@ -201,28 +201,34 @@ export default {
   .child {
     padding-left: 26px;
   }
+}
+#addjobs {
   .job-title {
-  color: #000000;
-  font-size: 16px;
-  padding-bottom: 10px;
-  text-align: center;
-}
-.job-ins-title {
-  color: #888888;
-  font-size: 14px;
-}
-.job-input {
-  border: 1px solid #888888;
-  padding: 8px !important;
-  margin-bottom: 10px;
-}
-.job-cancel-btn,
-.job-ok-btn {
-  width: 45%;
-  float: left;
-}
-.job-ok-btn {
-  color: #fa8c16;
-}
+    color: #000000;
+    font-size: 16px;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+  .job-ins-title {
+    color: #888888;
+    font-size: 14px;
+  }
+  .job-input {
+    border: 1px solid #dddddd;
+    padding: 8px !important;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  .job-btn {
+    border-radius: 0px;
+    font-size: 14px;
+    padding: 0px;
+  }
+  .border-right {
+    border-right: 1px solid #e8e8e8;
+  }
+  .border-top {
+    border-top: 1px solid #e8e8e8;
+  }
 }
 </style>
