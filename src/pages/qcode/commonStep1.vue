@@ -1,7 +1,7 @@
 <template>
   <div id="step-common-info">
     <van-cell-group :border="false">
-      <van-field class="font-16" v-model="commonForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
+      <van-field class="font-16" v-model="commonForm.alias" :label="nameLabel" :placeholder="nameHolder" required/>
       <van-cell title="所属项目" is-link :value="projectName" required class="font-16" @click="showPop = true"/>
       <van-cell title="地址" is-link :value="positionName" required class="font-16" @click="chooseMap"/>
       <van-field class="van-hairline--bottom"
@@ -68,6 +68,8 @@
         pickerLoading: false,
         hasLoadAll: false,
         commonForm: {},
+        nameLabel: '',
+        nameHolder: ''
       }
     },
     methods: {
@@ -182,6 +184,26 @@
       getForm () {
         this.commonForm = Object.assign({}, this.qrCodeForm)
         this.commonForm.qrCodeId = this.$store.state.qrCodeInfo.qrCodeMsg.qrCodeId
+        switch (this.type) {
+          case plantType.SINGLE:
+            this.nameLabel = '植物名称'
+            this.nameHolder = '请输入植物名称'
+            break
+          case plantType.AREA:
+            this.nameLabel = '片区名称'
+            this.nameHolder = '请输入片区名称'
+            break
+          case plantType.DEVICE:
+            this.nameLabel = '设备名称'
+            this.nameHolder = '请输入设备名称'
+            break
+          case plantType.OTHER:
+            this.nameLabel = '名称'
+            this.nameHolder = '请输入名称'
+            break
+          default:
+            break
+        }
       },
     },
     mounted () {
