@@ -6,7 +6,7 @@
           <q-item>
             <div class="title">二维码编号：</div>
             <div class="ml-20 content">{{ qrCode.identifier }}</div>
-            <q-item-side  class="active btn-right" right v-if="qrCode.editable"  @click.native="edit">修改</q-item-side>
+            <q-item-side  class="active btn-right" right v-if="detail.editable"  @click.native="edit">修改</q-item-side>
           </q-item>
           <q-item>
             <div class="title">片区名称：</div>
@@ -26,9 +26,9 @@
               {{ qrCode.location? qrCode.location.formattedAddress : ""  }}
             </div>
           </q-item>
-          <q-item v-if="detail.amount">
+          <q-item>
             <div class="title">片区面积：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount + detail.uomName}}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.acreage ? detail.acreage : '' }}</div>
           </q-item>
         </q-list>
         <q-list class="mt-10 singles-list" v-if="detail.singles.length > 0">
