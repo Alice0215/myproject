@@ -47,11 +47,18 @@
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount + detail.uomName}}</div>
           </q-item>
           <q-item>
-            <div class="title">苗木规格：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">
-              <span class="ib pr-5">胸径：{{ detail.xiongJing }}cm</span>
-              <span  class="ib pr-5">高度：{{ detail.gaoDu }}cm</span>
-              <span  class="ib pr-5">冠幅：{{ detail.guanFu }}cm</span>
+            <div class="row">
+              <div class="title">苗木规格：</div>
+              <div class="ml-20 content">
+                <span class="ib pr-5" v-if="detail.xiongJing">胸径：{{ detail.xiongJing }}cm</span>
+                <span  class="ib pr-5" v-if="detail.gaoDu">高度：{{ detail.gaoDu }}cm</span>
+                <span  class="ib pr-5" v-if="detail.guanFu">冠幅：{{ detail.guanFu }}cm</span>
+                <span  class="ib pr-5" v-if="detail.diJing">地径：{{ detail.diJing }}cm</span>
+                <span  class="ib pr-5" v-if="detail.pengJing">蓬径：{{ detail.pengJing }}cm</span>
+                <span  class="ib pr-5" v-if="detail.branch">分支数：{{ detail.branch }}cm</span>
+                <span  class="ib pr-5" v-if="detail.year">几年生：{{ detail.year }}cm</span>
+                <span  class="ib pr-5" v-if="detail.otherFeature">其他规格：{{ detail.otherFeature }}</span>
+              </div>
             </div>
           </q-item>
           <q-item>
