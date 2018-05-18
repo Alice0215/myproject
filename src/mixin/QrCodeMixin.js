@@ -10,7 +10,7 @@ const QrCodeMixin = {
       qrCodeId: 0,
       qrCode: {},
       detail: {},
-      thumbnails: [],  
+      thumbnails: [],
       previews: []
     }
   },
@@ -30,7 +30,7 @@ const QrCodeMixin = {
         }
         console.log(this.qrCode)
         this.dealPictures()
-       
+
       }
     },
     dealPictures () {
@@ -41,7 +41,7 @@ const QrCodeMixin = {
       _.forEach(this.qrCode.pictures, v=>{
         this.thumbnails.push(server.THUMBNAIL_API + v.filePath)
         this.previews.push(server.PREVIEW_API + v.filePath)
-      })      
+      })
     }
   },
   async mounted () {

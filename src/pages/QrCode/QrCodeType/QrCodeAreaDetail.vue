@@ -8,7 +8,9 @@
         <q-toolbar-title class='header-title text-center'>
           {{ qrCode.alias }}
         </q-toolbar-title>
-        <q-item-side class="white-right" right/>
+        <q-item-side class="white-right" right @click.native="openQrCode(qrCode)">
+          <i class="iconfont text-black font-20">&#xe701;</i>
+        </q-item-side>
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border class="tab-class">
         <q-tab default name="area-info" slot="title" label="片区信息" />
@@ -33,11 +35,15 @@
 
 <script>
 import QrAreaInfo from '../Information/QrAreaInfo'
+import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 
 export default {
   components: {
     QrAreaInfo
   },
+  mixins: [
+    QrCodeDetailMixin
+  ],
   props: [
     "qrCode",
     "previews",

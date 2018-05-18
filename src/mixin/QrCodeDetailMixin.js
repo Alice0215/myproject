@@ -11,6 +11,9 @@ const QrCodeDetailMixin = {
     },
     edit (detail) {
       this.$router.push('/qcode/edit?id=' + detail.id)
+    },
+    openQrCode (detail) {
+      console.log(detail)
     }
   },
   async mounted () {

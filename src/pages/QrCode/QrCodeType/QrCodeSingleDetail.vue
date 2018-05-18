@@ -8,7 +8,9 @@
         <q-toolbar-title class='header-title text-center'>
           {{ qrCode.alias }}
         </q-toolbar-title>
-        <q-item-side class="white-right" right/>
+        <q-item-side class="white-right" right @click.native="openQrCode(qrCode)">
+          <i class="iconfont text-black font-20">&#xe701;</i>
+        </q-item-side>
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border class="tab-class">
         <q-tab default name="single-info" slot="title" label="单株信息" />
@@ -40,12 +42,16 @@
 <script>
   import QrSingleInfo from '../Information/QrSingleInfo'
   import QrCodeMaintenance from '../Information/QrCodeMaintenance'
+  import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 
   export default {
     components: {
       QrSingleInfo,
       QrCodeMaintenance
     },
+    mixins: [
+      QrCodeDetailMixin
+    ],
     props: [
       "qrCode",
       "previews",

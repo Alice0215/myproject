@@ -8,7 +8,9 @@
         <q-toolbar-title class='header-title text-center'>
           {{ qrCode.alias }}
         </q-toolbar-title>
-        <q-item-side class="white-right" right/>
+        <q-item-side class="white-right" right @click.native="openQrCode(qrCode)">
+          <i class="iconfont text-black font-20">&#xe701;</i>
+        </q-item-side>
       </q-toolbar>
       <q-tabs inverted align="justify" no-pane-border class="tab-class">
         <q-tab default name="equipment-info" slot="title" label="设备信息" />
@@ -26,17 +28,20 @@
 
 <script>
 import CommonInfo from '../Information/CommonInfo'
-import eventBus from '../../../eventBus'
+import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 
 export default {
   components: {
     CommonInfo
   },
+  mixins: [
+    QrCodeDetailMixin
+  ],
   props: [
     "qrCode",
     "previews",
     "thumbnails"
-  ]    
+  ]
 }
 </script>
 
