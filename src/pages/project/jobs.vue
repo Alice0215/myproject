@@ -168,7 +168,7 @@ export default {
   },
   mounted () {
     this.getList()
-    let jobs = this.$store.getters['Maintenance/getJobGroup']
+    let jobs = _.values(Object.assign({}, this.$store.getters['Maintenance/getJobGroup']))
     if (!_.isUndefined(jobs) && !_.isNull(jobs)) {
       this.jobs = jobs
       _.forEach(this.jobs, u => {

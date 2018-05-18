@@ -218,8 +218,8 @@ const MaintenanceMixin = {
     } else {
       this.form.codeId = this.$route.query.codeId
     }
-    let form = this.$store.getters['Maintenance/getCurrent']
-    let jobs = this.$store.getters['Maintenance/getJobGroup']
+    let form = Object.assign({}, this.$store.getters['Maintenance/getCurrent'])
+    let jobs = _.values(Object.assign({}, this.$store.getters['Maintenance/getJobGroup']))
     if (!_.isNull(form) && !_.isUndefined(form)) {
       this.form = form
       this.jobs = jobs
