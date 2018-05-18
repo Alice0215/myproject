@@ -9,7 +9,7 @@
             <q-item-side  class="active btn-right" right v-if="qrCode.editable"  @click.native="edit">修改</q-item-side>
           </q-item>
           <q-item>
-            <div class="title">植物名称：</div>
+            <div class="title">片区名称：</div>
             <div class="ml-20 content" v-line-clamp:20="1">
               {{ qrCode.alias }}
             </div>
@@ -31,7 +31,7 @@
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount + detail.uomName}}</div>
           </q-item>
         </q-list>
-        <q-list class="mt-10 singles-list">
+        <q-list class="mt-10 singles-list" v-if="detail.singles.length > 0">
           <q-list-header class="list-header">片区植物</q-list-header>
           <q-item v-for="item in detail.singles" :key="item.id" class="bg-white" @click.native="toAreaDetail(item)">
             <q-item-main>
@@ -80,6 +80,11 @@ export default {
     "thumbnails"
   ],
   methods: {
+    toAreaDetail (info) {
+      info.areaName = this.qrCode.alias
+      this.$store.commit('Qrcode/setCurrent', info)
+      this.$router.push('/areaDetail')
+    },
     preview (i) {
       ImagePreview(this.previews, i)
     }

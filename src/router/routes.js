@@ -11,6 +11,7 @@ import areaDetail from '../pages/qcode/areaDetail'
 import chooseDate from '../pages/choose/chooseDate'
 
 import QrCodeDetail from '../pages/QrCode/QrCodeDetail'
+import QrAreaSingleDetail from '../pages/QrCode/Information/QrAreaSingleInfo'
 
 export default [
   {
@@ -81,7 +82,7 @@ export default [
   },
   {
     path: '/areaDetail',
-    component: areaDetail
+    component: QrAreaSingleDetail
   },
   {
     path: '/qcode/addPlant',
