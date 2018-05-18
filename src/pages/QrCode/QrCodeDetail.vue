@@ -1,9 +1,9 @@
 <template id="qr_detail">
-  <QrCodeSingle v-if="code.type === plantType.SINGLE"></QrCodeSingle>
-  <QrCodeArea v-else-if="code.type === plantType.AREA"></QrCodeArea>
-  <QrCodeDevice v-else-if="code.type === plantType.DEVICE"></QrCodeDevice>
-  <QrCodeOther v-else-if="code.type === plantType.OTHER"></QrCodeOther>
-  <QrCodeEmpty v-else></QrCodeEmpty>
+  <QrCodeEmpty v-if="!qrCode.type" :qrCode="qrCode"></QrCodeEmpty>
+  <QrCodeSingle v-else-if="qrCode.type.key === plantType.SINGLE" :qrCode="qrCode" :detail="detail" :thumbnails="thumbnails" :previews="previews"></QrCodeSingle>
+  <QrCodeArea v-else-if="qrCode.type.key === plantType.AREA" :qrCode="qrCode" :detail="detail" :thumbnails="thumbnails" :previews="previews"></QrCodeArea>
+  <QrCodeDevice v-else-if="qrCode.type.key === plantType.DEVICE" :qrCode="qrCode" :thumbnails="thumbnails" :previews="previews"></QrCodeDevice>
+  <QrCodeOther v-else-if="qrCode.type.key === plantType.OTHER" :qrCode="qrCode" :thumbnails="thumbnails" :previews="previews"></QrCodeOther>
 </template>
 
 <script>
@@ -13,6 +13,8 @@ import QrCodeDevice from './QrCodeType/QrCodeDeviceDetail'
 import QrCodeOther from './QrCodeType/QrCodeOtherDetail'
 import QrCodeEmpty from './QrCodeType/QrCodeEmptyDetail'
 import QrCodeMixin from '../../mixin/QrCodeMixin'
+
+import { plantType } from '../../const'
 
 export default {
   components: {
@@ -27,6 +29,7 @@ export default {
   ],
   data () {
     return {
+      plantType: plantType
     }
   },
   methods: {

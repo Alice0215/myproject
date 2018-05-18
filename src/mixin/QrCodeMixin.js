@@ -8,7 +8,7 @@ const QrCodeMixin = {
   data () {
     return {
       qrCodeId: 0,
-      code: {},
+      qrCode: {},
       detail: {},
       thumbnails: [],  
       previews: []
@@ -22,28 +22,23 @@ const QrCodeMixin = {
       if (resp) {
         let type = resp.data.resultMsg.type
         if(type && (type.key === plantType.SINGLE || type.key === plantType.AREA)) {
-          this.code = resp.data.resultMsg.code
+          this.qrCode = resp.data.resultMsg.code
           this.detail = resp.data.resultMsg
           this.hasMaintenanceRecords = true
         } else {
-          this.code = resp.data.resultMsg
+          this.qrCode = resp.data.resultMsg
         }
-        
+        console.log(this.qrCode)
         this.dealPictures()
-
-        eventBus.$emit('set-qrCodeDetail-code', this.code)
-        eventBus.$emit('set-qrCodeDetail-detail', this.detail)
-        eventBus.$emit('set-qrCodeDetail-previews', this.previews)
-        eventBus.$emit('set-qrCodeDetail-thumbnails', this.thumbnails)
-        
+       
       }
     },
     dealPictures () {
-      if (!_.has(this.code, 'pictures') || this.code.pictures.length === 0) {
+      if (!_.has(this.qrCode, 'pictures') || this.qrCode.pictures.length === 0) {
         return
       }
 
-      _.forEach(this.code.pictures, v=>{
+      _.forEach(this.qrCode.pictures, v=>{
         this.thumbnails.push(server.THUMBNAIL_API + v.filePath)
         this.previews.push(server.PREVIEW_API + v.filePath)
       })      

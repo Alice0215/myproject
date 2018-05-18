@@ -6,7 +6,7 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class='header-title text-center'>
-          {{ code.alias }}
+          {{ qrCode.alias }}
         </q-toolbar-title>
         <q-item-side class="white-right" right/>
       </q-toolbar>
@@ -15,7 +15,7 @@
         <q-tab name="occupy-records" slot="title" label="领用记录" />
         <q-tab name="patrol-records" slot="title" label="巡查记录" />
         <q-tab-pane name="equipment-info" class="tab-pane-class">
-          <common-info></common-info>
+          <common-info :qrCode="qrCode" :thumbnails="thumbnails" :previews="previews"></common-info>
         </q-tab-pane>
         <q-tab-pane name="occupy-records"></q-tab-pane>
         <q-tab-pane name="patrol-records"></q-tab-pane>
@@ -26,23 +26,17 @@
 
 <script>
 import CommonInfo from '../Information/CommonInfo'
+import eventBus from '../../../eventBus'
 
 export default {
   components: {
     CommonInfo
   },
-  data () {
-    return {
-      code: {}
-    }
-  },
-  methods: {
-  },
-  mounted () {
-    eventBus.$on('set-qrCodeDetail-code', (code) => {
-      this.code = code
-    })
-  }
+  props: [
+    "qrCode",
+    "previews",
+    "thumbnails"
+  ]    
 }
 </script>
 

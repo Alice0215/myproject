@@ -5,12 +5,12 @@
 
 <script>
   export default {
-    data () {
-      return {
-      }
-    },
-    methods: {
-    }
+    props: [
+      "qrCode",
+      "previews",
+      "thumbnails",
+      "detail"
+    ]    
   }
 </script>
 

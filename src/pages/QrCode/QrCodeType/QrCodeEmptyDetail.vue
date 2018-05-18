@@ -6,7 +6,7 @@
           <label>返回</label>
         </q-item-side>
       </q-toolbar>
-      <common-info class="mt-10"></common-info>
+      <common-info class="mt-10" :qrCode="qrCode"></common-info>
     </q-layout-header>
   </q-layout>
 </template>
@@ -18,12 +18,9 @@ export default {
   components: {
     CommonInfo
   },
-  data () {
-    return {
-    }
-  },
-  methods: {
-  }
+  props: [
+    "qrCode"
+  ]    
 }
 </script>
 
