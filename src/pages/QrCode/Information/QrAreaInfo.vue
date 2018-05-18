@@ -6,7 +6,7 @@
           <q-item>
             <div class="title">二维码编号：</div>
             <div class="ml-20 content">{{ qrCode.identifier }}</div>
-            <q-item-side  class="active btn-right" right v-if="detail.editable"  @click.native="edit">修改</q-item-side>
+            <q-item-side  class="active btn-right" right v-if="detail.editable"  @click.native="edit(qrCode)">修改</q-item-side>
           </q-item>
           <q-item>
             <div class="title">片区名称：</div>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { ImagePreview } from 'vant'
+import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 
 export default {
   props: [
@@ -79,14 +79,14 @@ export default {
     "previews",
     "thumbnails"
   ],
+  mixins: [
+    QrCodeDetailMixin
+  ],
   methods: {
     toAreaDetail (info) {
       info.areaName = this.qrCode.alias
       this.$store.commit('Qrcode/setCurrent', info)
       this.$router.push('/areaDetail')
-    },
-    preview (i) {
-      ImagePreview(this.previews, i)
     }
   }
 

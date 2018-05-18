@@ -6,7 +6,7 @@
           <q-item>
             <div class="title">二维码编号：</div>
             <div class="ml-20 content">{{ qrCode.identifier }}</div>
-            <q-item-side  class="active btn-right" right v-if="detail.editable"  @click.native="edit">修改</q-item-side>
+            <q-item-side  class="active btn-right" right v-if="detail.editable"  @click.native="edit(qrCode)">修改</q-item-side>
           </q-item>
           <q-item>
             <div class="title">植物名称：</div>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { ImagePreview } from 'vant'
+import QrCodeDetailMixin from '../../../mixin/QrCodeDetailMixin'
 
 export default {
   props: [
@@ -103,11 +103,9 @@ export default {
     "previews",
     "thumbnails"
   ],
-  methods: {
-    preview (i) {
-      ImagePreview(this.previews, i)
-    }
-  }
+  mixins: [
+    QrCodeDetailMixin
+  ]
 
 }
 </script>
