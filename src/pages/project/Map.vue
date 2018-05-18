@@ -49,6 +49,7 @@ export default {
       handleGeocoder (data) {
         let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
         geoInfo.position = this.position
+        this.$store.commit('Location/setCurrent', geoInfo)
         geoInfo = JSON.stringify(geoInfo)
         if (data.info === 'OK') {
           eventBus.$emit('user_location', geoInfo)
@@ -118,9 +119,6 @@ export default {
       this.getAdressByGeocoder(lngLatArray)
     },
     async getCurrentPosition () {
-      this.src = 'https://m.amap.com/picker/?center=113.60727' + ',34.788548' +
-          '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
-      window.addEventListener('message', this.receivedMessage, false)
       if (!window.GaodeLocation) {
         return false
       }
@@ -152,7 +150,6 @@ export default {
   },
   async mounted () {
     this.getCurrentPosition()
-    //      this.getGeolocation()
     this.$nextTick(() => {
       document.getElementById('map_frame').style.height = screen.height + 'px'
       let iframe = document.getElementById('map_frame').contentWindow
