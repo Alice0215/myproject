@@ -45,10 +45,10 @@
       </q-page>
       </q-page-container>
        <q-layout-footer>
-     <q-tabs class="footer" v-model="model">
+      <q-tabs class="footer" v-model="model">
         <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" name="home"/>
         <q-route-tab slot="title" icon="notifications none" to="/"  disable replace label="消息" class="menu" />
-        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" name="my"/>
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" />
       </q-tabs>
     </q-layout-footer>
     </q-layout>
@@ -56,6 +56,9 @@
 </template>
 
 <script>
+import { request } from '../../common'
+import _ from 'lodash'
+import { server, plantType } from '../../const'
 export default {
   data () {
     return {
@@ -207,7 +210,7 @@ export default {
     color: white;
     text-align: center;
     font-size: 20px;
-    padding-top: calc((40vh - 220px)/2);
+    padding-top: calc((40vh - 220px) / 2);
   }
   .log {
     text-align: center;
@@ -218,7 +221,7 @@ export default {
   }
   .nav {
     height: calc(21vh - 22px);
-    padding-top: calc((20vh - 100px)/2);
+    padding-top: calc((20vh - 100px) / 2);
     // padding-bottom: 15px;
     img {
       width: 60px;
