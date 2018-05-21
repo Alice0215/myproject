@@ -38,7 +38,7 @@ a {
 }
 
 .required {
-  
+
   padding-left: 2px;
   font-size: 20px;
   color: #F81D22;
@@ -220,8 +220,10 @@ input:not(.no-style):hover {
   padding-top: 15px;
 }
 .q-chip {
+  border-radius: 5px;
   margin-bottom: 10px;
   margin-right: 6px;
+  background-color: #F1F1F5 !important;
 }
 .img-close {
   margin-left: 70px;
@@ -245,6 +247,16 @@ input:not(.no-style):hover {
   line-height: 34px;
   font-size: 14px;
 }
+.title-font-color{
+  color: #666666 !important;
+}
+.active-btn {
+  background: $primary !important;
+  color: white !important;
+}
+.border-top {
+  border-top: 1px solid #e8e8e8;
+}
 
 .text-main-color {
   color: $primary;
@@ -258,4 +270,34 @@ hr {
   &.light {
     border-top-color: $line-light;
   }
+}
+
+.tab-class {
+  .q-tab {
+    padding-bottom: 2px !important;
+  }
+  .q-tab-label {
+    padding-bottom: 8px;
+    color: $text;
+    opacity: 1;
+  }
+  .active {
+    .q-tab-label {
+      border-bottom: 2px solid;
+      color: $primary;
+    }
+  }
+  background: $bgcolor;
+  .q-tabs-head {
+    background: white;
+  }
+  .q-tabs-panes {
+    .q-tab-pane {
+      padding: 12px 0 0 0;
+    }
+  }
+}
+
+.scroll-height {
+  height: calc(100vh - 100px);
 }
