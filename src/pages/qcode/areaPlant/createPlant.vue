@@ -133,7 +133,7 @@
         newBranch: null,
         otherUomShow: false,
         otherUom: null,
-        projectId: this.$store.state.qrCodeInfo.qrCodeMsg.project.id
+        projectId: this.$store.state.plantInfo.projectId
       }
     },
     methods: {
@@ -319,18 +319,16 @@
       chooseArea () {
         this.branchShow = true
       },
-      nextStep () {
-        this.setForm()
-        this.$root.$emit('next-step')
-      },
-      preStep () {
-        this.$root.$emit('pre-step')
-      },
       chooseNursery () {
         this.showPlantCategory = true
       },
       setForm () {
-        this.$store.commit('plantInfo/setNewPlantFormToArea', this.sForm)
+        let qFrom = Object.assign({}, this.sForm)
+        if (qFrom.pictures.length > 0) {
+          let pics = _.map(qFrom.pictures, 'contentUrl')
+          qFrom.pictures = pics
+        }
+        this.$store.commit('plantInfo/setNewPlantFormToArea', qFrom)
       }
     },
     mounted () {

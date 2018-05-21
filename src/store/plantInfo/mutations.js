@@ -22,6 +22,10 @@ export const removeQRCodeFormImage = (state, v) => {
   state.qrCodeForm.pictures.splice(v, 1)
 }
 
+export const removeSinglesFromArea = (state, v) => {
+  state.areaForm.singles.splice(v, 1)
+}
+
 export const setQRCodeFormToSingle = (state, v) => {
   state.singleForm.qrCodeForm = v
 }
@@ -35,7 +39,7 @@ export const setProjectId = (state, v) => {
 }
 
 export const setNewPlantFormToArea = (state, v) => {
-  state.areaForm.singles = v
+  state.areaForm.singles.push(v)
 }
 
 export const setChooseType = (state, v) => {

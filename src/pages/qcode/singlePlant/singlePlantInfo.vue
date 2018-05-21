@@ -6,7 +6,7 @@
       <van-cell title="苗木分类" is-link :value="category" required class="font-16" @click="chooseNursery"/>
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
         <label class="w-64">苗木面积</label>
-        <q-input placeholder="输入片值苗木面积" class="no-margin" v-model="sForm.area" type="number"></q-input>
+        <q-input placeholder="输入片值苗木面积" class="no-margin" v-model="sForm.amount" type="number"></q-input>
         <q-select v-model='uomId' @input="uomInput" :options='uomOptions'
                   class="no-margin border-left" placeholder='选择单位'/>
       </div>

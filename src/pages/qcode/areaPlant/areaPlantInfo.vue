@@ -16,7 +16,7 @@
             <label class="ml-10">{{v.alias}}</label>
             <label class="text-color">数量{{ v.amount }}</label>
             <div class="mr-18">
-              <i class="iconfont holder-color font-18">&#xe61e;</i>
+              <i class="iconfont holder-color font-18" @click="deleteAddPlant(i)">&#xe61e;</i>
               <i class="iconfont ml-10 primary-color font-18">&#xe69b;</i>
             </div>
           </div>
@@ -54,6 +54,10 @@
       }
     },
     methods: {
+      deleteAddPlant (index) {
+        console.log(index)
+        this.$store.commit('plantInfo/removeSinglesFromArea', index)
+      },
       setForm () {
         this.areaForm = this.aForm
         let qFrom = Object.assign({}, this.qrCodeForm)
