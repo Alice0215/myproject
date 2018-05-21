@@ -22,7 +22,7 @@ const jobType = {
 }
 
 const global = {
-  pageSize: 20
+  pageSize: 10
 }
 
 export {

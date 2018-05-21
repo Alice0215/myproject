@@ -1,28 +1,24 @@
 <template>
-  <q-layout id="maintenace-page" class="fit">
-   <q-toolbar class='header'>
-        <q-toolbar class='fix'>
-             <a @click="$router.goBack()" class="back-a"><q-item-side left  icon='keyboard arrow left' class='back-left'/>返回</a>
-            <q-toolbar-title class='header-title'>
+    <q-layout view="Hhh lpr Fff">
+      <q-layout-header>
+        <q-toolbar>
+           <a @click="back" class="back-a font-14">
+            <q-item-side left  icon="keyboard arrow left" class="back-left "/>
+            返回
+          </a>
+          <q-toolbar-title class="header-title">
             施工养护
-            </q-toolbar-title>
-            <a class="top-nav-right" @click="$router.push('/jobGroup/groupRecord?codeId=' + form.codeId)">养护记录</a>
-       </q-toolbar>
-    </q-toolbar>
+          </q-toolbar-title>
+          <q-item-side class="white-right" right/>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+      <q-page id="maintenace-page">
     <q-list>
-      <q-item link class="full-width bg-white">
-        <q-item-main sublabel lines='1'>
-           <q-item-tile class="color-black mb-8 mt-10">{{form.QrInfo.alias}}</q-item-tile>
-            <q-item-side left class="color-gray float-left" icon="place"/>
-            <label class="color-black font-12" v-if="form.QrInfo.location">{{form.QrInfo.location.formattedAddress}}</label>
-        </q-item-main>
-        <q-item-side right icon="fas fa-qrcode color-black" @click.native="$router.push('/qcode/detail?id='+form.codeId+'&type='+form.QrInfo.type.key)"/>
-        <q-item-side right class="color-gray" icon="keyboard_arrow_right"/>
-      </q-item>
        <q-field
-         @blur="$v.form.tags.$touch"
+         @blur="$v.jobs.$touch"
         @keyup.enter="operate"
-        :error="$v.form.tags.$error"
+        :error="$v.jobs.$error"
          error-label="请先选择工作内容">
           <q-item class="mt-6" @click.native="chooseJob">
             <q-item-side label class="font-14">工作内容选择</q-item-side>
@@ -31,243 +27,49 @@
           </q-item>
        </q-field>
       <q-item-separator class="mt-0 mb-0"/>
-      <q-item v-if="form.tags.length>0">
-        <q-chips-input v-model="form.tags" hide-underline readonly chips-bg-color="lightGray" chips-color="black"/>
-      </q-item>
+        <div class="bg-primary jobs-tags">
+          <div class="m-5">
+            <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item bg-white" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
+            {{item.fname}}<span  v-if="item.fname!=='' && item.description!==''">-</span>{{item.description}}
+            </q-chip>
+          </div>
+        </div>
+    </q-list>
+    <q-list class="mt-6 bg-white pb-8 row col-12 box pt-10 font-14 underline" >
+      <q-list-header class="font-14 col-2 h-35">备注</q-list-header>
+      <q-input class="remark-field col-9 ml-8 p-8 text-left" v-model="form.description"  placeholder="输入内容" type="textarea" rows="6" hide-underline/>
     </q-list>
     <q-list class="mt-6 bg-white pb-8">
-      <q-list-header>备注信息</q-list-header>
-      <q-input class="remark-field" v-model="form.description" type="textarea" placeholder="请输入备注信息" rows="6" hide-underline/>
-    </q-list>
-    <q-list class="mt-6 bg-white pb-8">
-      <q-list-header>现场拍照</q-list-header>
+      <q-list-header class="font-14">现场拍照</q-list-header>
       <div class="row">
         <div class="w-100 h-100 ml-10" v-for="v, i in form.pictures" :key="i">
           <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
-          <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width"/>
+          <q-btn icon="camera alt" size="35px" @click="openCamera" class="camera-button full-height full-width bg-primary"/>
         </div>
-        <q-btn class="full-width btn" @click="operate()">{{title}}</q-btn>
+        <q-btn class="full-width btn no-radius font-14 " @click="operate()">{{title}}</q-btn>
       </div>
     </q-list>
+      </q-page>
+      </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { request, uploadFiles, deleteFiles } from '../../common'
-import { required } from 'vuelidate/lib/validators'
-import { server } from '../../const'
-import _ from 'lodash'
-import eventBus from '../../eventBus'
-import { ImagePreview } from 'vant'
-import 'vant/lib/vant-css/base.css'
-import 'vant/lib/vant-css/image-preview.css'
-import 'vant/lib/vant-css/index.css';
-
+import MaintenanceMixin from '../../mixin/MaintenanceMixin'
 export default {
+  mixins: [
+    MaintenanceMixin
+  ],
   data () {
     return {
-      form: {
-        description: '',
-        pictures: [],
-        jobs: [],
-        tags: [],
-        jobObg: [],
-        QrInfo: {},
-        codeId: '',
-        imageArray: []
-      },
-      previewApi: '',
-      jobGroupId: '',
-      title: '添加'
-    }
-  },
-  validations: {
-    form: {
-      tags: { required }
     }
   },
   methods: {
-    imagePreview (index) {
-      console.log(index)
-      let previewArray = _.map(this.form.pictures, (img) => {
-        return this.previewApi + img.contentUrl
-      })
-      console.log(previewArray)
-      ImagePreview(previewArray, index)
-    },
-    cancelUploadImage (index) {
-      this.$q.loading.show()
-      let img = this.form.pictures[index]
-      deleteFiles(img.contentUrl, index)
-    },
-    openCamera () {
-      console.log('open camera')
-      if (navigator.camera) {
-        navigator.camera.getPicture(imgData => {
-          this.$q.loading.show()
-          uploadFiles(imgData)
-        }, errorMsg => {
-          console.log(errorMsg)
-        }, { destinationType: Camera.DestinationType.DATA_URL })
-      }
-    },
-    async getQrInfo () {
-      this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
-      if (resp) {
-        this.form.QrInfo = resp.data.resultMsg.code
-      }
-    },
-    async getDetail () {
-      this.areaBranches = []
-      let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
-      if (resp) {
-        this.form.QrInfo = resp.data.resultMsg.code
-        this.form.codeId = resp.data.resultMsg.code.id
-        this.form.description = resp.data.resultMsg.description
-        this.form.pictures = resp.data.resultMsg.pictures
-        let jobs = resp.data.resultMsg.jobs
-        let names = []
-        let jobObg = []
-        let ids = []
-        if (this.form.pictures.length > 0) {
-          let imageArray = []
-          _.forEach(this.form.pictures, v => {
-            let previewUrl = server.THUMBNAIL_API + v.filePath
-            imageArray.push({
-              'previewUrl': previewUrl,
-              'contentUrl': v.filePath
-            })
-          })
-          this.form.pictures = imageArray
-        }
-        for (var key in jobs) {
-          let editData = {}
-
-          if (jobs[key]['id']) {
-            editData.jobId = jobs[key]['id']
-          }
-          if (jobs[key]['action']) {
-            editData.actionId = parseInt(jobs[key]['action']['id'])
-            names.push(jobs[key]['action']['name'])
-            ids.push(jobs[key]['action']['id'])
-            jobObg = [...jobObg, { 'description': '', 'actionId': jobs[key]['action']['id'] }]
-            this.form.tags.push(jobs[key]['action']['name'])
-          }
-          if (jobs[key]['description']) {
-            editData.description = jobs[key]['description']
-          }
-          if (editData.actionId) {
-            this.form.jobs.push(editData)
-          }
-        }
-        this.form.jobObg = { 'names': names, 'jobs': jobObg, 'ids': ids }
-      }
-    },
-    operate () {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        return false
-      }
-      if (this.jobGroupId !== undefined) {
-        console.log(this.jobGroupId)
-        this.edit()
-      } else {
-        this.save()
-      }
-    },
-    save () {
-      let imgArray = []
-      if (this.form.pictures.length > 0) {
-        imgArray = _.map(this.form.pictures, 'contentUrl')
-      }
-      let data = {
-        'codeId': this.form.codeId,
-        'description': this.form.description,
-        'jobs': this.form.jobs,
-        'pictures': imgArray
-      }
-      request('jobGroup/create', 'post', data, 'json', true).then(resp => {
-        if (resp.data.resultCode === 'SUCCESS') {
-          this.$q.dialog({
-            title: '提示',
-            message: '添加成功'
-          })
-          setTimeout(() => {
-            this.$router.goBack()
-          }, 1000)
-        }
-      })
-    },
-    edit () {
-      let imgArray = []
-      if (this.form.pictures.length > 0) {
-        imgArray = _.map(this.form.pictures, 'contentUrl')
-      }
-      let data = {
-        'jobGroupId': this.jobGroupId,
-        'description': this.form.description,
-        'jobs': this.form.jobs,
-        'pictures': imgArray
-      }
-      request('jobGroup/edit', 'post', data, 'json', true).then(resp => {
-        if (resp && resp.data.resultCode === 'SUCCESS') {
-          this.$q.dialog({
-            title: '提示',
-            message: '修改成功'
-          })
-          setTimeout(() => {
-            this.$router.goBack()
-          }, 1000)
-        }
-      })
-    },
-    saveLocalData () {
-      localStorage.setItem('form', JSON.stringify(this.form))
-    },
-    chooseJob () {
-      this.saveLocalData()
-      this.$router.push('jobs')
-    }
   },
   mounted () {
-    this.previewApi = server.PREVIEW_API
-    this.jobGroupId = this.$route.query.jobGroupId
-
-    eventBus.$on('upload-success', resp => {
-      console.log(resp)
-      this.$q.loading.hide()
-      this.form.pictures.push(resp)
-    })
-    eventBus.$on('delete-success', (params) => {
-      this.$q.loading.hide()
-      let index = parseInt(params.idx)
-      this.form.pictures.splice(index, 1)
-      this.$q.dialog({
-        title: '提示',
-        message: params.msg
-      })
-    })
-    if (this.$route.query.jobGroupId) {
-      this.title = '修改'
-    } else {
-      this.form.codeId = this.$route.query.codeId
-      this.getQrInfo()
-    }
-    let form = JSON.parse(localStorage.getItem('form'))
-    if (!_.isNull(form)) {
-      this.form = form
-      localStorage.removeItem('form')
-    } else if (this.$route.query.jobGroupId) {
-      this.getDetail()
-    }
-  },
-  beforeDestroy () {
-    eventBus.$off('upload-success')
-    eventBus.$off('delete-success')
   }
 }
 </script>
@@ -278,12 +80,16 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f5f5f5;
-
+  .q-chip{
+    background-color: white !important;
+  }
   .q-list {
     border: 0;
     padding: 0;
   }
-
+  .no-radius {
+    border-radius: 0px;
+  }
   .q-item {
     background-color: white;
   }
@@ -300,7 +106,7 @@ export default {
     border-style: solid;
     border-width: 1px;
     border-color: lightgray;
-    border-radius: 8px;
+    border: none;
   }
   .auto {
     min-width: auto;
