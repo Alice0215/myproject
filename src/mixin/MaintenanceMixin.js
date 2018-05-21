@@ -55,7 +55,6 @@ const MaintenanceMixin = {
           this.$q.loading.show()
           uploadFiles(imgData)
         }, errorMsg => {
-          console.log(errorMsg)
         }, { destinationType: Camera.DestinationType.DATA_URL })
       }
     },
@@ -223,18 +222,14 @@ const MaintenanceMixin = {
     let form = Object.assign({}, this.$store.getters['Maintenance/getCurrent'])
     let jobs = _.values(Object.assign({}, this.$store.getters['Maintenance/getJobGroup']))
     if (form.codeId) {
-      console.log(form.codeId)
       this.form = form
       this.jobs = jobs
     } else if (this.$route.query.jobGroupId) {
       // 编辑
-      console.log('333444')
       this.getDetail()
     } else {
       // 添加
-      console.log('333')
       this.form.codeId = this.$route.query.codeId
-      console.log(this.form.codeId)
     }
   },
   beforeDestroy () {
