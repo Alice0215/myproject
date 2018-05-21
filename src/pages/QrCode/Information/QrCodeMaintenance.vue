@@ -32,7 +32,8 @@
                       <div class="work-content-title">工作内容：</div>
                       <div class="work-content bold" v-line-clamp:20="1">
                         <span v-for="(v, i) in item.jobs" v-if="item.jobs" :key="i">
-                          <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
+                          <span v-if="v.other" class="ml-5">{{ v.other }}</span>
+                          <span v-else class="ml-5">{{ v.action.name }}</span>
                         </span>
                       </div>
 
