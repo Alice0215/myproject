@@ -28,7 +28,7 @@
           </q-item>
           <q-item>
             <div class="title">片区面积：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.acreage ? detail.acreage : '' }}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.acreage ? detail.acreage : '' }}平方米</div>
           </q-item>
         </q-list>
         <q-list class="mt-10 singles-list" v-if="detail.singles.length > 0">
