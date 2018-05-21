@@ -1,4 +1,5 @@
 import { ImagePreview } from 'vant'
+import { server } from '../const'
 
 const QrCodeDetailMixin = {
   data () {
@@ -13,7 +14,8 @@ const QrCodeDetailMixin = {
       this.$router.push('/qcode/edit?id=' + detail.id)
     },
     openQrCode (detail) {
-      console.log(detail)
+      let images = [server.THUMBNAIL_QR + detail.batch.batchNo + '/' + detail.id + '.png']
+      ImagePreview(images, 1)
     }
   },
   async mounted () {
