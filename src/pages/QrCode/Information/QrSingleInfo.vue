@@ -50,13 +50,13 @@
             <div class="row">
               <div class="title">苗木规格：</div>
               <div class="ml-20 content">
-                <span class="ib pr-5" v-if="detail.xiongJing">胸径：{{ detail.xiongJing }}cm</span>
-                <span  class="ib pr-5" v-if="detail.gaoDu">高度：{{ detail.gaoDu }}cm</span>
-                <span  class="ib pr-5" v-if="detail.guanFu">冠幅：{{ detail.guanFu }}cm</span>
-                <span  class="ib pr-5" v-if="detail.diJing">地径：{{ detail.diJing }}cm</span>
-                <span  class="ib pr-5" v-if="detail.pengJing">蓬径：{{ detail.pengJing }}cm</span>
-                <span  class="ib pr-5" v-if="detail.branch">分支数：{{ detail.branch }}cm</span>
-                <span  class="ib pr-5" v-if="detail.year">几年生：{{ detail.year }}cm</span>
+                <span class="ib pr-5" v-if="detail.xiongJing">胸径：{{ detail.xiongJing }} 厘米</span>
+                <span  class="ib pr-5" v-if="detail.gaoDu">高度：{{ detail.gaoDu }} 米</span>
+                <span  class="ib pr-5" v-if="detail.guanFu">冠幅：{{ detail.guanFu }} 米</span>
+                <span  class="ib pr-5" v-if="detail.diJing">地径：{{ detail.diJing }} 厘米</span>
+                <span  class="ib pr-5" v-if="detail.pengJing">蓬径：{{ detail.pengJing }} 米</span>
+                <span  class="ib pr-5" v-if="detail.branch">分枝数：{{ detail.branch }} 个</span>
+                <span  class="ib pr-5" v-if="detail.year">几年生：{{ detail.year }} 年</span>
                 <span  class="ib pr-5" v-if="detail.otherFeature">其他规格：{{ detail.otherFeature }}</span>
               </div>
             </div>
