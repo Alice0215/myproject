@@ -30,13 +30,13 @@
         <div class="bg-primary jobs-tags">
           <div class="m-5">
             <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
-            {{item.fname}}<span v-if="item.description!==''">-{{item.description}}</span>
+            <span v-if="item.fname!==''">{{item.fname}}-</span>{{item.description}}
             </q-chip>
           </div>
         </div>
     </q-list>
     <q-list class="mt-6 bg-white pb-8 row col-12 box pt-10 font-14 underline" >
-      <q-list-header class="font-14 col-2 h-35 pt-10">备注</q-list-header>
+      <q-list-header class="font-14 col-2 h-35">备注</q-list-header>
       <q-input class="remark-field col-9 ml-8 p-8 text-left" v-model="form.description"  placeholder="输入内容" type="textarea" rows="6" hide-underline/>
     </q-list>
     <q-list class="mt-6 bg-white pb-8">

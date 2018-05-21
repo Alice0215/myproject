@@ -20,7 +20,7 @@
           <div class="bg-primary jobs-tags pt-5">
             <div class="m-5">
               <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
-               {{item.fname}}<span v-if="item.description!==''">-{{item.description}}</span>
+              <span v-if="item.fname!==''"> {{item.fname}}-</span>{{item.description}}
              </q-chip>
             </div>
           </div>
@@ -33,11 +33,12 @@
             <q-item  v-ripple.mat class="full-width underline user-item">
               <q-item-side left icon="expand more" v-if="item.children" class="auto-width"  @click.native="getChildList(item.id,item.children,item.name)"/>
               <q-item-main :label="item.name" />
-              <q-item-side right icon="radio button unchecked"   v-if="selectFid.indexOf(item.id) === -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
-              <q-item-side right icon="check circle" class="active"  v-if="selectFid.indexOf(item.id) !== -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
+              <q-item-side right icon="radio button unchecked" v-if="selectFid.indexOf(String(item.id)) === -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
+              <q-item-side right icon="check circle" class="active"  v-if="selectFid.indexOf(String(item.id)) !== -1" @click.native="choose(item.name,item.id,'','',item.children)"/>
             </q-item>
             <div class="child bg-primary" v-if="parentId===item.id" v-for="vo in children" :key="vo.id">
               <q-item  v-ripple.mat class="full-width underline user-item" @click.native="choose(item.name,item.id,vo.id,vo.name,item.children)">
+                <!-- <q-item-side left icon="expand more" v-if="vo.children" class="auto-width"  @click.native="getChildList(item.id,vo.id,vo.children,vo.name)"/> -->
                 <q-item-main :label="vo.name" />
                 <q-item-side right icon="radio button unchecked"   v-if="selected.indexOf(item.id+'-'+vo.id) === -1"/>
                 <q-item-side right icon="check circle" class="active"  v-if="selected.indexOf(item.id+'-'+vo.id) !== -1"/>
@@ -78,6 +79,7 @@ export default {
       selectFid: [],
       content: '',
       chooseId: '',
+      allJobs: [],
       isEdited: false
     }
   },
@@ -121,44 +123,73 @@ export default {
     async choose (fname, fid, id, name, isChildren) {
       if (id === '' && isChildren) {
         // 选择父级遍历所有子集
-        if (!this.isOpen || (this.isOpen && this.chooseId !== fid)) {
-          let resp = await request('data/jobAction/parent?parentId=' + fid, 'get')
-          if (resp) {
-            this.children = resp.data.resultMsg
-            this.chooseId = fid
-            if (this.selectFid.indexOf(fid) === -1) {
-              this.selectFid.push(fid)
-            } else {
-              _.remove(this.selectFid, v => { return v === fid })
-            }
-            _.forEach(resp.data.resultMsg, v => {
-              this.handleChoose(fid, v.id, v.name, fname)
-            })
+        let resp = await request('data/jobAction/parent?parentId=' + fid, 'get')
+        if (resp) {
+          if (this.selectFid.indexOf(fid) === -1) {
+            this.selectFid.push(fid)
+          } else {
+            _.remove(this.selectFid, v => { return v === fid })
           }
-          console.log(this.selectFid)
-        } else {
-          _.forEach(this.children, v => {
-            this.handleChoose(fid, v.id, v.name, fname)
+          _.forEach(resp.data.resultMsg, v => {
+            this.handleChoose(fid, v.id, v.name, fname, true)
           })
         }
+      } else if (id === '' && !isChildren) {
+        this.chooseId = fid
+        if (this.selectFid.indexOf(fid) === -1) {
+          this.selectFid.push(fid)
+        } else {
+          _.remove(this.selectFid, v => { return v === fid })
+        }
+        this.handleChoose(id, fid, fname, name, false)
       } else {
-        this.handleChoose(fid, id, name, fname)
+        if (this.selectFid.indexOf(fid) !== -1) {
+          _.remove(this.selectFid, v => { return v === fid })
+        }
+        this.handleChoose(fid, id, name, fname, false)
       }
     },
-    handleChoose (fid, id, name, fname) {
+    handleChoose (fid, id, name, fname, isAll) {
       this.isEdited = true
       let select = fid + '-' + id
-      if (this.selected.indexOf(select) !== -1) {
-        let index = this.selected.findIndex(v => v === fid + '-' + id)
-        this.jobs.splice(index, 1)
-        _.remove(this.selectFid, v => { return String(v) === String(this.fids[index]) })
-        this.selected.splice(index, 1)
-        this.fids.splice(index, 1)
-      } else {
-        let job = { 'actionId': id, 'description': name, 'fid': fid, 'fname': fname }
-        this.selected.push(select)
-        this.fids.push(fid)
-        this.jobs = [...this.jobs, job]
+      if ((isAll && this.selectFid.indexOf(fid) === -1) || (!isAll && this.selected.indexOf(select) !== -1)) {
+        if (this.selected.indexOf(select) !== -1) {
+          let index = this.selected.findIndex(v => v === fid + '-' + id)
+          this.jobs.splice(index, 1)
+          this.selected.splice(index, 1)
+        }
+      } else if ((isAll && this.selectFid.indexOf(fid) !== -1) || (!isAll && this.selected.indexOf(select) === -1)) {
+        // 全部选中
+        if (this.selected.indexOf(select) === -1) {
+          let job = { 'actionId': id, 'description': name, 'fid': fid, 'fname': fname }
+          this.selected.push(select)
+          this.jobs = [...this.jobs, job]
+        }
+      }
+    },
+    async getTree () {
+      let resp = await request('data/jobAction/tree?category=MAINTAIN', 'get')
+      if (resp) {
+        this.allJobs = resp.data.resultMsg
+        _.forEach(this.allJobs, u => {
+          let length = 0
+          _.forEach(this.jobs, v => {
+            if ((v.fid !== '' && String(u.id) === String(v.fid))) {
+              length++
+            }
+            if (v.fid === '' && String(u.id) === String(v.actionId)) {
+              // 无子分类
+              if (this.selectFid.indexOf(u.id) === -1) {
+                this.selectFid.push(String(u.id))
+              }
+            }
+          })
+          if (u.children && (u.children.length === length)) {
+            if (this.selectFid.indexOf(u.id) === -1) {
+              this.selectFid.push(String(u.id))
+            }
+          }
+        })
       }
     },
     save () {
@@ -174,8 +205,10 @@ export default {
       _.forEach(this.jobs, u => {
         let select = u.fid + '-' + u.actionId
         this.selected.push(select)
-        this.fids.push(String(u.fid))
       })
+      // allJobs
+      this.getTree()
+      this.$forceUpdate()
     }
   }
 }
@@ -232,6 +265,7 @@ export default {
     border-radius: 0px;
     font-size: 14px;
     padding: 0px;
+    width: 48%;
   }
   .border-right {
     border-right: 1px solid #e8e8e8;

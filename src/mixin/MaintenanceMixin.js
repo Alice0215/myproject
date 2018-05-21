@@ -32,8 +32,6 @@ const MaintenanceMixin = {
   methods: {
     remove (index) {
       this.jobs.splice(index, 1)
-      this.fids.splice(index, 1)
-      this.selected.splice(index, 1)
     },
     back () {
       this.$store.commit('Maintenance/setCurrent', null)
@@ -61,24 +59,15 @@ const MaintenanceMixin = {
         }, { destinationType: Camera.DestinationType.DATA_URL })
       }
     },
-    async getQrInfo () {
-      this.areaBranches = []
-      let resp = await request('qrcode/detail?qrCodeId=' + this.form.codeId, 'get', null, 'json', true)
-      if (resp) {
-        this.form.QrInfo = resp.data.resultMsg.code
-      }
-    },
     async getDetail () {
       this.areaBranches = []
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         let info = resp.data.resultMsg
-        console.log(info)
         this.form.QrInfo = info.code
         this.form.codeId = info.code.id
         this.form.description = info.description
         this.form.pictures = info.pictures
-
         if (this.form.pictures.length > 0) {
           let imageArray = []
           _.forEach(this.form.pictures, v => {
@@ -99,7 +88,6 @@ const MaintenanceMixin = {
           }
         })
         this.jobs = jobs
-        console.log(this.jobs)
       }
     },
     operate () {
@@ -128,6 +116,7 @@ const MaintenanceMixin = {
               jobs.push({ 'actionId': v.fid, 'description': v.fname })
             }
           } else {
+            // 有子类的
             if (v.jobId) {
               // 编辑的
               jobs.push({ 'actionId': v.actionId, 'description': v.description, 'jobId': v.jobId })
