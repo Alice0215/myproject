@@ -60,7 +60,6 @@ const MaintenanceMixin = {
       }
     },
     async getDetail () {
-      this.areaBranches = []
       let resp = await request('jobGroup/detail?jobGroupId=' + this.jobGroupId, 'get', null, 'json', true)
       if (resp) {
         let info = resp.data.resultMsg
@@ -82,7 +81,13 @@ const MaintenanceMixin = {
         let jobs = []
         _.forEach(info.jobs, v => {
           if (v.action) {
-            jobs = [...jobs, { 'actionId': v.action.id, 'description': v.action.name, 'jobId': v.id, 'fid': v.action.parent.id, 'fname': v.action.parent.name }]
+            let parentId = ''
+            let fname = ''
+            if (v.action.parent) {
+              parentId = v.action.parent.id
+              fname = v.action.parent.name
+            }
+            jobs = [...jobs, { 'actionId': v.action.id, 'description': v.action.name, 'jobId': v.id, 'fid': parentId, 'fname': fname }]
           } else {
             jobs = [...jobs, { 'actionId': '', 'description': '', 'jobId': v.id, 'fid': '', 'fname': v.other }]
           }
@@ -95,7 +100,7 @@ const MaintenanceMixin = {
       if (this.$v.$error) {
         return false
       }
-      if (!_.isNull(this.jobGroupId) && !_.isUndefined(this.jobGroupId)) {
+      if (this.jobGroupId) {
         this.edit()
       } else {
         this.save()
@@ -104,7 +109,7 @@ const MaintenanceMixin = {
     initJobs () {
       let jobs = []
       _.forEach(this.jobs, v => {
-        if (_.isNull(v.fid) || v.fid === '') {
+        if (v.fid === '' && v.actionId === '') {
           // 自定义类型
           jobs.push({ 'other': v.fname })
         } else {
@@ -188,7 +193,6 @@ const MaintenanceMixin = {
   },
   mounted () {
     this.previewApi = server.PREVIEW_API
-    this.jobGroupId = this.$route.query.jobGroupId
     eventBus.$on('upload-success', resp => {
       this.$q.loading.hide()
       this.form.pictures.push(resp)
@@ -203,18 +207,34 @@ const MaintenanceMixin = {
       })
     })
     if (this.$route.query.jobGroupId) {
+      this.jobGroupId = this.$route.query.jobGroupId
       this.title = '修改'
     } else {
-      this.form.codeId = this.$route.query.codeId
+      if (!this.$route.query.codeId) {
+        this.$q.notify({
+          timeout: 2000,
+          type: 'info',
+          message: '请扫描二维码进入！'
+        })
+        this.$router.goBack()
+        return
+      }
     }
     let form = Object.assign({}, this.$store.getters['Maintenance/getCurrent'])
     let jobs = _.values(Object.assign({}, this.$store.getters['Maintenance/getJobGroup']))
-    if (!_.isNull(form) && !_.isUndefined(form)) {
+    if (form.codeId) {
+      console.log(form.codeId)
       this.form = form
       this.jobs = jobs
     } else if (this.$route.query.jobGroupId) {
       // 编辑
+      console.log('333444')
       this.getDetail()
+    } else {
+      // 添加
+      console.log('333')
+      this.form.codeId = this.$route.query.codeId
+      console.log(this.form.codeId)
     }
   },
   beforeDestroy () {

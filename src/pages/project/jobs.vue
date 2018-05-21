@@ -78,7 +78,6 @@ export default {
       fids: [],
       selectFid: [],
       content: '',
-      chooseId: '',
       allJobs: [],
       isEdited: false
     }
@@ -135,7 +134,7 @@ export default {
           })
         }
       } else if (id === '' && !isChildren) {
-        this.chooseId = fid
+        // 无子分类
         if (this.selectFid.indexOf(fid) === -1) {
           this.selectFid.push(fid)
         } else {
@@ -159,9 +158,10 @@ export default {
           this.selected.splice(index, 1)
         }
       } else if ((isAll && this.selectFid.indexOf(fid) !== -1) || (!isAll && this.selected.indexOf(select) === -1)) {
-        // 全部选中
+        // 全部选中和单选选中
         if (this.selected.indexOf(select) === -1) {
-          let job = { 'actionId': id, 'description': name, 'fid': fid, 'fname': fname }
+          let job = {}
+          job = { 'actionId': id, 'description': name, 'fid': fid, 'fname': fname }
           this.selected.push(select)
           this.jobs = [...this.jobs, job]
         }
@@ -200,7 +200,7 @@ export default {
   mounted () {
     this.getList()
     let jobs = _.values(Object.assign({}, this.$store.getters['Maintenance/getJobGroup']))
-    if (!_.isUndefined(jobs) && !_.isNull(jobs)) {
+    if (jobs.length > 0) {
       this.jobs = jobs
       _.forEach(this.jobs, u => {
         let select = u.fid + '-' + u.actionId
