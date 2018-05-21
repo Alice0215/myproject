@@ -2,9 +2,9 @@
   <q-layout view="Hhh lpr Fff">
     <q-page-container>
       <q-page id="maintenance_records">
-        <q-infinite-scroll :handler="load">
-          <q-list separator v-if="joblist.length > 0">
-            <q-item v-for="item in joblist"
+        <q-infinite-scroll :handler="load" ref="scroll">
+          <q-list separator v-if="list.length > 0">
+            <q-item v-for="item in list"
                     :key="item.id"
                     @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
               <q-item-main>
@@ -19,7 +19,8 @@
                     <div class="work-content-title">工作内容：</div>
                     <div class="work-content" v-line-clamp:20="1">
                     <span v-for="v in item.jobs" v-if="item.jobs" :key="v.id">
-                      <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
+                      <span v-if="v.other" class="ml-5">{{ v.other }}</span>
+                      <span v-else class="ml-5">{{ v.action.name }}</span>
                     </span>
                     </div>
                   </div>
@@ -58,47 +59,24 @@
 <script>
 import { request } from '../../common'
 import eventBus from '../../eventBus'
+import InfiniteScroll from '../../mixin/InfiniteScroll'
 
 export default {
   data () {
     return {
-      joblist: [],
-      pageNo: 1,
-      hasLoadAll: false,
-      projectId: this.$route.query.projectId
+      projectId: this.$route.query.projectId,
     }
   },
-  methods: {
-    
-    async load (index, done) {
-      let that = this
-      setTimeout(() => {
-        if (!that.hasLoadAll) {
-          request('jobGroup/list/byProject?projectId=' + that.projectId + '&pageNo=' + that.pageNo + '&pageSize=20', 'get', '', 'json', true).then(response => {
-            if (response) {
-              let list = response.data.resultMsg
-              if (list.length === 0 || !list.length) {
-                that.hasLoadAll = true
-                return
-              }
-              if (list.length < 20) {
-                that.hasLoadAll = true
-              } else {
-                that.pageNo++
-              }
-              if (that.joblist.length > 0) {
-                that.joblist = that.joblist.concat(list)
-              } else {
-                that.joblist = list
-              }
-              if (this.joblist.length > 0) {
-                eventBus.$emit('has-maintenance-records')
-              }
-              done()
-            }
-          })
-        }
-      }, 100)
+  mixins: [
+    InfiniteScroll
+  ],
+  mounted () {
+    this.apiUrl = 'jobGroup/list/byProject?projectId=' + this.projectId
+    this.scroll = this.$refs.scroll
+    this.infiniteScrollCallback = function () {
+      if (this.list.length > 0) {
+        eventBus.$emit('has-maintenance-records')
+      }
     }
   }
 }

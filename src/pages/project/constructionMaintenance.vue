@@ -29,8 +29,8 @@
       <q-item-separator class="mt-0 mb-0"/>
         <div class="bg-primary jobs-tags">
           <div class="m-5">
-            <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
-            <span v-if="item.fname!==''">{{item.fname}}-</span>{{item.description}}
+            <q-chip icon-right="close" color="white" text-color="lightGray" class="job-item bg-white" v-for="(item, index) in jobs" :key="index"  @click="remove(index)">
+            {{item.fname}}<span  v-if="item.fname!=='' && item.description!==''">-</span>{{item.description}}
             </q-chip>
           </div>
         </div>
@@ -80,7 +80,9 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f5f5f5;
-
+  .q-chip{
+    background-color: white !important;
+  }
   .q-list {
     border: 0;
     padding: 0;

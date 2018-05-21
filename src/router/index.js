@@ -59,6 +59,7 @@ Router.beforeEach((to, from, next) => {
     return next()
   }
   Router.replace('/login')
+  return next()
 })
 
 export default Router

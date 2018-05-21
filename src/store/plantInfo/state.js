@@ -1,6 +1,9 @@
 export default {
   qrCodeForm: {pictures: []},
   singleForm:  {},
-  areaForm: {}
+  areaForm: {singles: []},
+  projectId: null,
+  type: null,
+  navTitle: null
   //
 }

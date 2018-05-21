@@ -6,6 +6,13 @@ import ProjectDetail from '../pages/project/ProjectDetail'
 import Admin from '../pages/admin/Admin'
 import MaintenanceDetail from '../pages/jobgroup/detail'
 
+import areaDetail from '../pages/qcode/areaDetail'
+
+import chooseDate from '../pages/choose/chooseDate'
+
+import QrCodeDetail from '../pages/QrCode/QrCodeDetail'
+import QrAreaSingleDetail from '../pages/QrCode/Information/QrAreaSingleInfo'
+
 export default [
   {
     path: '/',
@@ -70,8 +77,12 @@ export default [
   },
   {
     path: '/qcode/detail',
-    component: () => import('pages/qcode/detail'),
+    component: QrCodeDetail,
     name: 'qcodeDetail'
+  },
+  {
+    path: '/areaDetail',
+    component: QrAreaSingleDetail
   },
   {
     path: '/qcode/addPlant',
@@ -130,6 +141,10 @@ export default [
   {
     path: '/choose/qrtype',
     component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
+    path: '/chooseDate',
+    component: chooseDate
   },
   {
     path: '/qcode/scan',
