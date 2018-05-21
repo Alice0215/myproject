@@ -1,7 +1,7 @@
 <template>
   <div id="step-common-info">
     <van-cell-group :border="false">
-      <van-field class="font-16" v-model="commonForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
+      <van-field class="font-16" v-model="commonForm.alias" :label="nameLabel" :placeholder="nameHolder" required/>
       <van-cell title="所属项目" is-link :value="projectName" required class="font-16" @click="showPop = true"/>
       <van-cell title="地址" is-link :value="positionName" required class="font-16" @click="chooseMap"/>
       <van-field class="van-hairline--bottom"
@@ -13,15 +13,15 @@
                  autosize
       />
     </van-cell-group>
-    <q-list class="mt-6 bg-white no-border">
+    <q-list class="mt-1 bg-white no-border">
       <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
       <div class="row pl-20">
-        <div class="w-100 h-100" v-for="v, i in commonForm.pictures" :key="i">
+        <div class="w-100 h-100 ml-8 mt-8" v-for="v, i in commonForm.pictures" :key="i">
           <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
                class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
-        <div class="w-100 h-100 camera-div">
+        <div class="w-100 h-100 ml-8 mt-8 camera-div">
           <q-btn icon="camera alt" size="20px" @click="openCamera" class="camera-button full-height full-width"/>
         </div>
       </div>
@@ -38,7 +38,7 @@
       />
     </van-popup>
     <div class="bottom-button-div mt-40">
-      <q-btn color="white" text-color="black" class="border-1 float-left ml-16" label="上一步" size="md"/>
+      <q-btn color="white" text-color="black" class="border-1 float-left ml-16" label="上一步" size="md" @click="preStep"/>
       <q-btn color="white" text-color="black" class="border-1 float-right mr-16" label="下一步" size="md"
              @click="nextStep"/>
     </div>
@@ -51,7 +51,7 @@
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
-  import { server } from '../../const'
+  import { plantType, server } from '../../const'
 
   export default {
     mixins: [
@@ -68,6 +68,8 @@
         pickerLoading: false,
         hasLoadAll: false,
         commonForm: {},
+        nameLabel: '',
+        nameHolder: '',
       }
     },
     methods: {
@@ -105,9 +107,56 @@
           }
         }
       },
-      nextStep () {
+      preStep () {
+        this.$root.$emit('last-pre')
+      },
+      verifyForm () {
+        if (_.isNull(this.commonForm.alias) || _.isUndefined(this.commonForm.alias)) {
+          this.$q.notify({
+            message: '名称不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        if (_.isNull(this.commonForm.projectId) || _.isUndefined(this.commonForm.projectId)) {
+          this.$q.notify({
+            message: '所属项目不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        if (_.isNull(this.commonForm.locationJson) || _.isUndefined(this.commonForm.locationJson)) {
+          this.$q.notify({
+            message: '地址不能为空',
+            position: 'center'
+          })
+          return false
+        }
+        return true
+      },
+      async nextStep () {
+        console.log(this.commonForm)
+        if (!this.verifyForm()) {
+          return false
+        }
         this.setForm()
-        this.$root.$emit('next-step')
+        let url = null
+        if (this.type === plantType.DEVICE) {
+          url = 'qrcode/equipment/save'
+        } else if (this.type === plantType.OTHER) {
+          url = '/qrcode/other/save'
+        }
+        if (_.isNull(url)) {
+          this.$root.$emit('next-step')
+        } else {
+          this.$q.loading.show()
+          let resp = await request(url, 'put', this.commonForm, 'json', true)
+          this.$q.loading.hide()
+          if (resp) {
+            this.clearInfo()
+            this.$root.$emit('next-step')
+          }
+        }
       },
       onConfirm (value, index) {
         this.projectName = value.text
@@ -152,13 +201,49 @@
       },
       setForm () {
         this.qrCodeForm = this.commonForm
+        if (this.type === plantType.SINGLE || this.type === plantType.AREA) {
+          let qFrom = Object.assign({}, this.qrCodeForm)
+          if (qFrom.pictures.length > 0) {
+            let pics = _.map(qFrom.pictures, 'contentUrl')
+            qFrom.pictures = pics
+          }
+          this.commonForm = qFrom
+        }
       },
       getForm () {
         this.commonForm = Object.assign({}, this.qrCodeForm)
-      }
+        this.commonForm.qrCodeId = this.$store.state.qrCodeInfo.qrCodeMsg.qrCodeId
+        switch (this.type) {
+          case plantType.SINGLE:
+            this.nameLabel = '植物名称'
+            this.nameHolder = '请输入植物名称'
+            this.navTitle = '单株植物'
+            break
+          case plantType.AREA:
+            this.nameLabel = '片区名称'
+            this.nameHolder = '请输入片区名称'
+            this.navTitle = '片区植物'
+            break
+          case plantType.DEVICE:
+            this.nameLabel = '设备名称'
+            this.nameHolder = '请输入设备名称'
+            this.navTitle = '设备'
+            break
+          case plantType.OTHER:
+            this.nameLabel = '名称'
+            this.nameHolder = '请输入名称'
+            this.navTitle = '其他'
+            break
+          default:
+            break
+        }
+      },
     },
     mounted () {
       this.getForm()
+      this.$root.$on('clear-info', () => {
+        this.commonForm = {pictures: []}
+      })
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
         this.commonForm.pictures.push(resp)
@@ -182,6 +267,7 @@
       this.setForm()
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
+      eventBus.$off('clear-info')
     },
   }
 </script>
