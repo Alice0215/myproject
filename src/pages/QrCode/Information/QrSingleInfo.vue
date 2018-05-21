@@ -44,7 +44,7 @@
           </q-item>
           <q-item v-if="detail.amount">
             <div class="title">苗木面积：</div>
-            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount + detail.uomName}}</div>
+            <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount }}{{ detail.uomName ? detail.uomName : '' }}</div>
           </q-item>
           <q-item>
             <div class="row">

@@ -39,7 +39,7 @@
                 {{item.alias}}
               </div>
               <div class="wp-30 float-left title-count font-17" v-line-clamp:20="1">
-                数量：{{item.amount}}
+                数量：{{ item.amount }}{{ item.uomName ? item.uomName : '' }}
               </div>
               <div class="wp-20 float-right font-15" v-line-clamp:20="1">
                 详情
