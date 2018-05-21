@@ -114,21 +114,21 @@
         if (_.isNull(this.commonForm.alias) || _.isUndefined(this.commonForm.alias)) {
           this.$q.notify({
             message: '名称不能为空',
-            position: 'center'
+            position: 'center',
           })
           return false
         }
         if (_.isNull(this.commonForm.projectId) || _.isUndefined(this.commonForm.projectId)) {
           this.$q.notify({
             message: '所属项目不能为空',
-            position: 'center'
+            position: 'center',
           })
           return false
         }
         if (_.isNull(this.commonForm.locationJson) || _.isUndefined(this.commonForm.locationJson)) {
           this.$q.notify({
             message: '地址不能为空',
-            position: 'center'
+            position: 'center',
           })
           return false
         }
@@ -201,12 +201,10 @@
       },
       setForm () {
         this.qrCodeForm = this.commonForm
-        if (this.type === plantType.SINGLE || this.type === plantType.AREA) {
-          let qFrom = Object.assign({}, this.qrCodeForm)
-          if (qFrom.pictures.length > 0) {
-            let pics = _.map(qFrom.pictures, 'contentUrl')
-            qFrom.pictures = pics
-          }
+        let qFrom = Object.assign({}, this.qrCodeForm)
+        if (qFrom.pictures.length > 0) {
+          let pics = _.map(qFrom.pictures, 'contentUrl')
+          qFrom.pictures = pics
           this.commonForm = qFrom
         }
       },
