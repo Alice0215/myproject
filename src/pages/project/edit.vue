@@ -176,7 +176,7 @@ export default {
       this.$store.commit('Project/setCurrent', null)
       this.$store.commit('Location/setCurrent', null)
       this.$store.commit('Project/setEditData', null)
-      this.$router.goBack(this.isEdited, '确认放弃创建项目吗？', '离开当前页面您的项目信息将不会保存')
+      this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会保留您的操作信息，您确定要取消操作吗？')
     },
     edit () {
       this.$v.formData.$touch()

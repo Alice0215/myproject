@@ -1,16 +1,16 @@
 <template>
- <q-layout>
-  <div class="main" id="my">
-    <q-toolbar class="header">
-    <q-toolbar class="fix">
-       <q-item-side left/>
-        <q-toolbar-title class="header-title">
-        我的
-        </q-toolbar-title>
-         <q-btn   flat round dense icon="settings" @click="leftDrawer = !leftDrawer"/>
-        <!--<q-item-side right icon='settings' class='group'/>-->
-    </q-toolbar>
-    </q-toolbar>
+  <div>
+  <q-layout view="Hhh lpr Fff"  class="main" id="my">
+      <q-layout-header>
+        <q-toolbar>
+          <q-toolbar-title class="header-title">
+            我的
+          </q-toolbar-title>
+         <q-btn flat round dense icon="settings" @click="leftDrawer = !leftDrawer" class="top-color"/>
+        </q-toolbar>
+      </q-layout-header>
+      <q-page-container>
+      <q-page>
     <div class="full-width record-list">
         <q-item  v-ripple.mat class="full-width user-item-header">
           <q-item-main label="养护记录" />
@@ -30,7 +30,6 @@
         </div>
       </q-infinite-scroll>
     </div>
-  </div>
 
    <q-layout-drawer
       side="right"
@@ -55,13 +54,15 @@
         <!-- Content here -->
       </q-scroll-area>
     </q-layout-drawer>
-    <q-tabs class="footer">
-        <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu" />
-        <q-route-tab slot="title" icon="view_array" to="/qcode/scan" append label="扫二维码" class="menu"/>
-        <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
-        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
+    <q-tabs class="footer" v-model="model">
+        <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" name="home"/>
+        <q-route-tab slot="title" icon="notifications none" to="/"  disable replace label="消息" class="menu" />
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" name="my"/>
       </q-tabs>
- </q-layout>
+   </q-page>
+    </q-page-container>
+  </q-layout>
+  </div>
 </template>
 
 <script>
@@ -69,6 +70,7 @@ import { request } from '../../common'
 export default {
   data () {
     return {
+      model: 'my',
       pageNo: 1,
       hasLoadAll: true,
       leftDrawer: true,
@@ -156,6 +158,9 @@ export default {
   .record-right {
     margin-left: 0px;
     min-width: 20px;
+  }
+  .top-color{
+    color: #888
   }
 }
 </style>

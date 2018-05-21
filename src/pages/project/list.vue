@@ -17,7 +17,7 @@
       <q-list class="full-width card">
         <q-card inline class="q-ma-sm full-width bg-white"  v-for="(item, index) in list" :key="index" @click.native="$router.push('/ProjectInfo?projectId='+item.id)">
           <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
-            <span class="project-title font-18 bold wp-80">{{item.projectName}}</span>
+            <span class="project-title font-18 bold wp-80" v-line-clamp:20="1">{{item.projectName}}</span>
             <span class="float-right font-14 text-right wp-15 card-color">{{item.projectType.name}}</span>
           </q-card-title>
           <q-card-main class="underline pb-10">
@@ -39,8 +39,8 @@
             </div>
           </q-card-main>
           <q-card-actions class="col-12">
-            <span class="col-8 float-left leaders font-14" v-line-clamp:20="1">负责人：<span class="i-item" v-for="(v, index) in item.others.leaders" :key="index">
-              <span v-if="index===0">{{v}}</span><span v-if="index!==0">、{{v}}</span></span></span>
+            <span class="col-8 float-left leaders font-14">负责人：<span class="i-item" v-for="(v, index) in item.others.leaders" :key="index">
+              <span v-if="index===0">{{v}}</span><span v-if="index < 2 && index > 0">、{{v}}</span><span v-if="index===2">等</span></span></span>
             <div class="col-4">
               <q-btn flat  class="card-btn float-right card-color font-14"  icon-right="keyboard arrow right"  @click="$router.push('/ProjectInfo?projectId='+item.id)">查看详情</q-btn>
             </div>
@@ -65,7 +65,7 @@ import InfiniteScroll from '../../mixin/InfiniteScroll'
 export default {
   data () {
     return {
-      count: 0      
+      count: 0
     }
   },
   mixins: [
@@ -93,6 +93,9 @@ export default {
 #project-list {
   .q-list {
     border: none;
+  }
+  .underline{
+    border-bottom: 1px solid #E8E8E8 !important;
   }
   margin-top: 15px;
   .project-title {
