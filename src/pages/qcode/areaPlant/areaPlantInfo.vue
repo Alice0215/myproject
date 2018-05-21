@@ -17,7 +17,7 @@
             <label class="text-color">数量{{ v.amount }}</label>
             <div class="mr-18">
               <i class="iconfont holder-color font-18" @click="deleteAddPlant(i)">&#xe61e;</i>
-              <i class="iconfont ml-10 primary-color font-18">&#xe69b;</i>
+              <i class="iconfont ml-10 primary-color font-18" @click="editPlant(i)">&#xe69b;</i>
             </div>
           </div>
         </div>
@@ -51,9 +51,18 @@
       return {
         aForm: {singles: []},
         createPageShow: false,
+        isNew: false,
+        idx: null
       }
     },
     methods: {
+      editPlant (index) {
+        this.isNew = false
+        let idx = parseInt(index)
+        this.idx = idx
+        this.$root.$emit('edit-plant', this.aForm.singles[idx], idx)
+        this.createPageShow = true
+      },
       deleteAddPlant (index) {
         console.log(index)
         this.$store.commit('plantInfo/removeSinglesFromArea', index)
@@ -71,6 +80,7 @@
         this.aForm = Object.assign({}, this.areaForm)
       },
       createPlant () {
+        this.isNew = true
         this.createPageShow = true
       },
      async nextStep () {
@@ -95,7 +105,11 @@
       })
       this.$root.$on('add-plant-done', (newPlantForm) => {
         this.createPageShow = false
+        if (this.isNew) {
         this.aForm.singles.push(newPlantForm)
+        } else {
+          this.aForm.singles.splice(this.idx, 1, newPlantForm)
+        }
       })
       this.getForm()
       console.log(this.aForm)

@@ -133,7 +133,9 @@
         newBranch: null,
         otherUomShow: false,
         otherUom: null,
-        projectId: this.$store.state.plantInfo.projectId
+        projectId: this.$store.state.plantInfo.projectId,
+        isNew: true,
+        idx: null
       }
     },
     methods: {
@@ -328,10 +330,23 @@
           let pics = _.map(qFrom.pictures, 'contentUrl')
           qFrom.pictures = pics
         }
-        this.$store.commit('plantInfo/setNewPlantFormToArea', qFrom)
+        if (this.isNew) {
+          this.$store.commit('plantInfo/addNewPlantFormToArea', qFrom)
+        } else {
+          this.$store.commit('plantInfo/setNewPlantFormToArea', {
+            'idx': this.idx,
+            'value': qFrom
+          })
+        }
       }
     },
     mounted () {
+      this.$root.$on('edit-plant', (form, idx) => {
+        console.log(idx)
+        this.isNew = false
+        this.idx = idx
+        this.sForm = form
+      })
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
         this.sForm.pictures.push(resp)
@@ -352,6 +367,7 @@
     beforeDestroy () {
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
+      this.$root.$off('edit-plant')
     },
   }
 </script>

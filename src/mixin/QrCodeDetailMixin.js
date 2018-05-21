@@ -18,7 +18,6 @@ const QrCodeDetailMixin = {
     edit (detail) {
       console.log(this.qrCode)
       console.log(this.detail)
-      debugger
       let type = detail.type.key
 
       let qrCodeForm = this.qrCode

@@ -38,8 +38,18 @@ export const setProjectId = (state, v) => {
   state.projectId = v
 }
 
-export const setNewPlantFormToArea = (state, v) => {
+export const addNewPlantFormToArea = (state, v) => {
   state.areaForm.singles.push(v)
+}
+
+export const setNewPlantFormToArea = (state, v) => {
+  let idx = parseInt(v.idx)
+//  let singles = state.areaForm.singles
+//  if (singles.length >= idx) {
+//    singles.splice(idx, 1, v.value)
+//  }
+//  state.areaForm.singles = singles
+  state.areaForm.singles.splice(idx, 1, v.value)
 }
 
 export const setChooseType = (state, v) => {
