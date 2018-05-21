@@ -6,8 +6,6 @@ import ProjectDetail from '../pages/project/ProjectDetail'
 import Admin from '../pages/admin/Admin'
 import MaintenanceDetail from '../pages/jobgroup/detail'
 
-import areaDetail from '../pages/qcode/areaDetail'
-
 import chooseDate from '../pages/choose/chooseDate'
 
 import QrCodeDetail from '../pages/QrCode/QrCodeDetail'
