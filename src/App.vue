@@ -116,6 +116,13 @@ export default {
 </script>
 
 <style lang="scss">
+  .van-image-preview {
+    z-index: 9999 !important;
+  }
+
+  .van-modal {
+    z-index: 9998 !important;
+  }
 .child-view {
   position: absolute;
   width: 100%;
