@@ -4,6 +4,7 @@ import ProjectInfo from '../pages/project/ProjectInfo'
 import Records from '../pages/project/Records'
 import ProjectDetail from '../pages/project/ProjectDetail'
 import Admin from '../pages/admin/Admin'
+import MaintenanceDetail from '../pages/jobgroup/detail'
 
 import areaDetail from '../pages/qcode/areaDetail'
 
@@ -101,6 +102,11 @@ export default [
     path: '/jobGroup/byUser',
     component: () => import('pages/jobGroup/byUser'),
     name: 'groupByUser'
+  },
+  {
+    path: '/jobGroup/detail',
+    component: MaintenanceDetail,
+    name: 'jobDetail'
   },
   {
     path: '/project/maintenance',
