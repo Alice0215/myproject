@@ -230,11 +230,11 @@
               orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
               disableAnimations: true, // iOS
               disableSuccessBeep: false, // iOS and Android
-            },
-          )
-        },
+            })
+        }
       },
     }
+  }
 </script>
 
 <style lang='scss'>
