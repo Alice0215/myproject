@@ -1,7 +1,7 @@
 <template>
   <div id="single-plant-info">
     <van-cell-group :border="false">
-      <van-cell title="所属片区" is-link :value="position" class="font-16" @click="chooseArea"/>
+      <van-cell title="所属片区" is-link :value="areaName" class="font-16" @click="chooseArea"/>
       <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入相对位置" />
       <van-cell title="苗木分类" is-link :value="category" required class="font-16" @click="chooseNursery"/>
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
@@ -119,13 +119,14 @@
         sForm: {},
         plantCategoryArray: [],
         showPlantCategory: false,
-        position: '选择片区内容',
+        position: null,
         category: '选择苗木分类',
         uomOptions: [],
         oldUomNames: [],
         otherUomShow: false,
         otherUom: null,
         uomId: null,
+        areaName: '选择片区内容'
       }
     },
     methods: {
@@ -223,7 +224,7 @@
       branchItemClicked (item) {
         console.log(item)
         this.sForm.areaId = item.id
-        this.position = item.name
+        this.areaName = item.name
         this.branchShow = false
       },
       createNewBranchItem () {
@@ -247,7 +248,7 @@
            return v.id === bid
           })
           if (branch) {
-            this.position = branch.name
+            this.areaName = branch.name
           }
 //          this.branchActions.push({
 //            name: '新建',
