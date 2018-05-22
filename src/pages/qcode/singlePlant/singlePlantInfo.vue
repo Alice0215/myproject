@@ -277,7 +277,6 @@
         let resp = await request('qrcode/single/save', 'put', this.singleForm, 'json', true)
         this.$q.loading.hide()
         if (resp) {
-          this.clearInfo()
           this.sForm = {}
           this.$root.$emit('next-step')
         }

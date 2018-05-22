@@ -9,10 +9,16 @@
 </template>
 
 <script>
+  import addPlantMixin from '../mixin/addPlantMixin'
+
   export default {
+    mixins: [
+      addPlantMixin
+    ],
     methods: {
       goToDetail () {
-        console.log('Nobody tole me!')
+        this.$router.replace('/qcode/detail?id=' + this.qrCodeId + '&type=' + this.type)
+        this.clearInfo()
       }
     },
     mounted () {

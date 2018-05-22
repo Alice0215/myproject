@@ -11,7 +11,7 @@ const addPlantMixin = {
     },
     projectId: {
       get () {
-        return this.$store.state.qrCodeInfo.qrCodeMsg.project.id
+        return this.$store.state.plantInfo.projectId
       },
       set (val) {
         return this.$store.commit('plantInfo/setProjectId', val)

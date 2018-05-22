@@ -116,6 +116,7 @@
       msg.qrCodeId = qrCodeId
       msg.typeKey = typeKey
       this.$store.commit('qrCodeInfo/setQrCodeInfo', msg)
+      this.$store.commit('plantInfo/setProjectId', project.id)
       localStorage.setItem('qrCodeId', qrCodeId)
       localStorage.setItem('typeKey', typeKey)
       localStorage.setItem('choose-project', JSON.stringify(project))
