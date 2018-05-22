@@ -132,12 +132,6 @@ export default {
     let currentUser = this.$store.state.User.current
     this.apiUrl = 'jobGroup/list/byUser?userId=' + currentUser.userId
     this.scroll = this.$refs.scroll
-    this.infiniteScrollCallback = function () {
-      if (this.list.length > 0) {
-        eventBus.$emit('has-maintenance-records')
-      }
-    }
-    console.log(this.list)
   }
 }
 </script>
