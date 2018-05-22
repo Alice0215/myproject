@@ -112,6 +112,7 @@
         })
         localStorage.setItem('qrcode-image', JSON.stringify(imageArray))
       }
+      this.$store.commit('plantInfo/setQRCodeId', qrCodeId)
       msg.qrCodeId = qrCodeId
       msg.typeKey = typeKey
       this.$store.commit('qrCodeInfo/setQrCodeInfo', msg)

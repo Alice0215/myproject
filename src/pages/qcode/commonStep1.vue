@@ -47,7 +47,7 @@
 
 <script>
   import addPlantMixin from '../../mixin/addPlantMixin'
-  import { uploadFiles, deleteFiles, request } from '../../common'
+  import { uploadFiles, deleteFiles, request, setPicturesWithPreview } from '../../common'
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
   import eventBus from '../../eventBus'
@@ -70,6 +70,7 @@
         commonForm: {},
         nameLabel: '',
         nameHolder: '',
+        pickArray: []
       }
     },
     methods: {
@@ -161,6 +162,7 @@
       onConfirm (value, index) {
         this.projectName = value.text
         this.commonForm.projectId = value.id
+        this.projectId = value.id
         this.showPop = false
       },
       onCancel () {
@@ -200,6 +202,19 @@
         }
       },
       setForm () {
+        console.log(this.commonForm)
+        if (this.type === plantType.OTHER || this.type === plantType.DEVICE) {
+          this.commonForm = _.pick(this.commonForm, this.pickArray)
+        }
+        if (this.commonForm.type) {
+          delete this.commonForm.type
+        }
+        if (this.commonForm.locationJson) {
+          let lj = JSON.parse(this.commonForm.locationJson)
+          if (!lj.position) {
+            delete this.commonForm.locationJson
+          }
+        }
         this.qrCodeForm = this.commonForm
         let qFrom = Object.assign({}, this.qrCodeForm)
         if (qFrom.pictures.length > 0) {
@@ -210,7 +225,9 @@
       },
       getForm () {
         this.commonForm = Object.assign({}, this.qrCodeForm)
-        this.commonForm.qrCodeId = this.$store.state.qrCodeInfo.qrCodeMsg.qrCodeId
+        this.commonForm.qrCodeId = this.qrCodeId
+        let imgs = setPicturesWithPreview(this.commonForm.pictures)
+        this.commonForm.pictures = imgs
         switch (this.type) {
           case plantType.SINGLE:
             this.nameLabel = '植物名称'
@@ -226,15 +243,18 @@
             this.nameLabel = '设备名称'
             this.nameHolder = '请输入设备名称'
             this.navTitle = '设备'
+            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           case plantType.OTHER:
             this.nameLabel = '名称'
             this.nameHolder = '请输入名称'
             this.navTitle = '其他'
+            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           default:
             break
         }
+        console.log(this.commonForm)
       },
     },
     mounted () {

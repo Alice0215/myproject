@@ -60,6 +60,10 @@ export const setNavTitle = (state, v) => {
   state.navTitle = v
 }
 
+export const setQRCodeId = (state, v) => {
+  state.qrCodeId = v
+}
+
 export const clearInfo = (state) => {
   state.qrCodeForm = {pictures: []}
   state.singleForm = {}

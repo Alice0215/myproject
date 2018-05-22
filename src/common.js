@@ -167,6 +167,26 @@ async function uploadFiles (fileData) {
 }
 
 /**
+ * 返回带有 预览地址 和 contentUrl 的图片对象数组
+ * @param pictures
+ * @returns {Array}
+ */
+function setPicturesWithPreview (pictures) {
+  let imgs = []
+  _.forEach(pictures, imgURL => {
+    let filepath = !_.isUndefined(imgURL.filePath) ? imgURL.filePath : imgURL
+    if (!_.isNull(filepath)) {
+      let img = {
+        'previewUrl': server.THUMBNAIL_API + filepath,
+        'contentUrl': filepath
+      }
+      imgs.push(img)
+    }
+  })
+  return imgs
+}
+
+/**
  * 清除 localStory
  * @param name localStory名
  */
@@ -181,5 +201,6 @@ export {
   dataURLtoFile,
   deleteFiles,
   uploadFiles,
-  removeLocalStory
+  removeLocalStory,
+  setPicturesWithPreview
 }

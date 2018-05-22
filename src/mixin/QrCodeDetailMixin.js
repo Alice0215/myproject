@@ -2,6 +2,7 @@ import { ImagePreview } from 'vant'
 import { server, plantType } from '../const'
 import addPlantMixin from './addPlantMixin'
 import _ from 'lodash'
+import { setPicturesWithPreview } from '../common'
 
 const QrCodeDetailMixin = {
   mixins: [
@@ -26,8 +27,12 @@ const QrCodeDetailMixin = {
         this.projectId = this.qrCode.project.id
       }
       qrCodeForm.qrCodeId = this.qrCode.id
-      qrCodeForm.locationJson = JSON.stringify(this.qrCode.location)
+      this.$store.commit('plantInfo/setQRCodeId', this.qrCode.id)
+      if (!_.isNull(this.qrCode.location)) {
+        qrCodeForm.locationJson = JSON.stringify(this.qrCode.location)
+      }
       this.qrCodeForm = qrCodeForm
+      console.log(this.qrCodeForm)
       if (type === plantType.SINGLE) {
         let singleForm = this.detail
         singleForm.category = this.detail.category.id
@@ -39,6 +44,11 @@ const QrCodeDetailMixin = {
         let detail = this.detail
         _.forEach(detail.singles, (v) => {
           v.category = v.category.id
+          let imgs = []
+          _.forEach(v.pictures, (picture) => {
+            imgs.push(picture.filePath)
+          })
+          v.pictures = imgs
         })
         this.areaForm = detail
       }

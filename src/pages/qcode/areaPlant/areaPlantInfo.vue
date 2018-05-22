@@ -70,10 +70,6 @@
       setForm () {
         this.areaForm = this.aForm
         let qFrom = Object.assign({}, this.qrCodeForm)
-        if (qFrom.pictures.length > 0) {
-          let pics = _.map(qFrom.pictures, 'contentUrl')
-          qFrom.pictures = pics
-        }
         this.$store.commit('plantInfo/setQRCodeFormToArea', qFrom)
       },
       getForm () {
@@ -105,11 +101,13 @@
       })
       this.$root.$on('add-plant-done', (newPlantForm) => {
         this.createPageShow = false
-        if (this.isNew) {
-        this.aForm.singles.push(newPlantForm)
-        } else {
-          this.aForm.singles.splice(this.idx, 1, newPlantForm)
-        }
+//        if (this.isNew) {
+//          console.log(this.aForm.singles)
+//          debugger
+//        this.aForm.singles.push(newPlantForm)
+//        } else {
+//          this.aForm.singles.splice(this.idx, 1, newPlantForm)
+//        }
       })
       this.getForm()
       console.log(this.aForm)

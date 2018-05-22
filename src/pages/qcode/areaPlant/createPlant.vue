@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  import { uploadFiles, deleteFiles, request } from '../../../common'
+  import { uploadFiles, deleteFiles, request, setPicturesWithPreview } from '../../../common'
   import { ImagePreview } from 'vant'
   import _ from 'lodash'
   import eventBus from '../../../eventBus'
@@ -145,7 +145,7 @@
       },
       imagePreview (index) {
         console.log(index)
-        let previewArray = _.map(this.commonForm.pictures, (img) => {
+        let previewArray = _.map(this.sForm.pictures, (img) => {
           return server.PREVIEW_API + img.contentUrl
         })
         console.log(previewArray)
@@ -345,7 +345,10 @@
         console.log(idx)
         this.isNew = false
         this.idx = idx
+        let imgs = setPicturesWithPreview(form.pictures)
+        form.pictures = imgs
         this.sForm = form
+        console.log(this.sForm)
       })
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()

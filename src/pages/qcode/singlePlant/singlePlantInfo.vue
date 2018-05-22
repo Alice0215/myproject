@@ -291,10 +291,6 @@
       setForm () {
         this.singleForm = this.sForm
         let qFrom = Object.assign({}, this.qrCodeForm)
-        if (qFrom.pictures.length > 0) {
-          let pics = _.map(qFrom.pictures, 'contentUrl')
-          qFrom.pictures = pics
-        }
         this.$store.commit('plantInfo/setQRCodeFormToSingle', qFrom)
       },
       getForm () {
