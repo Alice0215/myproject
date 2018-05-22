@@ -1,57 +1,56 @@
 <template>
   <div>
     <q-layout view="Hhh lpr Fff">
-      <q-page-container>
-        <q-page>
-          <div id="home">
-            <div class="top-log">
-              <q-item-side left icon="fullscreen" class="color-white scan absolute" @click.native="openScan"><span
-                class="block font-12">扫一扫</span></q-item-side>
-              <p class="log">
-                <img src="statics/home/home-logo.png"/>
-              </p>
-              <p class="time">{{dataTime}}</p>
-            </div>
-            <div class="row card menu-field">
-              <div class="col-6 nav border-bottom border-right" @click="iconClicked('jobGroup')">
-                <img src="statics/home/1-1.png"/>
-                <div>养护记录</div>
-              </div>
-              <div class="col-6 nav  border-bottom">
-                <img src="statics/home/1-2.png"/>
-                <div>现场巡查记录</div>
-              </div>
-              <div class="col-6 nav border-bottom border-right">
-                <img src="statics/home/2-1.png"/>
-                <div>苗木到场</div>
-              </div>
-              <div class="col-6 nav  border-bottom" @click="iconClicked('qrcode')">
-                <img src="statics/home/2-2.png"/>
-                <div>二维码编辑</div>
-              </div>
-              <div class="col-6 nav border-right" @click="$router.push('/project/list')">
-                <img src="statics/home/3-1.png"/>
-                <div>项目</div>
-              </div>
-              <!-- <div class="col-6 nav border-bottom">
-                <img src="statics/home/3-2.png"/>
-                <div>成员</div>
-              </div> -->
-              <div class="col-6 nav" v-if="admin" @click="$router.push('/admin')">
-                <img src="statics/home/4-1.png"/>
-                <div>管理</div>
-              </div>
-            </div>
+    <q-page-container>
+      <q-page>
+      <div id="home">
+        <div class="top-log">
+          <q-item-side left  icon="fullscreen" class="color-white scan absolute" @click.native="openScan"><span class="block font-12">扫一扫</span></q-item-side>
+          <p class="log">
+            <img src="statics/home/home-logo.png"/>
+          </p>
+          <p class="time">{{dataTime}}</p>
+        </div>
+        <div class="row card menu-field">
+          <div class="col-6 nav border-bottom border-right" @click="iconClicked('jobGroup')">
+            <img src="statics/home/1-1.png"/>
+            <div>养护记录</div>
           </div>
-        </q-page>
+          <div class="col-6 nav  border-bottom">
+            <img src="statics/home/1-2.png"/>
+            <div>现场巡查记录</div>
+          </div>
+          <div class="col-6 nav border-bottom border-right">
+            <img src="statics/home/2-1.png"/>
+            <div>苗木到场</div>
+          </div>
+          <div class="col-6 nav  border-bottom" @click="iconClicked('qrcode')">
+            <img src="statics/home/2-2.png"/>
+            <div>二维码编辑</div>
+          </div>
+          <div class="col-6 nav border-right" @click="$router.push('/project/list')">
+            <img src="statics/home/3-1.png"/>
+            <div>项目</div>
+          </div>
+          <!-- <div class="col-6 nav border-bottom">
+            <img src="statics/home/3-2.png"/>
+            <div>成员</div>
+          </div> -->
+           <div class="col-6 nav" v-if="admin" @click="$router.push('/admin')">
+            <img src="statics/home/4-1.png"/>
+            <div>管理</div>
+          </div>
+        </div>
+      </div>
+      </q-page>
       </q-page-container>
-      <q-layout-footer>
-        <q-tabs class="footer">
-          <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu"/>
-          <q-route-tab slot="title" icon="notifications none" to="/" replace label="消息" class="menu"/>
-          <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
-        </q-tabs>
-      </q-layout-footer>
+       <q-layout-footer>
+      <q-tabs class="footer" v-model="model">
+        <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" name="home"/>
+        <q-route-tab slot="title" icon="notifications none" to="/"  disable replace label="消息" class="menu" />
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" />
+      </q-tabs>
+    </q-layout-footer>
     </q-layout>
   </div>
 </template>
@@ -66,6 +65,7 @@
       return {
         dataTime: '',
         admin: false,
+        model: 'home',
         type: null,
       }
     },
@@ -232,10 +232,9 @@
               disableSuccessBeep: false, // iOS and Android
             },
           )
-        }
+        },
       },
-    },
-  }
+    }
 </script>
 
 <style lang='scss'>
