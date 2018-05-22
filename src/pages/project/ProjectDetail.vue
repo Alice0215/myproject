@@ -64,7 +64,7 @@
       </q-item>
         <div class="row col-12 box pt-20 font-14">
           <span class="col-4 h-35 pt-10">项目简介</span>
-            <q-input
+            <q-input disable
           type="textarea"
           class="col-7 ml-8 p-8 text-right"
           v-model="formData.projectDesc"

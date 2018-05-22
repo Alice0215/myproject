@@ -104,16 +104,6 @@ export default [
     name: 'groupByUser'
   },
   {
-    path: '/jobGroup/record',
-    component: () => import('pages/jobGroup/record'),
-    name: 'jobRecord'
-  },
-  {
-    path: '/jobGroup/groupRecord',
-    component: () => import('pages/jobGroup/groupRecord'),
-    name: 'jobGroupRecord'
-  },
-  {
     path: '/jobGroup/detail',
     component: MaintenanceDetail,
     name: 'jobDetail'
