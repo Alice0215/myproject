@@ -15,24 +15,52 @@
         <q-item  v-ripple.mat class="full-width user-item-header">
           <q-item-main label="养护记录" />
        </q-item>
-        <q-infinite-scroll :handler="load" ref="scroll">
-        <q-list separator v-if="list.length > 0" class="scroll-field">
-            <q-item  v-ripple.mat class="full-width underline user-item" v-for="item in list"
-                    :key="item.id">
-            <div>
-              <!--jobs[i].action.name-->
-              {{item.job.action.name}}
-              <div>{{item.createTime}}</div>
-            </div>
-             <q-item-main />
-            <span class="user">{{item.project.projectName}}</span>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
-        </q-list>
-         <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
+       <q-infinite-scroll :handler="load" ref="scroll">
+          <q-list separator v-if="list.length > 0">
+            <q-item v-for="item in list"
+                    :key="item.id"
+                    @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
+              <q-item-main>
+                <q-item-tile>
+                  <div class="row">
+                    <div class="title col-8">{{ item.code.alias }}</div>
+                    <div class="type-title col-4 text-right">{{ item.code.type ? item.code.type.value  : '' }}</div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile class="content">
+                  <div class="pv-4 row">
+                    <div class="work-content-title">工作内容：</div>
+                    <div class="work-content" v-line-clamp:20="1">
+
+                    </div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile class="content">
+                  <div class="pv-4">
+                    <div>记录人：</div>
+                    <div>{{ item.user.fullname }}</div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile>
+                  <div class="pv-4 row font-15">
+                    <div class="col-8">
+                      <div class="inline-flex">
+                        <div>时间：</div>
+                        <div>{{ item.createTime }}</div>
+                      </div>
+                    </div>
+                    <div class="col-4 text-right btn-light">
+                      <div>查看详情<q-icon name="keyboard arrow right" size="20px"/></div>
+                    </div>
+                  </div>
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+          <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
             <q-spinner name="dots" slot="message" :size="40"></q-spinner>
           </div>
-      </q-infinite-scroll>
+        </q-infinite-scroll>
     </div>
 
    <q-layout-drawer
@@ -81,31 +109,6 @@ export default {
     InfiniteScroll
   ],
   methods: {
-    // async getlist (index, done) {
-    //   if (!this.hasLoadAll) {
-    //     request('jobGroup/list/byUser?pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
-    //       if (response.data.resultCode === 'SUCCESS') {
-    //         let that = this
-    //         let list = response.data.resultMsg
-    //         if (list.length === 0 || !list.length) {
-    //           that.hasLoadAll = true
-    //           return
-    //         }
-    //         if (list.length < 20) {
-    //           that.hasLoadAll = true
-    //         } else {
-    //           that.pageNo++
-    //         }
-    //         if (that.list.length > 0) {
-    //           that.list = that.list.concat(list)
-    //         } else {
-    //           that.list = list
-    //         }
-    //         done()
-    //       }
-    //     })
-    //   }
-    // },
     logOut () {
       this.$q.dialog({
         title: '提示',
@@ -120,19 +123,18 @@ export default {
       }).catch(() => {
         this.leftDrawer = false
       })
-    },
-    mounted () {
-      let currentUser = this.$store.state.User.current
-      // this.apiUrl = 'jobGroup/list/byProject?projectId=' + this.projectId
-      this.apiUrl = 'jobGroup/list/byUser?userId=' + currentUser.userId
-      console.log(this.apiUrl)
-      this.scroll = this.$refs.scroll
-      this.infiniteScrollCallback = function () {
-        if (this.list.length > 0) {
-          eventBus.$emit('has-maintenance-records')
-        }
+    }
+  },
+  mounted () {
+    let currentUser = this.$store.state.User.current
+    this.apiUrl = 'jobGroup/list/byUser?userId=' + currentUser.userId
+    this.scroll = this.$refs.scroll
+    this.infiniteScrollCallback = function () {
+      if (this.list.length > 0) {
+        eventBus.$emit('has-maintenance-records')
       }
     }
+    console.log(this.list)
   }
 }
 </script>
@@ -140,6 +142,34 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #my {
+   background: white;
+  .q-item-main {
+    .content {
+      .work-content-title {
+        width: 75px;
+      }
+      .work-content {
+        width: calc(100% - 90px);
+      }
+      div {
+        display: flex;
+        div {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .title {
+    font-size: 18px !important;
+    color: $text-highlight;
+  }
+  .type-title {
+    color: $type-title;
+  }
+  .btn-light {
+    color: $light-text;
+    font-size: 15px;
+  }
   .record-list {
     border-top: 1px solid #cccccc;
   }
