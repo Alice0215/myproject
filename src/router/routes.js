@@ -108,7 +108,11 @@ export default [
   },
   {
     path: '/project/maintenance',
-    component: () => import('pages/project/constructionMaintenance.vue')
+    component: () => import('pages/jobgroup/save.vue')
+  },
+  {
+    path: '/jobGroup/save',
+    component: () => import('pages/jobgroup/save.vue')
   },
   {
     path: '/project/jobs',
