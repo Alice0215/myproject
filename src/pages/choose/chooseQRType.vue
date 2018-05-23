@@ -74,6 +74,9 @@
         this.type = plantType.OTHER
         this.$router.push('/qrcode/stepper')
       },
+    },
+    mounted () {
+      this.isNew = true
     }
   }
 </script>

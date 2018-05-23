@@ -13,6 +13,15 @@ const QrCodeDetailMixin = {
     }
   },
   methods: {
+    back () {
+      let project = this.$route.query.projectId
+      console.log(project)
+      if (project) {
+        this.$router.goBack()
+      } else {
+        this.$router.go(-2)
+      }
+    },
     preview (i) {
       ImagePreview(this.previews, i)
     },

@@ -72,3 +72,7 @@ export const clearInfo = (state) => {
   state.type = null
   state.navTitle = null
 }
+
+export const setIsNew = (state, v) => {
+  state.isNew = v
+}

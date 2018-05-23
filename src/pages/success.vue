@@ -17,7 +17,11 @@
     ],
     methods: {
       goToDetail () {
-        this.$router.replace('/qcode/detail?id=' + this.qrCodeId + '&type=' + this.type)
+        if (this.isNew) {
+          this.$router.replace('/qcode/detail?id=' + this.qrCodeId + '&type=' + this.type)
+        } else {
+          this.$router.goBack()
+        }
         this.clearInfo()
       }
     },
