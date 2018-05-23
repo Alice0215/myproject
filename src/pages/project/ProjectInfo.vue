@@ -12,7 +12,7 @@
         <q-item-side class="white-right" right/>
       </q-toolbar>
       <div class="background-view">
-        <div class="mh-3 float-left">
+        <div class="mh-3  full-width">
           <div class="font-12 lh-1-8 address"> <q-item-side float-left  icon="room" class="float-left color-white mw-unset pr-5"/>
           <span v-line-clamp:20="1">{{formattedAddress}}</span></div>
           <div class="mt-3">

@@ -17,12 +17,12 @@
             <div>养护记录</div>
           </div>
           <div class="col-6 nav  border-bottom">
-            <img src="statics/home/1-2.png"/>
-            <div>现场巡查记录</div>
+            <img class="opacity-disabled" src="statics/home/1-2.png"/>
+            <div class="opacity-disabled">现场巡查记录</div>
           </div>
           <div class="col-6 nav border-bottom border-right">
-            <img src="statics/home/2-1.png"/>
-            <div>苗木到场</div>
+            <img class="opacity-disabled" src="statics/home/2-1.png"/>
+            <div class="opacity-disabled">苗木到场</div>
           </div>
           <div class="col-6 nav  border-bottom" @click="iconClicked('qrcode')">
             <img src="statics/home/2-2.png"/>
@@ -45,10 +45,10 @@
       </q-page>
       </q-page-container>
        <q-layout-footer>
-      <q-tabs class="footer">
-        <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" />
-        <q-route-tab slot="title" icon="notifications none" to="/" replace label="消息" class="menu" />
-        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
+      <q-tabs class="footer" v-model="model">
+        <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" name="home"/>
+        <q-route-tab slot="title" icon="notifications none" to="/"  disable replace label="消息" class="menu" />
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" />
       </q-tabs>
     </q-layout-footer>
     </q-layout>
@@ -56,14 +56,14 @@
 </template>
 
 <script>
-  import { request} from '../../common'
-  import _ from 'lodash'
-  import { server, plantType} from '../../const'
-
-  export default {
+import { request } from '../../common'
+import _ from 'lodash'
+import { server, plantType } from '../../const'
+export default {
   data () {
     return {
       dataTime: '',
+      model: 'home',
       admin: false,
       type: null
     }
@@ -200,7 +200,9 @@
       font-size: 34px;
     }
   }
-
+  .opacity-disabled {
+    opacity: 0.5;
+  }
   .top-log {
     height: calc(42vh - 66px);
     background: -webkit-linear-gradient($primary, $nextprimary);
@@ -210,7 +212,7 @@
     color: white;
     text-align: center;
     font-size: 20px;
-    padding-top: calc((40vh - 220px)/2);
+    padding-top: calc((40vh - 220px) / 2);
   }
   .log {
     text-align: center;
@@ -221,7 +223,7 @@
   }
   .nav {
     height: calc(21vh - 22px);
-    padding-top: calc((20vh - 100px)/2);
+    padding-top: calc((20vh - 100px) / 2);
     // padding-bottom: 15px;
     img {
       width: 60px;
