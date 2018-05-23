@@ -52,6 +52,7 @@
     },
     data () {
       return {
+        title: null,
         currentStep: 'common',
         singleShow: false,
         areaShow: false,
@@ -79,6 +80,12 @@
     mounted () {
       this.singleShow = this.type === plantType.SINGLE
       this.areaShow = this.type === plantType.AREA
+
+      if(this.type === plantType.AREA){
+        this.areaShow = true
+
+      }
+
       this.$root.$on('next-step', () => {
         this.$refs.stepper.next()
       })

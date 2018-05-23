@@ -111,7 +111,6 @@
     ],
     data () {
       return {
-        areaBranches: [],
         branchShow: false,
         createShow: false,
         branchActions: [],
@@ -165,17 +164,15 @@
       async getPlantCategory () {
         let resp = await request('data/plantCategory')
         if (resp) {
+          let that = this
           this.plantCategoryArray = resp.data.resultMsg
           _.forEach(this.plantCategoryArray, (v, key) => {
             v.text = v.name
             v.category = v.id.toString()
-          })
-          let cat = _.find(this.plantCategoryArray, (v) => {
-            return v.category === this.sForm.category
-          })
-          if (cat) {
-            this.category = cat.text
-          }
+            if(v.category === that.sForm.category){
+              that.category = v.text
+            }
+          })          
         }
       },
       otherUomClose (action, done) {
@@ -227,14 +224,14 @@
         this.areaName = item.name
         this.branchShow = false
       },
-      createNewBranchItem () {
-        this.branchShow = false
-        this.createShow = true
-      },
+      // createNewBranchItem () {
+      //   this.branchShow = false
+      //   this.createShow = true
+      // },
       async getAreaBranch () {
-        this.areaBranches = []
         let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
         if (resp) {
+          let bid = !_.isUndefined(this.sForm.areaId) ? this.sForm.areaId.toString() : null
           let branches = resp.data.resultMsg
           _.forEach(branches, v => {
             let branch = {}
@@ -242,14 +239,12 @@
             branch.id = v.id.toString()
             branch.callback = this.branchItemClicked
             this.branchActions.push(branch)
-          })
-          let bid = !_.isUndefined(this.sForm.areaId) ? this.sForm.areaId.toString() : null
-          let branch = _.find(this.branchActions, (v) => {
-           return v.id === bid
-          })
-          if (branch) {
-            this.areaName = branch.name
-          }
+
+            if(branch.id === bid){
+              this.areaName = branch.name
+            }
+          })          
+          
 //          this.branchActions.push({
 //            name: '新建',
 //            callback: this.createNewBranchItem,
