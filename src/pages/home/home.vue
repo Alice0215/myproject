@@ -17,12 +17,12 @@
             <div>养护记录</div>
           </div>
           <div class="col-6 nav  border-bottom">
-            <img src="statics/home/1-2.png"/>
-            <div>现场巡查记录</div>
+            <img class="opacity-disabled" src="statics/home/1-2.png"/>
+            <div class="opacity-disabled">现场巡查记录</div>
           </div>
           <div class="col-6 nav border-bottom border-right">
-            <img src="statics/home/2-1.png"/>
-            <div>苗木到场</div>
+            <img class="opacity-disabled" src="statics/home/2-1.png"/>
+            <div class="opacity-disabled">苗木到场</div>
           </div>
           <div class="col-6 nav  border-bottom" @click="iconClicked('qrcode')">
             <img src="statics/home/2-2.png"/>
@@ -200,7 +200,9 @@ export default {
       font-size: 34px;
     }
   }
-
+  .opacity-disabled {
+    opacity: 0.5;
+  }
   .top-log {
     height: calc(42vh - 66px);
     background: -webkit-linear-gradient($primary, $nextprimary);
