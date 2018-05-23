@@ -56,14 +56,6 @@ const addPlantMixin = {
       set (val) {
         return this.$store.commit('plantInfo/setNavTitle', val)
       }
-    },
-    isNew: {
-      get () {
-        return this.$store.state.plantInfo.isNew
-      },
-      set (val) {
-        return this.$store.commit('plantInfo/setIsNew', val)
-      }
     }
   },
   methods: {

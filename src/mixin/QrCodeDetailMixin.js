@@ -14,20 +14,20 @@ const QrCodeDetailMixin = {
   },
   methods: {
     back () {
-      let project = this.$route.query.projectId
-      console.log(project)
-      if (project) {
+      let projectId = this.$route.query.projectId
+      let fromDetail = this.$route.query.fromDetail
+      console.log(fromDetail)
+      if (fromDetail === 'true' || !projectId) {
         this.$router.goBack()
       } else {
-        this.$router.go(-2)
+        console.log('列表')
+        this.$router.replace('/qcode/list?projectId=' + projectId + '&twice=true')
       }
     },
     preview (i) {
       ImagePreview(this.previews, i)
     },
     edit (detail) {
-      console.log(this.qrCode)
-      console.log(this.detail)
       let type = detail.type.key
 
       let qrCodeForm = this.qrCode
@@ -40,6 +40,7 @@ const QrCodeDetailMixin = {
       if (!_.isNull(this.qrCode.location)) {
         qrCodeForm.locationJson = JSON.stringify(this.qrCode.location)
       }
+      qrCodeForm.fromDetail = this.$route.query.projectId
       this.qrCodeForm = qrCodeForm
       console.log(this.qrCodeForm)
       if (type === plantType.SINGLE) {
@@ -65,7 +66,6 @@ const QrCodeDetailMixin = {
 
       this.type = this.qrCode.type.key
       this.$router.push('/qrcode/stepper')
-//      this.$router.push('/qcode/edit?id=' + detail.id)
     },
     openQrCode (detail) {
       let images = [server.THUMBNAIL_QR + detail.batch.batchNo + '/' + detail.id + '.png']

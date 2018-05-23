@@ -73,6 +73,3 @@ export const clearInfo = (state) => {
   state.navTitle = null
 }
 
-export const setIsNew = (state, v) => {
-  state.isNew = v
-}

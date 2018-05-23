@@ -154,7 +154,6 @@
           let resp = await request(url, 'put', this.commonForm, 'json', true)
           this.$q.loading.hide()
           if (resp) {
-            this.clearInfo()
             this.$root.$emit('next-step')
           }
         }
@@ -240,13 +239,13 @@
             this.nameLabel = '设备名称'
             this.nameHolder = '请输入设备名称'
             this.navTitle = '设备'
-            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
+            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson', 'fromDetail']
             break
           case plantType.OTHER:
             this.nameLabel = '名称'
             this.nameHolder = '请输入名称'
             this.navTitle = '其他'
-            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
+            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson', 'fromDetail']
             break
           default:
             break

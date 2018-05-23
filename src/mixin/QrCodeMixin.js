@@ -45,7 +45,6 @@ const QrCodeMixin = {
     }
   },
   async mounted () {
-    this.$store.commit('plantInfo/setIsNew', false)
     this.qrCodeId = this.$route.query.id
     this.load()
   }

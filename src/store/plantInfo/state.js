@@ -5,7 +5,6 @@ export default {
   projectId: null,
   type: null,
   navTitle: null,
-  qrCodeId: null,
-  isNew: false
+  qrCodeId: null
   //
 }
