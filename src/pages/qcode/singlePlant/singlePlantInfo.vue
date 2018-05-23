@@ -286,6 +286,7 @@
       setForm () {
         this.singleForm = this.sForm
         let qFrom = Object.assign({}, this.qrCodeForm)
+        qFrom = this.removeLocationIfNotChanged(qFrom)
         this.$store.commit('plantInfo/setQRCodeFormToSingle', qFrom)
       },
       getForm () {

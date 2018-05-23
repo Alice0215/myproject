@@ -209,12 +209,9 @@
         if (this.commonForm.type) {
           delete this.commonForm.type
         }
-        if (this.commonForm.locationJson) {
-          let lj = JSON.parse(this.commonForm.locationJson)
-          if (!lj.position) {
-            delete this.commonForm.locationJson
-          }
-        }
+       if (this.type === plantType.DEVICE || this.type === plantType.OTHER) {
+          this.commonForm = this.removeLocationIfNotChanged(this.commonForm)
+       }
         this.qrCodeForm = this.commonForm
         let qFrom = Object.assign({}, this.qrCodeForm)
         if (qFrom.pictures.length > 0) {

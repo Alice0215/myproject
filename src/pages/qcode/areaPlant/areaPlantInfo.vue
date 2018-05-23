@@ -70,6 +70,7 @@
       setForm () {
         this.areaForm = this.aForm
         let qFrom = Object.assign({}, this.qrCodeForm)
+        qFrom = this.removeLocationIfNotChanged(qFrom)
         this.$store.commit('plantInfo/setQRCodeFormToArea', qFrom)
       },
       getForm () {

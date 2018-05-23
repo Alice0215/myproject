@@ -62,6 +62,15 @@ const addPlantMixin = {
     clearInfo () {
       this.$root.$emit('clear-info')
       this.$store.commit('plantInfo/clearInfo')
+    },
+    removeLocationIfNotChanged (commonForm) {
+      if (commonForm.locationJson) {
+        let lj = JSON.parse(commonForm.locationJson)
+        if (!lj.position) {
+          delete commonForm.locationJson
+        }
+      }
+      return commonForm
     }
   },
   data () {
