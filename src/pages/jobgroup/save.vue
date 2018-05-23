@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import _ from "lodash";
+import _ from 'lodash'
 import { request, uploadFiles, deleteFiles } from '../../common'
 import { required } from 'vuelidate/lib/validators'
 import { server } from '../../const'
@@ -74,46 +74,46 @@ export default {
   mixins: [
     JobActionMixin
   ],
-  data() {
-    return {      
+  data () {
+    return {
       jobgroup: null,
-      description: "",
+      description: '',
       pictures: [],
       jobs: [],
       tree: null,
       jobActionIds: [],
       jobActionNames: [],
-      jobGroupId: 0,
-      codeId: 0
-    };
+      jobGroupId: null,
+      codeId: null
+    }
   },
   validations: {
     jobs: { required }
   },
   methods: {
-    showJobActionModal(){
-      console.log('show-job-action-modal')      
+    showJobActionModal () {
+      console.log('show-job-action-modal')
       eventBus.$emit('show-job-action-modal')
     },
-    removeJob(index){
+    removeJob (index) {
       this.jobs.splice(index, 1)
     },
-    save() {
+    save () {
       let that = this
       let jobs = []
-      for(let i=0; i<this.jobs.length; i++){
+      for (let i = 0; i < this.jobs.length; i++) {
         let v = this.jobs[i]
-        if(v.other){
+        if (v.other) {
           jobs.push(v)
           continue
         }
         let action = that.findAction(that.tree, v.actionId)
-        if(!action.children){
+        if (!action.children) {
           jobs.push(v)
           continue
-        }  
+        }
       }
-      
+
       console.log(jobs)
 
       let data = {
@@ -122,13 +122,13 @@ export default {
         'pictures': this.pictures
       }
       let url = 'jobGroup/'
-      let mes = ""
+      let mes = ''
 
-      if(this.isEdit) {
+      if (this.isEdit) {
         data.jobGroupId = this.jobGroupId
         url += 'edit'
         mes = '养护记录修改成功！'
-      } else {        
+      } else {
         data.codeId = this.codeId
         url += 'create'
         mes = '养护记录保存成功！'
@@ -142,15 +142,15 @@ export default {
             type: 'positive',
             message: mes
           })
-          this.$router.push('/jobGroup/detail?jobGroupId='+resp.data.resultMsg)
+          this.$router.push('/jobGroup/detail?jobGroupId=' + resp.data.resultMsg)
         }
       })
-    }, 
-    
+    },
+
     back () {
       this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')
     },
-    imagePreview (index) {      
+    imagePreview (index) {
       ImagePreview(previews, index)
     },
     cancelUploadImage (index) {
@@ -166,80 +166,78 @@ export default {
         }, { destinationType: Camera.DestinationType.DATA_URL })
       }
     },
-    async getTree() {
+    async getTree () {
       let resp = await request('data/jobAction/tree?category=MAINTAIN', 'get')
       if (resp) {
         this.tree = resp.data.resultMsg
-        this.buildJobAction(this.tree, "")
+        this.buildJobAction(this.tree, '')
       }
     },
-    buildJobAction(list, parent) {
+    buildJobAction (list, parent) {
       let jobActionIds = this.jobActionIds
       let jobActionNames = this.jobActionNames
       _.forEach(list, v => {
         jobActionIds.push(v.id)
-        let name = (parent? parent+"-" : "")+v.name
+        let name = (parent ? parent + '-' : '') + v.name
         jobActionNames.push(name)
-        if(v.children){
+        if (v.children) {
           this.buildJobAction(v.children, name)
         }
-      });
+      })
     },
-    async getDetail() {
-      
+    async getDetail () {
       let resp = await request(
-        "jobGroup/detail?jobGroupId=" + this.jobGroupId,
-        "get",
+        'jobGroup/detail?jobGroupId=' + this.jobGroupId,
+        'get',
         null,
-        "json",
+        'json',
         true
-      );
+      )
       if (resp) {
-        this.jobgroup = resp.data.resultMsg;
-        this.codeId = this.jobgroup.code.id;
-        this.description = this.jobgroup.description;
-        let pictures = [];
+        this.jobgroup = resp.data.resultMsg
+        this.codeId = this.jobgroup.code.id
+        this.description = this.jobgroup.description
+        let pictures = []
         _.forEach(this.jobgroup.pictures, v => {
-          pictures.push(v.filePath);
-        });
-        this.pictures = pictures;
+          pictures.push(v.filePath)
+        })
+        this.pictures = pictures
         let jobs = this.jobs
         _.forEach(this.jobgroup.jobs, v => {
           let one = {
-            jobId:v.id,
-            actionId:null,
-            other:null
+            jobId: v.id,
+            actionId: null,
+            other: null
           }
-          if(v.other){            
+          if (v.other) {
             one.other = v.other
           } else {
             one.actionId = _.toInteger(v.action.id)
           }
-          jobs.push(one);
-        });
+          jobs.push(one)
+        })
       }
-      
     }
   },
   computed: {
     // 计算属性的 getter
-    isEdit: function() {
-      console.log("isedit: "+ this.jobGroupId)
-      return _.isInteger(this.jobGroupId);
+    isEdit: function () {
+      console.log('isedit: ' + this.jobGroupId)
+      return _.isInteger(this.jobGroupId)
     },
-    thumbnails: function() {
-      let arr = [];
+    thumbnails: function () {
+      let arr = []
       _.forEach(this.pictures, v => {
-        arr.push(server.THUMBNAIL_API + v);
-      });
-      return arr;
+        arr.push(server.THUMBNAIL_API + v)
+      })
+      return arr
     },
-    previews: function() {
-      let arr = [];
+    previews: function () {
+      let arr = []
       _.forEach(this.pictures, v => {
-        arr.push(server.PREVIEW_API + v);
-      });
-      return arr;
+        arr.push(server.PREVIEW_API + v)
+      })
+      return arr
     }
     // ,
     // displayJobs: function() {
@@ -247,7 +245,7 @@ export default {
 
     //   for(let i=0; i<this.jobs.length; i++){
     //     let v = this.jobs[i]
-        
+
     //     if(v.other){
     //       arr.push({name:v.other, visible:true})
     //     } else {
@@ -255,40 +253,40 @@ export default {
     //       let visible = true
     //       if(action.children){
     //         visible = false
-    //       }      
-          
+    //       }
+
     //       let index = this.jobActionIds.indexOf(v.actionId)
     //       let name = this.jobActionNames[index]
-            
-    //       arr.push({name:name, visible:visible})  
-    
+
+    //       arr.push({name:name, visible:visible})
+
     //     }
     //   }
 
     //   return arr
     // }
   },
-  async mounted() {
+  async mounted () {
     await this.getTree()
-    let jobGroupId = this.$route.query.jobGroupId    
+    let jobGroupId = this.$route.query.jobGroupId
     let codeId = this.$route.query.codeId
     if (jobGroupId) {
-      this.jobGroupId = _.toInteger(jobGroupId);
-      console.log("jobGroupId="+this.jobGroupId)
-      console.log("jobGroupId:"+typeof this.jobGroupId)
-      this.getDetail();
+      this.jobGroupId = _.toInteger(jobGroupId)
+      console.log('jobGroupId=' + this.jobGroupId)
+      console.log('jobGroupId:' + typeof this.jobGroupId)
+      this.getDetail()
     } else if (codeId) {
-      this.codeId = _.toInteger(codeId);
+      this.codeId = _.toInteger(codeId)
     } else {
       this.$q.notify({
         timeout: 2000,
-        type: "info",
-        message: "请扫描二维码进入！"
-      });
-      this.$router.goBack();
-      return;
-    }   
-    
+        type: 'info',
+        message: '请扫描二维码进入！'
+      })
+      this.$router.goBack()
+      return
+    }
+
     eventBus.$on('upload-success', resp => {
       this.$q.loading.hide()
       this.pictures.push(resp)
@@ -303,7 +301,7 @@ export default {
       })
     })
   }
-};
+}
 </script>
 
 <style lang="scss">
