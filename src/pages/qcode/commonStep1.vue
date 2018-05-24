@@ -1,11 +1,11 @@
 <template>
   <div id="step-common-info">
     <van-cell-group :border="false">
-      <van-field class="font-16" v-model="commonForm.alias" :label="nameLabel" :placeholder="nameHolder" required/>
-      <van-cell title="所属项目" is-link :value="projectName" required class="font-16" @click="showPop = true"/>
+      <van-field class="font-16" v-model="form.alias" :label="nameLabel" :placeholder="nameHolder" required/>
+      <van-cell title="所属项目" is-link :value="form.projectName" required class="font-16" @click="showPop = true"/>
       <van-cell title="地址" is-link :value="positionName" required class="font-16" @click="chooseMap"/>
       <van-field class="van-hairline--bottom"
-                 v-model="commonForm.description"
+                 v-model="form.description"
                  label="备注"
                  type="textarea"
                  placeholder="请输入备注"
@@ -16,8 +16,8 @@
     <q-list class="mt-1 bg-white no-border">
       <q-list-header class="p-0 pl-20 font-16 color-black">现场拍照</q-list-header>
       <div class="row pl-20">
-        <div class="w-100 h-100 ml-8 mt-8" v-for="v, i in commonForm.pictures" :key="i">
-          <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
+        <div class="w-100 h-100 ml-8 mt-8" v-for="(v, i) in thumbnails" :key="i">
+          <img :src="v" preview-title-enable="false" :key="i" @click="preview(i)"
                class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
@@ -57,23 +57,41 @@
     mixins: [
       addPlantMixin,
     ],
+    computed:{      
+      thumbnails: function() {
+        let arr = [];
+        _.forEach(this.form.pictures, v => {
+          arr.push(server.THUMBNAIL_API + v);
+        });
+        return arr;
+      },
+      previews: function() {
+        let arr = [];
+        _.forEach(this.form.pictures, v => {
+          arr.push(server.PREVIEW_API + v);
+        });
+        return arr;
+      }
+
+    },
     data () {
       return {
+        form:{},
         showPop: false,
         projectList: [],
-        projectAllList: [],
-        projectName: '默认项目名称',
         positionName: '定位地址',
         pageNum: 1,
         pickerLoading: false,
         hasLoadAll: false,
-        commonForm: {},
         nameLabel: '',
         nameHolder: '',
         pickArray: []
       }
     },
     methods: {
+      preview (i) {
+        ImagePreview(this.previews, i)
+      },
       async getProjectList () {
         if (this.hasLoadAll) {
           return
@@ -92,55 +110,47 @@
           } else {
             this.pageNum++
           }
-          if (this.projectAllList.length > 0) {
-            this.projectAllList = this.projectAllList.concat(list)
-          } else {
-            this.projectAllList = list
-          }
-          this.projectList = _.map(this.projectAllList, (v) => {
-            return {text: v.projectName, 'id': v.id}
-          })
-          let project = _.find(this.projectList, (v) => {
-            return v.id === this.commonForm.projectId
-          })
-          if (project) {
-            this.projectName = project.text
-          }
+          for(let i=0; i<list.length; i++) {
+            let v = list[i]
+            this.projectList.push({text: v.projectName, 'id': v.id})
+          }          
         }
       },
       preStep () {
+        this.qrCodeForm = this.form
         this.$root.$emit('last-pre')
       },
       verifyForm () {
-        if (_.isNull(this.commonForm.alias) || _.isUndefined(this.commonForm.alias)) {
+        if (_.isNull(this.form.alias) || _.isUndefined(this.form.alias)) {
           this.$q.notify({
             message: '名称不能为空',
             position: 'center',
           })
           return false
         }
-        if (_.isNull(this.commonForm.projectId) || _.isUndefined(this.commonForm.projectId)) {
+        if (_.isNull(this.form.projectId) || _.isUndefined(this.form.projectId)) {
           this.$q.notify({
             message: '所属项目不能为空',
             position: 'center',
           })
           return false
         }
-        if (_.isNull(this.commonForm.locationJson) || _.isUndefined(this.commonForm.locationJson)) {
-          this.$q.notify({
-            message: '地址不能为空',
-            position: 'center',
-          })
-          return false
+        if (_.isNull(this.form.locationJson) || _.isUndefined(this.form.locationJson)) {
+          if (_.isNull(this.form.location) || _.isUndefined(this.form.location)){
+            this.$q.notify({
+              message: '地址不能为空',
+              position: 'center',
+            })
+            return false
+          }          
         }
         return true
       },
       async nextStep () {
-        console.log(this.commonForm)
         if (!this.verifyForm()) {
           return false
         }
-        this.setForm()
+        
         let url = null
         if (this.type === plantType.DEVICE) {
           url = 'qrcode/equipment/save'
@@ -148,10 +158,13 @@
           url = '/qrcode/other/save'
         }
         if (_.isNull(url)) {
+          this.qrCodeForm = this.form
           this.$root.$emit('next-step')
         } else {
           this.$q.loading.show()
-          let resp = await request(url, 'put', this.commonForm, 'json', true)
+          let params = this.getQrCodeFormParam(this.form)
+          console.log("params.projectId: "+params.projectId)
+          let resp = await request(url, 'put', params, 'json', true)
           this.$q.loading.hide()
           if (resp) {
             this.clearInfo()
@@ -160,9 +173,13 @@
         }
       },
       onConfirm (value, index) {
-        this.projectName = value.text
-        this.commonForm.projectId = value.id
-        this.projectId = value.id
+        console.log("value: "+value.id+"-"+value.text)
+        if(this.form.projectId !== value.id){
+          this.singleFrom
+        }
+        this.form.projectId = value.id    
+        this.form.projectName = value.text
+        
         this.showPop = false
       },
       onCancel () {
@@ -175,22 +192,17 @@
         }
       },
       chooseMap () {
+        this.qrCodeForm = this.form
         this.$router.push('/project/map?from=qrCode')
       },
-      imagePreview (index) {
-        console.log(index)
-        let previewArray = _.map(this.commonForm.pictures, (img) => {
-          return server.PREVIEW_API + img.contentUrl
-        })
-        console.log(previewArray)
-        ImagePreview(previewArray, index)
-      },
+      
       cancelUploadImage (index) {
         this.$q.loading.show()
-        let img = this.commonForm.pictures[index]
+        let img = this.form.pictures[index]
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
+        this.qrCodeForm = this.form
         console.log('open camera')
         if (navigator.camera) {
           navigator.camera.getPicture(imgData => {
@@ -201,85 +213,70 @@
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
       },
-      setForm () {
-        console.log(this.commonForm)
-        if (this.type === plantType.OTHER || this.type === plantType.DEVICE) {
-          this.commonForm = _.pick(this.commonForm, this.pickArray)
-        }
-        if (this.commonForm.type) {
-          delete this.commonForm.type
-        }
-       if (this.type === plantType.DEVICE || this.type === plantType.OTHER) {
-          this.commonForm = this.removeLocationIfNotChanged(this.commonForm)
-       }
-        this.qrCodeForm = this.commonForm
-        let qFrom = Object.assign({}, this.qrCodeForm)
-        if (qFrom.pictures.length > 0) {
-          let pics = _.map(qFrom.pictures, 'contentUrl')
-          qFrom.pictures = pics
-          this.commonForm = qFrom
-        }
-      },
-      getForm () {
-        this.commonForm = Object.assign({}, this.qrCodeForm)
-        this.commonForm.qrCodeId = this.qrCodeId
-        let imgs = setPicturesWithPreview(this.commonForm.pictures)
-        this.commonForm.pictures = imgs
+     
+      init () {
+        console.log("project: "+this.form)
+        if(!this.form.projectName){
+          console.log("project: "+this.form.project)
+          this.form.projectId = this.form.project.id    
+          this.form.projectName = this.form.project.projectName
+        }   
+        
         switch (this.type) {
           case plantType.SINGLE:
             this.nameLabel = '植物名称'
             this.nameHolder = '请输入植物名称'
-            this.navTitle = '单株植物'
             break
           case plantType.AREA:
             this.nameLabel = '片区名称'
             this.nameHolder = '请输入片区名称'
-            this.navTitle = '片区植物'
             break
           case plantType.DEVICE:
             this.nameLabel = '设备名称'
             this.nameHolder = '请输入设备名称'
-            this.navTitle = '设备'
             this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           case plantType.OTHER:
             this.nameLabel = '名称'
             this.nameHolder = '请输入名称'
-            this.navTitle = '其他'
             this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           default:
             break
         }
-        console.log(this.commonForm)
+       
       },
     },
     mounted () {
-      this.getForm()
-      this.$root.$on('clear-info', () => {
-        this.commonForm = {pictures: []}
-      })
+      this.form = this.getQrCodeFormParam(this.qrCodeForm)
+      this.form.projectName = this.qrCodeForm.projectName
+      this.form.project = this.qrCodeForm.project
+      for(let i=0; i< this.qrCodeForm.pictures.length; i++){
+        this.form.pictures.push(that.qrCodeForm.pictures[i])
+      }   
+      this.init()
+      
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
-        this.commonForm.pictures.push(resp)
+        this.form.pictures.push(resp)
       })
       eventBus.$on('delete-success', (params) => {
         this.$q.loading.hide()
         let index = parseInt(params.idx)
-        this.commonForm.pictures.splice(index, 1)
+        this.form.pictures.splice(index, 1)
         this.$q.dialog({
           title: '提示',
           message: params.msg,
         })
       })
-      if (this.commonForm && this.commonForm.locationJson) {
-        let location = JSON.parse(this.commonForm.locationJson)
+      if (this.form && this.form.locationJson) {
+        let location = JSON.parse(this.form.locationJson)
         this.positionName = location.formattedAddress
       }
       this.getProjectList()
     },
     beforeDestroy () {
-      this.setForm()
+      
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
       eventBus.$off('clear-info')

@@ -89,42 +89,21 @@
         let resp = await request(url, 'get', '', 'json', false, true)
         this.$q.loading.hide()
         let msg = resp.data.resultMsg
-        let qrCodeId = null
-        let project = null
-        if (msg.code) {
-          qrCodeId = msg.code.id
-          project = msg.code.project
-        } else {
-          if (msg.project) {
-            project = msg.project
-          }
-          qrCodeId = msg.id
-        }
         let typeKey = null
+        let code = msg      
         if (msg.type) {
           typeKey = msg.type.key
+          if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
+            code = msg.code              
+          }
         }
-        let imageArray = []
-        if (msg.pictures) {
-          _.forEach(msg.pictures, v => {
-            let previewUrl = server.THUMBNAIL_API + v.filePath
-            imageArray.push({
-              'previewUrl': previewUrl,
-              'contentUrl': v.filePath,
-            })
-          })
-        }
-        this.$store.commit('plantInfo/setQRCodeId', qrCodeId)
-        msg.qrCodeId = qrCodeId
-        msg.typeKey = typeKey
-        this.$store.commit('qrCodeInfo/setQrCodeInfo', msg)
-        this.$store.commit('plantInfo/setProjectId', project.id)
+        let qrCodeId = code.id        
 
         if (typeKey === null) {
           if (msg.editable) {
-            this.$router.push('/qrcode/chooseType')
+            this.$router.push('/qrcode/chooseType?id='+qrCodeId+'&identifier='+code.identifier)
           } else {
-            this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
           }
         } else if (this.type === 'jobGroup') {
           if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
@@ -136,74 +115,26 @@
                 timeout: 3000,
                 type: 'info',
               })
-              this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+              this.$router.push('/qcode/detail?id=' + qrCodeId)
             }
           } else {
             // 设备类型或其他类型二维码，没有养护记录
-            this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
           }
         } else if (this.type === 'qrcode') {
-          if (msg.editable) {
-            let qrCodeForm = {
-              'projectId': project.id,
-              'qrCodeId': qrCodeId,
-              'alias': msg.code ? msg.code.alias : msg.alias,
-              'description': msg.code ? msg.code.description : msg.description,
-              'pictures': msg.code ? msg.code.pictures : msg.pictures,
-              'locationJson': JSON.stringify(
-                {'formattedAddress': msg.code ? msg.code.location.formattedAddress : msg.location.formattedAddress}),
-            }
-            if (typeKey === plantType.AREA) {
-              let singles = msg.singles
-              _.forEach(singles, v => {
-                v.category = v.category.id
-              })
-              let aForm = {
-                'singles': msg.singles,
-                'qrCodeForm': qrCodeForm,
-                'acreage': msg.acreage,
-                'areaId': msg.id,
-              }
-              this.$store.commit('plantInfo/updateAreaForm', aForm)
-            } else if (typeKey === plantType.SINGLE) {
-              msg.category = msg.category.id
-              let sForm = {
-                'category': msg.category,
-                'xiongJing': msg.xiongJing,
-                'diJing': msg.diJing,
-                'gaoDu': msg.gaoDu,
-                'guanFu': msg.guanFu,
-                'pengJing': msg.pengJing,
-                'branch': msg.branch,
-                'year': msg.year,
-                'otherFeature': msg.otherFeature,
-                'source': msg.source,
-                'dealer': msg.dealer,
-                'other': msg.other,
-                'singleId': msg.id,
-                'areaId': msg.area ? msg.area.code.id : null,
-                'position': msg.position,
-                'amount': msg.amount,
-                'uomId': msg.uomId,
-                'uomName': msg.uomName,
-                'qrCodeForm': qrCodeForm,
-              }
-              this.$store.commit('plantInfo/updateSingleForm', sForm)
-            }
-            this.$store.commit('plantInfo/updateQRCodeForm', qrCodeForm)
-            this.$store.commit('plantInfo/setChooseType', typeKey)
-            this.$router.push('/qrcode/stepper')
+          if (msg.editable) {            
+            this.$router.push('/qrcode/stepper?id='+qrCodeId+'&type='+typeKey)
           } else {
             this.$q.notify({
               message: '您无权限编辑此二维码',
               timeout: 3000,
               type: 'info',
             })
-            this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
           }
         } else {
           // 扫一扫，显示详情
-          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          this.$router.push('/qcode/detail?id=' + qrCodeId)
         }
       },
       openScan () {
