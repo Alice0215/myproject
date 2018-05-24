@@ -49,7 +49,7 @@
 <script>
 import { required, minLength, maxLength, numeric } from 'vuelidate/lib/validators'
 import { request } from '../../common'
-import successPage from '../success'
+import successPage from '../successSubmit'
 export default {
   data () {
     return {
