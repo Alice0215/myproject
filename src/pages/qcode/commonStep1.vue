@@ -60,7 +60,7 @@
     computed:{      
       positionName: function() {
         if (_.isNull(this.qrCodeForm.locationJson) || _.isUndefined(this.qrCodeForm.locationJson)) {
-          if (_.isNull(this.qrCodeForm.location) || _.isUndefined(this.qrCodeForm.location)){
+          if (!_.isNull(this.qrCodeForm.location) && !_.isUndefined(this.qrCodeForm.location)){
             return this.qrCodeForm.location.formattedAddress  
           }
           return ""          
@@ -260,7 +260,7 @@
       this.form.projectName = this.qrCodeForm.projectName
       this.form.project = this.qrCodeForm.project
       for(let i=0; i< this.qrCodeForm.pictures.length; i++){
-        this.form.pictures.push(that.qrCodeForm.pictures[i])
+        this.form.pictures.push(this.qrCodeForm.pictures[i])
       }   
       this.init()
       
