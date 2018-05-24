@@ -1,4 +1,5 @@
 <template>
+  
   <q-layout id="create-plant" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
@@ -6,7 +7,7 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
-          新增植物
+          {{ headerTitle }}
         </q-toolbar-title>
         <q-item-side class="no-info" right>
           <q-btn label="完成" @click="save" size="xs"></q-btn>
@@ -20,10 +21,10 @@
           <label class="w-64">数量</label>
           <q-input placeholder="输入片值物数量" hide-underline class="no-margin" v-model="sForm.amount"
                    type="number"></q-input>
-          <q-select hide-underline v-model="uomId" @input="uomInput" :options="uomOptions"
+          <q-select hide-underline v-model="displayUom" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>
         </div>
-        <van-cell title="苗木分类" is-link :value="category" required class="font-16" @click="chooseNursery"/>
+        <van-cell title="苗木分类" is-link :value="sForm.category.name" required class="font-16" @click="chooseNursery"/>
         <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入植物在片区内的位置"/>
         <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
           <label class="h-44">苗木规则</label>
@@ -77,8 +78,9 @@
       <q-list class="mt-1 bg-white no-border">
         <q-list-header class="p-0 pl-15 mt-15 font-16 color-black">现场拍照</q-list-header>
         <div class="row pl-20">
-          <div class="w-100 h-100 ml-8 mt-8" v-for="v, i in sForm.pictures" :key="i">
-            <img :src="v.previewUrl" preview-title-enable="false" :key="i" @click="imagePreview(i)"
+          <div class="w-100 h-100 ml-8 mt-8" v-for="(v, i) in thumbnails" :key="i">
+            
+            <img :src="v" preview-title-enable="false" :key="i" @click="preview(i)"
                  class="full-height full-width">
             <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
           </div>
@@ -87,7 +89,7 @@
           </div>
         </div>
       </q-list>
-      <van-actionsheet v-model="branchShow" :actions="branchActions" cancel-text="取消"/>
+      
       <van-dialog
         v-model="otherUomShow"
         show-cancel-button
@@ -109,365 +111,349 @@
       </van-popup>
     </q-page-container>
   </q-layout>
+ 
 </template>
 
 <script>
-  import { uploadFiles, deleteFiles, request } from '../../../common'
-  import { ImagePreview } from 'vant'
-  import _ from 'lodash'
-  import eventBus from '../../../eventBus'
-  import { server } from '../../../const'
+import {
+  uploadFiles,
+  deleteFiles,
+  request,
+  setPicturesWithPreview
+} from "../../../common";
+import { ImagePreview } from "vant";
+import _ from "lodash";
+import eventBus from "../../../eventBus";
+import { server } from "../../../const";
+import SingleMixin from "../../../mixin/SingleMixin";
+import addPlantMixin from "../../../mixin/addPlantMixin";
 
-  export default {
-    data () {
-      return {
-        sForm: {pictures:[]},
-        category: '选择苗木分类',
-        uomId: null,
-        uomOptions: [],
-        plantCategoryArray: [],
-        showPlantCategory: false,
-        branchShow: false,
-        createShow: false,
-        branchActions: [],
-        newBranch: null,
-        otherUomShow: false,
-        otherUom: null,
-        projectId: this.$store.state.qrCodeInfo.qrCodeMsg.project.id
+export default {
+  props: ["index", "singles", "createPageShow"],
+  data() {
+    return {
+      singlesCopy: [],
+      sForm: {
+        category: {},
+        pictures: []
+      }
+    };
+  },
+  mixins: [SingleMixin, addPlantMixin],
+  computed: {
+    headerTitle: function() {
+      if (this.index !== -1) {
+        return "修改片区植物";
+      }
+      return "添加片区植物";
+    },
+
+    thumbnails: function() {
+      let arr = [];
+      _.forEach(this.sForm.pictures, v => {
+        arr.push(server.THUMBNAIL_API + v);
+      });
+      return arr;
+    },
+    previews: function() {
+      let arr = [];
+      _.forEach(this.sForm.pictures, v => {
+        arr.push(server.PREVIEW_API + v);
+      });
+      return arr;
+    }
+  },
+  watch: {
+    createPageShow: function(newQuestion, oldQuestion) {
+      this.reset();
+    }
+  },
+  methods: {
+    preview(i) {
+      ImagePreview(this.previews, i);
+    },
+    async reset() {
+      
+      this.displayUom = null;
+      let single = {};
+      this.sForm = {
+        category: {},
+        pictures: []
+      };
+      this.singlesCopy=[]
+      console.log("mounted.");
+      if (this.index !== -1) {
+        single = this.singles[this.index]
+        this.sForm = Object.assign({}, single);
+      
+        if (
+          !_.isNull(single.pictures) &&
+          !_.isUndefined(single.pictures)
+        ) {
+          for (let i = 0; i < single.pictures.length; i++) {
+            this.sForm.pictures.push(single.pictures[i]);
+          }
+        }
+      }
+      this.uomOptions = []
+      await this.queryWorkUomList()
+      
+      if(single.uomId){
+        this.displayUom = single.uomId.toString()
+      } else {
+        if(this.single.uomName){
+          this.uomOptions.push({label: single.uomName, value: single.uomName})
+        }
+        this.displayUom = single.uomName
+      }
+      
+      console.log("reset" + this.displayUom)
+      this.uomOptions.push({label: '其他', value: 'other'})
+
+    },
+    back() {
+      this.reset();
+      this.$emit("update:createPageShow", false);
+    },
+
+    cancelUploadImage(index) {
+      this.$q.loading.show();
+      let img = this.sForm.pictures[index];
+      deleteFiles(img.contentUrl, index);
+    },
+    openCamera() {
+      console.log("open camera");
+      if (navigator.camera) {
+        navigator.camera.getPicture(
+          imgData => {
+            this.$q.loading.show();
+            uploadFiles(imgData);
+          },
+          errorMsg => {
+            console.log(errorMsg);
+          },
+          { destinationType: Camera.DestinationType.DATA_URL }
+        );
       }
     },
-    methods: {
-      back() {
-        this.sForm = {pictures: []}
-        this.$root.$emit('add-plant-close')
-      },
-      imagePreview (index) {
-        console.log(index)
-        let previewArray = _.map(this.commonForm.pictures, (img) => {
-          return server.PREVIEW_API + img.contentUrl
-        })
-        console.log(previewArray)
-        ImagePreview(previewArray, index)
-      },
-      cancelUploadImage (index) {
-        this.$q.loading.show()
-        let img = this.sForm.pictures[index]
-        deleteFiles(img.contentUrl, index)
-      },
-      openCamera () {
-        console.log('open camera')
-        if (navigator.camera) {
-          navigator.camera.getPicture(imgData => {
-            this.$q.loading.show()
-            uploadFiles(imgData)
-          }, errorMsg => {
-            console.log(errorMsg)
-          }, {destinationType: Camera.DestinationType.DATA_URL})
-        }
-      },
-      verifyForm () {
-        if (_.isNull(this.sForm.alias) || _.isUndefined(this.sForm.alias)) {
-          this.$q.notify({
-            message: '名称不能为空',
-            position: 'center'
-          })
-          return false
-        }
-        if (_.isNull(this.sForm.category) || _.isUndefined(this.sForm.category)) {
-          this.$q.notify({
-            message: '分类不能为空',
-            position: 'center'
-          })
-          return false
-        }
-        return true
-      },
-      save () {
-        if (!this.verifyForm()) {
-          return false
-        }
-        this.setForm()
-        this.$root.$emit('add-plant-done', this.sForm)
-        this.sForm = {pictures: []}
-      },
-      uomInput (val) {
-        if (val === 'other') {
-          this.otherUomShow = true
+    verifyForm() {
+      if (_.isNull(this.sForm.alias) || _.isUndefined(this.sForm.alias)) {
+        this.$q.notify({
+          message: "名称不能为空",
+          position: "center"
+        });
+        return false;
+      }
+      if (_.isNull(this.sForm.category) || _.isUndefined(this.sForm.category)) {
+        this.$q.notify({
+          message: "分类不能为空",
+          position: "center"
+        });
+        return false;
+      }
+      return true;
+    },
+    save() {
+      if (!this.verifyForm()) {
+        return false;
+      }
+      for(let i=0; i< this.singles.length; i++){        
+        let one = Object.assign({}, this.singles[i]);
+        
+        if(i==this.index){
+          this.singlesCopy.push(this.sForm)
         } else {
-          this.sForm.uomId = val
+          this.singlesCopy.push(one)
         }
-      },
-      async getWorkUomList () {
-        let resp = await request('uom/all', 'get', null, true)
-        if (resp) {
-          _.forEach(resp.data.resultMsg, v => {
-            v.label = v.name
-            v.value = v.id
-          })
-          this.uomOptions = resp.data.resultMsg
-          this.oldUomNames = _.map(this.uomOptions, 'label')
-          if (!_.isUndefined(this.uomId) && !_.isUndefined(this.sForm.uomName) && !_.includes(this.oldUomNames, this.uomId)) {
-            this.uomOptions.push({label: this.sForm.uomName, value: this.sForm.uomName})
-            this.oldUomNames.push(this.sForm.uomName)
-            this.uomId = this.sForm.uomName
-          }
-          this.uomOptions.push({label: '其他', value: 'other'})
-        }
-      },
-      onPickerCancel () {
-        this.showPlantCategory = false
-      },
-      onPickerConfirm (value, index) {
-        this.sForm.category = value.category
-        this.category = value.text
-        this.showPlantCategory = false
-      },
-      async getPlantCategory () {
-        let resp = await request('data/plantCategory')
-        if (resp) {
-          this.plantCategoryArray = resp.data.resultMsg
-          _.forEach(this.plantCategoryArray, (v, key) => {
-            v.text = v.name
-            v.category = v.id.toString()
-          })
-          let cat = _.find(this.plantCategoryArray, (v) => {
-            return v.category === this.sForm.category
-          })
-          if (cat) {
-            this.category = cat.text
-          }
-        }
-      },
-      otherUomClose (action, done) {
-        done()
-        if (action === 'confirm') {
-          if (!_.includes(this.oldUomNames, this.otherUom)) {
-            this.sForm.uomName = this.otherUom
-            this.sForm.uomId = null
-            this.uomId = this.otherUom
-            this.uomOptions.splice(this.uomOptions.length - 1, 0,
-              {label: this.otherUom.toString(), value: this.otherUom.toString()})
-            this.oldUomNames = _.map(this.uomOptions, 'label')
-          } else {
-            this.$q.notify('单位已存在')
-            let uom = _.find(this.uomOptions, this.otherUom)
-            if (uom) {
-              this.sForm.uomId = uom.value
-            }
-            this.uomId = this.otherUom
-          }
-          this.otherUom = null
-          this.otherUomShow = false
-        } else {
-          console.log('cancel')
-          this.otherUom = null
-          this.uomId = undefined
-          this.otherUomShow = false
-        }
-      },
-      createClose (action, done) {
-        done()
-        if (action === 'confirm') {
-          if (!_.includes(this.branchActions, this.otherUom)) {
-            this.sForm.position = this.newBranch
-            this.position = this.newBranch
-            this.sForm.areaId = undefined
-          } else {
-            this.$q.notify('单位已存在')
-          }
-          this.createShow = false
-        } else {
-          console.log('cancel')
-          this.createShow = false
-        }
-      },
-      branchItemClicked (item) {
-        console.log(item)
-        this.sForm.areaId = item.id
-        this.position = item.name
-        this.branchShow = false
-      },
-      createNewBranchItem () {
-        this.branchShow = false
-        this.createShow = true
-      },
-      async getAreaBranch () {
-        this.areaBranches = []
-        let resp = await request('qrcode/list?projectId=' + this.projectId + '&type=AREA', 'get', null, null, true)
-        if (resp) {
-          let branches = resp.data.resultMsg
-          _.forEach(branches, v => {
-            let branch = {}
-            branch.name = v.alias + '-' + v.identifier
-            branch.id = v.id.toString()
-            branch.callback = this.branchItemClicked
-            this.branchActions.push(branch)
-          })
-          let bid = !_.isUndefined(this.sForm.areaId) ? this.sForm.areaId.toString() : null
-          let branch = _.find(this.branchActions, (v) => {
-            return v.id === bid
-          })
-          if (branch) {
-            this.position = branch.name
-          }
-          this.branchActions.push({
-            name: '新建',
-            callback: this.createNewBranchItem,
-          })
-        }
-      },
-      chooseArea () {
-        this.branchShow = true
-      },
-      nextStep () {
-        this.setForm()
-        this.$root.$emit('next-step')
-      },
-      preStep () {
-        this.$root.$emit('pre-step')
-      },
-      chooseNursery () {
-        this.showPlantCategory = true
-      },
-      setForm () {
-        this.$store.commit('plantInfo/setNewPlantFormToArea', this.sForm)
+      }
+
+
+      this.$emit("update:singles", this.singlesCopy);
+      this.$emit("update:createPageShow", false);
+    },
+    
+    uomInput(val) {
+      if (val === "other") {
+        this.otherUomShow = true;
+      } else {
+        this.sForm.uomId = val;
+        this.displayUom = val;
+        this.sForm.uomName = null;
+        this.sForm.displayUom = null;
       }
     },
-    mounted () {
-      eventBus.$on('upload-success', resp => {
-        this.$q.loading.hide()
-        this.sForm.pictures.push(resp)
-      })
-      eventBus.$on('delete-success', (params) => {
-        this.$q.loading.hide()
-        let index = parseInt(params.idx)
-        this.sForm.pictures.splice(index, 1)
-        this.$q.dialog({
-          title: '提示',
-          message: params.msg,
-        })
-      })
-      this.getAreaBranch()
-      this.getPlantCategory()
-      this.getWorkUomList()
+
+    onPickerConfirm(value, index) {
+      this.sForm.category = this.plantCategoryArray[index];
+      this.showPlantCategory = false;
     },
-    beforeDestroy () {
-      eventBus.$off('upload-success')
-      eventBus.$off('delete-success')
-    },
+
+    otherUomClose(action, done) {
+      done();
+      if (action === "confirm") {
+        let otherUom = this.otherUom.toString();
+        for (let i = 0; i < this.uomOptions.length; i++) {
+          let one = this.uomOptions[i];
+          if (one.label === otherUom) {
+            this.$q.notify("单位已存在");
+            return;
+          }
+        }
+
+        this.uomOptions.splice(this.uomOptions.length - 1, 0, {
+          label: otherUom,
+          value: otherUom
+        });
+
+        this.sForm.uomId = null;
+        this.displayUom = otherUom;
+        this.sForm.uomName = otherUom;
+
+        this.otherUom = null;
+        this.otherUomShow = false;
+      } else {
+        console.log("cancel");
+        this.otherUom = null;
+        this.otherUomShow = false;
+      }
+    }
+  },
+  mounted() {
+    eventBus.$on("upload-success", resp => {
+      this.$q.loading.hide();
+      this.sForm.pictures.push(resp);
+    });
+    eventBus.$on("delete-success", params => {
+      this.$q.loading.hide();
+      let index = parseInt(params.idx);
+      this.sForm.pictures.splice(index, 1);
+      this.$q.dialog({
+        title: "提示",
+        message: params.msg
+      });
+    });
+
+    this.getPlantCategory();
+
+    
+  },
+  beforeDestroy() {
+    eventBus.$off("upload-success");
+    eventBus.$off("delete-success");
   }
+};
 </script>
 
 <style lang="scss">
-  @import "../../../assets/css/variable";
+@import "../../../assets/css/variable";
 
-  #create-plant {
-    .other-spec {
-      width: calc(100% - 64px - 8px) !important;
+#create-plant {
+  .other-spec {
+    width: calc(100% - 64px - 8px) !important;
+  }
+  .spec-row-div {
+    justify-content: space-between;
+    div {
+      margin-top: 12px;
     }
-    .spec-row-div {
-      justify-content: space-between;
-      div {
-        margin-top: 12px;
-      }
-    }
+  }
 
-    .spec-input-left {
-      width: 32px;
+  .spec-input-left {
+    width: 32px;
+    height: 44px;
+    line-height: 44px;
+  }
+  .spec-input {
+    margin: 0 !important;
+    background-color: white;
+    width: 70px;
+    margin-left: 8px !important;
+    height: 44px;
+    line-height: 44px;
+  }
+
+  .spec-input-unit {
+    background-color: white;
+    color: gray;
+    width: 44px;
+    text-align: center;
+    height: 44px;
+    line-height: 44px;
+  }
+
+  .specification-class {
+    background-color: $bgcolor;
+
+    .q-if-inner {
+      height: 100%;
+      margin-top: 0 !important;
+    }
+  }
+
+  .border-left {
+    border-left: 1px solid #e8e8e8;
+  }
+
+  .area-input-class {
+    height: 44px;
+
+    .q-input {
+      margin-left: 20px !important;
+      width: 150px;
+      padding: 0 !important;
       height: 44px;
-      line-height: 44px;
-    }
-    .spec-input {
-      margin: 0 !important;
-      background-color: white;
-      width: 70px;
-      margin-left: 8px !important;
-      height: 44px;
-      line-height: 44px;
-    }
-
-    .spec-input-unit {
-      background-color: white;
-      color: gray;
-      width: 44px;
-      text-align: center;
-      height: 44px;
-      line-height: 44px;
-    }
-
-    .specification-class {
-      background-color: $bgcolor;
 
       .q-if-inner {
         height: 100%;
-        margin-top: 0 !important;
       }
     }
 
-    .border-left {
-      border-left: 1px solid #e8e8e8;
-    }
+    .q-select {
+      width: calc(100% - 20px - 150px - 64px);
+      margin-right: 8px;
+      text-align: center;
+      padding-bottom: 0 !important;
 
-    .area-input-class {
-      height: 44px;
-
-      .q-input {
-        margin-left: 20px !important;
-        width: 150px;
-        padding: 0 !important;
+      .q-input-target {
         height: 44px;
-
-        .q-if-inner {
-          height: 100%;
-        }
-      }
-
-      .q-select {
-        width: calc(100% - 20px - 150px - 64px);
-        margin-right: 8px;
-        text-align: center;
-        padding-bottom: 0 !important;
-
-        .q-input-target {
-          height: 44px;
-          line-height: 44px;
-        }
-
-        .q-icon {
-          height: 44px;
-        }
-      }
-
-      label {
         line-height: 44px;
       }
-    }
-
-    .bottom-button-div {
-      button {
-        width: 45%;
-      }
-    }
-
-    .img-close {
-      margin-left: 70px;
-      margin-top: -195px;
-      font-size: 28px;
-    }
-
-    .camera-div {
-      background-color: #EEEEEE;
 
       .q-icon {
-        color: gray;
+        height: 44px;
       }
     }
 
-    .no-info {
-      .q-btn {
-        background-color: $primary !important;
-        color: white !important;
-      }
+    label {
+      line-height: 44px;
     }
   }
+
+  .bottom-button-div {
+    button {
+      width: 45%;
+    }
+  }
+
+  .img-close {
+    margin-left: 70px;
+    margin-top: -195px;
+    font-size: 28px;
+  }
+
+  .camera-div {
+    background-color: #eeeeee;
+
+    .q-icon {
+      color: gray;
+    }
+  }
+
+  .no-info {
+    .q-btn {
+      background-color: $primary !important;
+      color: white !important;
+    }
+  }
+}
 </style>

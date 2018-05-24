@@ -56,148 +56,130 @@
 </template>
 
 <script>
-import { request } from '../../common'
-import _ from 'lodash'
-import { server, plantType } from '../../const'
-export default {
-  data () {
-    return {
-      dataTime: '',
-      model: 'home',
-      admin: false,
-      type: null
-    }
-  },
-  mounted () {
-    this.admin = this.$store.getters['User/admin']
-    this.getTime()
-  },
-  methods: {
-    iconClicked (type) {
-      this.type = type
-      this.openScan()
+  import { request } from '../../common'
+  import _ from 'lodash'
+  import { server, plantType } from '../../const'
+
+  export default {
+    data () {
+      return {
+        dataTime: '',
+        admin: false,
+        model: 'home',
+        type: null,
+      }
     },
-    getTime () {
-      let myDate = new Date()
-      let Week = ['日', '一', '二', '三', '四', '五', '六']
-      this.dataTime = myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月' + myDate.getDate() + '日 周' + Week[myDate.getDay()]
+    mounted () {
+      this.admin = this.$store.getters['User/admin']
+      this.getTime()
     },
-    async handleScanResult (url) {
-      this.$q.loading.show()
-      let resp = await request(url, 'get', '', 'json', false, true)
-      this.$q.loading.hide()
-      let msg = resp.data.resultMsg
-      let qrCodeId = null
-      if (msg.code) {
-        qrCodeId = msg.code.id
-      } else {
-        qrCodeId = msg.id
-      }
-      let project = null
-      if (msg.project) {
-        project = msg.project
-      }
-      let typeKey = null
-      if (msg.type) {
-        typeKey = msg.type.key
-      }
-      let imageArray = []
-      if (msg.pictures) {
-        _.forEach(msg.pictures, v => {
-          let previewUrl = server.THUMBNAIL_API + v.filePath
-          imageArray.push({
-            'previewUrl': previewUrl,
-            'contentUrl': v.filePath
-          })
-        })
-        localStorage.setItem('qrcode-image', JSON.stringify(imageArray))
-      }
-      msg.qrCodeId = qrCodeId
-      msg.typeKey = typeKey
-      this.$store.commit('qrCodeInfo/setQrCodeInfo', msg)
-      localStorage.setItem('qrCodeId', qrCodeId)
-      localStorage.setItem('typeKey', typeKey)
-      localStorage.setItem('choose-project', JSON.stringify(project))
-      if (typeKey === null) {
-        if (msg.editable) {
-          this.$router.push('/qrcode/chooseType')
-        } else {
-          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+    methods: {
+      iconClicked (type) {
+        this.type = type
+        this.openScan()
+      },
+      getTime () {
+        let myDate = new Date()
+        let Week = ['日', '一', '二', '三', '四', '五', '六']
+        this.dataTime = myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月' + myDate.getDate() + '日 周' +
+          Week[myDate.getDay()]
+      },
+      async handleScanResult (url) {
+        this.$q.loading.show()
+        let resp = await request(url, 'get', '', 'json', false, true)
+        this.$q.loading.hide()
+        let msg = resp.data.resultMsg
+        let typeKey = null
+        let code = msg      
+        if (msg.type) {
+          typeKey = msg.type.key
+          if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
+            code = msg.code              
+          }
         }
-      } else if (this.type === 'jobGroup') {
-        if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
-          if (msg.maintainable) {
-            this.$router.push('/project/maintenance?codeId=' + qrCodeId)
+        let qrCodeId = code.id        
+
+        if (typeKey === null) {
+          if (msg.editable) {
+            this.$router.push('/qrcode/chooseType?id='+qrCodeId+'&identifier='+code.identifier)
+          } else {
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
+          }
+        } else if (this.type === 'jobGroup') {
+          if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
+            if (msg.maintainable) {
+              this.$router.push('/project/maintenance?codeId=' + qrCodeId)
+            } else {
+              this.$q.notify({
+                message: '您无权限添加养护记录',
+                timeout: 3000,
+                type: 'info',
+              })
+              this.$router.push('/qcode/detail?id=' + qrCodeId)
+            }
+          } else {
+            // 设备类型或其他类型二维码，没有养护记录
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
+          }
+        } else if (this.type === 'qrcode') {
+          if (msg.editable) {            
+            this.$router.push('/qrcode/stepper?id='+qrCodeId+'&type='+typeKey)
           } else {
             this.$q.notify({
-              message: '您无权限添加养护记录',
+              message: '您无权限编辑此二维码',
               timeout: 3000,
-              type: 'info'
+              type: 'info',
             })
-            this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+            this.$router.push('/qcode/detail?id=' + qrCodeId)
           }
         } else {
-          // 设备类型或其他类型二维码，没有养护记录
-          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+          // 扫一扫，显示详情
+          this.$router.push('/qcode/detail?id=' + qrCodeId)
         }
-      } else if (this.type === 'qrcode') {
-        if (msg.editable) {
-          this.$router.push('/qcode/edit?id=' + qrCodeId + '&typeKey=' + typeKey)
-        } else {
-          this.$q.notify({
-            message: '您无权限编辑此二维码',
-            timeout: 3000,
-            type: 'info'
-          })
-          this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
+      },
+      openScan () {
+        if (cordova.plugins.barcodeScanner) {
+          cordova.plugins.barcodeScanner.scan(
+            (result) => {
+              if (result.cancelled) {
+                return false
+              }
+              this.handleScanResult(result.text)
+            },
+            (error) => {
+              alert('Scanning failed: ' + error)
+            },
+            {
+              preferFrontCamera: false, // iOS and Android
+              showFlipCameraButton: false, // iOS and Android
+              showTorchButton: false, // iOS and Android
+              torchOn: false, // Android, launch with the torch switched on (if available)
+              saveHistory: false, // Android, save scan history (default false)
+              prompt: '在扫描区域内放置一个二维码', // Android
+              resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+              formats: 'QR_CODE', // default: all but PDF_417 and RSS_EXPANDED
+              orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
+              disableAnimations: true, // iOS
+              disableSuccessBeep: false, // iOS and Android
+            })
         }
-      } else {
-        // 扫一扫，显示详情
-        this.$router.push('/qcode/detail?id=' + qrCodeId + '&type=' + typeKey)
-      }
-    },
-    openScan () {
-      if (cordova.plugins.barcodeScanner) {
-        cordova.plugins.barcodeScanner.scan(
-          (result) => {
-            if (result.cancelled) {
-              return false
-            }
-            this.handleScanResult(result.text)
-          },
-          (error) => {
-            alert('Scanning failed: ' + error)
-          },
-          {
-            preferFrontCamera: false, // iOS and Android
-            showFlipCameraButton: false, // iOS and Android
-            showTorchButton: false, // iOS and Android
-            torchOn: false, // Android, launch with the torch switched on (if available)
-            saveHistory: false, // Android, save scan history (default false)
-            prompt: '在扫描区域内放置一个二维码', // Android
-            resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-            formats: 'QR_CODE', // default: all but PDF_417 and RSS_EXPANDED
-            orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
-            disableAnimations: true, // iOS
-            disableSuccessBeep: false // iOS and Android
-          }
-        )
-      }
+      },
     }
   }
-}
 </script>
 
 <style lang='scss'>
-@import "../../assets/css/common";
-#home {
-  .q-layout-page-container {
-    padding-top: 50px;
-  }
-  .scan {
-    left: 16px;
-    .q-icon.material-icons {
-      font-size: 34px;
+  @import "../../assets/css/common";
+
+  #home {
+    .q-layout-page-container {
+      padding-top: 50px;
+    }
+    .scan {
+      left: 16px;
+      .q-icon.material-icons {
+        font-size: 34px;
+      }
     }
   }
   .opacity-disabled {
@@ -220,25 +202,31 @@ export default {
       width: 100px;
       height: 100px;
     }
-  }
-  .nav {
-    height: calc(21vh - 22px);
-    padding-top: calc((20vh - 100px) / 2);
-    // padding-bottom: 15px;
-    img {
-      width: 60px;
+    .log {
+      text-align: center;
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    }
+    .nav {
+      height: calc(21vh - 22px);
+      padding-top: calc((20vh - 100px) / 2);
+      // padding-bottom: 15px;
+      img {
+        width: 60px;
+      }
+    }
+    .menu-field {
+      height: calc(64vh - 66px);
+      margin-top: 15px;
+      text-align: center;
+    }
+    .border-bottom {
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .border-right {
+      border-right: 1px solid #e8e8e8;
     }
   }
-  .menu-field {
-    height: calc(64vh - 66px);
-    margin-top: 15px;
-    text-align: center;
-  }
-  .border-bottom {
-    border-bottom: 1px solid #e8e8e8;
-  }
-  .border-right {
-    border-right: 1px solid #e8e8e8;
-  }
-}
 </style>

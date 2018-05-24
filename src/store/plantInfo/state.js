@@ -4,6 +4,7 @@ export default {
   areaForm: {singles: []},
   projectId: null,
   type: null,
-  navTitle: null
+  navTitle: null,
+  qrCodeId: null
   //
 }

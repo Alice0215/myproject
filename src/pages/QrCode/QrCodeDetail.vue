@@ -32,7 +32,8 @@ export default {
       plantType: plantType
     }
   },
-  methods: {
+  async mounted () {  
+    await this.initQrCodeMixin()
   }
 }
 </script>
