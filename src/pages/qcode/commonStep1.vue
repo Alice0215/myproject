@@ -269,7 +269,12 @@
         that.form.projectName = that.qrCodeForm.projectName
         that.form.project = that.qrCodeForm.project
         for(let i=0; i< that.qrCodeForm.pictures.length; i++){
-          that.form.pictures.push(that.qrCodeForm.pictures[i].filePath)
+          let p = that.qrCodeForm.pictures[i]
+          if(_.has(p, 'filePath')){
+            that.form.pictures.push(p.filePath)
+          } else {
+            that.form.pictures.push(p)
+          }
         }   
         that.init()
         that.getProjectList()
