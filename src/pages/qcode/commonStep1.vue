@@ -146,8 +146,8 @@
           })
           return false
         }
-        if (_.isNull(this.form.locationJson) || _.isUndefined(this.form.locationJson)) {
-          if (_.isNull(this.form.location) || _.isUndefined(this.form.location)){
+        if (_.isNull(this.qrCodeForm.locationJson) || _.isUndefined(this.qrCodeForm.locationJson)) {
+          if (_.isNull(this.qrCodeForm.location) || _.isUndefined(this.qrCodeForm.location)){
             this.$q.notify({
               message: '地址不能为空',
               position: 'center',
@@ -173,6 +173,7 @@
           this.$root.$emit('next-step')
         } else {
           this.$q.loading.show()
+          this.form.locationJson = this.qrCodeForm.locationJson
           let params = this.getQrCodeFormParam(this.form)
           console.log("params.projectId: "+params.projectId)
           let resp = await request(url, 'put', params, 'json', true)
