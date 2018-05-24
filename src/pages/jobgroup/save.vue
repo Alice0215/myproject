@@ -42,8 +42,8 @@
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header class="font-14">现场拍照</q-list-header>
       <div class="row">
-        <div class="w-100 h-100 ml-10" v-for="(v, i) in thumbnails" :key="i">
-          <img :src="v"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
+        <div class="w-100 h-100 ml-10" v-for="(v, i) in pictures" :key="i">
+          <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -66,6 +66,7 @@ import { server } from '../../const'
 import JobActionModal from './JobActionModal'
 import eventBus from '../../eventBus'
 import JobActionMixin from '../../mixin/JobActionMixin'
+import { ImagePreview } from 'vant'
 
 export default {
   components: {
@@ -75,7 +76,7 @@ export default {
     JobActionMixin
   ],
   data() {
-    return {      
+    return {
       jobgroup: null,
       description: "",
       pictures: [],
@@ -83,8 +84,8 @@ export default {
       tree: null,
       jobActionIds: [],
       jobActionNames: [],
-      jobGroupId: 0,
-      codeId: 0
+      jobGroupId: null,
+      codeId: null
     };
   },
   validations: {
@@ -92,7 +93,7 @@ export default {
   },
   methods: {
     showJobActionModal(){
-      console.log('show-job-action-modal')      
+      console.log('show-job-action-modal')
       eventBus.$emit('show-job-action-modal')
     },
     removeJob(index){
@@ -111,15 +112,21 @@ export default {
         if(!action.children){
           jobs.push(v)
           continue
-        }  
+        }
       }
-      
+
       console.log(jobs)
+
+      let pictures = []
+      if (this.pictures.length > 0) {
+        let pics = _.map(this.pictures, 'contentUrl')
+        pictures = pics
+      }
 
       let data = {
         'description': this.description,
         'jobs': jobs,
-        'pictures': this.pictures
+        'pictures': pictures
       }
       let url = 'jobGroup/'
       let mes = ""
@@ -128,7 +135,7 @@ export default {
         data.jobGroupId = this.jobGroupId
         url += 'edit'
         mes = '养护记录修改成功！'
-      } else {        
+      } else {
         data.codeId = this.codeId
         url += 'create'
         mes = '养护记录保存成功！'
@@ -145,13 +152,17 @@ export default {
           this.$router.push('/jobGroup/detail?jobGroupId='+resp.data.resultMsg)
         }
       })
-    }, 
-    
+    },
+
     back () {
       this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')
     },
-    imagePreview (index) {      
-      ImagePreview(previews, index)
+    imagePreview (index) {
+      let previewArray = _.map(this.pictures, (img) => {
+        return server.PREVIEW_API + img.contentUrl
+      })
+      console.log(previewArray)
+      ImagePreview(previewArray, index)
     },
     cancelUploadImage (index) {
       this.$q.loading.show()
@@ -186,7 +197,7 @@ export default {
       });
     },
     async getDetail() {
-      
+
       let resp = await request(
         "jobGroup/detail?jobGroupId=" + this.jobGroupId,
         "get",
@@ -210,7 +221,7 @@ export default {
             actionId:null,
             other:null
           }
-          if(v.other){            
+          if(v.other){
             one.other = v.other
           } else {
             one.actionId = _.toInteger(v.action.id)
@@ -218,7 +229,7 @@ export default {
           jobs.push(one);
         });
       }
-      
+
     }
   },
   computed: {
@@ -247,7 +258,7 @@ export default {
 
     //   for(let i=0; i<this.jobs.length; i++){
     //     let v = this.jobs[i]
-        
+
     //     if(v.other){
     //       arr.push({name:v.other, visible:true})
     //     } else {
@@ -255,13 +266,13 @@ export default {
     //       let visible = true
     //       if(action.children){
     //         visible = false
-    //       }      
-          
+    //       }
+
     //       let index = this.jobActionIds.indexOf(v.actionId)
     //       let name = this.jobActionNames[index]
-            
-    //       arr.push({name:name, visible:visible})  
-    
+
+    //       arr.push({name:name, visible:visible})
+
     //     }
     //   }
 
@@ -270,7 +281,7 @@ export default {
   },
   async mounted() {
     await this.getTree()
-    let jobGroupId = this.$route.query.jobGroupId    
+    let jobGroupId = this.$route.query.jobGroupId
     let codeId = this.$route.query.codeId
     if (jobGroupId) {
       this.jobGroupId = _.toInteger(jobGroupId);
@@ -287,8 +298,8 @@ export default {
       });
       this.$router.goBack();
       return;
-    }   
-    
+    }
+
     eventBus.$on('upload-success', resp => {
       this.$q.loading.hide()
       this.pictures.push(resp)
