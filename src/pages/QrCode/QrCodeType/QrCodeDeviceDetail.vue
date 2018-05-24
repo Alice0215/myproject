@@ -2,7 +2,7 @@
   <q-layout view="hHh lpr fFf" id="device_detail">
     <q-layout-header>
       <q-toolbar class='nav-header bg-white'>
-        <q-item-side @click.native="$router.goBack()" left icon="keyboard arrow left" class="back-left">
+        <q-item-side @click.native="back" left icon="keyboard arrow left" class="back-left">
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class='header-title text-center'>

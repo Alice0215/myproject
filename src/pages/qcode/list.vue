@@ -2,7 +2,7 @@
   <q-layout view="Hhh lpr Fff" class="bg-primary" id="qr-list">
     <q-layout-header>
       <q-toolbar>
-          <a @click="$router.goBack()" class="back-a font-14">
+          <a @click="back" class="back-a font-14">
           <q-item-side left  icon="keyboard arrow left" class="back-left "/>
           返回
         </a>
@@ -29,12 +29,12 @@
         </q-item-main>
       </q-item>
       <q-infinite-scroll :handler="load" ref="scroll">
-        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id" 
+        <q-item link class="full-width bg-white qr-item mt-15 pb-10" v-for="item in list" :key="item.id"
           @click.native="$router.push('/qcode/detail?projectId='+projectId+'&id='+item.id+'&type='+item.type.key)">
           <q-item-main v-line-clamp:20="1" class="wp-30">
            {{item.identifier + " " + item.alias}} {{(item.type && item.type.key==='SINGLE')?item.position:''}}
           </q-item-main>
-          
+
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='SINGLE'">&#xe64c;</i>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='AREA'">&#xe909;</i>
           <i class="iconfont active pr-8" v-if="item.type && item.type.key==='EQUIPMENT'">&#xe62f;</i>
@@ -57,7 +57,7 @@ import InfiniteScroll from '../../mixin/InfiniteScroll'
 export default {
   data() {
     return {
-      count: { active: 0, total: 0 },     
+      count: { active: 0, total: 0 },
       projectId: 0,
       type: ""
     };
@@ -68,19 +68,31 @@ export default {
   mounted () {
     this.projectId = this.$route.query.projectId;
     this.getCount();
-    this.apiUrl = 'qrcode/list?projectId=' + this.projectId    
+    this.apiUrl = 'qrcode/list?projectId=' + this.projectId
     this.scroll = this.$refs.scroll
   },
   methods: {
+    back () {
+      if (this.$route.query.twice) {
+        console.log(window.history.length)
+        if (window.history.length > 2) {
+          this.$router.go(-2)
+        } else {
+          this.$router.goBack()
+        }
+      } else {
+        this.$router.goBack()
+      }
+    },
     chooseType(type) {
       this.type = type;
-      this.apiUrl = 'qrcode/list?projectId=' + this.projectId + "&type=" + type   
+      this.apiUrl = 'qrcode/list?projectId=' + this.projectId + "&type=" + type
       this.scroll.reset();
       this.hasLoadAll = false;
       this.pageNo = 1;
       this.count = { active: 0, total: 0 };
       this.list = [];
-      this.getCount();      
+      this.getCount();
       this.scroll.resume();
     },
 

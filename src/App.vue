@@ -113,8 +113,14 @@ export default {
   .van-image-preview {
     z-index: 9999 !important;
   }
+  .van-modal {
+    z-index: 3002 !important;
+  }
   .modal {
-    z-index: 2000 !important;
+    z-index: 3001 !important;
+  }
+  .van-dialog {
+    z-index: 3003 !important;
   }
 .child-view {
   position: absolute;

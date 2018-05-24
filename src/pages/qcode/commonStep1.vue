@@ -167,7 +167,6 @@
           let resp = await request(url, 'put', params, 'json', true)
           this.$q.loading.hide()
           if (resp) {
-            this.clearInfo()
             this.$root.$emit('next-step')
           }
         }
@@ -234,12 +233,10 @@
           case plantType.DEVICE:
             this.nameLabel = '设备名称'
             this.nameHolder = '请输入设备名称'
-            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           case plantType.OTHER:
             this.nameLabel = '名称'
             this.nameHolder = '请输入名称'
-            this.pickArray = ['projectId', 'qrCodeId', 'alias', 'description', 'pictures', 'locationJson']
             break
           default:
             break

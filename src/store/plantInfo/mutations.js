@@ -72,3 +72,4 @@ export const clearInfo = (state) => {
   state.type = null
   state.navTitle = null
 }
+
