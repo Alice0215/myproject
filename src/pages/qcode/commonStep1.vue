@@ -58,17 +58,29 @@
       addPlantMixin,
     ],
     computed:{      
+      positionName: function() {
+        if (_.isNull(this.qrCodeForm.locationJson) || _.isUndefined(this.qrCodeForm.locationJson)) {
+          if (_.isNull(this.qrCodeForm.location) || _.isUndefined(this.qrCodeForm.location)){
+            return this.qrCodeForm.location.formattedAddress  
+          }
+          return ""          
+        } else {
+          let json = this.qrCodeForm.locationJson
+          let location = JSON.parse(json)
+          return location.formattedAddress   
+        }        
+      },
       thumbnails: function() {
         let arr = [];
         _.forEach(this.form.pictures, v => {
-          arr.push(server.THUMBNAIL_API + v);
+          arr.push(server.THUMBNAIL_API + v.filePath);
         });
         return arr;
       },
       previews: function() {
         let arr = [];
         _.forEach(this.form.pictures, v => {
-          arr.push(server.PREVIEW_API + v);
+          arr.push(server.PREVIEW_API + v.filePath);
         });
         return arr;
       }
@@ -79,7 +91,6 @@
         form:{},
         showPop: false,
         projectList: [],
-        positionName: '定位地址',
         pageNum: 1,
         pickerLoading: false,
         hasLoadAll: false,
@@ -197,7 +208,7 @@
       
       cancelUploadImage (index) {
         this.$q.loading.show()
-        let img = this.form.pictures[index]
+        let img = this.form.pictures[index].filePath
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
@@ -266,10 +277,10 @@
           message: params.msg,
         })
       })
-      if (this.form && this.form.locationJson) {
-        let location = JSON.parse(this.form.locationJson)
-        this.positionName = location.formattedAddress
-      }
+      // if (this.form && this.form.locationJson) {
+      //   let location = JSON.parse(this.form.locationJson)
+      //   this.positionName = location.formattedAddress
+      // }
       this.getProjectList()
     },
     beforeDestroy () {
