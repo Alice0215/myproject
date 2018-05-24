@@ -129,7 +129,7 @@ import SingleMixin from "../../../mixin/SingleMixin";
 import addPlantMixin from "../../../mixin/addPlantMixin";
 
 export default {
-  props: ["index", "singles", "createPageShow"],
+  props: ["index", "singles"],
   data() {
     return {
       singlesCopy: [],
@@ -163,11 +163,7 @@ export default {
       return arr;
     }
   },
-  watch: {
-    createPageShow: function(newQuestion, oldQuestion) {
-      this.reset();
-    }
-  },
+  
   methods: {
     preview(i) {
       ImagePreview(this.previews, i);
@@ -213,7 +209,7 @@ export default {
     },
     back() {
       this.reset();
-      this.$emit("update:createPageShow", false);
+      this.$emit("close-create-plant");
     },
 
     cancelUploadImage(index) {
@@ -269,7 +265,8 @@ export default {
 
 
       this.$emit("update:singles", this.singlesCopy);
-      this.$emit("update:createPageShow", false);
+      this.reset();
+      this.$emit("close-create-plant");
     },
     
     uomInput(val) {

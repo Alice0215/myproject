@@ -29,7 +29,7 @@
              @click="nextStep"/>
     </div>    
     <q-modal v-model="createPageShow"> 
-    <create-plant :index="index" :singles.sync="aForm.singles" :createPageShow.sync="createPageShow"></create-plant>
+    <create-plant :index="index" :singles.sync="aForm.singles" ></create-plant>
     </q-modal>
   </div>
 </template>
@@ -39,6 +39,7 @@ import addPlantMixin from "../../../mixin/addPlantMixin";
 import createPlant from "./createPlant";
 import _ from "lodash";
 import { request } from "../../../common";
+import eventBus from '../../../eventBus'
 
 export default {
   mixins: [addPlantMixin],
@@ -117,6 +118,11 @@ export default {
         this.aForm.singles.push(this.areaForm.singles[i]);
       }
     }
+
+    eventBus.$on('close-create-plant', resp => {
+      this.createPageShow = false
+    })
+
   },
   beforeDestroy() {}
 };
