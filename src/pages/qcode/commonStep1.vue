@@ -57,18 +57,18 @@
     mixins: [
       addPlantMixin,
     ],
-    computed:{      
+    computed:{
       positionName: function() {
         if (_.isNull(this.qrCodeForm.locationJson) || _.isUndefined(this.qrCodeForm.locationJson)) {
           if (!_.isNull(this.qrCodeForm.location) && !_.isUndefined(this.qrCodeForm.location)){
-            return this.qrCodeForm.location.formattedAddress  
+            return this.qrCodeForm.location.formattedAddress
           }
-          return ""          
+          return ""
         } else {
           let json = this.qrCodeForm.locationJson
           let location = JSON.parse(json)
-          return location.formattedAddress   
-        }        
+          return location.formattedAddress
+        }
       },
       thumbnails: function() {
         let arr = [];
@@ -124,7 +124,7 @@
           for(let i=0; i<list.length; i++) {
             let v = list[i]
             this.projectList.push({text: v.projectName, 'id': v.id})
-          }          
+          }
         }
       },
       preStep () {
@@ -153,7 +153,7 @@
               position: 'center',
             })
             return false
-          }          
+          }
         }
         return true
       },
@@ -161,7 +161,7 @@
         if (!this.verifyForm()) {
           return false
         }
-        
+
         let url = null
         if (this.type === plantType.DEVICE) {
           url = 'qrcode/equipment/save'
@@ -189,9 +189,9 @@
         if(this.form.projectId !== value.id){
           this.singleFrom
         }
-        this.form.projectId = value.id    
+        this.form.projectId = value.id
         this.form.projectName = value.text
-        
+
         this.showPop = false
       },
       onCancel () {
@@ -207,7 +207,7 @@
         this.qrCodeForm = this.form
         this.$router.push('/project/map?from=qrCode')
       },
-      
+
       cancelUploadImage (index) {
         this.$q.loading.show()
         let img = this.form.pictures[index].filePath
@@ -225,15 +225,15 @@
           }, {destinationType: Camera.DestinationType.DATA_URL})
         }
       },
-     
+
       init () {
         console.log("project: "+this.form)
         if(!this.form.projectName){
           console.log("project: "+this.form.project)
-          this.form.projectId = this.form.project.id    
+          this.form.projectId = this.form.project.id
           this.form.projectName = this.form.project.projectName
-        }   
-        
+        }
+
         switch (this.type) {
           case plantType.SINGLE:
             this.nameLabel = '植物名称'
@@ -254,13 +254,13 @@
           default:
             break
         }
-       
+
       },
     },
     mounted () {
       let that = this
       eventBus.$on('load-common-step',() => {
-        that.form.projectId = that.qrCodeForm.projectId 
+        that.form.projectId = that.qrCodeForm.projectId
         that.form.qrCodeId = that.qrCodeId
         that.form.id = that.qrCodeId
         that.form.alias = that.qrCodeForm.alias
@@ -275,14 +275,14 @@
           } else {
             that.form.pictures.push(p)
           }
-        }   
+        }
         that.init()
         that.getProjectList()
       })
-      
+
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
-        this.form.pictures.push(resp)
+        this.form.pictures.push(resp.contentUrl)
       })
       eventBus.$on('delete-success', (params) => {
         this.$q.loading.hide()
@@ -297,10 +297,10 @@
       //   let location = JSON.parse(this.form.locationJson)
       //   this.positionName = location.formattedAddress
       // }
-      
+
     },
     beforeDestroy () {
-      
+
       eventBus.$off('upload-success')
       eventBus.$off('delete-success')
       eventBus.$off('clear-info')
