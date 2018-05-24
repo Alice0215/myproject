@@ -99,7 +99,7 @@ export default {
             document.addEventListener('backbutton', backEvent, false) // 返回键
           }, 3000)
         } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
-          this.$router.push('/')       
+          this.$router.push('/')
         } else {
           this.$router.goBack()
         }
@@ -120,6 +120,9 @@ export default {
     z-index: 3001 !important;
   }
   .van-dialog {
+    z-index: 3004 !important;
+  }
+  .van-popup {
     z-index: 3003 !important;
   }
 .child-view {
