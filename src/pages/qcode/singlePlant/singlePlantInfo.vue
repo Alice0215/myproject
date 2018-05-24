@@ -232,6 +232,7 @@ export default {
       );
       this.$q.loading.hide();
       if (resp) {
+        this.clearInfo()
         this.$root.$emit("next-step");
       }
     },
@@ -245,9 +246,9 @@ export default {
     this.sForm.position = this.singleForm.position;
     this.sForm.uomId = this.singleForm.uomId;
     this.sForm.uomName = this.singleForm.uomName;
-    this.sForm.location = this.singleForm.location;
+    // this.sForm.location = this.singleForm.location;
     if(this.singleForm.category){
-      this.sForm.category = this.singleForm.category;
+      this.sForm.category = Object.assign({}, this.singleForm.category);
     } else {
       this.sForm.category = {name:"", id:0};
     }

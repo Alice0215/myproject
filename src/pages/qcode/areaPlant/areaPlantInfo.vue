@@ -98,6 +98,7 @@ export default {
       let resp = await request("qrcode/area/save", "put", param, "json", true);
       this.$q.loading.hide();
       if (resp) {
+        this.clearInfo()
         this.$root.$emit("next-step");
       }
     },
