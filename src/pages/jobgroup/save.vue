@@ -42,8 +42,8 @@
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header class="font-14">现场拍照</q-list-header>
       <div class="row">
-        <div class="w-100 h-100 ml-10" v-for="(v, i) in thumbnails" :key="i">
-          <img :src="v"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
+        <div class="w-100 h-100 ml-10" v-for="(v, i) in pictures" :key="i">
+          <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -66,6 +66,7 @@ import { server } from '../../const'
 import JobActionModal from './JobActionModal'
 import eventBus from '../../eventBus'
 import JobActionMixin from '../../mixin/JobActionMixin'
+import { ImagePreview } from 'vant'
 
 export default {
   components: {
@@ -116,10 +117,16 @@ export default {
 
       console.log(jobs)
 
+      let pictures = []
+      if (this.pictures.length > 0) {
+        let pics = _.map(this.pictures, 'contentUrl')
+        pictures = pics
+      }
+
       let data = {
         'description': this.description,
         'jobs': jobs,
-        'pictures': this.pictures
+        'pictures': pictures
       }
       let url = 'jobGroup/'
       let mes = ''
@@ -151,7 +158,11 @@ export default {
       this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')
     },
     imagePreview (index) {
-      ImagePreview(previews, index)
+      let previewArray = _.map(this.pictures, (img) => {
+        return server.PREVIEW_API + img.contentUrl
+      })
+      console.log(previewArray)
+      ImagePreview(previewArray, index)
     },
     cancelUploadImage (index) {
       this.$q.loading.show()
