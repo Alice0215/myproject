@@ -73,14 +73,14 @@
       thumbnails: function() {
         let arr = [];
         _.forEach(this.form.pictures, v => {
-          arr.push(server.THUMBNAIL_API + v.filePath);
+          arr.push(server.THUMBNAIL_API + v);
         });
         return arr;
       },
       previews: function() {
         let arr = [];
         _.forEach(this.form.pictures, v => {
-          arr.push(server.PREVIEW_API + v.filePath);
+          arr.push(server.PREVIEW_API + v);
         });
         return arr;
       }
@@ -262,13 +262,14 @@
       eventBus.$on('load-common-step',() => {
         that.form.projectId = that.qrCodeForm.projectId 
         that.form.qrCodeId = that.qrCodeId
+        that.form.id = that.qrCodeId
         that.form.alias = that.qrCodeForm.alias
         that.form.description = that.qrCodeForm.description
         that.form.locationJson = that.qrCodeForm.locationJson
         that.form.projectName = that.qrCodeForm.projectName
         that.form.project = that.qrCodeForm.project
         for(let i=0; i< that.qrCodeForm.pictures.length; i++){
-          that.form.pictures.push(that.qrCodeForm.pictures[i])
+          that.form.pictures.push(that.qrCodeForm.pictures[i].filePath)
         }   
         that.init()
         that.getProjectList()
