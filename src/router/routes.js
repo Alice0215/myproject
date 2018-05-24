@@ -137,11 +137,7 @@ export default [
   {
     path: '/chooseDate',
     component: chooseDate
-  },
-  {
-    path: '/qcode/scan',
-    component: () => import('pages/qcode/scan.vue')
-  },
+  },  
   {
     path: '/qcode/view',
     component: () => import('pages/qcode/viewQRCode.vue')

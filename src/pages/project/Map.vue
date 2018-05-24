@@ -57,15 +57,17 @@ export default {
           let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
           qrcodeForm.locationJson = geoInfo
           this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
-          if (this.$route.query.from === 'qrCode') {
-            this.$router.goBack()
-            return
-          }
-          if (this.$route.query.projectId) {
-            this.$router.goBack()
-          } else {
-            this.$router.goBack()
-          }
+
+          this.$router.goBack()
+          // if (this.$route.query.from === 'qrCode') {
+          //   this.$router.goBack()
+          //   return
+          // }
+          // if (this.$route.query.projectId) {
+          //   this.$router.goBack()
+          // } else {
+          //   this.$router.goBack()
+          // }
       }
     },
     async getGeolocation () {

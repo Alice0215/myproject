@@ -85,7 +85,6 @@ export default {
       } else {
         let exitArray = ['/', '/login']
         let menuArray = ['/register', '/partyRegister', '/jobGroup/byUser']
-        let qr = ['/qcode/scan']
         if (_.indexOf(exitArray, this.$router.currentRoute.path) > -1) {
           this.$q.notify({
             message: '再按一次退出',
@@ -100,12 +99,7 @@ export default {
             document.addEventListener('backbutton', backEvent, false) // 返回键
           }, 3000)
         } else if (_.indexOf(menuArray, this.$router.currentRoute.path) > -1) {
-          this.$router.push('/')
-        } else if (_.indexOf(qr, this.$router.currentRoute.path) > -1) {
-          if (window.QRScanner) {
-            window.QRScanner.hide()
-          }
-          this.$router.push('/')
+          this.$router.push('/')       
         } else {
           this.$router.goBack()
         }
@@ -116,6 +110,18 @@ export default {
 </script>
 
 <style lang="scss">
+  .van-image-preview {
+    z-index: 9999 !important;
+  }
+  .van-modal {
+    z-index: 3002 !important;
+  }
+  .modal {
+    z-index: 3001 !important;
+  }
+  .van-dialog {
+    z-index: 3003 !important;
+  }
 .child-view {
   position: absolute;
   width: 100%;

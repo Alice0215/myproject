@@ -15,6 +15,11 @@ const QrCodeMixin = {
     }
   },
   methods: {
+    async initQrCodeMixin () {
+      this.qrCodeId = this.$route.query.id
+      this.load()
+    },
+    
     async load () {
       this.$q.loading.show()
       const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
@@ -44,10 +49,7 @@ const QrCodeMixin = {
       })
     }
   },
-  async mounted () {
-    this.qrCodeId = this.$route.query.id
-    this.load()
-  }
+  
 }
 
 export default QrCodeMixin
