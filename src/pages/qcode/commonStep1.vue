@@ -204,7 +204,10 @@
         }
       },
       chooseMap () {
-        this.qrCodeForm = this.form
+        this.qrCodeForm.projectId = this.form.projectId
+        this.qrCodeForm.alias = this.form.alias
+        this.qrCodeForm.description = this.form.description
+        this.qrCodeForm.projectName = this.form.projectName
         this.$router.push('/project/map?from=qrCode')
       },
 
@@ -214,7 +217,10 @@
         deleteFiles(img.contentUrl, index)
       },
       openCamera () {
-        this.qrCodeForm = this.form
+        this.qrCodeForm.projectId = this.form.projectId
+        this.qrCodeForm.alias = this.form.alias
+        this.qrCodeForm.description = this.form.description
+        this.qrCodeForm.projectName = this.form.projectName
         console.log('open camera')
         if (navigator.camera) {
           navigator.camera.getPicture(imgData => {
