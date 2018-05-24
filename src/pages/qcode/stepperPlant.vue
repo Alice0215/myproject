@@ -25,7 +25,7 @@ url参数：
         <q-step title="选择类型" icon="more_horiz" name="first" :order="1">
         </q-step>
         <q-step default title="填写基本类型" icon="more_horiz" name="common" :order="2">
-          <common-step v-if="headerTitle.length>0"></common-step>
+          <common-step></common-step>
         </q-step>
         <q-step v-if="singleShow||areaShow" :title="title" icon="more_horiz" name="inpueData" :order="3">
           <singleInfo v-if="singleShow"></singleInfo>
@@ -46,7 +46,8 @@ url参数：
   import areaInfo from './areaPlant/areaPlantInfo'
   import { plantType } from '../../const'
   import addPlantMixin from '../../mixin/addPlantMixin'
-  import { request } from "../../common";
+  import { request } from "../../common"
+  import eventBus from '../../eventBus'
 
   export default {
     mixins: [
@@ -71,7 +72,7 @@ url参数：
       async init(){   
         console.log("stepperPlant.init")    
 
-        if(!this.qrCodeForm){
+        if(!this.qrCodeForm.id){
           this.$q.loading.show()
           const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
           this.$q.loading.hide()
@@ -112,6 +113,7 @@ url参数：
           this.headerTitle = '其他类型'   
         }
 
+        eventBus.$emit('load-common-step')
       },
       backConfirmClose (action, done) {
         done()

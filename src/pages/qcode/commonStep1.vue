@@ -88,7 +88,7 @@
     },
     data () {
       return {
-        form:{},
+        form:{pictures:[]},
         showPop: false,
         projectList: [],
         pageNum: 1,
@@ -258,13 +258,21 @@
       },
     },
     mounted () {
-      this.form = this.getQrCodeFormParam(this.qrCodeForm)
-      this.form.projectName = this.qrCodeForm.projectName
-      this.form.project = this.qrCodeForm.project
-      for(let i=0; i< this.qrCodeForm.pictures.length; i++){
-        this.form.pictures.push(this.qrCodeForm.pictures[i])
-      }   
-      this.init()
+      let that = this
+      eventBus.$on('load-common-step',() => {
+        that.form.projectId = that.qrCodeForm.projectId 
+        that.form.qrCodeId = that.qrCodeId
+        that.form.alias = that.qrCodeForm.alias
+        that.form.description = that.qrCodeForm.description
+        that.form.locationJson = that.qrCodeForm.locationJson
+        that.form.projectName = that.qrCodeForm.projectName
+        that.form.project = that.qrCodeForm.project
+        for(let i=0; i< that.qrCodeForm.pictures.length; i++){
+          that.form.pictures.push(that.qrCodeForm.pictures[i])
+        }   
+        that.init()
+        that.getProjectList()
+      })
       
       eventBus.$on('upload-success', resp => {
         this.$q.loading.hide()
@@ -283,7 +291,7 @@
       //   let location = JSON.parse(this.form.locationJson)
       //   this.positionName = location.formattedAddress
       // }
-      this.getProjectList()
+      
     },
     beforeDestroy () {
       
