@@ -7,7 +7,7 @@
           <label>返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
-          {{ headerTitle }}
+          {{ createPlantTitle }}
         </q-toolbar-title>
         <q-item-side class="no-info" right>
           <q-btn label="完成" @click="save" size="xs"></q-btn>
@@ -141,7 +141,7 @@ export default {
   },
   mixins: [SingleMixin, addPlantMixin],
   computed: {
-    headerTitle: function() {
+    createPlantTitle: function() {
       if (this.index !== -1) {
         return "修改片区植物";
       }

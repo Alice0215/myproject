@@ -179,6 +179,7 @@
           let resp = await request(url, 'put', params, 'json', true)
           this.$q.loading.hide()
           if (resp) {
+            this.clearInfo()
             this.$root.$emit('next-step')
           }
         }

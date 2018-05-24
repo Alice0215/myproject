@@ -70,23 +70,26 @@ url参数：
     methods: {
       async init(){   
         console.log("stepperPlant.init")    
-        this.$q.loading.show()
-        const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
-        this.$q.loading.hide()
-        if (resp) {          
-          console.log("stepperPlant.init="+resp)    
-          let type = resp.data.resultMsg.type
-          this.qrCodeForm = resp.data.resultMsg
-          if(type) {
-            if(type.key === plantType.SINGLE) {
-              this.singleForm = resp.data.resultMsg
-              this.qrCodeForm = resp.data.resultMsg.code
-            } else if(type.key === plantType.AREA) {
-              this.areaForm = resp.data.resultMsg   
-              this.qrCodeForm = resp.data.resultMsg.code    
+
+        if(!this.qrCodeForm){
+          this.$q.loading.show()
+          const resp = await request('qrcode/detail?qrCodeId=' + this.qrCodeId, 'get', null, 'json', true)
+          this.$q.loading.hide()
+          if (resp) {          
+            console.log("stepperPlant.init="+resp)    
+            let type = resp.data.resultMsg.type
+            this.qrCodeForm = resp.data.resultMsg
+            if(type) {
+              if(type.key === plantType.SINGLE) {
+                this.singleForm = resp.data.resultMsg
+                this.qrCodeForm = resp.data.resultMsg.code
+              } else if(type.key === plantType.AREA) {
+                this.areaForm = resp.data.resultMsg   
+                this.qrCodeForm = resp.data.resultMsg.code    
+              }
             }
           }
-        }
+        }        
 
         if(this.qrCodeForm.type){          
           this.type = this.qrCodeForm.type.key
@@ -108,12 +111,12 @@ url参数：
         } else if(this.type === plantType.OTHER){
           this.headerTitle = '其他类型'   
         }
+
       },
       backConfirmClose (action, done) {
         done()
         if (action === 'confirm') {
-          this.$root.$emit('clear-info')
-          this.$store.commit('plantInfo/clearInfo')
+          this.clearInfo()
           this.$router.goBack()
         }
       },
