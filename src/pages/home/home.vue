@@ -90,14 +90,14 @@
         this.$q.loading.hide()
         let msg = resp.data.resultMsg
         let typeKey = null
-        let code = msg      
+        let code = msg
         if (msg.type) {
           typeKey = msg.type.key
           if ((typeKey === plantType.SINGLE || typeKey === plantType.AREA)) {
-            code = msg.code              
+            code = msg.code
           }
         }
-        let qrCodeId = code.id        
+        let qrCodeId = code.id
 
         if (typeKey === null) {
           if (msg.editable) {
@@ -122,7 +122,7 @@
             this.$router.push('/qcode/detail?id=' + qrCodeId)
           }
         } else if (this.type === 'qrcode') {
-          if (msg.editable) {            
+          if (msg.editable) {
             this.$router.push('/qrcode/stepper?id='+qrCodeId+'&type='+typeKey)
           } else {
             this.$q.notify({
@@ -181,52 +181,46 @@
         font-size: 34px;
       }
     }
-  }
-  .opacity-disabled {
-    opacity: 0.5;
-  }
-  .top-log {
-    height: calc(42vh - 66px);
-    background: -webkit-linear-gradient($primary, $nextprimary);
-    background: -o-linear-gradient($primary, $nextprimary);
-    background: -moz-linear-gradient($primary, $nextprimary);
-    background: linear-gradient($primary, $nextprimary); /* 标准的语法 */
-    color: white;
-    text-align: center;
-    font-size: 20px;
-    padding-top: calc((40vh - 220px) / 2);
-  }
-  .log {
-    text-align: center;
-    img {
-      width: 100px;
-      height: 100px;
+
+    .opacity-disabled {
+      opacity: 0.5;
     }
-    .log {
+    .top-log {
+      height: calc(42vh - 66px);
+      background: -webkit-linear-gradient($primary, $nextprimary);
+      background: -o-linear-gradient($primary, $nextprimary);
+      background: -moz-linear-gradient($primary, $nextprimary);
+      background: linear-gradient($primary, $nextprimary); /* 标准的语法 */
+      color: white;
       text-align: center;
-      img {
-        width: 100px;
-        height: 100px;
+      font-size: 20px;
+      padding-top: calc((40vh - 220px) / 2);
+    }
+      .log {
+        text-align: center;
+        img {
+          width: 100px;
+          height: 100px;
+        }
       }
-    }
-    .nav {
-      height: calc(21vh - 22px);
-      padding-top: calc((20vh - 100px) / 2);
-      // padding-bottom: 15px;
-      img {
-        width: 60px;
+      .nav {
+        height: calc(21vh - 22px);
+        padding-top: calc((20vh - 100px) / 2);
+        // padding-bottom: 15px;
+        img {
+          width: 60px;
+        }
       }
-    }
-    .menu-field {
-      height: calc(64vh - 66px);
-      margin-top: 15px;
-      text-align: center;
-    }
-    .border-bottom {
-      border-bottom: 1px solid #e8e8e8;
-    }
-    .border-right {
-      border-right: 1px solid #e8e8e8;
-    }
+      .menu-field {
+        height: calc(64vh - 66px);
+        margin-top: 15px;
+        text-align: center;
+      }
+      .border-bottom {
+        border-bottom: 1px solid #e8e8e8;
+      }
+      .border-right {
+        border-right: 1px solid #e8e8e8;
+      }
   }
 </style>

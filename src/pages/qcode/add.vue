@@ -14,7 +14,7 @@
     </q-layout-header>
     <q-page-container>
     <q-page>
-    <div class='full-width card'>
+    <div class='full-width card' v-if="!addSuccess">
         <q-field @blur="$v.contactPerson.$touch"
         @keyup.enter="add"
         :error="$v.contactPerson.$error"
@@ -38,6 +38,9 @@
          </q-field>
         <q-btn class='full-width btn' @click='add()'>提交申请</q-btn>
     </div>
+    <div v-if="addSuccess">
+    <successPage></successPage>
+    </div>
     </q-page>
   </q-page-container>
   </q-layout>
@@ -46,14 +49,19 @@
 <script>
 import { required, minLength, maxLength, numeric } from 'vuelidate/lib/validators'
 import { request } from '../../common'
+import successPage from '../success'
 export default {
   data () {
     return {
+      addSuccess: false,
       projectId: '',
       amount: '',
       contactNumber: '',
       contactPerson: ''
     }
+  },
+  components: {
+    successPage
   },
   validations: {
     contactPerson: { required },
@@ -77,12 +85,10 @@ export default {
       }
       request('qrcode/batch', 'post', data, 'json', true).then(response => {
         if (response) {
-          this.$q.notify({
-            timeout: 2000,
-            type: 'positive',
-            message: '添加成功！'
-          })
-          this.$router.goBack()
+          this.addSuccess = true
+          setTimeout(() => {
+            this.$router.goBack()
+          }, 3000)
         }
       })
     }
