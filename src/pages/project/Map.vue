@@ -136,9 +136,9 @@ export default {
       this.getAdressByGeocoder(lngLatArray)
     },
     async getCurrentPosition () {
-      // this.src = 'https://m.amap.com/picker/?center=113.60727' + ',34.788548' +
-      //   '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
-      // window.addEventListener('message', this.receivedMessage, false)
+      this.src = 'https://m.amap.com/picker/?center=113.60727' + ',34.788548' +
+        '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+      window.addEventListener('message', this.receivedMessage, false)
 
       if (!window.GaodeLocation) {
         return false

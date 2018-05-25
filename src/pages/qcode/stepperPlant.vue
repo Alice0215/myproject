@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       title: null,
-      currentStep: "common",
+      currentStep: null,
       singleShow: false,
       areaShow: false,
       headerTitle: ""
@@ -105,7 +105,9 @@ export default {
       that.back();
     });
 
-    eventBus.$emit("load-commonStep")
+    this.currentStep = "common"
+
+    //eventBus.$emit("load-commonStep")
 
   },
   destroyed() {
