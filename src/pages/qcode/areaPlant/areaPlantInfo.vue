@@ -10,11 +10,11 @@
       </div>
       <div class="bg-color font-16 pl-15 pr-15 pt-16 pb-20">
         <label class="h-44">片区植物</label>
-        <label class="h-44 float-right primary-color" @click="showPlant">新增植物</label>
+        <label class="h-44 float-right primary-color" @click="showPlant(-1)">新增植物</label>
         <div class="mt-6" v-for="(v, i) in aForm.singles" :key="i">
           <div class="row bg-white plant-list justify-between full-width">
             <label class="ml-10">{{v.alias}}</label>
-            <label class="text-color">{{ v.amount }}{{ v.displayUom }}</label>
+            <label class="text-color">{{ v.amount }}{{ v.uomStr }}</label>
             <div class="mr-18">
               <i class="iconfont holder-color font-18" @click="deleteAddPlant(i)">&#xe61e;</i>
               <i class="iconfont ml-10 primary-color font-18" @click="editPlant(i)">&#xe69b;</i>
@@ -29,7 +29,7 @@
              @click="nextStep"/>
     </div>    
     <q-modal v-model="createPageShow"> 
-    <create-plant :index="index" ></create-plant>
+    <create-plant></create-plant>
     </q-modal>
   </div>
 </template>
@@ -49,30 +49,28 @@ export default {
   data() {
     return {
       createPageShow: false,
-      index: -1,
       aForm: { singles: [], acreage:""}
     };
   },
   methods: {
     editPlant(index) {
-      this.index = parseInt(index);
-      showPlant()
+      this.showPlant(index)
     },
     deleteAddPlant(index) {
       console.log(index);
       this.aForm.singles.splice(index, 1);
     },
 
-    showPlant() {
+    showPlant(index) {
       this.saveAreaForm(this.aForm)
-      eventBus.$emit("show-create-plant")
+      eventBus.$emit("show-create-plant", index)
       
       this.createPageShow = true;
     },
     async nextStep() {
       this.$q.loading.show();     
 
-      let param = Object.assign({}, this.areaForm);
+      let param = Object.assign({}, this.aForm);
       param.qrCodeForm = this.toQrCodeForm();      
       console.log("singles :"+param.singles)
 

@@ -14,22 +14,14 @@ const QrCodeDetailMixin = {
   },
   methods: {
     back () {
-      let projectId = this.$route.query.projectId
-      let fromDetail = this.$route.query.fromDetail
-      console.log(fromDetail)
-      if (fromDetail === 'true' || !projectId) {
-        this.$router.goBack()
-      } else {
-        console.log('列表')
-        this.$router.replace('/qcode/list?projectId=' + projectId + '&twice=true')
-      }
+      let projectId =  this.qrCode.project.id
+      this.$router.push('/qcode/list?projectId=' + projectId)
     },
     preview (i) {
       ImagePreview(this.previews, i)
     },
     edit (detail) {      
       this.$router.push('/qrcode/stepper?id='+this.qrCode.id)
-//      this.$router.push('/qcode/edit?id=' + detail.id)
 
     },
     openQrCode (detail) {

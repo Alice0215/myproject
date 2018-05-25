@@ -2,7 +2,7 @@
   <q-layout view="Hhh lpr Fff">
     <q-layout-header>
       <q-toolbar>
-          <a @click="$router.goBack()" class="back-a font-14">
+          <a @click="back" class="back-a font-14">
           <q-item-side left  icon="keyboard arrow left" class="back-left "/>
           返回
         </a>
@@ -77,6 +77,9 @@ export default {
     this.getProjectCount()
   },
   methods: {
+    back(){
+      this.$router.push('/home')
+    },
     getProjectCount () {
       request('project/count', 'get', '', 'json', true).then(response => {
         if (response) {

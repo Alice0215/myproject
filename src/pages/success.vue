@@ -17,8 +17,7 @@
     ],
     methods: {
       goToDetail () {
-        this.$router.replace('/qcode/detail?projectId=' + this.projectId + '&id=' + this.qrCodeId + '&type=' +
-          this.type + '&fromDetail=' + this.qrCodeForm.fromDetail)
+        this.$router.replace('/qcode/detail?id=' + this.qrCodeId)
         this.clearInfo()
       },
     },
