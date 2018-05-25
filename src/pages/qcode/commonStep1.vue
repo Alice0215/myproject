@@ -229,6 +229,8 @@ export default {
       this.type = this.$route.query.type;
     
       let qrCodeForm = this.toQrCodeForm();
+      console.log("type key: "+qrCodeForm.typeKey);
+      console.log("formattedAddress: "+qrCodeForm.formattedAddress);
       if (!qrCodeForm.id) {
         this.$q.loading.show();
         const resp = await request(
@@ -301,7 +303,7 @@ export default {
         this.nameHolder = "请输入名称";
       }
       
-      this.$root.$emit("refresh-data", data)
+      eventBus.$emit("refresh-data", data)
 
       this.getProjectList();
 
@@ -311,7 +313,9 @@ export default {
     console.log("mounted commonStep1.vue");
     let that = this;
     
-    that.init();    
+    eventBus.$on("load-commonStep", () => {
+      that.init();    
+    });    
 
     eventBus.$on("upload-success", resp => {
       that.$q.loading.hide();

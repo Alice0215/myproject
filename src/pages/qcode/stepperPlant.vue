@@ -92,7 +92,7 @@ export default {
     this.$root.$on("next-step", () => {
       that.$refs.stepper.next();
     });
-    this.$root.$on("refresh-data", (data) => {
+    eventBus.$on("refresh-data", (data) => {
       that.title = data.title
       that.headerTitle = data.headerTitle
       that.singleShow = data.singleShow
@@ -104,6 +104,9 @@ export default {
     this.$root.$on("last-pre", () => {
       that.back();
     });
+
+    eventBus.$emit("load-commonStep")
+
   },
   destroyed() {
     this.$root.$off("next-step");

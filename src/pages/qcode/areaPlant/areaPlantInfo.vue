@@ -14,7 +14,7 @@
         <div class="mt-6" v-for="(v, i) in aForm.singles" :key="i">
           <div class="row bg-white plant-list justify-between full-width">
             <label class="ml-10">{{v.alias}}</label>
-            <label class="text-color">{{ v.amount }}{{ v.uomName }}</label>
+            <label class="text-color">{{ v.amount }}{{ v.displayUom }}</label>
             <div class="mr-18">
               <i class="iconfont holder-color font-18" @click="deleteAddPlant(i)">&#xe61e;</i>
               <i class="iconfont ml-10 primary-color font-18" @click="editPlant(i)">&#xe69b;</i>
