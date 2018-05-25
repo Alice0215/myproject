@@ -14,6 +14,7 @@
 <script>
 import _ from 'lodash'
 import eventBus from '../../eventBus'
+import addPlantMixin from '../../mixin/addPlantMixin'
 
 export default {
   data () {
@@ -23,6 +24,9 @@ export default {
       position: {}
     }
   },
+  mixins: [
+    addPlantMixin,
+  ],
   methods: {
        /**
        * 获取逆地理信息
@@ -54,9 +58,15 @@ export default {
         if (data.info === 'OK') {
           eventBus.$emit('user_location', geoInfo)
           localStorage.setItem('user_location', geoInfo)
-          let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
-          qrcodeForm.locationJson = geoInfo
-          this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
+
+          let form = this.toQrCodeForm()
+          form.locationJson = geoInfo
+          form.formattedAddress = geoInfo.formattedAddress
+          this.saveQrCodeForm(form)
+
+          // let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
+          // qrcodeForm.locationJson = geoInfo
+          // this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
 
           this.$router.goBack()
           // if (this.$route.query.from === 'qrCode') {

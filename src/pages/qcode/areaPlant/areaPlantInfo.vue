@@ -10,11 +10,11 @@
       </div>
       <div class="bg-color font-16 pl-15 pr-15 pt-16 pb-20">
         <label class="h-44">片区植物</label>
-        <label class="h-44 float-right primary-color" @click="createPlant">新增植物</label>
+        <label class="h-44 float-right primary-color" @click="showPlant">新增植物</label>
         <div class="mt-6" v-for="(v, i) in aForm.singles" :key="i">
           <div class="row bg-white plant-list justify-between full-width">
             <label class="ml-10">{{v.alias}}</label>
-            <label class="text-color">{{ v.amount }}{{ v.displayUom?v.displayUom:v.uomName }}</label>
+            <label class="text-color">{{ v.amount }}{{ v.uomName }}</label>
             <div class="mr-18">
               <i class="iconfont holder-color font-18" @click="deleteAddPlant(i)">&#xe61e;</i>
               <i class="iconfont ml-10 primary-color font-18" @click="editPlant(i)">&#xe69b;</i>
@@ -29,7 +29,7 @@
              @click="nextStep"/>
     </div>    
     <q-modal v-model="createPageShow"> 
-    <create-plant :index="index" :singles.sync="aForm.singles" ></create-plant>
+    <create-plant :index="index" ></create-plant>
     </q-modal>
   </div>
 </template>
@@ -56,43 +56,24 @@ export default {
   methods: {
     editPlant(index) {
       this.index = parseInt(index);
-      this.createPageShow = true;
+      showPlant()
     },
     deleteAddPlant(index) {
       console.log(index);
       this.aForm.singles.splice(index, 1);
     },
 
-    createPlant() {
-      console.log("save:" + this.aForm.singles.length);
+    showPlant() {
+      this.saveAreaForm(this.aForm)
+      eventBus.$emit("show-create-plant")
+      
       this.createPageShow = true;
     },
     async nextStep() {
-      this.$q.loading.show();
-      
+      this.$q.loading.show();     
 
-      let param = {};
-      param.areaId = this.areaForm.id;
-      param.acreage = this.aForm.acreage;
-      param.qrCodeForm = this.getQrCodeFormParam(this.qrCodeForm);
-      param.singles = [];
-      for (let i = 0; i < this.aForm.singles.length; i++) {
-        let one = Object.assign({}, this.aForm.singles[i]);
-        param.singles.push(one);
-        
-        one.category = this.aForm.singles[i].category.id;
-        one.singleId = this.aForm.singles[i].id;
-        
-        if (
-          !_.isNull(this.aForm.singles[i].pictures) &&
-          !_.isUndefined(this.aForm.singles[i].pictures)
-        ) {
-          for (let i = 0; i < this.aForm.singles[i].pictures.length; i++) {
-            one.pictures.push(this.aForm.singles[i].pictures[i]);
-          }
-          
-        }
-      }
+      let param = Object.assign({}, this.areaForm);
+      param.qrCodeForm = this.toQrCodeForm();      
       console.log("singles :"+param.singles)
 
       let resp = await request("qrcode/area/save", "put", param, "json", true);
@@ -103,25 +84,19 @@ export default {
       }
     },
     preStep() {
-      this.areaForm = this.aForm;
+      this.saveAreaForm(this.aForm)
       this.$root.$emit("pre-step");
     }
   },
   mounted() {
-    console.log("this.areaForm.acreage:"+this.areaForm.acreage)
-    this.aForm.acreage = this.areaForm.acreage;
-    this.aForm.code = this.areaForm.code;
-    if (
-      !_.isNull(this.areaForm.singles) &&
-      !_.isUndefined(this.areaForm.singles)
-    ) {
-      for (let i = 0; i < this.areaForm.singles.length; i++) {
-        this.aForm.singles.push(this.areaForm.singles[i]);
-      }
-    }
-
+    console.log("mounted areaPlantInfo.vue")
+    let that = this
+    that.aForm = that.toAreaForm()
+    
     eventBus.$on('close-create-plant', resp => {
-      this.createPageShow = false
+      console.log('event close-create-plant')
+      that.aForm = that.toAreaForm()
+      that.createPageShow = false
     })
 
   },

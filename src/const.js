@@ -10,6 +10,7 @@ const server = {
   PREVIEW_API: host + 'fs/ls/uploaded/'
 }
 
+
 const plantType = {
   SINGLE: 'SINGLE',
   AREA: 'AREA',

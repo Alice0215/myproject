@@ -1,5 +1,5 @@
 <template>
-
+  
   <q-layout id="create-plant" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
@@ -21,10 +21,10 @@
           <label class="w-64">数量</label>
           <q-input placeholder="输入片值物数量" hide-underline class="no-margin" v-model="sForm.amount"
                    type="number"></q-input>
-          <q-select hide-underline v-model="displayUom" @input="uomInput" :options="uomOptions"
+          <q-select hide-underline v-model="sForm.displayUom" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>
         </div>
-        <van-cell title="苗木分类" is-link :value="sForm.category.name" required class="font-16" @click="chooseNursery"/>
+        <van-cell title="苗木分类" is-link :value="sForm.categoryName" required class="font-16" @click="chooseCategory"/>
         <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入植物在片区内的位置"/>
         <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
           <label class="h-44">苗木规则</label>
@@ -79,7 +79,7 @@
         <q-list-header class="p-0 pl-15 mt-15 font-16 color-black">现场拍照</q-list-header>
         <div class="row pl-20">
           <div class="w-100 h-100 ml-8 mt-8" v-for="(v, i) in thumbnails" :key="i">
-
+            
             <img :src="v" preview-title-enable="false" :key="i" @click="preview(i)"
                  class="full-height full-width">
             <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
@@ -89,7 +89,7 @@
           </div>
         </div>
       </q-list>
-
+      
       <van-dialog
         v-model="otherUomShow"
         show-cancel-button
@@ -111,7 +111,7 @@
       </van-popup>
     </q-page-container>
   </q-layout>
-
+ 
 </template>
 
 <script>
@@ -129,16 +129,8 @@ import SingleMixin from "../../../mixin/SingleMixin";
 import addPlantMixin from "../../../mixin/addPlantMixin";
 
 export default {
-  props: ["index", "singles"],
-  data() {
-    return {
-      singlesCopy: [],
-      sForm: {
-        category: {},
-        pictures: []
-      }
-    };
-  },
+  props: ["index"],
+  
   mixins: [SingleMixin, addPlantMixin],
   computed: {
     createPlantTitle: function() {
@@ -163,60 +155,20 @@ export default {
       return arr;
     }
   },
-
+  
   methods: {
     preview(i) {
       ImagePreview(this.previews, i);
     },
-    async reset() {
-
-      this.displayUom = null;
-      let single = {};
-      this.sForm = {
-        category: {},
-        pictures: []
-      };
-      this.singlesCopy=[]
-      console.log("mounted.");
-      if (this.index !== -1) {
-        single = this.singles[this.index]
-        this.sForm = Object.assign({}, single);
-
-        if (
-          !_.isNull(single.pictures) &&
-          !_.isUndefined(single.pictures)
-        ) {
-          for (let i = 0; i < single.pictures.length; i++) {
-            this.sForm.pictures.push(single.pictures[i]);
-          }
-        }
-      }
-      this.uomOptions = []
-      await this.queryWorkUomList()
-
-      if(single.uomId){
-        this.displayUom = single.uomId.toString()
-      } else {
-        if(this.single.uomName){
-          this.uomOptions.push({label: single.uomName, value: single.uomName})
-        }
-        this.displayUom = single.uomName
-      }
-
-      console.log("reset" + this.displayUom)
-      this.uomOptions.push({label: '其他', value: 'other'})
-
-    },
+   
     back() {
-      this.reset();
       this.$emit("close-create-plant");
     },
 
-    cancelUploadImage(index) {
-      this.$q.loading.show();
-      let img = this.sForm.pictures[index];
-      deleteFiles(img.contentUrl, index);
+    cancelUploadImage (index) {
+      this.sForm.pictures.splice(index, 1)
     },
+
     openCamera() {
       console.log("open camera");
       if (navigator.camera) {
@@ -240,7 +192,7 @@ export default {
         });
         return false;
       }
-      if (_.isNull(this.sForm.category) || _.isUndefined(this.sForm.category)) {
+      if (!this.sForm.category) {
         this.$q.notify({
           message: "分类不能为空",
           position: "center"
@@ -252,91 +204,46 @@ export default {
     save() {
       if (!this.verifyForm()) {
         return false;
-      }
-      for(let i=0; i< this.singles.length; i++){
-        let one = Object.assign({}, this.singles[i]);
+      }      
 
-        if(i==this.index){
-          this.singlesCopy.push(this.sForm)
-        } else {
-          this.singlesCopy.push(one)
+      let aForm = this.toAreaForm()
+      console.log(aForm)
+      if(this.index===-1){
+        if(aForm.singles && aForm.singles.length === 0){
+          aForm.singles = []
         }
-      }
-
-
-      this.$emit("update:singles", this.singlesCopy);
-      this.reset();
-      this.$emit("close-create-plant");
-    },
-
-    uomInput(val) {
-      if (val === "other") {
-        this.otherUomShow = true;
+         
+        aForm.singles.push(this.sForm)
       } else {
-        this.sForm.uomId = val;
-        this.displayUom = val;
-        this.sForm.uomName = null;
-        this.sForm.displayUom = null;
+        aForm.singles[index] = this.sForm
       }
-    },
-
-    onPickerConfirm(value, index) {
-      this.sForm.category = this.plantCategoryArray[index];
-      this.showPlantCategory = false;
-    },
-
-    otherUomClose(action, done) {
-      done();
-      if (action === "confirm") {
-        let otherUom = this.otherUom.toString();
-        for (let i = 0; i < this.uomOptions.length; i++) {
-          let one = this.uomOptions[i];
-          if (one.label === otherUom) {
-            this.$q.notify("单位已存在");
-            return;
-          }
-        }
-
-        this.uomOptions.splice(this.uomOptions.length - 1, 0, {
-          label: otherUom,
-          value: otherUom
-        });
-
-        this.sForm.uomId = null;
-        this.displayUom = otherUom;
-        this.sForm.uomName = otherUom;
-
-        this.otherUom = null;
-        this.otherUomShow = false;
-      } else {
-        console.log("cancel");
-        this.otherUom = null;
-        this.otherUomShow = false;
-      }
-    }
+      this.saveAreaForm(aForm)
+      eventBus.$emit("close-create-plant");
+    }     
+   
   },
   mounted() {
+    let that = this 
+    eventBus.$on("show-create-plant", () => {
+      console.log("event show-create-plant")
+      let aForm = that.toAreaForm()
+      if(that.index!==-1){
+        that.sForm = Object.assign({}, aForm.singles[index])   
+      } else {
+        that.sForm = {pictures:[]}
+      }
+    });   
+    
+
     eventBus.$on("upload-success", resp => {
       this.$q.loading.hide();
-      this.sForm.pictures.push(resp);
-    });
-    eventBus.$on("delete-success", params => {
-      this.$q.loading.hide();
-      let index = parseInt(params.idx);
-      this.sForm.pictures.splice(index, 1);
-      this.$q.dialog({
-        title: "提示",
-        message: params.msg
-      });
-    });
+      this.sForm.pictures.push(resp.contentUrl);
+    });   
 
-    this.getPlantCategory();
-
-
+    this.initSingle()
   },
   beforeDestroy() {
     eventBus.$off("upload-success");
-    eventBus.$off("delete-success");
   }
 };
 </script>
@@ -384,9 +291,6 @@ export default {
     .q-if-inner {
       height: 100%;
       margin-top: 0 !important;
-      input {
-        height: 100%;
-      }
     }
   }
 
