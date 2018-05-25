@@ -5,6 +5,9 @@ export default {
   projectId: null,
   type: null,
   navTitle: null,
-  qrCodeId: null
+  qrCodeId: null,
+  qrCodeFormJsonStr: null,
+  singleFormJsonStr: null,
+  areaFormJsonStr: null
   //
 }

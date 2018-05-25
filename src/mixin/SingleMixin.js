@@ -1,14 +1,17 @@
 import { request } from '../common'
+import _ from "lodash";
 
 const SingleMixin = {
   data () {
     return {
+      sForm: {
+        pictures: []
+      },
       uomOptions: [],
       plantCategoryArray: [],
       showPlantCategory: false,
       otherUomShow: false,
-      otherUom: null,
-      displayUom: null
+      otherUom: null
     }
   },
   computed: {
@@ -16,8 +19,60 @@ const SingleMixin = {
     
   },
   methods: {
+    uomInput(val) {
+      console.log(val)
+      if (val === "other") {
+        this.otherUomShow = true;
+      } else {
+        if(_.isInteger(val)){
+          this.sForm.uomId = _.toInteger(val);
+        } else {
+          this.sForm.uomId = null
+        }        
+        this.sForm.displayUom = val;
+        this.sForm.uomName = null;       
+        
+      }
+    },
 
-    chooseNursery () {
+    onPickerConfirm(value, index) {
+      let category = this.plantCategoryArray[index];
+      this.sForm.category = category.id
+      this.sForm.categoryName = category.text
+      this.showPlantCategory = false;
+    },
+
+    otherUomClose(action, done) {
+      done();
+      if (action === "confirm") {
+        let otherUom = this.otherUom.toString();
+        for (let i = 0; i < this.uomOptions.length; i++) {
+          let one = this.uomOptions[i];
+          if (one.label === otherUom) {
+            this.$q.notify("单位已存在");
+            return;
+          }
+        }
+
+        this.uomOptions.splice(this.uomOptions.length - 1, 0, {
+          label: otherUom,
+          value: otherUom
+        });
+
+        this.sForm.uomId = null;
+        this.sForm.uomName = otherUom;
+        this.sForm.displayUom = otherUom;
+
+        this.otherUom = null;
+        this.otherUomShow = false;
+      } else {
+        console.log("cancel");
+        this.otherUom = null;
+        this.otherUomShow = false;
+      }
+    },
+
+    chooseCategory () {
       this.showPlantCategory = true
     },
 
@@ -25,39 +80,47 @@ const SingleMixin = {
       this.showPlantCategory = false
     },
 
+    onUomPickerCancel () {
+      this.showUom = false
+    },
+
     async getPlantCategory () {
       let resp = await request('data/plantCategory')
       if (resp) {
+        let list = resp.data.resultMsg;
         let that = this
-        this.plantCategoryArray = resp.data.resultMsg
-        console.log()
-        _.forEach(this.plantCategoryArray, (v, key) => {
-          
-          v.text = v.name
-          v.category = v.id.toString()
-        })          
+        _.forEach(list, v => {
+          let one = {};
+          one.text = v.name
+          one.id = v.id                  
+          that.plantCategoryArray.push(one);
+        });
+       
       }
     },
 
-    async queryWorkUomList () {   
+    initSingle(){
+      this.getPlantCategory();
+      let customUom = null
+      if(!this.sForm.uomId){
+        customUom = this.sForm.uomName
+      }
+      this.getWorkUomList(customUom);
+    },
+
+    async getWorkUomList (customUom) {   
+      this.uomOptions.push({label: '', value: '0'})
       let resp = await request('uom/all', 'get', null, true)
       if (resp) {
         let that = this
-        _.forEach(resp.data.resultMsg, v => {
-          that.uomOptions.push({label: v.name, value: v.id})
-        })  
+        if(resp.data.resultMsg){
+          _.forEach(resp.data.resultMsg, v => {
+            that.uomOptions.push({label: v.name, value: v.id.toString()})
+          })  
+        }        
       }     
-    },
-    getWorkUomList (uomId, uomName) {   
-      let resp = this.queryWorkUomList ()
-      
-      if(uomId){
-        this.displayUom = uomId
-      } else {
-        if(uomName){
-          this.uomOptions.push({label: uomName, value: uomName})
-        }
-        this.displayUom = uomName
+      if(customUom){
+        this.uomOptions.push({label: customUom, value: customUom})
       }
       this.uomOptions.push({label: '其他', value: 'other'})
     },

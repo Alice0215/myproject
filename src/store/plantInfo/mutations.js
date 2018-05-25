@@ -64,6 +64,18 @@ export const setQRCodeId = (state, v) => {
   state.qrCodeId = v
 }
 
+export const setAreaFormJsonStr = (state, v) => {
+  state.areaFormJsonStr = v
+}
+
+export const setSingleFormJsonStr = (state, v) => {
+  state.singleFormJsonStr = v
+}
+
+export const setQrCodeFormJsonStr = (state, v) => {
+  state.qrCodeFormJsonStr = v
+}
+
 export const clearInfo = (state) => {
   state.qrCodeForm = {pictures: []}
   state.singleForm = {}
@@ -71,5 +83,9 @@ export const clearInfo = (state) => {
   state.projectId = null
   state.type = null
   state.navTitle = null
+
+  state.qrCodeFormJsonStr = null
+  state.singleFormJsonStr = null
+  state.areaFormJsonStr = null
 }
 

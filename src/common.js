@@ -19,6 +19,10 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {
     params = data
   }
+  console.debug("url: "+url)
+  console.debug("method: "+method)
+  console.debug("data: ")
+  console.debug(data)
   const [err, resp] = await to(axios.request({
     url,
     method,
