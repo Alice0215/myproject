@@ -21,6 +21,9 @@ function backEvent () {
 }
 
 document.addEventListener('deviceready', () => {
+  if (StatusBar) {
+    StatusBar.styleDefault()
+  }
   document.addEventListener('backbutton', backEvent, false)
 }, false)
 
