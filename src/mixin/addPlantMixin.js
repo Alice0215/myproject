@@ -133,8 +133,6 @@ const addPlantMixin = {
         rData.areaName = code.area.code.alias
         rData.areaId = code.area.id
       }
-      rData.areaName = code.area.code.alias
-      rData.areaId = code.area.id
       rData.position = code.position
       rData.uomName = code.uomName         
       rData.uomId = code.uomId

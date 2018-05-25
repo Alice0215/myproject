@@ -313,9 +313,10 @@ export default {
     console.log("mounted commonStep1.vue");
     let that = this;
     
-    eventBus.$on("load-commonStep", () => {
-      that.init();    
-    });    
+    that.init();    
+    // eventBus.$on("load-commonStep", () => {
+    //   that.init();    
+    // });    
 
     eventBus.$on("upload-success", resp => {
       that.$q.loading.hide();

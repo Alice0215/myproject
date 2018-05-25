@@ -181,7 +181,7 @@ export default {
     },
     preStep() {
       this.saveSingleForm(this.sForm)
-      eventBus.$emit("load-common-step");
+      eventBus.$emit("load-commonStep");
       this.$root.$emit("pre-step");
     }
   },

@@ -209,7 +209,11 @@ export default {
       let aForm = this.toAreaForm()
       console.log(aForm)
       if(this.index===-1){
-        if(!(aForm.singles && aForm.singles.length === 0)){
+        if(aForm.singles){
+          if(aForm.singles.length === 0){
+            aForm.singles = []
+          }
+        } else {
           aForm.singles = []
         }
          
@@ -217,6 +221,11 @@ export default {
       } else {
         aForm.singles[index] = this.sForm
       }
+
+      console.log("uomId="+this.sForm.uomId)
+      console.log("uomName="+this.sForm.uomName)
+      console.log("displayUom="+this.sForm.displayUom)
+
       this.saveAreaForm(aForm)
       eventBus.$emit("close-create-plant");
     }     
