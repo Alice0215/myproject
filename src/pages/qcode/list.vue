@@ -73,16 +73,7 @@ export default {
   },
   methods: {
     back () {
-      if (this.$route.query.twice) {
-        console.log(window.history.length)
-        if (window.history.length > 2) {
-          this.$router.go(-2)
-        } else {
-          this.$router.goBack()
-        }
-      } else {
-        this.$router.goBack()
-      }
+      this.$router.push('/ProjectInfo?projectId='+this.projectId)
     },
     chooseType(type) {
       this.type = type;

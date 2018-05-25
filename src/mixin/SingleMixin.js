@@ -24,13 +24,23 @@ const SingleMixin = {
       if (val === "other") {
         this.otherUomShow = true;
       } else {
-        if(_.isInteger(val)){
-          this.sForm.uomId = _.toInteger(val);
+        this.sForm.uomName = null;    
+        let p= parseInt(val)
+        console.log(p)
+        if(_.isInteger(p)){
+          this.sForm.uomId = val
         } else {
-          this.sForm.uomId = null
+          this.sForm.uomName = uomName
         }        
         this.sForm.displayUom = val;
-        this.sForm.uomName = null;       
+        
+        for (let i = 0; i < this.uomOptions.length; i++) {
+          let one = this.uomOptions[i];
+          if (one.value === val) {
+            this.sForm.uomStr = one.label;        
+            return 
+          }
+        }
         
       }
     },
@@ -62,6 +72,7 @@ const SingleMixin = {
         this.sForm.uomId = null;
         this.sForm.uomName = otherUom;
         this.sForm.displayUom = otherUom;
+        this.sForm.uomStr = otherUom;        
 
         this.otherUom = null;
         this.otherUomShow = false;

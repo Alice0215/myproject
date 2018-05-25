@@ -3,8 +3,8 @@
   <q-layout id="create-plant" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
-        <q-item-side @click.native="back" left icon="keyboard arrow left" class="back-left">
-          <label>返回</label>
+        <q-item-side  @click="back" left icon="keyboard arrow left" class="back-left">
+          <label @click="back">返回</label>
         </q-item-side>
         <q-toolbar-title class="header-title">
           {{ createPlantTitle }}
@@ -129,8 +129,11 @@ import SingleMixin from "../../../mixin/SingleMixin";
 import addPlantMixin from "../../../mixin/addPlantMixin";
 
 export default {
-  props: ["index"],
-  
+  data() {
+    return {      
+      index: -1
+    };
+  },
   mixins: [SingleMixin, addPlantMixin],
   computed: {
     createPlantTitle: function() {
@@ -162,7 +165,7 @@ export default {
     },
    
     back() {
-      this.$emit("close-create-plant");
+      eventBus.$emit("close-create-plant");
     },
 
     cancelUploadImage (index) {
@@ -219,7 +222,7 @@ export default {
          
         aForm.singles.push(this.sForm)
       } else {
-        aForm.singles[index] = this.sForm
+        aForm.singles[this.index] = this.sForm
       }
 
       console.log("uomId="+this.sForm.uomId)
@@ -233,7 +236,8 @@ export default {
   },
   mounted() {
     let that = this 
-    eventBus.$on("show-create-plant", () => {
+    eventBus.$on("show-create-plant", (index) => {
+      that.index = index
       console.log("event show-create-plant")
       let aForm = that.toAreaForm()
       if(that.index!==-1){
@@ -241,6 +245,7 @@ export default {
       } else {
         that.sForm = {pictures:[]}
       }
+      console.log(that.sForm)
     });   
     
 

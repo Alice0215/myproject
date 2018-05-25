@@ -134,10 +134,12 @@ const addPlantMixin = {
         rData.areaId = code.area.id
       }
       rData.position = code.position
-      rData.uomName = code.uomName         
-      rData.uomId = code.uomId
+      rData.uomName = code.uomName        
+      rData.uomId = null
+      rData.uomStr = code.uomName      
       if(code.uomId){
-        rData.displayUom = code.uomId.toString() 
+        rData.uomId = code.uomId.toString() 
+        rData.displayUom = rData.uomId
       } else {
         rData.displayUom = code.uomName
       }
@@ -177,7 +179,7 @@ const addPlantMixin = {
       rData.singles = []
       if(code.singles){
         for(let i = 0; i<code.singles.length; i++){
-          rData.singles.push(convertSingle(code.singles[i]))
+          rData.singles.push(this.convertSingle(code.singles[i]))
         }
       }
       return rData
