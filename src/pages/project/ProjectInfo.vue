@@ -41,25 +41,27 @@
               <div class="pb-5 font-14"><span class="font-20 active">{{qrcodeInfo.qrCount}}</span>/{{qrcodeInfo.qrAllCount}}</div>
               <div v-line-clamp:20="1" class="font-12">已录入二维码数量</div>
             </div>
-            <div class="project-item text-center">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">{{qrcodeInfo.SingleCount}}</div>
-              <div v-line-clamp:20="1" class="font-14">单株植物</div>
-            </div>
-            <div class="project-item text-center ">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">
-               {{qrcodeInfo.AreaCount}}
+            <div class="row justify-between">
+              <div class="text-center">
+                <div class="active font-18  pb-5" v-line-clamp:20="1">{{qrcodeInfo.SingleCount}}</div>
+                <div v-line-clamp:20="1" class="font-14">单株植物</div>
               </div>
-              <div class="font-14" v-line-clamp:20="1">片区植物</div>
-            </div>
-            <div class="project-item text-center">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">
-              {{qrcodeInfo.EquipmentCount}}
+              <div class="text-center ">
+                <div class="active font-18  pb-5" v-line-clamp:20="1">
+                  {{qrcodeInfo.AreaCount}}
+                </div>
+                <div class="font-14" v-line-clamp:20="1">片区植物</div>
               </div>
-              <div class="font-14" v-line-clamp:20="1">设备</div>
-            </div>
-            <div class="project-item text-center">
-              <div class="active font-18  pb-5" v-line-clamp:20="1">{{qrcodeInfo.OtherCount}}</div>
-              <div class="font-14" v-line-clamp:20="1">其它</div>
+              <div class="text-center">
+                <div class="active font-18  pb-5" v-line-clamp:20="1">
+                  {{qrcodeInfo.EquipmentCount}}
+                </div>
+                <div class="font-14" v-line-clamp:20="1">设备</div>
+              </div>
+              <div class="text-center">
+                <div class="active font-18  pb-5" v-line-clamp:20="1">{{qrcodeInfo.OtherCount}}</div>
+                <div class="font-14" v-line-clamp:20="1">其它</div>
+              </div>
             </div>
           </q-card-main>
         </q-card>
