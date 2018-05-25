@@ -66,7 +66,7 @@
              @click="nextStep"/>
     </div>
     <van-actionsheet v-model="branchShow" :actions="branchActions" cancel-text="取消"/>
-    
+
     <van-dialog
       v-model="otherUomShow"
       show-cancel-button
@@ -252,7 +252,7 @@ export default {
     } else {
       this.sForm.category = {name:"", id:0};
     }
-   
+
     this.sForm.xiongJing = this.singleForm.xiongJing;
     this.sForm.diJing = this.singleForm.diJing;
     this.sForm.gaoDu = this.singleForm.gaoDu;
@@ -265,7 +265,7 @@ export default {
     this.sForm.dealer = this.singleForm.dealer;
     this.sForm.other = this.singleForm.other;
     this.sForm.amount = this.singleForm.amount;
-    
+
     if (!this.singleForm.areaName) {
       if (this.singleForm.area && this.singleForm.area.code) {
         console.log("area: "+this.singleForm.area.code)
@@ -273,7 +273,7 @@ export default {
         this.sForm.areaId = this.singleForm.area.code.id;
       }
     }
-   
+
     this.getAreaList();
     this.getPlantCategory();
     this.getWorkUomList(this.sForm.uomId, this.sForm.uomName);
@@ -323,6 +323,13 @@ export default {
 
   .specification-class {
     background-color: $bgcolor;
+
+    .q-if-inner {
+      height: 100%;
+      input {
+        height: 100%;
+      }
+    }
   }
 
   .border-left {
