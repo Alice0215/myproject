@@ -186,9 +186,9 @@ const addPlantMixin = {
     },
 
     saveQrCodeForm(code){
-      console.debug("saveQrCodeForm")
+      console.info("saveQrCodeForm")
       this.qrCodeFormJsonStr = JSON.stringify(code)
-      console.debug(this.qrCodeFormJsonStr)
+      console.info(this.qrCodeFormJsonStr)
     },
 
     saveSingleForm(code){

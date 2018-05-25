@@ -14,7 +14,7 @@
 <script>
 import _ from 'lodash'
 import eventBus from '../../eventBus'
-import addPlantMixin from '../../mixin/addPlantMixin'
+import addPlantMixin from "../../mixin/addPlantMixin";
 
 export default {
   data () {
@@ -51,18 +51,23 @@ export default {
        * @param data
        */
       handleGeocoder (data) {
+        console.log("handleGeocoder:"+data.info)
         let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
+        
         geoInfo.position = this.position
         this.$store.commit('Location/setCurrent', geoInfo)
-        geoInfo = JSON.stringify(geoInfo)
-        if (data.info === 'OK') {
-          eventBus.$emit('user_location', geoInfo)
-          localStorage.setItem('user_location', geoInfo)
+        let geoInfoJson = JSON.stringify(geoInfo)
+        
+        if (data.info.toString() === 'OK') {
+          
+          eventBus.$emit('user_location', geoInfoJson)
+          localStorage.setItem('user_location', geoInfoJson)
 
           let form = this.toQrCodeForm()
-          form.locationJson = geoInfo
-          form.formattedAddress = geoInfo.formattedAddress
+          form.locationJson = geoInfoJson
+          form.formattedAddress = geoInfo.formattedAddress         
           this.saveQrCodeForm(form)
+          
 
           // let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
           // qrcodeForm.locationJson = geoInfo
@@ -131,6 +136,10 @@ export default {
       this.getAdressByGeocoder(lngLatArray)
     },
     async getCurrentPosition () {
+      // this.src = 'https://m.amap.com/picker/?center=113.60727' + ',34.788548' +
+      //   '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+      // window.addEventListener('message', this.receivedMessage, false)
+
       if (!window.GaodeLocation) {
         return false
       }

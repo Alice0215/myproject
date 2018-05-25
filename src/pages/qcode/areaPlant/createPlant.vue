@@ -209,7 +209,7 @@ export default {
       let aForm = this.toAreaForm()
       console.log(aForm)
       if(this.index===-1){
-        if(aForm.singles && aForm.singles.length === 0){
+        if(!(aForm.singles && aForm.singles.length === 0)){
           aForm.singles = []
         }
          
