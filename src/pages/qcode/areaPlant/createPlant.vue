@@ -1,5 +1,5 @@
 <template>
-  
+
   <q-layout id="create-plant" view="lHr lpr lfr">
     <q-layout-header>
       <q-toolbar class="nav-header">
@@ -79,7 +79,7 @@
         <q-list-header class="p-0 pl-15 mt-15 font-16 color-black">现场拍照</q-list-header>
         <div class="row pl-20">
           <div class="w-100 h-100 ml-8 mt-8" v-for="(v, i) in thumbnails" :key="i">
-            
+
             <img :src="v" preview-title-enable="false" :key="i" @click="preview(i)"
                  class="full-height full-width">
             <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
@@ -89,7 +89,7 @@
           </div>
         </div>
       </q-list>
-      
+
       <van-dialog
         v-model="otherUomShow"
         show-cancel-button
@@ -111,7 +111,7 @@
       </van-popup>
     </q-page-container>
   </q-layout>
- 
+
 </template>
 
 <script>
@@ -163,13 +163,13 @@ export default {
       return arr;
     }
   },
-  
+
   methods: {
     preview(i) {
       ImagePreview(this.previews, i);
     },
     async reset() {
-      
+
       this.displayUom = null;
       let single = {};
       this.sForm = {
@@ -181,7 +181,7 @@ export default {
       if (this.index !== -1) {
         single = this.singles[this.index]
         this.sForm = Object.assign({}, single);
-      
+
         if (
           !_.isNull(single.pictures) &&
           !_.isUndefined(single.pictures)
@@ -193,7 +193,7 @@ export default {
       }
       this.uomOptions = []
       await this.queryWorkUomList()
-      
+
       if(single.uomId){
         this.displayUom = single.uomId.toString()
       } else {
@@ -202,7 +202,7 @@ export default {
         }
         this.displayUom = single.uomName
       }
-      
+
       console.log("reset" + this.displayUom)
       this.uomOptions.push({label: '其他', value: 'other'})
 
@@ -253,9 +253,9 @@ export default {
       if (!this.verifyForm()) {
         return false;
       }
-      for(let i=0; i< this.singles.length; i++){        
+      for(let i=0; i< this.singles.length; i++){
         let one = Object.assign({}, this.singles[i]);
-        
+
         if(i==this.index){
           this.singlesCopy.push(this.sForm)
         } else {
@@ -268,7 +268,7 @@ export default {
       this.reset();
       this.$emit("close-create-plant");
     },
-    
+
     uomInput(val) {
       if (val === "other") {
         this.otherUomShow = true;
@@ -332,7 +332,7 @@ export default {
 
     this.getPlantCategory();
 
-    
+
   },
   beforeDestroy() {
     eventBus.$off("upload-success");
@@ -384,6 +384,9 @@ export default {
     .q-if-inner {
       height: 100%;
       margin-top: 0 !important;
+      input {
+        height: 100%;
+      }
     }
   }
 
