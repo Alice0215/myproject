@@ -18,8 +18,8 @@
       <van-cell-group :border="false">
         <van-field class="font-16" v-model="sForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
         <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
-          <label class="w-64">数量</label>
-          <q-input placeholder="输入片值物数量" hide-underline class="no-margin" v-model="sForm.amount"
+          <label class="w-64">数量/面积</label>
+          <q-input placeholder="输入面积或数量" hide-underline class="no-margin" v-model="sForm.amount"
                    type="number"></q-input>
           <q-select hide-underline v-model="sForm.displayUom" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>

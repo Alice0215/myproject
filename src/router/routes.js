@@ -83,12 +83,6 @@ export default [
     component: QrAreaSingleDetail
   },
   {
-    path: '/qcode/addPlant',
-    component: () => import('pages/qcode/addPlant'),
-    name: 'qcodeAddPlant'
-  },
-  
-  {
     path: '/project/map',
     component: () => import('pages/project/map')
   },

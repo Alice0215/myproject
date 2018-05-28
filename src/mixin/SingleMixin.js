@@ -55,6 +55,10 @@ const SingleMixin = {
     otherUomClose(action, done) {
       done();
       if (action === "confirm") {
+        if(!this.otherUom){
+          this.sForm.displayUom = null;
+          return
+        }
         let otherUom = this.otherUom.toString();
         for (let i = 0; i < this.uomOptions.length; i++) {
           let one = this.uomOptions[i];
@@ -78,6 +82,7 @@ const SingleMixin = {
         this.otherUomShow = false;
       } else {
         console.log("cancel");
+        this.sForm.displayUom = null;
         this.otherUom = null;
         this.otherUomShow = false;
       }
@@ -122,6 +127,7 @@ const SingleMixin = {
     },
 
     async getWorkUomList (customUom) {   
+      this.uomOptions.splice(0, this.uomOptions.length)
       this.uomOptions.push({label: '', value: '0'})
       let resp = await request('uom/all', 'get', null, true)
       if (resp) {
