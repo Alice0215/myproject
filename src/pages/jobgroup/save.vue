@@ -42,8 +42,8 @@
     <q-list class="mt-6 bg-white pb-8">
       <q-list-header class="font-14">现场拍照</q-list-header>
       <div class="row">
-        <div class="w-100 h-100 ml-10" v-for="(v, i) in pictures" :key="i">
-          <img :src="v.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
+        <div class="w-100 h-100 ml-10" v-for="(v, i) in thumbnails" :key="i">
+          <img :src="v"  preview-title-enable="false" :key="i" @click="imagePreview(i)" class="full-height full-width">
           <q-icon class="img-close" @click.native="cancelUploadImage(i)" color="grey" name="ion-close-circled"/>
         </div>
         <div class="w-100 h-100 ml-10">
@@ -62,24 +62,23 @@
 import _ from 'lodash'
 import { request, uploadFiles, deleteFiles } from '../../common'
 import { required } from 'vuelidate/lib/validators'
-import { server } from '../../const'
 import JobActionModal from './JobActionModal'
 import eventBus from '../../eventBus'
 import JobActionMixin from '../../mixin/JobActionMixin'
-import { ImagePreview } from 'vant'
+import Picture from '../../mixin/Picture'
 
 export default {
   components: {
     JobActionModal
   },
   mixins: [
-    JobActionMixin
+    JobActionMixin,
+    Picture
   ],
   data () {
     return {
       jobgroup: null,
       description: '',
-      pictures: [],
       jobs: [],
       tree: null,
       jobActionIds: [],
@@ -115,18 +114,12 @@ export default {
         }
       }
 
-      console.log(jobs)
-
-      let pictures = []
-      if (this.pictures.length > 0) {
-        let pics = _.map(this.pictures, 'contentUrl')
-        pictures = pics
-      }
+      console.log(jobs)     
 
       let data = {
         'description': this.description,
         'jobs': jobs,
-        'pictures': pictures
+        'pictures': this.pictures
       }
       let url = 'jobGroup/'
       let mes = ''
@@ -157,26 +150,8 @@ export default {
     back () {
       this.$router.goBack(this.isEdited, '取消操作', '点击确定将不会被保留所选择的信息，您确定要取消操作吗？')
     },
-    imagePreview (index) {
-      let previewArray = _.map(this.pictures, (img) => {
-        return server.PREVIEW_API + img.contentUrl
-      })
-      console.log(previewArray)
-      ImagePreview(previewArray, index)
-    },
-    cancelUploadImage (index) {
-      this.$q.loading.show()
-      deleteFiles(this.pictures[index], index)
-    },
-    openCamera () {
-      if (navigator.camera) {
-        navigator.camera.getPicture(imgData => {
-          this.$q.loading.show()
-          uploadFiles(imgData)
-        }, errorMsg => {
-        }, { destinationType: Camera.DestinationType.DATA_URL })
-      }
-    },
+
+    
     async getTree () {
       let resp = await request('data/jobAction/tree?category=MAINTAIN', 'get')
       if (resp) {
@@ -205,14 +180,13 @@ export default {
         true
       )
       if (resp) {
+
         this.jobgroup = resp.data.resultMsg
         this.codeId = this.jobgroup.code.id
         this.description = this.jobgroup.description
-        let pictures = []
-        _.forEach(this.jobgroup.pictures, v => {
-          pictures.push(v.filePath)
-        })
-        this.pictures = pictures
+        
+        this.buildPicture(this.jobgroup.pictures)
+
         let jobs = this.jobs
         _.forEach(this.jobgroup.jobs, v => {
           let one = {
@@ -235,20 +209,6 @@ export default {
     isEdit: function () {
       console.log('isedit: ' + this.jobGroupId)
       return _.isInteger(this.jobGroupId)
-    },
-    thumbnails: function () {
-      let arr = []
-      _.forEach(this.pictures, v => {
-        arr.push(server.THUMBNAIL_API + v)
-      })
-      return arr
-    },
-    previews: function () {
-      let arr = []
-      _.forEach(this.pictures, v => {
-        arr.push(server.PREVIEW_API + v)
-      })
-      return arr
     }
     // ,
     // displayJobs: function() {
@@ -298,19 +258,7 @@ export default {
       return
     }
 
-    eventBus.$on('upload-success', resp => {
-      this.$q.loading.hide()
-      this.pictures.push(resp)
-    })
-    eventBus.$on('delete-success', (params) => {
-      this.$q.loading.hide()
-      let index = parseInt(params.idx)
-      this.pictures.splice(index, 1)
-      this.$q.dialog({
-        title: '提示',
-        message: params.msg
-      })
-    })
+    this.addUploadEvent()
   }
 }
 </script>

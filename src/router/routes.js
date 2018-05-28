@@ -82,7 +82,6 @@ export default [
     path: '/areaDetail',
     component: QrAreaSingleDetail
   },
-  
   {
     path: '/project/map',
     component: () => import('pages/project/map')

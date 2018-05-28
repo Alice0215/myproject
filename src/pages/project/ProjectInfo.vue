@@ -2,7 +2,7 @@
   <q-layout id="project-info" view="Hhh lpr Fff"  class="bg-primary">
     <q-layout-header class="no-box-shadow q-toolbar">
       <q-toolbar class="pl-0">
-        <a @click="$router.goBack()" class="back-a text-white">
+        <a @click="$router.push('/project/list')" class="back-a text-white">
           <q-item-side left  icon="keyboard arrow left" class="back-left text-white"/>
           返回
         </a>

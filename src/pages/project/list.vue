@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     back(){
-      this.$router.push('/home')
+      this.$router.push('/')
     },
     getProjectCount () {
       request('project/count', 'get', '', 'json', true).then(response => {
