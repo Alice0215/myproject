@@ -3,7 +3,7 @@
     <q-btn-dropdown label="筛选" v-model="dropdown">
       <div class="box font-14">
         <p class="pt-20">日期</p>
-        <p class="block"><q-input v-model="startDateFormat" class="time-btn float-left ph-10 title-font-color" @click="chooseData(true)"/><span class="text-center float-left ph-20">——</span><q-input v-model="endDateFormat" class="time-btn ph-10" @click="chooseData(false)"/></p>
+        <p class="block"><q-input v-model="startDateFormat" class="time-btn float-left ph-10 title-font-color" @click="chooseData(true)"/><span class="text-center float-left ph-10">:</span><q-input v-model="endDateFormat" class="time-btn ph-10" @click="chooseData(false)"/></p>
         <p>工作内容</p>
         <div class="p-10">
           <q-chip color="light" text-color="tertiary"  v-for="item in jobActions"

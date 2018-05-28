@@ -43,7 +43,7 @@
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.category.name }}</div>
           </q-item>
           <q-item v-if="detail.amount">
-            <div class="title">苗木面积：</div>
+            <div class="title">数量/面积：</div>
             <div class="ml-20 content" v-line-clamp:20="1">{{ detail.amount }}{{ detail.uomName ? detail.uomName : '' }}</div>
           </q-item>
           <q-item>
@@ -129,7 +129,7 @@ export default {
       font-size: 15px !important;
     }
     .content {
-      width: calc(100% - 105px - 32px);
+      //width: calc(100% - 105px - 32px);
       color: $text-highlight;
       font-size: 15px !important;
     }

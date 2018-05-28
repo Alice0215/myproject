@@ -5,8 +5,8 @@
       <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入相对位置" />
       <van-cell title="苗木分类" is-link :value="sForm.categoryName" required class="font-16" @click="chooseCategory"/>
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
-        <label class="w-64">苗木面积</label>
-        <q-input placeholder="输入片值苗木面积" class="no-margin" v-model="sForm.amount" type="number"></q-input>
+        <label class="w-64">数量/面积</label>
+        <q-input placeholder="输入面积或数量" class="no-margin" v-model="sForm.amount" type="number"></q-input>
         <q-select hide-underline v-model="sForm.displayUom" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>
       </div>
@@ -40,7 +40,7 @@
           </div>
           <div class="row spec-left-div ">
             <label class="spec-input-left w-64">分支数量</label>
-            <q-input class="spec-input w-40" align="center" v-model="sForm.one" type="number"/>
+            <q-input class="spec-input w-40" align="center" v-model="sForm.branch" type="number"/>
             <span class="spec-input-unit">个</span>
           </div>
           <div class="row spec-right-div">
