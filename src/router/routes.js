@@ -87,11 +87,7 @@ export default [
     component: () => import('pages/qcode/addPlant'),
     name: 'qcodeAddPlant'
   },
-  {
-    path: '/qcode/edit',
-    component: () => import('pages/qcode/edit'),
-    name: 'qcodeEdit'
-  },
+  
   {
     path: '/project/map',
     component: () => import('pages/project/map')
