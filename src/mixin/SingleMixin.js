@@ -116,7 +116,9 @@ const SingleMixin = {
       if(!this.sForm.uomId){
         customUom = this.sForm.uomName
       }
+      console.log("customUom: "+customUom)
       this.getWorkUomList(customUom);
+      
     },
 
     async getWorkUomList (customUom) {   

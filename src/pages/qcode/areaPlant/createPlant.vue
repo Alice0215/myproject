@@ -228,6 +228,8 @@ export default {
       console.log("uomId="+this.sForm.uomId)
       console.log("uomName="+this.sForm.uomName)
       console.log("displayUom="+this.sForm.displayUom)
+      console.log("pictures="+this.sForm.pictures)
+      console.log(this.sForm.pictures)
 
       this.saveAreaForm(aForm)
       eventBus.$emit("close-create-plant");
@@ -246,6 +248,7 @@ export default {
         that.sForm = {pictures:[]}
       }
       console.log(that.sForm)
+      that.initSingle()
     });   
     
 
@@ -254,7 +257,7 @@ export default {
       this.sForm.pictures.push(resp.contentUrl);
     });   
 
-    this.initSingle()
+    
   },
   beforeDestroy() {
     eventBus.$off("upload-success");

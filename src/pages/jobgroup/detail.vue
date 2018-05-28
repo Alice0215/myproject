@@ -59,8 +59,8 @@
         <q-list>
           <q-item class="ib">
             <div class="mb-10">现场图片</div>
-            <span v-for="(item, i) in info.pictures" v-bind:key="item.id" :class="{'ml-10': i !== 0}">
-              <img :src="item.previewUrl"  preview-title-enable="false" :key="i" @click="imagePreview(i)">
+            <span v-for="(item, i) in thumbnails" v-bind:key="item.id" :class="{'ml-10': i !== 0}">
+              <img :src="item"  preview-title-enable="false" :key="i" @click="imagePreview(i)">
             </span>
           </q-item>
           <hr>
@@ -72,31 +72,26 @@
 
 <script>
 import { request } from '../../common'
-import { server, plantType} from '../../const'
+import { plantType} from '../../const'
 import _ from 'lodash'
-import { ImagePreview } from 'vant'
+import Picture from '../../mixin/Picture'
 
 export default {
+  mixins: [
+    Picture
+  ],
   data () {
     return {
       jobGroupId: '',
-      previewApi: '',
       info: '',
       tags: []
     }
   },
   created () {
-    this.previewApi = server.PREVIEW_API
     this.jobGroupId = this.$route.query.jobGroupId
     this.getInfo()
   },
   methods: {
-    imagePreview (index) {
-      let previewArray = _.map(this.info.pictures, (img) => {
-        return this.previewApi + img.contentUrl
-      })
-      ImagePreview(previewArray, index)
-    },
     getActionName (action) {  
       let s = action.name 
       if(_.has(action, 'parent')){
@@ -110,6 +105,8 @@ export default {
         this.$q.loading.hide()
         if (response) {
           this.info = response.data.resultMsg
+
+          console.log("editable: " + this.info.editable)
           switch (this.info.code.type.key) {
             case plantType.SINGLE:
               this.info.type = 1
@@ -124,17 +121,8 @@ export default {
               this.info.type = 4
               break
           }
-          if (this.info.pictures.length > 0) {
-            let imageArray = []
-            _.forEach(this.info.pictures, v => {
-              let previewUrl = server.THUMBNAIL_API + v.filePath
-              imageArray.push({
-                'previewUrl': previewUrl,
-                'contentUrl': v.filePath
-              })
-            })
-            this.info.pictures = imageArray
-          }
+          this.buildPicture(this.info.pictures)
+          
           for(let i = 0; i<this.info.jobs.length; i++){
             let job = this.info.jobs[i]
             let one = ""          
