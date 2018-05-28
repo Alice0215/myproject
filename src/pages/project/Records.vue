@@ -10,8 +10,8 @@
           </q-toolbar-title>
           <q-item-side class="white-right" right/>
         </q-toolbar>
-        <q-tabs inverted align="justify" no-pane-border>
-          <q-tab default name="maintenance-records" slot="title" label="养护记录" />
+        <q-tabs inverted align="justify" no-pane-border ref="tabs">
+          <q-tab name="maintenance-records" slot="title" label="养护记录" />
           <q-tab name="patrol-records" slot="title" label="巡查记录" />
           <q-tab name="equipment-records" slot="title" label="设备领用记录" />
           <q-tab name="seedlings-records" slot="title" label="苗木到场" />
@@ -48,6 +48,7 @@ export default {
     eventBus.$on('has-maintenance-records', () => {
       this.hasMaintenanceRecords = true
     })
+    this.$refs.tabs.selectTab('maintenance-records')
   }
 }
 </script>

@@ -12,7 +12,7 @@
           </q-chip>
         </div>
         <div class="btn-field">
-          <span class="wp-48 ib border-top text-center pv-10" @click="cancel">取消</span>
+          <span class="wp-48 ib border text-center pv-10" @click="cancel">取消</span>
           <span class="wp-50 ib border-top text-center pv-10 active-btn" @click="doSearch"> 确定</span>
         </div>
       </div>
