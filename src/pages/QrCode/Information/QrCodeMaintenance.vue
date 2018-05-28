@@ -3,7 +3,11 @@
     <q-btn-dropdown label="筛选" v-model="dropdown">
       <div class="box font-14">
         <p class="pt-20">日期</p>
-        <p class="block"><q-input v-model="startDateFormat" class="time-btn float-left ph-10 title-font-color" @click="chooseData(true)"/><span class="text-center float-left ph-10">:</span><q-input v-model="endDateFormat" class="time-btn ph-10" @click="chooseData(false)"/></p>
+        <p class="block">
+          <q-input v-model="startDateFormat" class="time-btn float-left ph-10 title-font-color" @click="chooseData(true)"/>
+          <span class="text-bottom float-left ph-10">:</span>
+          <q-input v-model="endDateFormat" class="time-btn ph-10" @click="chooseData(false)"/>
+        </p>
         <p>工作内容</p>
         <div class="p-10">
           <q-chip color="light" text-color="tertiary"  v-for="item in jobActions"
@@ -12,7 +16,7 @@
           </q-chip>
         </div>
         <div class="btn-field">
-          <span class="wp-48 ib border text-center pv-10" @click="cancel">取消</span>
+          <span class="wp-48 ib border-top border-left text-center pv-10" @click="cancel">取消</span>
           <span class="wp-50 ib border-top text-center pv-10 active-btn" @click="doSearch"> 确定</span>
         </div>
       </div>
@@ -214,26 +218,10 @@ export default {
 
 <style lang='scss'>
   @import "../../../assets/css/_variable.scss";
-  #common_info {
-    .q-list {
-      background: white;
-    }
-    img {
-      width: 80px;
-      height: 80px;
-    }
-    .title {
-      width: 90px;
-      font-size: 15px !important;
-    }
-    .content {
-      color: $text-highlight;
-      font-size: 15px !important;
-    }
-    .btn-right {
-      font-size: 15px;
-      position: absolute;
-      right: 16px;
-    }
+  .text-bottom {
+    text-align: bottom !important;
+  }
+  .border-left {
+    border-left: 1px solid #e8e8e8;
   }
 </style>
