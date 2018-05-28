@@ -16,26 +16,26 @@
     <q-infinite-scroll :handler="load" class="scroll-field" ref="scroll">
       <q-list class="full-width card">
         <q-card inline class="q-ma-sm full-width bg-white"  v-for="(item, index) in list" :key="index" @click.native="$router.push('/ProjectInfo?projectId='+item.id)">
-          <q-card-title class="no-padding-bottom" v-line-clamp:20="1">
-            <span class="project-title font-18 bold wp-80" v-line-clamp:20="1">{{item.projectName}}</span>
+          <q-card-title class="no-padding-bottom van-ellipsis">
+            <span class="project-title font-18 bold wp-80 van-ellipsis">{{item.projectName}}</span>
             <span class="float-right font-14 text-right wp-15 card-color">{{item.projectType.name}}</span>
           </q-card-title>
           <q-card-main class="underline pb-10">
             <div class="project-item text-center">
-              <div class="active font-18 bold pb-5" v-line-clamp:20="1">{{item.others.memberSize}}</div>
-              <div v-line-clamp:20="1" class="font-12">项目成员/人</div>
+              <div class="active font-18 bold pb-5 van-ellipsis">{{item.others.memberSize}}</div>
+              <div class="font-12 van-ellipsis">项目成员/人</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold pb-5" v-line-clamp:20="1"><span v-if="item.others.codeCount">{{item.others.codeCount}}</span><span v-if="!item.others.codeCount">0</span></div>
-              <div class="font-12" v-line-clamp:20="1">二维码数量/个</div>
+              <div class="active font-18 bold pb-5 van-ellipsis"><span v-if="item.others.codeCount">{{item.others.codeCount}}</span><span v-if="!item.others.codeCount">0</span></div>
+              <div class="font-12 van-ellipsis" >二维码数量/个</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold pb-5" v-line-clamp:20="1"><span v-if="item.others.groupCount">{{item.others.groupCount}}</span><span v-if="!item.others.groupCount">0</span></div>
-              <div class="font-12" v-line-clamp:20="1">今日记录/个</div>
+              <div class="active font-18 bold pb-5 van-ellipsis"><span v-if="item.others.groupCount">{{item.others.groupCount}}</span><span v-if="!item.others.groupCount">0</span></div>
+              <div class="font-12 van-ellipsis">今日记录/个</div>
             </div>
             <div class="project-item text-center">
-              <div class="active font-18 bold pb-5" v-line-clamp:20="1">{{item.others.problems}}</div>
-              <div class="font-12" v-line-clamp:20="1">现场巡查/个</div>
+              <div class="active font-18 bold pb-5 van-ellipsis">{{item.others.problems}}</div>
+              <div class="font-12 van-ellipsis">现场巡查/个</div>
             </div>
           </q-card-main>
           <q-card-actions class="col-12">

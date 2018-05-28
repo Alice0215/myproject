@@ -239,6 +239,12 @@ export default {
 
   .specification-class {
     background-color: $bgcolor;
+    .q-if-inner {
+      height: 100%;
+      input {
+        height: 100%;
+      }
+    }
   }
 
   .border-left {

@@ -308,6 +308,9 @@ export default {
     .q-if-inner {
       height: 100%;
       margin-top: 0 !important;
+       input {
+        height: 100%;
+      }
     }
   }
 
