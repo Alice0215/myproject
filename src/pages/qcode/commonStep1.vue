@@ -128,14 +128,14 @@ export default {
       this.$root.$emit("last-pre");
     },
     verifyForm() {
-      if (_.isNull(this.form.alias) || _.isUndefined(this.form.alias)) {
+      if (!this.form.alias) {
         this.$q.notify({
           message: "名称不能为空",
           position: "center"
         });
         return false;
       }
-      if (_.isNull(this.form.projectId) || _.isUndefined(this.form.projectId)) {
+      if (!this.form.projectId) {
         this.$q.notify({
           message: "所属项目不能为空",
           position: "center"
@@ -147,7 +147,7 @@ export default {
             message: "地址不能为空",
             position: "center"
           });
-          // return false;
+          return false;
         }
       
       return true;
