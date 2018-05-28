@@ -3,11 +3,14 @@
   <q-layout view="Hhh lpr Fff"  class="main" id="my">
       <q-layout-header>
         <q-toolbar>
+          <q-item-side class="white-right" left/>
           <q-toolbar-title class="header-title">
             我的
           </q-toolbar-title>
-         <q-btn flat round dense icon="settings" @click="leftDrawer = !leftDrawer" class="top-color"/>
-        </q-toolbar>
+          <q-btn flat round dense icon="settings" @click="leftDrawer = !leftDrawer" class="top-color" right/>
+          
+      </q-toolbar>
+
       </q-layout-header>
       <q-page-container>
       <q-page>

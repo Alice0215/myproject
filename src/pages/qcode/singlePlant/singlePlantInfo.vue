@@ -5,13 +5,13 @@
       <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入相对位置" />
       <van-cell title="苗木分类" is-link :value="sForm.categoryName" required class="font-16" @click="chooseCategory"/>
       <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
-        <label class="w-64">数量/面积</label>
+        <label class="w-64">苗木总量</label>
         <q-input placeholder="输入面积或数量" class="no-margin" v-model="sForm.amount" type="number"></q-input>
         <q-select hide-underline v-model="sForm.displayUom" @input="uomInput" :options="uomOptions"
                     class="no-margin border-left" placeholder='选择单位'/>
       </div>
       <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
-        <label class="h-44">苗木规则</label>
+        <label class="h-44">苗木规格</label>
         <div class="row mt-6 spec-row-div">
           <div class="row spec-left-div ">
             <label class="spec-input-left">胸径</label>
@@ -164,6 +164,7 @@ export default {
       }
       this.$q.loading.show();
       let param = Object.assign({}, this.sForm);
+      console.log("areaId: "+this.sForm.areaId)
       param.qrCodeForm = this.toQrCodeForm();
       
       let resp = await request(
@@ -188,6 +189,7 @@ export default {
   mounted() {
     console.log("mounted singlePlantInfo.vue")
     this.sForm = this.toSingleForm()        
+    console.log("areaId: "+this.sForm.areaId)
     this.getAreaList()
     this.initSingle()   
     

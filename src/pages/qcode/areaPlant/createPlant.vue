@@ -18,7 +18,7 @@
       <van-cell-group :border="false">
         <van-field class="font-16" v-model="sForm.alias" label="植物名称" placeholder="请输入植物名称" required/>
         <div class="van-hairline--bottom font-16 ml-15 area-input-class row">
-          <label class="w-64">数量/面积</label>
+          <label class="w-64">苗木总量</label>
           <q-input placeholder="输入面积或数量" hide-underline class="no-margin" v-model="sForm.amount"
                    type="number"></q-input>
           <q-select hide-underline v-model="sForm.displayUom" @input="uomInput" :options="uomOptions"
@@ -27,7 +27,7 @@
         <van-cell title="苗木分类" is-link :value="sForm.categoryName" required class="font-16" @click="chooseCategory"/>
         <van-field class="font-16" v-model="sForm.position" label="相对位置" placeholder="请输入植物在片区内的位置"/>
         <div class="specification-class font-16 pl-15 pr-15 pt-16 pb-20">
-          <label class="h-44">苗木规则</label>
+          <label class="h-44">苗木规格</label>
           <div class="row mt-6 spec-row-div">
             <div class="row spec-left-div ">
               <label class="spec-input-left">胸径</label>
