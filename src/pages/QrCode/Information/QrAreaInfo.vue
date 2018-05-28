@@ -127,7 +127,7 @@ export default {
       font-size: 15px;
     }
     .content {
-      width: calc(100% - 105px - 32px);
+      //width: calc(100% - 105px - 32px);
       color: $text-highlight;
       font-size: 15px !important;
     }
