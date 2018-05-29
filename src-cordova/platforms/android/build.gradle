@@ -41,7 +41,7 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url "https://maven.google.com"
+//            url "https://maven.google.com"
             url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master"
         }
     }
@@ -93,7 +93,8 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
-apply from: "cordova-plugin-qrscanner/app-qrscanner.gradle"
+apply from: "cordova-plugin-crosswalk-webview/app-xwalk.gradle"
+apply from: "phonegap-plugin-barcodescanner/app-barcodescanner.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
@@ -251,13 +252,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'libs')
     // SUB-PROJECT DEPENDENCIES START
     debugCompile(project(path: "CordovaLib", configuration: "debug"))
     releaseCompile(project(path: "CordovaLib", configuration: "release"))
     compile "com.android.support:support-v4:24.1.1+"
     // SUB-PROJECT DEPENDENCIES END
     compile 'com.pgyersdk:sdk:2.8.1'
+    //    compile files('app/src/main/libs/AMap_Location_V3.7.0_20171218.jar')
+    //    compile files('app/src/main/libs/android-support-v4.jar')
+    //    compile files('app/src/main/libs/Android_Map3D_SDK_V5.7.0_20171229.jar')
+    compile files('libs/Gaode_Location_SDK_V3.5.0.jar')
 }
 
 def promptForReleaseKeyPassword() {

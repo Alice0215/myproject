@@ -33,14 +33,6 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-qrscanner.QRScanner",
-    "file": "plugins/cordova-plugin-qrscanner/www/www.min.js",
-    "pluginId": "cordova-plugin-qrscanner",
-    "clobbers": [
-      "QRScanner"
-    ]
-  },
-  {
     "id": "cordova-plugin-splashscreen.SplashScreen",
     "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
     "pluginId": "cordova-plugin-splashscreen",
@@ -49,29 +41,34 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-geolocation.geolocation",
-    "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
-    "pluginId": "cordova-plugin-geolocation",
+    "id": "cordova-plugin-gaode-location.cordova-plugin-gaode-location",
+    "file": "plugins/cordova-plugin-gaode-location/www/cordova-plugin-gaode-location.js",
+    "pluginId": "cordova-plugin-gaode-location",
     "clobbers": [
-      "navigator.geolocation"
+      "GaodeLocation"
     ]
   },
   {
-    "id": "cordova-plugin-geolocation.PositionError",
-    "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
-    "pluginId": "cordova-plugin-geolocation",
-    "runs": true
+    "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
+    "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
+    "pluginId": "phonegap-plugin-barcodescanner",
+    "clobbers": [
+      "cordova.plugins.barcodeScanner"
+    ]
   }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
   "cordova-plugin-camera": "4.0.2",
-  "cordova-plugin-qrscanner": "2.5.0",
   "cordova-plugin-splashscreen": "5.0.2",
   "cordova-plugin-whitelist": "1.3.3",
   "cordova-plugin-add-swift-support": "1.7.2",
-  "cordova-plugin-geolocation": "4.0.1"
+  "cordova-plugin-cocoapod-support": "1.3.0",
+  "cordova-plugin-gaode-location": "1.0.0",
+  "cordova-plugin-crosswalk-webview": "2.4.0",
+  "cordova-plugin-swift-support": "3.1.1",
+  "phonegap-plugin-barcodescanner": "7.1.2"
 };
 // BOTTOM OF METADATA
 });

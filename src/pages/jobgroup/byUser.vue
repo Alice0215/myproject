@@ -1,42 +1,78 @@
 <template>
- <q-layout>
-  <div class="main" id="my">
-    <q-toolbar class="header">
-    <q-toolbar class="fix">
-       <q-item-side left/>
-        <q-toolbar-title class="header-title">
-        我的
-        </q-toolbar-title>
-         <q-btn   flat round dense icon="settings" @click="leftDrawer = !leftDrawer"/>
-        <!--<q-item-side right icon='settings' class='group'/>-->
-    </q-toolbar>
-    </q-toolbar>
+  <div>
+  <q-layout view="Hhh lpr Fff"  class="main" id="my">
+      <q-layout-header>
+        <q-toolbar>
+          <q-item-side class="white-right" left/>
+          <q-toolbar-title class="header-title">
+            我的
+          </q-toolbar-title>
+          <q-btn flat round dense icon="settings" @click="leftDrawer = !leftDrawer" class="top-color" right/>
+          
+      </q-toolbar>
+
+      </q-layout-header>
+      <q-page-container>
+      <q-page>
     <div class="full-width record-list">
         <q-item  v-ripple.mat class="full-width user-item-header">
           <q-item-main label="养护记录" />
        </q-item>
-       <q-infinite-scroll :handler="getlist" class="scroll-field">
-        <div  v-for="item in list" :key="item.id">
-            <q-item  v-ripple.mat class="full-width underline user-item">
-            <div>
-              <!--jobs[i].action.name-->
-              {{item.job.action.name}}
-              <div>{{item.createTime}}</div>
-            </div>
-             <q-item-main />
-            <span class="user">{{item.project.projectName}}</span>
-            <q-item-side right  icon="keyboard_arrow_right"  class="record-right" />
-          </q-item>
-        </div>
-      </q-infinite-scroll>
+       <q-infinite-scroll :handler="load" ref="scroll">
+          <q-list separator v-if="list.length > 0">
+            <q-item v-for="item in list"
+                    :key="item.id"
+                    @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
+              <q-item-main>
+                <q-item-tile>
+                  <div class="row">
+                    <div class="title col-8">{{ item.code.alias }}</div>
+                    <div class="type-title col-4 text-right">{{ item.code.type ? item.code.type.value  : '' }}</div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile class="content">
+                  <div class="pv-4 row">
+                    <div class="work-content-title">工作内容：</div>
+                    <div class="work-content" v-line-clamp:20="1">
+                    <span v-for="v in item.jobs" v-if="item.jobs" :key="v.id">
+                      <span v-if="v.other" class="ml-5">{{ v.other }}</span>
+                      <span v-if="v.action" class="ml-5">{{ v.action.name }}</span>
+                    </span>
+                    </div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile class="content">
+                  <div class="pv-4">
+                    <div>记录人：</div>
+                    <div>{{ item.user.fullname }}</div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile>
+                  <div class="pv-4 row font-15">
+                    <div class="col-8">
+                      <div class="inline-flex">
+                        <div>时间：</div>
+                        <div>{{ item.createTime }}</div>
+                      </div>
+                    </div>
+                    <div class="col-4 text-right btn-light">
+                      <div>查看详情<q-icon name="keyboard arrow right" size="20px"/></div>
+                    </div>
+                  </div>
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+          <div class="row justify-center" style="margin-bottom: 50px;" v-if="!hasLoadAll">
+            <q-spinner name="dots" slot="message" :size="40"></q-spinner>
+          </div>
+        </q-infinite-scroll>
     </div>
-  </div>
 
    <q-layout-drawer
       side="right"
       v-model="leftDrawer"
     >
-      <!-- QScrollArea is optional -->
       <q-scroll-area class="fit q-pa-sm">
          <q-item  v-ripple.mat class="full-width user-item  underline">
         </q-item>
@@ -52,55 +88,33 @@
           <q-item-side left icon="exit to app" class="record-right active"/>
             <q-item-main  :label="`退出登录`" />
         </q-item>
-        <!-- Content here -->
       </q-scroll-area>
     </q-layout-drawer>
-    <q-tabs class="footer">
-        <q-route-tab slot="title" icon="dashboard" to="/" replace label="我的项目" class="menu" />
-        <q-route-tab slot="title" icon="view_array" to="/qcode/scan" append label="扫二维码" class="menu"/>
-        <q-route-tab slot="title" icon="event note" to="/" replace label="巡查" class="menu"/>
-        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu"/>
+    <q-tabs class="footer" v-model="model">
+        <q-route-tab slot="title" icon="home" to="/" replace label="首页" class="menu" name="home"/>
+        <q-route-tab slot="title" icon="notifications none" to="/"  disable replace label="消息" class="menu" />
+        <q-route-tab slot="title" icon="person" to="/jobGroup/byUser" replace label="我的" class="menu" name="my"/>
       </q-tabs>
- </q-layout>
+   </q-page>
+    </q-page-container>
+  </q-layout>
+  </div>
 </template>
 
 <script>
-import { request } from '../../common'
+import eventBus from '../../eventBus'
+import InfiniteScroll from '../../mixin/InfiniteScroll'
 export default {
   data () {
     return {
-      pageNo: 1,
-      hasLoadAll: true,
-      leftDrawer: true,
-      list: []
+      model: 'my',
+      leftDrawer: true
     }
   },
+  mixins: [
+    InfiniteScroll
+  ],
   methods: {
-    async getlist (index, done) {
-      if (!this.hasLoadAll) {
-        request('jobGroup/list/byUser?pageNo=' + this.pageNo + '&pageSize=20', 'get', null, 'json', true).then(response => {
-          if (response.data.resultCode === 'SUCCESS') {
-            let that = this
-            let list = response.data.resultMsg
-            if (list.length === 0 || !list.length) {
-              that.hasLoadAll = true
-              return
-            }
-            if (list.length < 20) {
-              that.hasLoadAll = true
-            } else {
-              that.pageNo++
-            }
-            if (that.list.length > 0) {
-              that.list = that.list.concat(list)
-            } else {
-              that.list = list
-            }
-            done()
-          }
-        })
-      }
-    },
     logOut () {
       this.$q.dialog({
         title: '提示',
@@ -116,6 +130,11 @@ export default {
         this.leftDrawer = false
       })
     }
+  },
+  mounted () {
+    let currentUser = this.$store.state.User.current
+    this.apiUrl = 'jobGroup/list/byUser?userId=' + currentUser.userId
+    this.scroll = this.$refs.scroll
   }
 }
 </script>
@@ -123,6 +142,34 @@ export default {
 <style lang='scss'>
 @import "../../assets/css/common";
 #my {
+   background: white;
+  .q-item-main {
+    .content {
+      .work-content-title {
+        width: 75px;
+      }
+      .work-content {
+        width: calc(100% - 90px);
+      }
+      div {
+        display: flex;
+        div {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .title {
+    font-size: 18px !important;
+    color: $text-highlight;
+  }
+  .type-title {
+    color: $type-title;
+  }
+  .btn-light {
+    color: $light-text;
+    font-size: 15px;
+  }
   .record-list {
     border-top: 1px solid #cccccc;
   }
@@ -156,6 +203,9 @@ export default {
   .record-right {
     margin-left: 0px;
     min-width: 20px;
+  }
+  .top-color {
+    color: #888;
   }
 }
 </style>

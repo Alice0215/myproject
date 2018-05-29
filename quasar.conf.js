@@ -7,7 +7,9 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'helper',
-      'imagePreview'
+      'imagePreview',
+      'vantUI',
+      'vueLineClamp'
     ],
     css: [
       'app.styl'
@@ -48,6 +50,7 @@ module.exports = function (ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
+      i18n: 'zh-hans',
       components: [
         'QLayout',
         'QLayoutHeader',
@@ -73,6 +76,14 @@ module.exports = function (ctx) {
         'QInfiniteScroll',
         'QSpinner',
         'QTabs',
+        'QTab',
+        'QTabPane',
+        'QRouteTab',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
+        'QTableColumns',
         'QScrollArea',
         'QChipsInput',
         'QRouteTab',
@@ -83,9 +94,25 @@ module.exports = function (ctx) {
         'QLayoutFooter',
         'QAlert',
         'QChip',
-        'QBtnDropdown'
+        'QBtnDropdown',
+        'QCard',
+        'QCardTitle',
+        'QCardMain',
+        'QCardMedia',
+        'QCardSeparator',
+        'QCardActions',
+        'QStepper',
+        'QStep',
+        'QStepperNavigation',
+        'QModal',
+        'QModalLayout',
+        'QCheckbox',
+        'QProgress',
+        'QDatetimePicker',
+        'QDatetime'
       ],
       directives: [
+        'CloseOverlay',
         'Ripple'
       ],
       // Quasar plugins

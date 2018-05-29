@@ -1,9 +1,9 @@
 <template>
   <q-layout id="map-page">
-       <a  @click="$router.goBack()" >
-      <q-toolbar class="fix" >
+    <a @click="$router.goBack()">
+      <q-toolbar class="fix">
       </q-toolbar>
-       </a>
+    </a>
     <iframe :src="src" id="map_frame">
     </iframe>
     <div id="map">
@@ -14,6 +14,7 @@
 <script>
 import _ from 'lodash'
 import eventBus from '../../eventBus'
+import addPlantMixin from "../../mixin/addPlantMixin";
 
 export default {
   data () {
@@ -23,52 +24,72 @@ export default {
       position: {}
     }
   },
+  mixins: [
+    addPlantMixin,
+  ],
   methods: {
-    /**
-     * 获取逆地理信息
-     * @param location
-     */
-    getAdressByGeocoder (location) {
-      if (_.isUndefined(location)) {
-        return
-      }
-      let geocoder = new AMap.Geocoder({
-        radius: 1000,
-        extensions: 'all'
-      })
-      geocoder.getAddress(location, (status, result) => {
-        if (status === 'complete' && result.info === 'OK') {
-          this.handleGeocoder(result)
-        }
-      })
-    },
-    /**
-     * 处理逆向地理编码
-     * @param data
-     */
-    handleGeocoder (data) {
-      let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
-      geoInfo.position = this.position
-      geoInfo = JSON.stringify(geoInfo)
-      if (data.info === 'OK') {
-        eventBus.$emit('user_location', geoInfo)
-        localStorage.setItem('user_location', geoInfo)
-        if (this.$route.query.from === 'qrCode') {
-          this.$router.goBack()
+       /**
+       * 获取逆地理信息
+       * @param location
+       */
+      getAdressByGeocoder (location) {
+        if (_.isUndefined(location)) {
           return
         }
-        if (this.$route.query.projectId) {
+        let geocoder = new AMap.Geocoder({
+          radius: 1000,
+          extensions: 'all',
+        })
+        geocoder.getAddress(location, (status, result) => {
+          if (status === 'complete' && result.info === 'OK') {
+            this.handleGeocoder(result)
+          }
+        })
+      },
+      /**
+       * 处理逆向地理编码
+       * @param data
+       */
+      handleGeocoder (data) {
+        console.log("handleGeocoder:"+data.info)
+        let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
+        
+        geoInfo.position = this.position
+        this.$store.commit('Location/setCurrent', geoInfo)
+        let geoInfoJson = JSON.stringify(geoInfo)
+        
+        if (data.info.toString() === 'OK') {
+          
+          eventBus.$emit('user_location', geoInfoJson)
+          localStorage.setItem('user_location', geoInfoJson)
+
+          let form = this.toQrCodeForm()
+          form.locationJson = geoInfoJson
+          form.formattedAddress = geoInfo.formattedAddress         
+          this.saveQrCodeForm(form)
+          
+
+          // let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
+          // qrcodeForm.locationJson = geoInfo
+          // this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
+
           this.$router.goBack()
-        } else {
-          this.$router.goBack()
-        }
+          // if (this.$route.query.from === 'qrCode') {
+          //   this.$router.goBack()
+          //   return
+          // }
+          // if (this.$route.query.projectId) {
+          //   this.$router.goBack()
+          // } else {
+          //   this.$router.goBack()
+          // }
       }
     },
     async getGeolocation () {
       // 定位获取经纬度
       let mapObj = new AMap.Map('map', {
         resizeEnable: true, // 自适应大小
-        zoom: 13// 初始视窗
+        zoom: 13 // 初始视窗
       })
       mapObj.plugin('AMap.Geolocation', function () {
         let geolocation = new AMap.Geolocation({
@@ -82,8 +103,7 @@ export default {
           showMarker: false, // 定位成功后在定位到的位置显示点标记，默认：true
           showCircle: false, // 定位成功后用圆圈表示定位精度范围，默认：true
           panToLocation: false, // 定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: false, // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-          useNative: true
+          zoomToAccuracy: false // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
         })
         mapObj.addControl(geolocation)
         geolocation.getCurrentPosition()
@@ -92,7 +112,8 @@ export default {
           console.log('定位成功')
           let getLng = d.position.getLng()
           let getLat = d.position.getLat()
-          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat + '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+          this.src = 'https://m.amap.com/picker/?center=' + getLng + ',' + getLat +
+            '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
           // console.log(this.src)
           window.addEventListener('message', this.receivedMessage, false)
         }) // 返回定位信息
@@ -113,24 +134,44 @@ export default {
         this.position.lat = lngLatArray[1]
       }
       this.getAdressByGeocoder(lngLatArray)
+    },
+    async getCurrentPosition () {
+      // this.src = 'https://m.amap.com/picker/?center=113.60727' + ',34.788548' +
+      //   '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+      // window.addEventListener('message', this.receivedMessage, false)
+
+      if (!window.GaodeLocation) {
+        return false
+      }
+      // todo 正式版需要更换appName
+      let para = {
+        appName: 'com.eyuanlin.dev.app',
+        android: {
+          // set some parameters
+        },
+        ios: {
+          accuracy: 2
+          // set some parameters
+        }
+      }
+      this.$q.loading.show()
+      window.GaodeLocation.configLocation(para, function (successMsg) {
+        console.log(successMsg)
+      })
+      await GaodeLocation.getLocation({ retGeo: true }, (locationInfo) => {
+        this.src = 'https://m.amap.com/picker/?center=' + locationInfo.longitude + ',' + locationInfo.latitude +
+          '&radius=500&total=50&key=d18fb1ffb12982910e0ab4c6ffd7ee6e'
+        window.addEventListener('message', this.receivedMessage, false)
+        this.$q.loading.hide()
+      }, (err) => {
+        this.$q.loading.hide()
+        console.log(err)
+      })
     }
-    // getCurrentPosition () {
-    //   if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(success => {
-    //       console.log('2222')
-    //       console.log(success)
-    //     }, err => {
-    //       console.log('ccc')
-    //       console.log(err)
-    //     })
-    //   }
-    // }
   },
   async mounted () {
-    // this.getCurrentPosition()
-    this.getGeolocation()
+    this.getCurrentPosition()
     this.$nextTick(() => {
-      // document.getElementById('map_frame').style.height = document.documentElement.clientHeight + 'px'
       document.getElementById('map_frame').style.height = screen.height + 'px'
       let iframe = document.getElementById('map_frame').contentWindow
       document.getElementById('map_frame').onload = function () {
@@ -146,6 +187,7 @@ export default {
 
 <style lang='scss'>
 @import "../../assets/css/common";
+
 #map-page {
   #map_frame {
     width: 100%;

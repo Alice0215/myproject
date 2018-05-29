@@ -5,3 +5,13 @@
 
 // iOS only Quasar variables overwrites
 // -----------------------------------------
+body.cordova.platform-ios .layout-header > .q-toolbar:first-child,
+body.demo-site.within-iframe .layout-header > .q-toolbar:first-child,
+body.cordova.platform-ios .layout-aside.top-padding,
+body.demo-site.within-iframe .layout-aside.top-padding {
+  /* Status bar height on iOS 11.0 */
+  padding-top: constant(safe-area-inset-top);
+
+  /* Status bar height on iOS 11+ */
+  padding-top: env(safe-area-inset-top);
+}
