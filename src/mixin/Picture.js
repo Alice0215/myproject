@@ -43,7 +43,7 @@ const Picture = {
     },
 
     imagePreview (index) {     
-      ImagePreview(previews, index)
+      ImagePreview(this.previews, index)
     },
 
     buildPicture(list){
