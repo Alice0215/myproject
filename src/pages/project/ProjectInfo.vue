@@ -27,8 +27,8 @@
       </div>
     </q-layout-header>
     <q-page-container>
-      <div class="wp-100 ph-15 pt-15">
-         <q-btn class="wp-100 font-16 no-color-btn" @click="$router.push('/qcode/add?projectId='+projectId)">申请制作二维码</q-btn>
+      <div class="wp-100 ph-15 pt-15" v-if="info.others.isMember">
+         <q-btn class="wp-100 font-16 no-color-btn" @click="$router.push('/qcode/add?projectId='+projectId)" >申请制作二维码</q-btn>
       </div>
       <q-list v-if="info.others && info.others.codeCountMap.length>0">
         <q-card inline class="q-ma-sm full-width bg-white">
