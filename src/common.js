@@ -7,8 +7,11 @@ import eventBus from './eventBus'
 
 let batchRequest = Number.MAX_SAFE_INTEGER
 
-async function request (url, method = 'get', data = {}, responseType = 'json', project = false, absoluteUrl = false) {
-  const endpoint = project ? server.PROJECT_API : server.API
+async function request (url, method = 'get', data = {}, responseType = 'json', project = false, absoluteUrl = false, admin = false) {
+  let endpoint = project ? server.PROJECT_API : server.API
+  if (admin) {
+    endpoint = server.ADMIN_API
+  }
   if (!absoluteUrl) {
     url = endpoint + url
   }
@@ -16,6 +19,10 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   if ((method.toLowerCase() === ('get')) || method.toLowerCase() === ('delete')) {
     params = data
   }
+  console.debug("url: "+url)
+  console.debug("method: "+method)
+  console.debug("data: ")
+  console.debug(data)
   const [err, resp] = await to(axios.request({
     url,
     method,
@@ -23,8 +30,8 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     responseType,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Authorization': localStorage.getItem('token'),
-      'CURRENT_PARTY_ID': localStorage.getItem('partyId'),
+      'Authorization': store.getters['User/token'],
+      'CURRENT_PARTY_ID': store.getters['User/partyId'],
       'Access-Control-Allow-Origin': '*',
       'Content-type': 'application/json'
     },
@@ -34,7 +41,6 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
     params: params
   }))
   if (err) {
-    console.log(err)
     if (batchRequest > 0) {
       batchRequest--
       if (err.message === 'Network Error') {
@@ -49,6 +55,7 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   }
   const code = resp.data.resultCode
   const msg = resp.data.resultMsg
+  console.log(msg)
   if (code === 'SUCCESS') {
     if (typeof (msg) === 'string') {
       let result = ''
@@ -92,6 +99,10 @@ async function request (url, method = 'get', data = {}, responseType = 'json', p
   return resp
 }
 
+async function requestAdmin (url, method = 'get', data = {}, project, absoluteUrl) {
+  return request(url, method, data, 'json', false, false, true)
+}
+
 /**
  * Base64 转 blob
  * @param dataurl
@@ -103,17 +114,17 @@ function dataURLtoFile (dataurl, filename = Date.now() + '.jpeg') {
   let mime, bstr, n, u8arr
   if (_.isNull(arr[0].match(/:(.*?);/))) {
     mime = 'image/jpeg'
-    bstr = atob(arr[0])
+    bstr = atob (arr[0])
   } else {
     mime = arr[0].match(/:(.*?);/)[1]
-    bstr = atob(arr[1])
+    bstr = atob (arr[1])
   }
   n = bstr.length
   u8arr = new Uint8Array(n)
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
-  return new File([u8arr], filename, {type: mime})
+  return new File ([u8arr], filename, { type: mime })
 }
 
 /**
@@ -144,7 +155,7 @@ async function deleteFiles (filePath, index = null) {
  */
 async function uploadFiles (fileData) {
   let fileBlob = dataURLtoFile(fileData)
-  let fD = new FormData()
+  let fD = new FormData ()
   fD.append('file', fileBlob)
   let uploadReq = await request('file/upload', 'POST', fD, 'json', true)
   if (uploadReq) {
@@ -161,6 +172,26 @@ async function uploadFiles (fileData) {
 }
 
 /**
+ * 返回带有 预览地址 和 contentUrl 的图片对象数组
+ * @param pictures
+ * @returns {Array}
+ */
+function setPicturesWithPreview (pictures) {
+  let imgs = []
+  _.forEach(pictures, imgURL => {
+    let filepath = !_.isUndefined(imgURL.filePath) ? imgURL.filePath : imgURL
+    if (!_.isNull(filepath)) {
+      let img = {
+        'previewUrl': server.THUMBNAIL_API + filepath,
+        'contentUrl': filepath
+      }
+      imgs.push(img)
+    }
+  })
+  return imgs
+}
+
+/**
  * 清除 localStory
  * @param name localStory名
  */
@@ -169,12 +200,12 @@ function removeLocalStory (name) {
     localStorage.removeItem(name)
   }
 }
-
-
 export {
   request,
+  requestAdmin,
   dataURLtoFile,
   deleteFiles,
   uploadFiles,
-  removeLocalStory
+  removeLocalStory,
+  setPicturesWithPreview
 }

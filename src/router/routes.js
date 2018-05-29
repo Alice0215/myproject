@@ -1,7 +1,20 @@
+import Home from '../pages/home/home'
+import ProjectList from '../pages/project/list'
+import ProjectInfo from '../pages/project/ProjectInfo'
+import Records from '../pages/project/Records'
+import ProjectDetail from '../pages/project/ProjectDetail'
+import Admin from '../pages/admin/Admin'
+import MaintenanceDetail from '../pages/jobgroup/detail'
+
+import chooseDate from '../pages/choose/chooseDate'
+
+import QrCodeDetail from '../pages/QrCode/QrCodeDetail'
+import QrAreaSingleDetail from '../pages/QrCode/Information/QrAreaSingleInfo'
+
 export default [
   {
     path: '/',
-    component: () => import('pages/project/list')
+    component: Home
   },
   {
     path: '/login',
@@ -19,14 +32,26 @@ export default [
     component: () => import('pages/auth/partyRegister')
   },
   {
+    path: '/project/list',
+    component: ProjectList
+  },
+  {
     path: '/project/add',
     component: () => import('pages/project/add'),
     name: 'projectAdd'
   },
   {
+    path: '/projectDetail',
+    component: ProjectDetail
+  },
+  {
     path: '/project/edit',
     component: () => import('pages/project/edit'),
     name: 'projectEdit'
+  },
+  {
+    path: '/ProjectInfo',
+    component: ProjectInfo
   },
   {
     path: '/project/allUser',
@@ -50,18 +75,12 @@ export default [
   },
   {
     path: '/qcode/detail',
-    component: () => import('pages/qcode/detail'),
+    component: QrCodeDetail,
     name: 'qcodeDetail'
   },
   {
-    path: '/qcode/addPlant',
-    component: () => import('pages/qcode/addPlant'),
-    name: 'qcodeAddPlant'
-  },
-  {
-    path: '/qcode/edit',
-    component: () => import('pages/qcode/edit'),
-    name: 'qcodeEdit'
+    path: '/areaDetail',
+    component: QrAreaSingleDetail
   },
   {
     path: '/project/map',
@@ -73,39 +92,53 @@ export default [
     name: 'groupByUser'
   },
   {
-    path: '/jobGroup/record',
-    component: () => import('pages/jobGroup/record'),
-    name: 'jobRecord'
-  },
-  {
-    path: '/jobGroup/groupRecord',
-    component: () => import('pages/jobGroup/groupRecord'),
-    name: 'jobGroupRecord'
-  },
-  {
     path: '/jobGroup/detail',
-    component: () => import('pages/jobGroup/detail'),
+    component: MaintenanceDetail,
     name: 'jobDetail'
   },
   {
     path: '/project/maintenance',
-    component: () => import('pages/project/constructionMaintenance.vue')
+    component: () => import('pages/jobgroup/save.vue')
+  },
+  {
+    path: '/jobGroup/save',
+    component: () => import('pages/jobgroup/save.vue')
   },
   {
     path: '/project/jobs',
     component: () => import('pages/project/jobs.vue')
   },
   {
+    path: '/project/maintenance-records',
+    component: Records
+  },
+  {
+    path: '/admin',
+    component: Admin
+  },
+  {
     path: '/choose/project',
     component: () => import('pages/choose/chooseProject.vue')
   },
   {
-    path: '/qcode/scan',
-    component: () => import('pages/qcode/scan.vue')
+    path: '/choose/qrtype',
+    component: () => import('pages/choose/chooseQRType.vue')
   },
+  {
+    path: '/chooseDate',
+    component: chooseDate
+  },  
   {
     path: '/qcode/view',
     component: () => import('pages/qcode/viewQRCode.vue')
+  },
+  {
+    path: '/qrcode/chooseType',
+    component: () => import('pages/choose/chooseQRType.vue')
+  },
+  {
+    path: '/qrcode/stepper',
+    component: () => import('pages/qcode/stepperPlant.vue')
   },
   { // Always leave this as last one
     path: '*',

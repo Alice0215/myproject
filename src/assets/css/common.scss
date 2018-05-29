@@ -32,12 +32,28 @@ a {
     }
   }
 }
+
+.box {
+  padding: 0 26px;
+}
+
+.required {
+
+  padding-left: 2px;
+  font-size: 20px;
+  color: #F81D22;
+}
+
 .card {
   margin-bottom: 0px;
   padding: 0px 15px;
   min-height: 160px;
 }
+.box {
+  padding: 0px 15px;
+}
 .back-a{
+  font-size: 14px;
   line-height: 34px;
   .back-left{
     min-width: auto !important;
@@ -100,8 +116,21 @@ input:not(.no-style):hover {
   position: fixed;
 }
 .header-title {
-  font-size: 17px;
-  color: #101010;
+  color: $nav-title;
+  text-align: center;
+}
+.fix-header{
+  background-color: #FEFCEC;
+  height: 36px;
+    line-height: 36px;
+    padding: 0px 26px;
+    color: $primary;
+    font-size: 14px;
+    width: 100%;
+    .delete-btn .q-item-icon{
+      color: $primary;
+      font-size: 18px;
+    }
 }
 .footer {
   background-color:  $bgcolor !important;
@@ -123,14 +152,22 @@ input:not(.no-style):hover {
 .bg-primary{
   background:  $bgcolor !important;
 }
+.bg-white{
+  background: white !important;
+}
 .active{
   color: $primary !important;
 }
-.q-tabs-position-top .q-tabs-bar{
+.footer.q-tabs-position-top .q-tabs-bar{
   color:$bgcolor !important;
 }
 .bg-color{
   background-color:  $bgcolor;
+}
+.required {
+  padding-left: 3px;
+  font-size: 20px;
+  color: #F81D22;
 }
 .underline {
   border-bottom: 1px solid #cccccc;
@@ -171,15 +208,107 @@ input:not(.no-style):hover {
   background-color: white;
   min-height: auto;
 }
+.no-color-btn{
+  border: 1px solid #bbbbbb;
+  box-shadow: none;
+  background-color: white;
+  min-height: auto;
+  padding: 10px;
+  color: black;
+}
 .q-item{
   padding-top: 15px;
 }
 .q-chip {
+  border-radius: 5px;
   margin-bottom: 10px;
   margin-right: 6px;
+  background-color: #F1F1F5 !important;
 }
 .img-close {
   margin-left: 70px;
   margin-top: -195px;
   font-size: 28px;
+}
+.top-btn {
+  display: inline-block;
+  background: $primary;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 3px;
+}
+.q-list {
+  border: none;
+}
+.q-item-side.white-right {
+  width: 58px !important;
+}
+.back-a {
+  line-height: 34px;
+  font-size: 14px;
+}
+.title-font-color{
+  color: #666666 !important;
+}
+.active-btn {
+  background: $primary !important;
+  color: white !important;
+}
+.border-top {
+  border-top: 1px solid #e8e8e8;
+}
+
+.text-main-color {
+  color: $primary;
+}
+
+hr {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: none;
+  margin: 0;
+
+  &.light {
+    border-top-color: $line-light;
+  }
+}
+//这是公共弹框的样式
+.modal-header{
+  font-size: 16px !important;
+  color: black !important;
+  padding-bottom: 5px;
+}
+.modal-body{
+  font-size: 14px !important;
+  color: #888888 !important;
+  line-height: 25px;
+}
+
+.tab-class {
+  .q-tab {
+    padding-bottom: 2px !important;
+  }
+  .q-tab-label {
+    padding-bottom: 8px;
+    color: $text;
+    opacity: 1;
+  }
+  .active {
+    .q-tab-label {
+      border-bottom: 2px solid;
+      color: $primary;
+    }
+  }
+  background: $bgcolor;
+  .q-tabs-head {
+    background: white;
+  }
+  .q-tabs-panes {
+    .q-tab-pane {
+      padding: 12px 0 0 0;
+    }
+  }
+}
+
+.scroll-height {
+  height: calc(100vh - 100px);
 }

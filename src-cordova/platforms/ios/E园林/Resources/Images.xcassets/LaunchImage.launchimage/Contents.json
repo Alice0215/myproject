@@ -138,7 +138,7 @@
     {
       "orientation" : "landscape",
       "idiom" : "ipad",
-      "filename" : "Default-Landscape~ipad.png",
+      "filename" : "loading1024x768-1.png",
       "extent" : "full-screen",
       "scale" : "1x"
     },
@@ -164,7 +164,7 @@
     {
       "orientation" : "landscape",
       "idiom" : "ipad",
-      "filename" : "Default-Landscape@2x~ipad.png",
+      "filename" : "loading2048x1536-1.png",
       "extent" : "full-screen",
       "scale" : "2x"
     }
