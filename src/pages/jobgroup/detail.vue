@@ -2,7 +2,7 @@
   <q-layout view="hHh lpr fFf" id="maintenance_record_detail">
     <q-layout-header>
       <q-toolbar class='header bg-white'>
-        <a @click="$router.goBack()" class="back-a">
+        <a @click="back" class="back-a">
           <q-item-side left  icon="keyboard arrow left" class="back-left"/>
           返回
         </a>
@@ -92,6 +92,16 @@ export default {
     this.getInfo()
   },
   methods: {
+    back () {
+      let tab = this.$route.query.tab
+      if(tab){
+        this.$router.replace('/qcode/detail?id=' + this.info.code.id+"&tab="+tab)
+      } else {
+        this.$router.goBack()
+      }
+      
+    },
+
     getActionName (action) {  
       let s = action.name 
       if(_.has(action, 'parent')){

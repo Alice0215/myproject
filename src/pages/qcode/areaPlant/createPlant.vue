@@ -188,7 +188,7 @@ export default {
       }
     },
     verifyForm() {
-      if (_.isNull(this.sForm.alias) || _.isUndefined(this.sForm.alias)) {
+      if (!this.sForm.alias) {
         this.$q.notify({
           message: "名称不能为空",
           position: "center"

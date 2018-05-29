@@ -49,6 +49,7 @@ export default {
       this.hasMaintenanceRecords = true
     })
     this.$refs.tabs.selectTab('maintenance-records')
+    eventBus.$emit('has-maintenance-records')
   }
 }
 </script>
