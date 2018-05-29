@@ -1,3 +1,1 @@
-# Quasar App
-
-> WIP
+v2 版本发布前，备份v1版本
