@@ -39,7 +39,7 @@
             <span class="spec-input-unit">米</span>
           </div>
           <div class="row spec-left-div ">
-            <label class="spec-input-left w-64">分支数量</label>
+            <label class="spec-input-left w-64">分枝数量</label>
             <q-input class="spec-input w-40" align="center" v-model="sForm.branch" type="number"/>
             <span class="spec-input-unit">个</span>
           </div>
