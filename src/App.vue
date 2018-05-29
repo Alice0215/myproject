@@ -105,8 +105,9 @@ export default {
       }
     })
     eventBus.$on('backButton-clicked', () => {
-      if ($('#preview-cover').css('display') !== 'none') {
-        $('#preview-cover').click()
+      if ($('.van-image-preview').css('display') !== 'none') {
+        $('.van-modal').click()
+        return false
       } else {
         let exitArray = ['/', '/login']
         let menuArray = ['/register', '/partyRegister', '/jobGroup/byUser']
