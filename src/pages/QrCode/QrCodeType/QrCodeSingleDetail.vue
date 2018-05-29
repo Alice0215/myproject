@@ -12,8 +12,8 @@
           <i class="iconfont text-black font-20">&#xe701;</i>
         </q-item-side>
       </q-toolbar>
-      <q-tabs inverted align="justify" no-pane-border class="tab-class">
-        <q-tab default name="single-info" slot="title" label="单株信息" />
+      <q-tabs inverted align="justify" no-pane-border class="tab-class" ref="tabs">
+        <q-tab name="single-info" slot="title" label="单株信息" />
         <q-tab name="maintenance-records" slot="title" label="养护记录" />
         <q-tab name="patrol-records" slot="title" label="巡查记录" />
         <q-tab-pane name="single-info" class="tab-pane-class">
@@ -56,7 +56,16 @@
       "previews",
       "thumbnails",
       "detail"
-    ]
+    ],
+    mounted() {
+      let tab = this.$route.query.tab
+      if(tab){
+        this.$refs.tabs.selectTab(tab)
+      } else {
+        this.$refs.tabs.selectTab('single-info')
+      }      
+    }
+
   }
 </script>
 

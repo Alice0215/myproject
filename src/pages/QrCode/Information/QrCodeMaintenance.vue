@@ -29,7 +29,7 @@
             <q-list separator v-if="list.length > 0">
               <q-item v-for="item in list"
                       :key="item.id"
-                      @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id)">
+                      @click.native="$router.push('/jobGroup/detail?jobGroupId='+ item.id+'&tab=maintenance-records')">
                 <q-item-main>
                   <q-item-tile class="content">
                     <div class="pv-4 row">
