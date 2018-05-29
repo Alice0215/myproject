@@ -20,10 +20,32 @@ function backEvent () {
   eventBus.$emit('backButton-clicked')
 }
 
+function getCameraPermission () {
+  if (!cordova.plugins.permissions) {
+    return false
+  }
+  let permissions = cordova.plugins.permissions
+  permissions.hasPermission(permissions.CAMERA, (status) => {
+    if (!status.hasPermission) {
+      let errorCallback = function () {
+        console.warn('摄像头的权限没有打开')
+      }
+      permissions.requestPermission(
+        permissions.CAMERA,
+        function (status) {
+          if (!status.hasPermission) errorCallback()
+          console.log('获取权限成功！')
+        },
+        errorCallback)
+    }
+  } , null)
+}
+
 document.addEventListener('deviceready', () => {
   if (StatusBar) {
     StatusBar.styleDefault()
   }
+  getCameraPermission()
   document.addEventListener('backbutton', backEvent, false)
 }, false)
 
@@ -83,8 +105,9 @@ export default {
       }
     })
     eventBus.$on('backButton-clicked', () => {
-      if ($('#preview-cover').css('display') !== 'none') {
-        $('#preview-cover').click()
+      if ($('.van-image-preview').css('display') !== 'none') {
+        $('.van-modal').click()
+        return false
       } else {
         let exitArray = ['/', '/login']
         let menuArray = ['/register', '/partyRegister', '/jobGroup/byUser']
