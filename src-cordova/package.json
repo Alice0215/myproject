@@ -10,7 +10,6 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "cordova-amap-location-sdk": "^1.0.4",
     "cordova-android": "6.3.0",
     "cordova-android-support-gradle-release": "^1.4.2",
     "cordova-ios": "^4.5.4",
@@ -34,13 +33,6 @@
       "cordova-plugin-camera": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-gaode-location": {
-        "ANDROIDKEY": "1b6ab30af85b3cbd899ff446747f286f",
-        "IOSKEY": "867b29fcd190bafc7d81af5e122bd616",
-        "LOCATION_ALWAYS_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
-        "LOCATION_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
-        "LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行"
-      },
       "cordova-plugin-crosswalk-webview": {
         "XWALK_VERSION": "23+",
         "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
@@ -55,7 +47,14 @@
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
       },
-      "cordova-plugin-android-permissions": {}
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-gaode-location": {
+        "ANDROIDKEY": "f22053ee102053f5f68216573df8c004",
+        "IOSKEY": "50b2b79079d0918b299534c5c1ce2de7",
+        "LOCATION_ALWAYS_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
+        "LOCATION_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
+        "LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行"
+      }
     },
     "platforms": [
       "android",

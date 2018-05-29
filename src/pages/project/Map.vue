@@ -14,7 +14,7 @@
 <script>
 import _ from 'lodash'
 import eventBus from '../../eventBus'
-import addPlantMixin from "../../mixin/addPlantMixin";
+import addPlantMixin from '../../mixin/addPlantMixin';
 
 export default {
   data () {
@@ -25,64 +25,63 @@ export default {
     }
   },
   mixins: [
-    addPlantMixin,
+    addPlantMixin
   ],
   methods: {
-       /**
+    /**
        * 获取逆地理信息
        * @param location
        */
-      getAdressByGeocoder (location) {
-        if (_.isUndefined(location)) {
-          return
+    getAdressByGeocoder (location) {
+      if (_.isUndefined(location)) {
+        return
+      }
+      let geocoder = new AMap.Geocoder({
+        radius: 1000,
+        extensions: 'all'
+      })
+      geocoder.getAddress(location, (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          this.handleGeocoder(result)
         }
-        let geocoder = new AMap.Geocoder({
-          radius: 1000,
-          extensions: 'all',
-        })
-        geocoder.getAddress(location, (status, result) => {
-          if (status === 'complete' && result.info === 'OK') {
-            this.handleGeocoder(result)
-          }
-        })
-      },
-      /**
+      })
+    },
+    /**
        * 处理逆向地理编码
        * @param data
        */
-      handleGeocoder (data) {
-        console.log("handleGeocoder:"+data.info)
-        let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
-        
-        geoInfo.position = this.position
-        this.$store.commit('Location/setCurrent', geoInfo)
-        let geoInfoJson = JSON.stringify(geoInfo)
-        
-        if (data.info.toString() === 'OK') {
-          
-          eventBus.$emit('user_location', geoInfoJson)
-          localStorage.setItem('user_location', geoInfoJson)
+    handleGeocoder (data) {
+      console.log('handleGeocoder:' + data.info)
+      let geoInfo = _.omit(data.regeocode, ['pois', 'roads', 'crosses', 'aois'])
 
-          let form = this.toQrCodeForm()
-          form.locationJson = geoInfoJson
-          form.formattedAddress = geoInfo.formattedAddress         
-          this.saveQrCodeForm(form)
-          
+      geoInfo.position = this.position
+      this.$store.commit('Location/setCurrent', geoInfo)
+      let geoInfoJson = JSON.stringify(geoInfo)
 
-          // let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
-          // qrcodeForm.locationJson = geoInfo
-          // this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
+      if (data.info.toString() === 'OK') {
+        eventBus.$emit('user_location', geoInfoJson)
+        localStorage.setItem('user_location', geoInfoJson)
 
-          this.$router.goBack()
-          // if (this.$route.query.from === 'qrCode') {
-          //   this.$router.goBack()
-          //   return
-          // }
-          // if (this.$route.query.projectId) {
-          //   this.$router.goBack()
-          // } else {
-          //   this.$router.goBack()
-          // }
+        let form = this.toQrCodeForm()
+        form.locationJson = geoInfoJson
+        form.formattedAddress = geoInfo.formattedAddress
+        this.saveQrCodeForm(form)
+
+
+        // let qrcodeForm = this.$store.state.plantInfo.qrCodeForm
+        // qrcodeForm.locationJson = geoInfo
+        // this.$store.commit('plantInfo/updateQRCodeForm', qrcodeForm)
+
+        this.$router.goBack()
+        // if (this.$route.query.from === 'qrCode') {
+        //   this.$router.goBack()
+        //   return
+        // }
+        // if (this.$route.query.projectId) {
+        //   this.$router.goBack()
+        // } else {
+        //   this.$router.goBack()
+        // }
       }
     },
     async getGeolocation () {
@@ -143,9 +142,8 @@ export default {
       if (!window.GaodeLocation) {
         return false
       }
-      // todo 正式版需要更换appName
       let para = {
-        appName: 'com.eyuanlin.dev.app',
+        appName: 'com.eyuanlin.app',
         android: {
           // set some parameters
         },

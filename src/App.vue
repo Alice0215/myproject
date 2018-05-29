@@ -38,7 +38,7 @@ function getCameraPermission () {
         },
         errorCallback)
     }
-  } , null)
+  }, null)
 }
 
 document.addEventListener('deviceready', () => {
