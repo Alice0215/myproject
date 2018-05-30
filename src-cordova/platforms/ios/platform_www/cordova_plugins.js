@@ -1,6 +1,14 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
   {
+    "id": "cordova-plugin-android-permissions.Permissions",
+    "file": "plugins/cordova-plugin-android-permissions/www/permissions-dummy.js",
+    "pluginId": "cordova-plugin-android-permissions",
+    "clobbers": [
+      "cordova.plugins.permissions"
+    ]
+  },
+  {
     "id": "cordova-plugin-camera.Camera",
     "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
     "pluginId": "cordova-plugin-camera",
@@ -49,14 +57,6 @@ module.exports = [
     ]
   },
   {
-    "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
-    "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
-    "pluginId": "phonegap-plugin-barcodescanner",
-    "clobbers": [
-      "cordova.plugins.barcodeScanner"
-    ]
-  },
-  {
     "id": "cordova-plugin-statusbar.statusbar",
     "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
     "pluginId": "cordova-plugin-statusbar",
@@ -65,28 +65,29 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-android-permissions.Permissions",
-    "file": "plugins/cordova-plugin-android-permissions/www/permissions-dummy.js",
-    "pluginId": "cordova-plugin-android-permissions",
+    "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
+    "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
+    "pluginId": "phonegap-plugin-barcodescanner",
     "clobbers": [
-      "cordova.plugins.permissions"
+      "cordova.plugins.barcodeScanner"
     ]
   }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
+  "cordova-android-support-gradle-release": "1.4.2",
   "cordova-plugin-add-swift-support": "1.7.2",
+  "cordova-plugin-android-permissions": "1.0.0",
   "cordova-plugin-camera": "4.0.2",
   "cordova-plugin-compat": "1.2.0",
   "cordova-plugin-crosswalk-webview": "2.4.0",
   "cordova-plugin-gaode-location": "1.0.0",
   "cordova-plugin-splashscreen": "5.0.2",
-  "cordova-plugin-whitelist": "1.3.3",
-  "phonegap-plugin-barcodescanner": "7.1.2",
   "cordova-plugin-statusbar": "2.4.2",
-  "cordova-android-support-gradle-release": "1.4.2",
-  "cordova-plugin-android-permissions": "1.0.0"
+  "cordova-plugin-swift-support": "3.1.1",
+  "cordova-plugin-whitelist": "1.3.3",
+  "phonegap-plugin-barcodescanner": "7.1.2"
 };
 // BOTTOM OF METADATA
 });
