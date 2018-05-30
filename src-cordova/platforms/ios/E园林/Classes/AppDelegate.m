@@ -19,12 +19,13 @@
 
 //
 //  AppDelegate.m
-//  E园林
+//  e园林
 //
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
 //
-static const NSString * kPgyKey = @"610fc30db68fb59865707c9616db656d";
+
+static NSString * const kPgyKey = @"610fc30db68fb59865707c9616db656d";
 
 #import "AppDelegate.h"
 #import "MainViewController.h"

@@ -21,15 +21,11 @@
               "count": 1
             },
             {
-              "xml": "<preference name=\"GAODEKEY\" value=\"gaode867b29fcd190bafc7d81af5e122bd616\" />",
+              "xml": "<preference name=\"GAODEKEY\" value=\"gaode50b2b79079d0918b299534c5c1ce2de7\" />",
               "count": 1
             },
             {
               "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
               "count": 1
             },
             {
@@ -43,6 +39,10 @@
             {
               "xml": "<preference name=\"StatusBarStyle\" value=\"lightcontent\" />",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -51,7 +51,7 @@
         "parents": {
           "CFBundleURLTypes": [
             {
-              "xml": "<array><dict><key>CFBundleURLName</key><string>GAODEKEY</string><key>CFBundleURLSchemes</key><array><string>gaode867b29fcd190bafc7d81af5e122bd616</string></array></dict></array>",
+              "xml": "<array><dict><key>CFBundleURLName</key><string>GAODEKEY</string><key>CFBundleURLSchemes</key><array><string>gaode50b2b79079d0918b299534c5c1ce2de7</string></array></dict></array>",
               "count": 1
             }
           ],
@@ -78,54 +78,64 @@
               "xml": "<dict><key>NSAllowsArbitraryLoads</key><true /></dict>",
               "count": 1
             }
-          ],
-          "NSCameraUsageDescription": []
+          ]
         }
       }
     }
   },
   "installed_plugins": {
+    "cordova-android-support-gradle-release": {
+      "PACKAGE_NAME": "com.eyuanlin.app"
+    },
     "cordova-plugin-add-swift-support": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
+    },
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-camera": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-compat": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-crosswalk-webview": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-gaode-location": {
-      "ANDROIDKEY": "1b6ab30af85b3cbd899ff446747f286f",
-      "IOSKEY": "867b29fcd190bafc7d81af5e122bd616",
+      "ANDROIDKEY": "f22053ee102053f5f68216573df8c004",
+      "IOSKEY": "50b2b79079d0918b299534c5c1ce2de7",
       "LOCATION_ALWAYS_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
       "LOCATION_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
       "LOCATION_ALWAYS_AND_WHEN_IN_USAGE_DESCRIPTION": "请选择'始终允许'以保证应用的正常运行",
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
-    },
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
-    },
-    "phonegap-plugin-barcodescanner": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
     "cordova-plugin-statusbar": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
-    "cordova-android-support-gradle-release": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+    "cordova-plugin-swift-support": {
+      "PACKAGE_NAME": "com.eyuanlin.app"
     },
-    "cordova-plugin-android-permissions": {
-      "PACKAGE_NAME": "com.eyuanlin.dev.app"
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.eyuanlin.app"
+    },
+    "phonegap-plugin-barcodescanner": {
+      "PACKAGE_NAME": "com.eyuanlin.app"
     }
   },
   "dependent_plugins": {},
   "modules": [
+    {
+      "id": "cordova-plugin-android-permissions.Permissions",
+      "file": "plugins/cordova-plugin-android-permissions/www/permissions-dummy.js",
+      "pluginId": "cordova-plugin-android-permissions",
+      "clobbers": [
+        "cordova.plugins.permissions"
+      ]
+    },
     {
       "id": "cordova-plugin-camera.Camera",
       "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
@@ -175,14 +185,6 @@
       ]
     },
     {
-      "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
-      "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
-      "pluginId": "phonegap-plugin-barcodescanner",
-      "clobbers": [
-        "cordova.plugins.barcodeScanner"
-      ]
-    },
-    {
       "id": "cordova-plugin-statusbar.statusbar",
       "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
       "pluginId": "cordova-plugin-statusbar",
@@ -191,25 +193,26 @@
       ]
     },
     {
-      "id": "cordova-plugin-android-permissions.Permissions",
-      "file": "plugins/cordova-plugin-android-permissions/www/permissions-dummy.js",
-      "pluginId": "cordova-plugin-android-permissions",
+      "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
+      "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
+      "pluginId": "phonegap-plugin-barcodescanner",
       "clobbers": [
-        "cordova.plugins.permissions"
+        "cordova.plugins.barcodeScanner"
       ]
     }
   ],
   "plugin_metadata": {
+    "cordova-android-support-gradle-release": "1.4.2",
     "cordova-plugin-add-swift-support": "1.7.2",
+    "cordova-plugin-android-permissions": "1.0.0",
     "cordova-plugin-camera": "4.0.2",
     "cordova-plugin-compat": "1.2.0",
     "cordova-plugin-crosswalk-webview": "2.4.0",
     "cordova-plugin-gaode-location": "1.0.0",
     "cordova-plugin-splashscreen": "5.0.2",
-    "cordova-plugin-whitelist": "1.3.3",
-    "phonegap-plugin-barcodescanner": "7.1.2",
     "cordova-plugin-statusbar": "2.4.2",
-    "cordova-android-support-gradle-release": "1.4.2",
-    "cordova-plugin-android-permissions": "1.0.0"
+    "cordova-plugin-swift-support": "3.1.1",
+    "cordova-plugin-whitelist": "1.3.3",
+    "phonegap-plugin-barcodescanner": "7.1.2"
   }
 }
